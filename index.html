@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tubed — Daily London Underground Challenge</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0a0f1e;--surf:#111827;--brd:#1e2d4a;--red:#E32017;--navy:#003688;--yellow:#FFD300;--txt:#f0f4ff;--muted:#7a8ba8;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
+.wrap{max-width:540px;margin:0 auto;padding:24px 18px 48px;}
+.hdr{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
+.gtitle{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1;}
+.gsub{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.streak-box{margin-left:auto;background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:8px 14px;text-align:center;flex-shrink:0;}
+.streak-n{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--yellow);line-height:1;}
+.streak-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:18px;margin-bottom:16px;}
+.challenge{display:flex;align-items:center;}
+.st-box{flex:1;text-align:center;}
+.st-role{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px;}
+.st-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1.1;color:var(--txt);}
+.arr{font-size:22px;color:var(--red);padding:0 12px;flex-shrink:0;}
+.sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;}
+#map{width:100%;height:280px;border-radius:10px;margin-bottom:16px;border:0.5px solid var(--brd);}
+.route-steps{display:flex;flex-direction:column;margin-bottom:14px;min-height:48px;}
+.empty-route{text-align:center;color:var(--muted);font-size:13px;padding:14px 0;}
+.step{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--brd);position:relative;}
+.step:last-child{border-bottom:none;}
+.step-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;z-index:1;}
+.step-conn{position:absolute;left:5.5px;top:-9px;width:2px;height:9px;}
+.step-txt{flex:1;}
+.step-stn{font-size:14px;font-weight:500;color:var(--txt);}
+.step-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:3px;font-weight:500;letter-spacing:0.3px;}
+.step-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;line-height:1;border-radius:4px;}
+.step-rm:hover{color:var(--red);}
+.add-area{background:#0d1525;border-radius:10px;padding:14px;margin-top:6px;}
+.add-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:10px;}
+.step-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+select{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:11px 12px;font-size:14px;font-family:'DM Sans',sans-serif;width:100%;appearance:none;cursor:pointer;}
+select:focus{outline:none;border-color:#4a6fa5;}
+select option{background:#111827;}
+.btn-add{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s,transform 0.1s;letter-spacing:0.3px;}
+.btn-add:hover{background:#0047b3;} .btn-add:active{transform:scale(0.98);}
+.btn-sub{background:var(--red);color:white;width:100%;padding:16px;font-size:17px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.15s,transform 0.1s;margin-bottom:8px;letter-spacing:0.5px;}
+.btn-sub:hover:not(:disabled){background:#c01a10;} .btn-sub:active:not(:disabled){transform:scale(0.98);}
+.btn-sub:disabled{background:#3a1210;color:#6a3030;cursor:not-allowed;}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.result-card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:24px 20px;margin-bottom:16px;}
+.result-medal{font-size:52px;text-align:center;margin-bottom:8px;}
+.result-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;text-align:center;margin-bottom:4px;}
+.result-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.times-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.time-box{background:var(--bg);border-radius:10px;padding:14px;text-align:center;}
+.time-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;}
+.time-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+.bar-wrap{background:var(--bg);border-radius:20px;height:8px;margin:0 0 6px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:20px;transition:width 1.3s cubic-bezier(.22,1,.36,1);}
+.pct-lbl{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;}
+.rank-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;margin:0 auto 16px;font-size:14px;font-weight:500;}
+.opt-legs{border-top:0.5px solid var(--brd);padding-top:14px;margin-bottom:16px;}
+.opt-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+.opt-leg{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13px;color:var(--txt);}
+.opt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.top5-section{border-top:0.5px solid var(--brd);padding-top:14px;margin-bottom:16px;}
+.top5-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--brd);font-size:13px;}
+.top5-row:last-child{border-bottom:none;}
+.top5-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);width:24px;flex-shrink:0;}
+.top5-mins{margin-left:auto;font-weight:500;color:var(--yellow);}
+.btn-reset{background:var(--navy);color:white;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;transition:background 0.15s;}
+.btn-reset:hover{background:#0047b3;}
+.hist-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--brd);font-size:13px;}
+.hist-row:last-child{border-bottom:none;}
+.hist-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.loading-state{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
+.error-banner{background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:12px 14px;font-size:13px;color:#f08080;margin-bottom:12px;line-height:1.5;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.note-bar{background:#0d1525;border:0.5px solid var(--brd);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px;line-height:1.5;}
+.btn-share{background:#162a16;color:#4ade80;border:1px solid #2d5a2d;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;margin-bottom:10px;}
+.btn-share:hover{background:#1f3a1f;}
+.btn-share.copied{color:#86efac;}
+.puzzle-num{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="25" cy="25" r="23" fill="#E32017"/>
+      <rect x="0" y="19.5" width="50" height="11" fill="#003688"/>
+      <circle cx="25" cy="25" r="23" fill="none" stroke="#003688" stroke-width="1.5"/>
+      <text x="25" y="27.5" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="7" fill="white" letter-spacing="0.5">TUBED</text>
+    </svg>
+    <div>
+      <div class="gtitle">Tubed</div>
+      <div class="gsub">Daily London Underground Puzzle</div>
+    </div>
+    <div class="streak-box">
+      <div class="streak-n" id="streak-disp">0</div>
+      <div class="streak-l">Day Streak</div>
+    </div>
+  </div>
+
+  <div id="main-panel">
+    <div class="card challenge">
+      <div class="st-box"><div class="st-role">Start</div><div class="st-name" id="start-stn">—</div></div>
+      <div class="arr">&#8594;</div>
+      <div class="st-box"><div class="st-role">Destination</div><div class="st-name" id="end-stn">—</div></div>
+    </div>
+
+    <div id="loading-puzzle" class="loading-state">
+      <span class="spinner" style="border-top-color:var(--muted);"></span>&nbsp; Loading today's puzzle...
+    </div>
+
+    <div id="game-body" style="display:none;">
+      <div class="note-bar">
+        Journey times are travel time only — no waiting time is included.<br>
+        All players are scored against the same TFL-sourced optimal route.
+      </div>
+
+      <div class="sec-lbl">Route map</div>
+      <div id="map"></div>
+
+      <div class="card">
+        <div class="sec-lbl">Your route</div>
+        <div class="route-steps" id="route-steps">
+          <div class="empty-route">Add stops below to build your route</div>
+        </div>
+        <div class="add-area">
+          <div class="add-label">Add a stop</div>
+          <div class="step-form">
+            <select id="sel-stn"><option value="">Choose station...</option></select>
+            <select id="sel-line"><option value="">Choose line...</option></select>
+          </div>
+          <button class="btn-add" onclick="addStep()">
+            <span style="font-size:20px;line-height:1;">+</span> Add this stop
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-sub" id="sub-btn" onclick="submitRoute()" disabled>
+        Submit my route &nbsp;&#8594;
+      </button>
+      <div class="hint">Add stops ending at your destination, then submit</div>
+    </div>
+  </div>
+
+  <div id="result-panel" style="display:none;"></div>
+
+  <div style="margin-top:8px;">
+    <div class="sec-lbl" style="margin-bottom:10px;">Past results</div>
+    <div class="card" style="padding:10px 18px;">
+      <div id="hist-list">
+        <div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── LINE COLOURS ────────────────────────────────────────────────────────────
+const LC = {
+  'Central':            {bg:'#E32017',txt:'#fff'},
+  'Northern':           {bg:'#000000',txt:'#fff'},
+  'Jubilee':            {bg:'#A0A5AE',txt:'#fff'},
+  'Victoria':           {bg:'#0098D4',txt:'#fff'},
+  'Bakerloo':           {bg:'#B36305',txt:'#fff'},
+  'Piccadilly':         {bg:'#003688',txt:'#fff'},
+  'District':           {bg:'#00782A',txt:'#fff'},
+  'Circle':             {bg:'#FFD300',txt:'#000'},
+  'Hammersmith & City': {bg:'#F3A9BB',txt:'#000'},
+  'Metropolitan':       {bg:'#9B0056',txt:'#fff'},
+  'Waterloo & City':    {bg:'#95CDBA',txt:'#000'},
+  'Elizabeth':          {bg:'#6950A1',txt:'#fff'},
+  'Overground':         {bg:'#EE7C0E',txt:'#fff'},
+  'DLR':                {bg:'#00A4A7',txt:'#fff'},
+};
+
+// ─── INTERCHANGE WALKING TIMES (minutes) ─────────────────────────────────────
+// These are the known platform-to-platform walking times at major interchanges.
+// Source: TFL's own published interchange times.
+// If a pair isn't listed, we use 2 min as a conservative default.
+const INTERCHANGE_MINS = {
+  'Bank':                   4, // Long travelator + stairs between Central/Northern/W&C
+  'Kings Cross St. Pancras':3, // Multiple lines but reasonably connected
+  'Liverpool Street':       3,
+  'Paddington':             3, // Between Elizabeth and other lines
+  'Waterloo':               3,
+  'Victoria':               2,
+  'Oxford Circus':          2,
+  'Green Park':             2,
+  'Bond Street':            2,
+  'Moorgate':               2,
+  'Stockwell':              2,
+  'Canary Wharf':           3, // Jubilee <-> Elizabeth involves some walking
+  'Stratford':              3,
+  'Highbury & Islington':   2,
+  'Finsbury Park':          2,
+  'Hammersmith':            3, // Two separate Hammersmith stations
+  'Earls Court':            2,
+  'Embankment':             2,
+  'Westminster':            2,
+  'Elephant & Castle':      3,
+  'Camden Town':            2,
+};
+
+function interchangeTime(station) {
+  return INTERCHANGE_MINS[station] || 2;
+}
+
+// ─── STATION COORDINATES ─────────────────────────────────────────────────────
+const COORDS = {
+  'Aldgate':              [51.5143,-0.0755],
+  'Aldgate East':         [51.5152,-0.0726],
+  'Angel':                [51.5322,-0.1058],
+  'Baker Street':         [51.5226,-0.1571],
+  'Bank':                 [51.5133,-0.0886],
+  'Barbican':             [51.5203,-0.0979],
+  'Bermondsey':           [51.4995,-0.0640],
+  'Bethnal Green':        [51.5272,-0.0549],
+  'Blackfriars':          [51.5119,-0.1040],
+  'Bond Street':          [51.5142,-0.1494],
+  'Borough':              [51.5011,-0.0941],
+  'Brixton':              [51.4627,-0.1144],
+  'Camden Town':          [51.5392,-0.1426],
+  'Canada Water':         [51.4980,-0.0500],
+  'Canary Wharf':         [51.5051,-0.0209],
+  'Cannon Street':        [51.5113,-0.0904],
+  'Canonbury':            [51.5490,-0.0923],
+  'Charing Cross':        [51.5081,-0.1247],
+  'Clapham Common':       [51.4618,-0.1390],
+  'Clapham Junction':     [51.4642,-0.1702],
+  'Clapham North':        [51.4648,-0.1302],
+  'Clapham South':        [51.4565,-0.1480],
+  'Cutty Sark':           [51.4826,-0.0094],
+  'Dalston Kingsland':    [51.5492,-0.0757],
+  'Ealing Broadway':      [51.5150,-0.3018],
+  "Earl's Court":         [51.4915,-0.1937],
+  'Edgware Road':         [51.5199,-0.1686],
+  'Elephant & Castle':    [51.4958,-0.1007],
+  'Embankment':           [51.5072,-0.1221],
+  'Euston':               [51.5282,-0.1337],
+  'Euston Square':        [51.5261,-0.1350],
+  'Farringdon':           [51.5203,-0.1050],
+  'Finchley Road':        [51.5476,-0.1799],
+  'Finsbury Park':        [51.5642,-0.1058],
+  'Gloucester Road':      [51.4944,-0.1829],
+  'Goldhawk Road':        [51.5019,-0.2264],
+  'Goodge Street':        [51.5208,-0.1347],
+  'Great Portland Street':[51.5240,-0.1440],
+  'Green Park':           [51.5067,-0.1428],
+  'Greenwich':            [51.4779, 0.0147],
+  'Hackney Central':      [51.5466,-0.0555],
+  'Hammersmith':          [51.4934,-0.2226],
+  'Heathrow Terminal 5':  [51.4731,-0.4852],
+  'Heron Quays':          [51.5037,-0.0223],
+  'Highbury & Islington': [51.5463,-0.1038],
+  'Holborn':              [51.5174,-0.1200],
+  'Hyde Park Corner':     [51.5027,-0.1527],
+  'Island Gardens':       [51.4889,-0.0174],
+  'Kennington':           [51.4881,-0.1051],
+  'Kings Cross St. Pancras':[51.5308,-0.1238],
+  'Knightsbridge':        [51.5013,-0.1609],
+  'Ladbroke Grove':       [51.5172,-0.2120],
+  'Lambeth North':        [51.4988,-0.1119],
+  'Latimer Road':         [51.5134,-0.2172],
+  'Leicester Square':     [51.5113,-0.1281],
+  'Limehouse':            [51.5120,-0.0372],
+  'Liverpool Street':     [51.5178,-0.0823],
+  'London Bridge':        [51.5079,-0.0877],
+  'Mansion House':        [51.5123,-0.0942],
+  'Marylebone':           [51.5223,-0.1630],
+  'Mile End':             [51.5252,-0.0334],
+  'Monument':             [51.5103,-0.0862],
+  'Moorgate':             [51.5186,-0.0886],
+  'Mudchute':             [51.4941,-0.0165],
+  'North Greenwich':      [51.5004, 0.0039],
+  'Notting Hill Gate':    [51.5095,-0.1967],
+  'Old Street':           [51.5263,-0.0873],
+  'Oval':                 [51.4820,-0.1134],
+  'Oxford Circus':        [51.5154,-0.1416],
+  'Paddington':           [51.5154,-0.1755],
+  'Parsons Green':        [51.4754,-0.1993],
+  'Piccadilly Circus':    [51.5098,-0.1342],
+  'Pimlico':              [51.4893,-0.1334],
+  'Poplar':               [51.5074,-0.0170],
+  'Putney Bridge':        [51.4682,-0.2097],
+  "Regent's Park":        [51.5234,-0.1466],
+  'Royal Oak':            [51.5203,-0.1974],
+  'Shadwell':             [51.5116,-0.0564],
+  "Shepherd's Bush":      [51.5053,-0.2187],
+  "Shepherd's Bush Market":[51.5048,-0.2264],
+  'Sloane Square':        [51.4924,-0.1565],
+  'South Kensington':     [51.4941,-0.1738],
+  'South Quay':           [51.5011,-0.0188],
+  'Southwark':            [51.5041,-0.1050],
+  "St. James's Park":     [51.4994,-0.1335],
+  "St. Paul's":           [51.5146,-0.0973],
+  'Stockwell':            [51.4723,-0.1228],
+  'Stratford':            [51.5416,-0.0042],
+  'Temple':               [51.5113,-0.1141],
+  'Tottenham Court Road': [51.5165,-0.1300],
+  'Tower Hill':           [51.5099,-0.0766],
+  'Vauxhall':             [51.4861,-0.1228],
+  'Victoria':             [51.4965,-0.1447],
+  'Warren Street':        [51.5244,-0.1387],
+  'Waterloo':             [51.5036,-0.1143],
+  'Wembley Park':         [51.5634,-0.2795],
+  'West Brompton':        [51.4865,-0.1952],
+  'West Ham':             [51.5287, 0.0052],
+  'Westbourne Park':      [51.5210,-0.2042],
+  'Westferry':            [51.5094,-0.0269],
+  'Westminster':          [51.5010,-0.1254],
+  'White City':           [51.5121,-0.2244],
+  'Whitechapel':          [51.5196,-0.0600],
+  'Wimbledon':            [51.4214,-0.2060],
+  'East Putney':          [51.4607,-0.2082],
+  'Fulham Broadway':      [51.4802,-0.1936],
+  'Barons Court':         [51.4901,-0.2138],
+  'Bayswater':            [51.5121,-0.1877],
+};
+
+// ─── STATION → LINES LOOKUP ───────────────────────────────────────────────────
+const LINE_STATIONS = {
+  'Central':            ['Bethnal Green','Mile End','Stratford','Liverpool Street','Bank',"St. Paul's",'Holborn','Tottenham Court Road','Oxford Circus','Bond Street','Notting Hill Gate',"Shepherd's Bush",'White City','Ealing Broadway'],
+  'Northern':           ['Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Warren Street','Tottenham Court Road','Leicester Square','Embankment','Waterloo','Stockwell','Brixton','Camden Town','Highbury & Islington','Charing Cross','Goodge Street'],
+  'Victoria':           ['Brixton','Stockwell','Vauxhall','Pimlico','Victoria',"St. James's Park",'Green Park','Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras','Highbury & Islington','Finsbury Park'],
+  'Jubilee':            ['Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Stratford','Green Park','Bond Street','Baker Street','Finchley Road','Wembley Park'],
+  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Holborn','Kings Cross St. Pancras','Finsbury Park'],
+  'District':           ['Wimbledon','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Hammersmith','Ealing Broadway'],
+  'Circle':             ['Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater'],
+  'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington'],
+  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras','Baker Street','Marylebone','Paddington','Hammersmith'],
+  'Hammersmith & City': ['Hammersmith',"Shepherd's Bush Market",'Goldhawk Road','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel','Mile End','West Ham'],
+  'Elizabeth':          ['Paddington','Bond Street','Tottenham Court Road','Farringdon','Liverpool Street','Whitechapel','Canary Wharf','Stratford'],
+  'Waterloo & City':    ['Waterloo','Bank'],
+  'Overground':         ['Highbury & Islington','Canonbury','Dalston Kingsland','Hackney Central','Stratford','Clapham Junction'],
+  'DLR':                ['Bank','Shadwell','Limehouse','Westferry','Poplar','Canary Wharf','Heron Quays','South Quay','Mudchute','Island Gardens','Cutty Sark','Greenwich'],
+};
+
+// ─── JOURNEY TIMES (travel time only, no waiting) ────────────────────────────
+// Minutes of in-train travel between station pairs, order-independent.
+const JOURNEY_TIMES = {
+  // Central
+  'Bethnal Green|Liverpool Street':3,'Liverpool Street|Bank':3,"Bank|St. Paul's":2,
+  "St. Paul's|Chancery Lane":2,'Chancery Lane|Holborn':2,'Holborn|Tottenham Court Road':2,
+  'Tottenham Court Road|Oxford Circus':2,'Oxford Circus|Bond Street':2,'Bond Street|Marble Arch':2,
+  'Marble Arch|Lancaster Gate':2,'Lancaster Gate|Queensway':2,'Queensway|Notting Hill Gate':2,
+  "Notting Hill Gate|Shepherd's Bush":4,'Mile End|Bethnal Green':3,'Mile End|Stratford':4,
+  'Liverpool Street|Stratford':7,'Bank|Stratford':9,'Oxford Circus|Stratford':16,
+  'Bethnal Green|Bank':6,'Stratford|Oxford Circus':16,'Bank|Oxford Circus':9,
+  'Liverpool Street|Oxford Circus':11,'Bethnal Green|Oxford Circus':11,
+  // Northern
+  'Oval|Kennington':2,'Kennington|Elephant & Castle':3,'Elephant & Castle|Borough':2,
+  'Borough|London Bridge':2,'London Bridge|Bank':2,'Bank|Moorgate':3,'Moorgate|Old Street':2,
+  'Old Street|Angel':2,'Angel|Kings Cross St. Pancras':2,'Kings Cross St. Pancras|Euston':2,
+  'Euston|Warren Street':2,'Warren Street|Goodge Street':2,'Goodge Street|Tottenham Court Road':2,
+  'Tottenham Court Road|Leicester Square':2,'Leicester Square|Charing Cross':2,
+  'Charing Cross|Embankment':2,'Embankment|Waterloo':2,'Waterloo|Kennington':4,
+  'Kennington|Stockwell':3,'Stockwell|Brixton':2,'Camden Town|Kings Cross St. Pancras':3,
+  'Highbury & Islington|Angel':3,'Oval|Bank':11,'Brixton|Bank':16,'Camden Town|Euston':5,
+  'Highbury & Islington|Euston':7,'Highbury & Islington|Kings Cross St. Pancras':5,
+  'Angel|Euston':4,'Camden Town|Angel':4,'Camden Town|Waterloo':14,
+  'Brixton|Stockwell':2,'Oval|Waterloo':13,'Oval|Kennington':2,
+  // Victoria
+  'Brixton|Stockwell':2,'Stockwell|Vauxhall':3,'Vauxhall|Pimlico':2,'Pimlico|Victoria':2,
+  "Victoria|St. James's Park":2,"St. James's Park|Green Park":2,'Green Park|Oxford Circus':3,
+  'Oxford Circus|Warren Street':2,'Warren Street|Euston':2,'Euston|Kings Cross St. Pancras':2,
+  'Kings Cross St. Pancras|Highbury & Islington':3,'Highbury & Islington|Finsbury Park':3,
+  'Victoria|Oxford Circus':5,'Victoria|Green Park':4,'Victoria|Brixton':10,
+  'Victoria|Kings Cross St. Pancras':9,'Highbury & Islington|Oxford Circus':11,
+  'Highbury & Islington|Victoria':13,'Highbury & Islington|Green Park':10,
+  'Highbury & Islington|Warren Street':8,'Highbury & Islington|Euston':7,
+  // Jubilee
+  'Westminster|Waterloo':2,'Waterloo|Southwark':2,'Southwark|London Bridge':2,
+  'London Bridge|Bermondsey':2,'Bermondsey|Canada Water':2,'Canada Water|Canary Wharf':3,
+  'Canary Wharf|North Greenwich':5,'North Greenwich|Stratford':7,'Green Park|Westminster':3,
+  'Bond Street|Green Park':2,'Baker Street|Bond Street':3,'Westminster|Canary Wharf':9,
+  'Green Park|Canary Wharf':13,'Bond Street|Canary Wharf':15,'Waterloo|Canary Wharf':13,
+  'Westminster|London Bridge':6,'Green Park|London Bridge':9,
+  // Piccadilly
+  'Hammersmith|Barons Court':2,"Barons Court|Earl's Court":2,'Hyde Park Corner|Green Park':2,
+  'Green Park|Piccadilly Circus':2,'Piccadilly Circus|Leicester Square':2,
+  'Leicester Square|Covent Garden':1,'Covent Garden|Holborn':2,
+  'Holborn|Kings Cross St. Pancras':6,'Kings Cross St. Pancras|Finsbury Park':5,
+  // District
+  'Wimbledon|East Putney':4,'East Putney|Putney Bridge':2,'Putney Bridge|Parsons Green':3,
+  'Parsons Green|Fulham Broadway':2,'Fulham Broadway|West Brompton':2,
+  "West Brompton|Earl's Court":3,"Earl's Court|Gloucester Road":3,'Gloucester Road|South Kensington':2,
+  'South Kensington|Sloane Square':3,'Sloane Square|Victoria':3,'Victoria|Westminster':4,
+  'Westminster|Embankment':2,'Embankment|Temple':2,'Temple|Blackfriars':2,
+  'Blackfriars|Mansion House':2,'Mansion House|Cannon Street':1,'Cannon Street|Monument':2,
+  'Monument|Tower Hill':2,'Tower Hill|Aldgate East':2,'Aldgate East|Whitechapel':2,
+  'Wimbledon|Victoria':22,'Wimbledon|Westminster':26,'Victoria|Tower Hill':12,
+  "Earl's Court|Victoria":5,'Hammersmith|Paddington':5,
+  // Circle / H&C
+  'Paddington|Edgware Road':3,'Edgware Road|Baker Street':4,'Baker Street|Great Portland Street':2,
+  'Great Portland Street|Euston Square':2,'Euston Square|Kings Cross St. Pancras':2,
+  'Kings Cross St. Pancras|Farringdon':4,'Farringdon|Barbican':2,'Barbican|Moorgate':2,
+  'Moorgate|Liverpool Street':2,'Liverpool Street|Aldgate':3,'Aldgate|Tower Hill':3,
+  'Paddington|Kings Cross St. Pancras':14,'Paddington|Liverpool Street':18,
+  'Baker Street|Kings Cross St. Pancras':8,
+  // Bakerloo
+  'Elephant & Castle|Lambeth North':2,'Lambeth North|Waterloo':2,
+  'Waterloo|Embankment':2,'Embankment|Charing Cross':1,'Charing Cross|Piccadilly Circus':3,
+  'Piccadilly Circus|Oxford Circus':2,"Oxford Circus|Regent's Park":2,
+  "Regent's Park|Baker Street":2,'Baker Street|Marylebone':2,'Marylebone|Edgware Road':2,
+  'Edgware Road|Paddington':3,'Paddington|Oxford Circus':8,'Paddington|Waterloo':14,
+  'Paddington|Elephant & Castle':16,
+  // Elizabeth
+  'Paddington|Bond Street':4,'Bond Street|Tottenham Court Road':3,
+  'Tottenham Court Road|Farringdon':3,'Farringdon|Liverpool Street':3,
+  'Liverpool Street|Whitechapel':3,'Whitechapel|Canary Wharf':5,'Canary Wharf|Stratford':7,
+  'Paddington|Canary Wharf':19,'Paddington|Liverpool Street':12,'Paddington|Stratford':26,
+  'Liverpool Street|Canary Wharf':8,
+  // Waterloo & City
+  'Waterloo|Bank':4,
+  // DLR
+  'Bank|Shadwell':5,'Shadwell|Limehouse':3,'Limehouse|Westferry':2,
+  'Westferry|Poplar':2,'Poplar|Canary Wharf':3,'Bank|Canary Wharf':11,
+  // Overground
+  'Highbury & Islington|Canonbury':3,'Canonbury|Dalston Kingsland':3,
+  'Dalston Kingsland|Hackney Central':4,'Hackney Central|Stratford':8,
+  'Highbury & Islington|Stratford':18,
+};
+
+function getJourneyTime(from, to) {
+  return JOURNEY_TIMES[`${from}|${to}`] || JOURNEY_TIMES[`${to}|${from}`] || null;
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let puzzleData  = null; // set by todayPuzzle()
+let userRoute   = [];
+let map, mapLayers = [];
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────────
+function getStore() {
+  try { return JSON.parse(localStorage.getItem('tubepzl_v4') || 'null') || {streak:0,lastPlayed:null,history:[]}; }
+  catch(e) { return {streak:0,lastPlayed:null,history:[]}; }
+}
+function setStore(d) { try { localStorage.setItem('tubepzl_v4', JSON.stringify(d)); } catch(e) {} }
+
+// ─── ENDLESS DAILY PUZZLE GENERATOR ─────────────────────────────────────────
+// Uses the date as a seed to generate a unique puzzle every day, forever.
+// Same seed = same puzzle for all players on the same day (like Wordle).
+// Guaranteed to require at least 2 different lines.
+
+// Seeded pseudo-random number generator (mulberry32)
+function seededRng(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+// All valid puzzle stations — well-connected, spread across London
+const PUZZLE_STATIONS = [
+  'Angel','Baker Street','Bank','Bethnal Green','Bond Street','Borough',
+  'Brixton','Camden Town','Canary Wharf','Clapham Common','Clapham North',
+  "Earl's Court","Ealing Broadway",'Elephant & Castle','Embankment',
+  'Euston','Farringdon','Finsbury Park','Green Park','Hammersmith',
+  'Highbury & Islington','Holborn','Hyde Park Corner','Kennington',
+  'Kings Cross St. Pancras','Knightsbridge','Leicester Square',
+  'Liverpool Street','London Bridge','Mile End','Moorgate',
+  'Notting Hill Gate','Old Street','Oval','Oxford Circus','Paddington',
+  'Pimlico','Putney Bridge','Sloane Square','South Kensington',
+  'Southwark','Stockwell','Stratford','Tottenham Court Road',
+  'Tower Hill','Vauxhall','Victoria','Waterloo','Westminster',
+  "Wimbledon","Shepherd's Bush","Canary Wharf","Camden Town",
+];
+
+// Get the lines serving a station
+function linesForStation(stn) {
+  return Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l);
+}
+
+// Check two stations share NO common line (forces interchange)
+function requiresChange(a, b) {
+  const la = new Set(linesForStation(a));
+  const lb = new Set(linesForStation(b));
+  for (const l of la) { if (lb.has(l)) return false; }
+  return true;
+}
+
+// Estimate journey time between any two stations using JOURNEY_TIMES + distance fallback
+function estimateJourneyMins(from, to) {
+  const t = getJourneyTime(from, to);
+  if (t !== null) return t;
+  const fc = COORDS[from], tc = COORDS[to];
+  if (fc && tc) {
+    const d = Math.sqrt(Math.pow(fc[0]-tc[0],2)+Math.pow(fc[1]-tc[1],2))*111;
+    return Math.round(Math.max(5, d * 4));
+  }
+  return 15;
+}
+
+// Find the best interchange station between two stations
+function findBestInterchange(from, to) {
+  const fromLines = linesForStation(from);
+  const toLines   = linesForStation(to);
+  let best = null, bestTime = Infinity;
+
+  // Look for stations that are on both a fromLine and a toLine
+  for (const [line, stns] of Object.entries(LINE_STATIONS)) {
+    if (!fromLines.includes(line)) continue;
+    for (const stn of stns) {
+      const stnLines = linesForStation(stn);
+      const sharedWithTo = stnLines.filter(l => toLines.includes(l));
+      if (sharedWithTo.length === 0) continue;
+      const t = estimateJourneyMins(from, stn) + interchangeTime(stn) + estimateJourneyMins(stn, to);
+      if (t < bestTime) { bestTime = t; best = { stn, lineIn: line, lineOut: sharedWithTo[0], totalMins: t }; }
+    }
+  }
+  return best;
+}
+
+// Generate top 3 routes for a puzzle pair
+function generateRoutes(start, end) {
+  const routes = [];
+  const startLines = linesForStation(start);
+  const endLines   = linesForStation(end);
+
+  // Strategy: try every (startLine, interchange, endLine) combination
+  const seen = new Set();
+  for (const sl of startLines) {
+    for (const el of endLines) {
+      if (sl === el) continue; // already filtered by requiresChange
+      // Find interchanges between sl and el
+      for (const [,stns] of Object.entries(LINE_STATIONS)) {
+        for (const stn of stns) {
+          if (stn === start || stn === end) continue;
+          const stnLines = linesForStation(stn);
+          if (!stnLines.includes(sl) || !stnLines.includes(el)) continue;
+          const key = `${sl}|${stn}|${el}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+
+          const leg1 = estimateJourneyMins(start, stn);
+          const walk = interchangeTime(stn);
+          const leg2 = estimateJourneyMins(stn, end);
+          const total = leg1 + walk + leg2;
+
+          routes.push({
+            mins: total,
+            legs: [
+              {from: start, to: stn,  line: sl, mins: leg1},
+              {from: stn,   to: end,  line: el, mins: leg2},
+            ]
+          });
+        }
+      }
+    }
+  }
+
+  // Also try 2-interchange routes (3 legs) for completeness
+  if (routes.length < 3) {
+    for (const sl of startLines) {
+      for (const [midLine, midStns] of Object.entries(LINE_STATIONS)) {
+        if (midLine === sl) continue;
+        for (const mid of midStns.slice(0,5)) {
+          const stnLines = linesForStation(mid);
+          if (!stnLines.includes(sl) || !stnLines.some(l => endLines.includes(l))) continue;
+          const el = stnLines.find(l => endLines.includes(l));
+          if (!el || el === sl) continue;
+          const leg1 = estimateJourneyMins(start, mid);
+          const leg2 = estimateJourneyMins(mid, end);
+          const total = leg1 + interchangeTime(mid) + leg2;
+          routes.push({mins: total, legs:[{from:start,to:mid,line:sl,mins:leg1},{from:mid,to:end,line:el,mins:leg2}]});
+        }
+      }
+    }
+  }
+
+  // Sort and deduplicate by first interchange station
+  routes.sort((a,b) => a.mins - b.mins);
+  const dedupedRoutes = [];
+  const usedInterchanges = new Set();
+  for (const r of routes) {
+    const interchangeKey = r.legs.map(l=>l.line).join('>');
+    if (!usedInterchanges.has(interchangeKey)) {
+      usedInterchanges.add(interchangeKey);
+      dedupedRoutes.push(r);
+    }
+    if (dedupedRoutes.length >= 5) break;
+  }
+
+  // Ensure we always have at least 1 route
+  if (dedupedRoutes.length === 0) {
+    const inter = findBestInterchange(start, end);
+    if (inter) {
+      const l1 = estimateJourneyMins(start, inter.stn);
+      const l2 = estimateJourneyMins(inter.stn, end);
+      dedupedRoutes.push({mins: l1+interchangeTime(inter.stn)+l2, legs:[{from:start,to:inter.stn,line:inter.lineIn,mins:l1},{from:inter.stn,to:end,line:inter.lineOut,mins:l2}]});
+    }
+  }
+
+  return dedupedRoutes.map((r,i) => ({rank:i+1, mins:r.mins, legs:r.legs}));
+}
+
+// Generate today's puzzle deterministically from the date
+function todayPuzzle() {
+  const now   = new Date();
+  const seed  = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
+  const rng   = seededRng(seed);
+  const stns  = PUZZLE_STATIONS.filter(s => COORDS[s] && linesForStation(s).length > 0);
+
+  // Try up to 50 random pairs until we find one that requires a change
+  // and has a reasonable journey time (10-50 mins optimal)
+  let start, end, routes;
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const si = Math.floor(rng() * stns.length);
+    let   ei = Math.floor(rng() * stns.length);
+    if (ei === si) ei = (ei + 1) % stns.length;
+    start = stns[si]; end = stns[ei];
+    if (!requiresChange(start, end)) continue;
+    routes = generateRoutes(start, end);
+    if (routes.length > 0 && routes[0].mins >= 10 && routes[0].mins <= 55) break;
+  }
+
+  // Fallback to a known-good puzzle if generation fails
+  if (!routes || routes.length === 0) {
+    start = 'Bethnal Green'; end = 'Oval';
+    routes = [{rank:1,mins:24,legs:[{from:'Bethnal Green',to:'Bank',line:'Central',mins:9},{from:'Bank',to:'Oval',line:'Northern',mins:11}]}];
+  }
+
+  return { start, end, optimal: routes[0], routes,
+           date: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,
+           puzzleNum: Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1 };
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  renderStore();
+  puzzleData = todayPuzzle();
+  document.getElementById('start-stn').textContent = puzzleData.start;
+  document.getElementById('end-stn').textContent   = puzzleData.end;
+  // Show puzzle number like Wordle does
+  const sub = document.querySelector('.gsub');
+  if (sub) sub.textContent = `Daily London Underground Puzzle #${puzzleData.puzzleNum}`;
+  document.getElementById('loading-puzzle').style.display = 'none';
+  document.getElementById('game-body').style.display      = 'block';
+  buildSelectors();
+  initMap();
+}
+
+function buildSelectors() {
+  const ss = document.getElementById('sel-stn');
+  const allStations = [...new Set(Object.values(LINE_STATIONS).flat())].filter(s => COORDS[s]).sort();
+  allStations.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; ss.appendChild(o); });
+
+  populateAllLines();
+
+  ss.addEventListener('change', () => {
+    const stn   = ss.value;
+    const lines = Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l);
+    const sl    = document.getElementById('sel-line');
+    sl.innerHTML = '<option value="">Choose line...</option>';
+    (lines.length ? lines : Object.keys(LC)).forEach(l => {
+      const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o);
+    });
+  });
+}
+
+function populateAllLines() {
+  const sl = document.getElementById('sel-line');
+  sl.innerHTML = '<option value="">Choose line...</option>';
+  Object.keys(LC).forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o); });
+}
+
+// ─── MAP ──────────────────────────────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', {zoomControl:true,attributionControl:false,scrollWheelZoom:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
+  const sc = COORDS[puzzleData.start], ec = COORDS[puzzleData.end];
+  if (sc) addPinMarker(sc, puzzleData.start, '#00e87a', 'S');
+  if (ec) addPinMarker(ec, puzzleData.end,   '#FFD300', 'E');
+  if (sc && ec) map.fitBounds(L.latLngBounds([sc,ec]).pad(0.45));
+  else map.setView([51.505,-0.09],12);
+}
+
+function addPinMarker(coords, label, color, letter) {
+  const icon = L.divIcon({className:'',html:`<div style="width:28px;height:28px;background:${color};border-radius:50%;border:2.5px solid white;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#000;box-shadow:0 2px 8px rgba(0,0,0,0.6);">${letter}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
+  L.marker(coords,{icon}).bindTooltip(label,{permanent:false,direction:'top'}).addTo(map);
+}
+
+function updateMapRoute() {
+  mapLayers.forEach(l => map.removeLayer(l)); mapLayers = [];
+  const startCoord = COORDS[puzzleData.start];
+  if (startCoord) {
+    const lc = userRoute.length ? (LC[userRoute[0].line]||{bg:'#00e87a'}) : {bg:'#00e87a'};
+    const icon = L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.6);"></div>`,iconSize:[13,13],iconAnchor:[6,6]});
+    const sm = L.marker(startCoord,{icon}).bindTooltip(puzzleData.start+' (Start)',{direction:'top'});
+    sm.addTo(map); mapLayers.push(sm);
+  }
+  if (!userRoute.length) return;
+  userRoute.forEach((step,i) => {
+    const coord = COORDS[step.station]; if (!coord) return;
+    const lc = LC[step.line]||{bg:'#888',txt:'#fff'};
+    const prevCoord = i===0 ? COORDS[puzzleData.start] : COORDS[userRoute[i-1].station];
+    if (prevCoord) { const pl=L.polyline([prevCoord,coord],{color:lc.bg,weight:5,opacity:0.95,lineCap:'round',lineJoin:'round'}); pl.addTo(map); mapLayers.push(pl); }
+    const icon=L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.5);"></div>`,iconSize:[13,13],iconAnchor:[6,6]});
+    const mk=L.marker(coord,{icon}).bindTooltip(`${step.station} · ${step.line}`,{direction:'top'}); mk.addTo(map); mapLayers.push(mk);
+  });
+  const pts=[COORDS[puzzleData.start],COORDS[puzzleData.end],...userRoute.filter(s=>COORDS[s.station]).map(s=>COORDS[s.station])].filter(Boolean);
+  if (pts.length>1) map.fitBounds(L.latLngBounds(pts).pad(0.3));
+}
+
+// ─── ROUTE BUILDING ───────────────────────────────────────────────────────────
+function renderRoute() {
+  const c = document.getElementById('route-steps');
+  if (!userRoute.length) {
+    c.innerHTML = '<div class="empty-route">Add stops below to build your route</div>';
+    document.getElementById('sub-btn').disabled = true;
+    updateMapRoute(); return;
+  }
+  c.innerHTML = userRoute.map((s,i) => {
+    const lc = LC[s.line]||{bg:'#444',txt:'#fff'};
+    const conn = i>0 ? `<div class="step-conn" style="background:${lc.bg};"></div>` : '';
+    return `<div class="step">${conn}<div class="step-dot" style="background:${lc.bg};"></div><div class="step-txt"><div class="step-stn">${s.station}</div><span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${s.line}</span></div><button class="step-rm" onclick="removeStep(${i})">&#x2715;</button></div>`;
+  }).join('');
+  updateMapRoute();
+  const hasEnd = userRoute.some(s => s.station.toLowerCase() === puzzleData.end.toLowerCase());
+  document.getElementById('sub-btn').disabled = !(userRoute.length >= 1 && hasEnd);
+}
+
+function addStep() {
+  const stn  = document.getElementById('sel-stn').value;
+  const line = document.getElementById('sel-line').value;
+  if (!stn||!line) { alert('Please select both a station and a line.'); return; }
+  userRoute.push({station:stn,line});
+  document.getElementById('sel-stn').value = '';
+  populateAllLines();
+  renderRoute();
+}
+
+function removeStep(i) { userRoute.splice(i,1); renderRoute(); }
+
+// ─── SCORING ──────────────────────────────────────────────────────────────────
+// Travel time only — no waiting. Interchange walking time is added at each line change.
+function calcUserMins(route) {
+  const stations = [puzzleData.start, ...route.map(s => s.station)];
+  let total = 0;
+
+  for (let i = 0; i < stations.length - 1; i++) {
+    const from = stations[i], to = stations[i+1];
+    const t = getJourneyTime(from, to);
+    if (t !== null) {
+      total += t;
+    } else {
+      // Fallback: estimate from geographic distance at ~4 min/km underground
+      const fc=COORDS[from], tc=COORDS[to];
+      if (fc&&tc) {
+        const d=Math.sqrt(Math.pow(fc[0]-tc[0],2)+Math.pow(fc[1]-tc[1],2))*111;
+        total += Math.round(Math.max(2, d*4));
+      } else { total += 8; }
+    }
+  }
+
+  // Add interchange walking time at each line change
+  for (let i = 1; i < route.length; i++) {
+    if (route[i].line !== route[i-1].line) {
+      total += interchangeTime(route[i].station);
+    }
+  }
+
+  return total;
+}
+
+// Compare user route against TFL's top-5 routes.
+// Returns { rank, matched, userMins, optimalMins, top5 }
+function scoreRoute(route) {
+  const userMins    = calcUserMins(route);
+  const optimalMins = puzzleData.optimal.mins;
+  const top5        = puzzleData.routes;
+
+  // Find rank: within X% of each ranked route
+  let rank = null;
+  const TOLERANCE = 0.10; // within 10% of a ranked route counts as matching it
+
+  for (const r of top5) {
+    if (userMins <= r.mins * (1 + TOLERANCE)) {
+      rank = r.rank;
+      break;
+    }
+  }
+
+  return { rank, userMins, optimalMins, top5 };
+}
+
+function submitRoute() {
+  const btn = document.getElementById('sub-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring your route...';
+
+  const existing = document.getElementById('route-error');
+  if (existing) existing.remove();
+
+  const { rank, userMins, optimalMins, top5 } = scoreRoute(userRoute);
+
+  // Medal & messaging — scored by time difference vs optimal, not rank position
+  const diff = userMins - optimalMins;
+  let medal, color, title, subtitle;
+  if (diff <= 0)       { medal='🥇'; color='#FFD300'; title='Optimal route!';     subtitle='You matched the fastest possible route!'; }
+  else if (diff <= 2)  { medal='🥇'; color='#FFD300'; title='Perfect!';           subtitle=`Only ${diff} min off optimal — outstanding!`; }
+  else if (diff <= 5)  { medal='🥈'; color='#C0C0C0'; title='Nearly optimal!';    subtitle=`${diff} min off optimal — great route!`; }
+  else if (diff <= 10) { medal='🥉'; color='#CD7F32'; title='Good effort!';       subtitle=`${diff} min off optimal`; }
+  else if (diff <= 20) { medal='⭐'; color='#4a9eff'; title='Not bad!';           subtitle=`${diff} min off optimal — keep practising`; }
+  else                 { medal='🚇'; color='var(--muted)'; title='Room to improve'; subtitle=`${diff} min off optimal — try again tomorrow!`; }
+
+  // Also note if they matched a top-5 route specifically
+  const rankLabel = rank ? ` (rank #${rank} route)` : '';
+
+  const pct = Math.max(0, Math.min(100, Math.round((optimalMins / Math.max(userMins,1)) * 100)));
+
+  // Save to history
+  const data  = getStore();
+  const today = new Date().toDateString();
+  if (data.lastPlayed !== today) {
+    data.streak = (data.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? data.streak+1 : 1;
+    data.lastPlayed = today;
+  }
+  data.history.push({start:puzzleData.start,end:puzzleData.end,userMins,optimalMins,medal,rank,date:today});
+  setStore(data);
+
+  // Build optimal legs display
+  const optLegsHtml = puzzleData.optimal.legs.filter(l=>l.from&&l.mode!=='walking').map(l => {
+    const lc = LC[l.line]||{bg:'#888'};
+    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} &rarr; ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>&nbsp;${l.mins} min</div></div>`;
+  }).join('');
+
+  // Build top-5 display
+  const rankEmojis = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+  const top5Html = top5.map(r => {
+    const highlight = r.rank === rank;
+    const legSummary = r.legs.filter(l=>l.mode!=='walking').map(l=>`${l.line}`).join(' → ');
+    return `<div class="top5-row" style="${highlight?'background:#1a2a3a;border-radius:6px;padding:7px 8px;':''}">
+      <div class="top5-rank">${rankEmojis[r.rank-1]}</div>
+      <div style="flex:1;font-size:12px;color:${highlight?'var(--txt)':'var(--muted)'};">${legSummary}</div>
+      <div class="top5-mins">${r.mins} min</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('main-panel').style.display = 'none';
+  const rp = document.getElementById('result-panel');
+  rp.style.display = 'block';
+  rp.innerHTML = `
+    <div class="result-card">
+      <div class="result-medal">${medal}</div>
+      <div class="result-title" style="color:${color};">${title}</div>
+      <div class="result-sub">${puzzleData.start} &rarr; ${puzzleData.end}</div>
+      <div class="times-grid">
+        <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your time (min)</div></div>
+        <div class="time-box"><div class="time-val" style="color:${color};">${optimalMins}</div><div class="time-lbl">Optimal (min)</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:6px;">Efficiency vs optimal</div>
+      <div class="bar-wrap"><div class="bar-fill" id="score-bar" style="width:0%;background:${color};"></div></div>
+      <div class="pct-lbl">${pct}% &mdash; ${subtitle}${rankLabel}</div>
+      <div class="opt-legs">
+        <div class="opt-lbl">Optimal route (from TFL)</div>
+        ${optLegsHtml}
+      </div>
+      <div class="top5-section">
+        <div class="opt-lbl">Today's top 5 routes</div>
+        ${top5Html}
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">
+        Times are travel time only — no waiting included
+      </div>
+      <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} &middot; ${puzzleData.date}</div>
+      <button class="btn-share" id="share-btn" onclick="shareResult('${medal}', ${diff}, '${title}', ${pct})">
+        &#128279; Share my result
+      </button>
+      <button class="btn-reset" onclick="resetGame()">Back to stats</button>
+    </div>`;
+  setTimeout(() => { const b=document.getElementById('score-bar'); if(b) b.style.width=pct+'%'; }, 150);
+  renderStore();
+}
+
+function showError(msg) {
+  const el=document.createElement('div'); el.id='route-error';
+  el.className='error-banner'; el.style.marginTop='8px';
+  el.textContent='⚠ '+msg;
+  document.getElementById('sub-btn').insertAdjacentElement('afterend',el);
+  setTimeout(()=>el.remove(),6000);
+}
+
+function renderStore() {
+  const d = getStore();
+  document.getElementById('streak-disp').textContent = d.streak;
+  const h = document.getElementById('hist-list');
+  if (!d.history.length) { h.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>'; return; }
+  h.innerHTML = d.history.slice().reverse().slice(0,5).map(e =>
+    `<div class="hist-row"><div><div>${e.start} &rarr; ${e.end}</div><div class="hist-sub">${e.userMins} min &middot; optimal ${e.optimalMins} min &middot; ${e.rank ? 'rank #'+e.rank : 'outside top 5'} &middot; ${e.date}</div></div><div style="font-size:20px;">${e.medal}</div></div>`
+  ).join('');
+}
+
+function resetGame() {
+  document.getElementById('result-panel').style.display='none';
+  document.getElementById('result-panel').innerHTML='';
+  document.getElementById('main-panel').style.display='block';
+  const btn=document.getElementById('sub-btn'); btn.disabled=true; btn.innerHTML='Submit my route &nbsp;&#8594;';
+  userRoute=[]; renderRoute(); renderStore();
+  setTimeout(()=>map.invalidateSize(),100);
+}
+
+function shareResult(medal, diff, title, pct) {
+  const routeSummary = userRoute.map(s => s.line).join(' → ');
+  const rankLine = diff <= 0 ? 'Matched the optimal route!' : `${diff} min off optimal`;
+  const text = [
+    `🚇 Tubed #${puzzleData.puzzleNum}`,
+    `${puzzleData.start} → ${puzzleData.end}`,
+    `${medal} ${title}`,
+    rankLine,
+    `Efficiency: ${pct}%`,
+    `Play at tubed.netlify.app`
+  ].join('\n');
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('share-btn');
+      if (btn) { btn.textContent = '✓ Copied to clipboard!'; btn.classList.add('copied'); }
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  const btn = document.getElementById('share-btn');
+  if (btn) { btn.textContent = '✓ Copied!'; btn.classList.add('copied'); }
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
