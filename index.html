@@ -86,7 +86,7 @@ select option{background:#111827;}
 .puzzle-num{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
 
 /* HOW TO PLAY MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s;}
 .modal-overlay.open{opacity:1;}
 .modal{background:var(--surf);border:0.5px solid var(--brd);border-radius:16px;padding:24px 22px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform 0.2s;}
 .modal-overlay.open .modal{transform:translateY(0);}
