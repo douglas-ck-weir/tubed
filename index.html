@@ -876,9 +876,11 @@ function renderRoute() {
   document.getElementById('sub-btn').disabled = !(userRoute.length >= 1 && hasEnd);
 }
 
+function stationOnLine(station, line) {
+  return LINE_STATIONS[line] && LINE_STATIONS[line].includes(station);
+}
+
 function addStep() {
-  // Use confirmed selectedStation (set by clicking/keyboard from autocomplete)
-  // Fall back to typed value if it exactly matches a known station
   let stn = selectedStation;
   if (!stn) {
     const typed = document.getElementById('sel-stn').value.trim();
@@ -890,18 +892,56 @@ function addStep() {
     alert(!stn ? 'Please select a station from the list.' : 'Please choose a line.');
     return;
   }
+
+  // Validate the leg is actually possible on the chosen line
+  const fromStation = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length - 1].station;
+  const fromLine    = userRoute.length === 0 ? null             : userRoute[userRoute.length - 1].line;
+
+  // Check the destination station is served by the chosen line
+  if (!stationOnLine(stn, line)) {
+    showStepError(`${stn} is not on the ${line} line. Please choose a different line.`);
+    return;
+  }
+
+  // Check the departure station is served by the chosen line
+  if (!stationOnLine(fromStation, line)) {
+    showStepError(`You can't take the ${line} line from ${fromStation} — that line doesn't stop there.`);
+    return;
+  }
+
+  // Prevent adding the same station twice in a row
+  if (stn === fromStation) {
+    showStepError(`You're already at ${stn}!`);
+    return;
+  }
+
   userRoute.push({station:stn, line});
-  // Reset search
   document.getElementById('sel-stn').value = '';
   selectedStation = '';
   closeAutocomplete();
   populateAllLines();
   renderRoute();
-  // Return focus to station input for quick multi-stop entry
+  clearStepError();
   document.getElementById('sel-stn').focus();
 }
 
-function removeStep(i) { userRoute.splice(i,1); renderRoute(); }
+function showStepError(msg) {
+  let el = document.getElementById('step-error');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'step-error';
+    el.style.cssText = 'background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:10px 12px;font-size:13px;color:#f08080;margin-top:8px;line-height:1.5;touch-action:manipulation;';
+    document.querySelector('.add-area').appendChild(el);
+  }
+  el.textContent = '⚠ ' + msg;
+}
+
+function clearStepError() {
+  const el = document.getElementById('step-error');
+  if (el) el.remove();
+}
+
+function removeStep(i) { userRoute.splice(i,1); clearStepError(); renderRoute(); }
 
 // ─── SCORING ──────────────────────────────────────────────────────────────────
 // Travel time only — no waiting. Interchange walking time is added at each line change.
@@ -1080,7 +1120,7 @@ function shareResult(medal, diff, title, pct) {
     `${medal} ${title}`,
     rankLine,
     `Efficiency: ${pct}%`,
-    `Play at tubed.netlify.app`
+    `Play at douglas-ck-weir.github.io/tubed/`
   ].join('\n');
 
   if (navigator.clipboard) {
