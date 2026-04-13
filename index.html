@@ -84,6 +84,39 @@ select option{background:#111827;}
 .btn-share:hover{background:#1f3a1f;}
 .btn-share.copied{color:#86efac;}
 .puzzle-num{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
+
+/* HOW TO PLAY MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s;}
+.modal-overlay.open{opacity:1;}
+.modal{background:var(--surf);border:0.5px solid var(--brd);border-radius:16px;padding:24px 22px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform 0.2s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--txt);}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;line-height:1;border-radius:6px;}
+.modal-close:hover{color:var(--txt);}
+.how-step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
+.how-num{width:28px;height:28px;border-radius:50%;background:var(--navy);color:white;font-weight:500;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.how-txt{font-size:14px;line-height:1.6;color:var(--txt);}
+.how-txt strong{color:var(--yellow);}
+.how-divider{border:none;border-top:0.5px solid var(--brd);margin:18px 0;}
+.medal-row{display:flex;align-items:center;gap:12px;padding:6px 0;font-size:13px;color:var(--muted);}
+.medal-row span:first-child{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.btn-how{background:none;border:0.5px solid var(--brd);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;margin-left:auto;}
+.btn-how:hover{border-color:var(--txt);color:var(--txt);}
+.btn-got-it{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;margin-top:6px;transition:background 0.15s;}
+.btn-got-it:hover{background:#0047b3;}
+
+/* STATION SEARCH AUTOCOMPLETE */
+.search-wrap{position:relative;width:100%;}
+.search-input{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:11px 12px;font-size:14px;font-family:'DM Sans',sans-serif;width:100%;}
+.search-input:focus{outline:none;border-color:#4a6fa5;}
+.search-input::placeholder{color:var(--muted);}
+.autocomplete-list{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#111827;border:1px solid #2a3d5e;border-radius:8px;max-height:200px;overflow-y:auto;z-index:100;display:none;}
+.autocomplete-list.open{display:block;}
+.autocomplete-item{padding:10px 12px;font-size:14px;cursor:pointer;color:var(--txt);border-bottom:0.5px solid var(--brd);}
+.autocomplete-item:last-child{border-bottom:none;}
+.autocomplete-item:hover,.autocomplete-item.active{background:#1a2a3a;color:var(--yellow);}
+.autocomplete-item mark{background:none;color:var(--yellow);font-weight:500;}
 </style>
 </head>
 <body>
@@ -99,9 +132,54 @@ select option{background:#111827;}
       <div class="gtitle">Tubed</div>
       <div class="gsub">Daily London Underground Puzzle</div>
     </div>
-    <div class="streak-box">
-      <div class="streak-n" id="streak-disp">0</div>
-      <div class="streak-l">Day Streak</div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;margin-left:auto;">
+      <div class="streak-box" style="margin-left:0;">
+        <div class="streak-n" id="streak-disp">0</div>
+        <div class="streak-l">Day Streak</div>
+      </div>
+      <button class="btn-how" onclick="openModal()">&#63; How to play</button>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
+    <div class="modal">
+      <div class="modal-hdr">
+        <div class="modal-title">How to play</div>
+        <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+      </div>
+
+      <div class="how-step">
+        <div class="how-num">1</div>
+        <div class="how-txt">You are given a <strong>start station</strong> and a <strong>destination</strong> on the London Underground.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">2</div>
+        <div class="how-txt">Build your route by selecting <strong>stations and lines</strong> one stop at a time. You must change lines at least once — no single-line routes!</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">3</div>
+        <div class="how-txt">Your final stop must be the <strong>destination station</strong>. Then hit <strong>Submit my route</strong>.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-num">4</div>
+        <div class="how-txt">Your route is scored against the <strong>optimal journey time</strong>. The closer you are, the better your medal.</div>
+      </div>
+
+      <hr class="how-divider"/>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Scoring</div>
+      <div class="medal-row"><span>🥇</span><span>Within 2 minutes of optimal — perfect!</span></div>
+      <div class="medal-row"><span>🥈</span><span>Within 5 minutes of optimal</span></div>
+      <div class="medal-row"><span>🥉</span><span>Within 10 minutes of optimal</span></div>
+      <div class="medal-row"><span>⭐</span><span>Within 20 minutes of optimal</span></div>
+      <div class="medal-row"><span>🚇</span><span>More than 20 minutes off — keep practising!</span></div>
+
+      <hr class="how-divider"/>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
+        A new puzzle is available every day at midnight. Times are <strong style="color:var(--txt);">travel time only</strong> — no waiting or walking time is included. Everyone worldwide gets the same puzzle each day.
+      </div>
+
+      <button class="btn-got-it" onclick="closeModal()">Got it — let's play! 🚇</button>
     </div>
   </div>
 
@@ -133,7 +211,10 @@ select option{background:#111827;}
         <div class="add-area">
           <div class="add-label">Add a stop</div>
           <div class="step-form">
-            <select id="sel-stn"><option value="">Choose station...</option></select>
+            <div class="search-wrap">
+              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off" oninput="onStationInput()" onkeydown="onStationKey(event)"/>
+              <div class="autocomplete-list" id="autocomplete-list"></div>
+            </div>
             <select id="sel-line"><option value="">Choose line...</option></select>
           </div>
           <button class="btn-add" onclick="addStep()">
@@ -648,30 +729,97 @@ function init() {
   document.getElementById('game-body').style.display      = 'block';
   buildSelectors();
   initMap();
+  maybeShowWelcome();
 }
 
+// All stations sorted alphabetically, filtered to ones with coordinates
+const ALL_STATIONS_LIST = [...new Set(Object.values(LINE_STATIONS).flat())].filter(s => COORDS[s]).sort();
+
+let selectedStation = ''; // tracks the currently confirmed station selection
+let activeIdx = -1;       // keyboard navigation index
+
 function buildSelectors() {
-  const ss = document.getElementById('sel-stn');
-  const allStations = [...new Set(Object.values(LINE_STATIONS).flat())].filter(s => COORDS[s]).sort();
-  allStations.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; ss.appendChild(o); });
-
   populateAllLines();
-
-  ss.addEventListener('change', () => {
-    const stn   = ss.value;
-    const lines = Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l);
-    const sl    = document.getElementById('sel-line');
-    sl.innerHTML = '<option value="">Choose line...</option>';
-    (lines.length ? lines : Object.keys(LC)).forEach(l => {
-      const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o);
-    });
+  // Close autocomplete when clicking outside
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrap')) closeAutocomplete();
   });
 }
 
-function populateAllLines() {
+function onStationInput() {
+  const val = document.getElementById('sel-stn').value.trim();
+  selectedStation = ''; // clear confirmed selection when user types
+  updateLineSelector('');
+  if (val.length < 1) { closeAutocomplete(); return; }
+  const matches = ALL_STATIONS_LIST.filter(s => s.toLowerCase().includes(val.toLowerCase()));
+  renderAutocomplete(matches, val);
+}
+
+function renderAutocomplete(matches, query) {
+  const list = document.getElementById('autocomplete-list');
+  activeIdx = -1;
+  if (!matches.length) { list.innerHTML = '<div class="autocomplete-item" style="color:var(--muted);cursor:default;">No stations found</div>'; list.classList.add('open'); return; }
+  list.innerHTML = matches.slice(0, 8).map((s, i) => {
+    // Highlight matching part
+    const idx = s.toLowerCase().indexOf(query.toLowerCase());
+    const highlighted = idx >= 0
+      ? s.slice(0, idx) + '<mark>' + s.slice(idx, idx + query.length) + '</mark>' + s.slice(idx + query.length)
+      : s;
+    return `<div class="autocomplete-item" data-station="${s}" onmousedown="selectStation('${s.replace(/'/g,"\'")}')">${highlighted}</div>`;
+  }).join('');
+  list.classList.add('open');
+}
+
+function selectStation(stn) {
+  selectedStation = stn;
+  document.getElementById('sel-stn').value = stn;
+  closeAutocomplete();
+  updateLineSelector(stn);
+  // Focus the line selector for quick keyboard flow
+  document.getElementById('sel-line').focus();
+}
+
+function closeAutocomplete() {
+  document.getElementById('autocomplete-list').classList.remove('open');
+  activeIdx = -1;
+}
+
+function onStationKey(e) {
+  const list = document.getElementById('autocomplete-list');
+  const items = list.querySelectorAll('.autocomplete-item[data-station]');
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    activeIdx = Math.min(activeIdx + 1, items.length - 1);
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    activeIdx = Math.max(activeIdx - 1, 0);
+    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (activeIdx >= 0 && items[activeIdx]) {
+      selectStation(items[activeIdx].dataset.station);
+    } else if (items.length === 1) {
+      selectStation(items[0].dataset.station);
+    }
+  } else if (e.key === 'Escape') {
+    closeAutocomplete();
+  }
+}
+
+function updateLineSelector(stn) {
   const sl = document.getElementById('sel-line');
   sl.innerHTML = '<option value="">Choose line...</option>';
-  Object.keys(LC).forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o); });
+  const lines = stn
+    ? Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l)
+    : Object.keys(LC);
+  lines.forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o); });
+  // Auto-select if only one line serves this station
+  if (stn && lines.length === 1) sl.value = lines[0];
+}
+
+function populateAllLines() {
+  updateLineSelector('');
 }
 
 // ─── MAP ──────────────────────────────────────────────────────────────────────
@@ -731,13 +879,28 @@ function renderRoute() {
 }
 
 function addStep() {
-  const stn  = document.getElementById('sel-stn').value;
+  // Use confirmed selectedStation (set by clicking/keyboard from autocomplete)
+  // Fall back to typed value if it exactly matches a known station
+  let stn = selectedStation;
+  if (!stn) {
+    const typed = document.getElementById('sel-stn').value.trim();
+    const exact = ALL_STATIONS_LIST.find(s => s.toLowerCase() === typed.toLowerCase());
+    if (exact) stn = exact;
+  }
   const line = document.getElementById('sel-line').value;
-  if (!stn||!line) { alert('Please select both a station and a line.'); return; }
-  userRoute.push({station:stn,line});
+  if (!stn || !line) {
+    alert(!stn ? 'Please select a station from the list.' : 'Please choose a line.');
+    return;
+  }
+  userRoute.push({station:stn, line});
+  // Reset search
   document.getElementById('sel-stn').value = '';
+  selectedStation = '';
+  closeAutocomplete();
   populateAllLines();
   renderRoute();
+  // Return focus to station input for quick multi-stop entry
+  document.getElementById('sel-stn').focus();
 }
 
 function removeStep(i) { userRoute.splice(i,1); renderRoute(); }
@@ -940,6 +1103,30 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
   const btn = document.getElementById('share-btn');
   if (btn) { btn.textContent = '✓ Copied!'; btn.classList.add('copied'); }
+}
+
+function openModal() {
+  const m = document.getElementById('modal-overlay');
+  m.style.display = 'flex';
+  requestAnimationFrame(() => m.classList.add('open'));
+}
+
+function closeModal() {
+  const m = document.getElementById('modal-overlay');
+  m.classList.remove('open');
+  setTimeout(() => { m.style.display = 'none'; }, 200);
+}
+
+function closeModalOnBg(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// Show modal automatically for first-time visitors
+function maybeShowWelcome() {
+  if (!localStorage.getItem('tubed_played_before')) {
+    setTimeout(openModal, 600);
+    localStorage.setItem('tubed_played_before', '1');
+  }
 }
 
 window.addEventListener('load', init);
