@@ -190,11 +190,6 @@ select option{background:#111827;}
     </div>
 
     <div id="game-body" style="display:none;">
-      <div class="note-bar">
-        Journey times are travel time only — no waiting time is included.<br>
-        All players are scored against the same TFL-sourced optimal route.
-      </div>
-
       <div class="sec-lbl">Route map</div>
       <div id="map"></div>
 
@@ -820,7 +815,7 @@ function populateAllLines() {
 // ─── MAP ──────────────────────────────────────────────────────────────────────
 function initMap() {
   map = L.map('map', {zoomControl:true,attributionControl:false,scrollWheelZoom:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
   const sc = COORDS[puzzleData.start], ec = COORDS[puzzleData.end];
   if (sc) addPinMarker(sc, puzzleData.start, '#00e87a', 'S');
   if (ec) addPinMarker(ec, puzzleData.end,   '#FFD300', 'E');
@@ -1165,7 +1160,8 @@ function maybeShowWelcome() {
 }
 
 window.addEventListener('load', init);
+document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
-  <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:#4a5a6a;line-height:1.8;">Powered by TfL Open Data &middot; Not affiliated with Transport for London<br>&copy; Tubed 2024</div>
+  <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:#4a5a6a;line-height:1.8;">Powered by TfL Open Data &middot; Not affiliated with Transport for London<br>&copy; Tubed <span id="yr"></span></div>
 </body>
 </html>
