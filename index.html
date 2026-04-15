@@ -700,7 +700,17 @@ function todayPuzzle() {
     routes = [{rank:1,mins:24,legs:[{from:'Bethnal Green',to:'Bank',line:'Central',mins:9},{from:'Bank',to:'Oval',line:'Northern',mins:11}]}];
   }
 
-  return { start, end, optimal: routes[0], routes,
+  // Recalculate all route times using the exact same formula as user scoring.
+  // This ensures no player can ever "beat" the optimal due to formula mismatch.
+  const recalculated = routes.map((r, i) => {
+    const recalcMins = calcRouteMins(start, r.legs.map(l => ({station: l.to, line: l.line})));
+    return { ...r, rank: i+1, mins: recalcMins };
+  });
+  // Re-sort after recalculation in case times shifted
+  recalculated.sort((a,b) => a.mins - b.mins);
+  recalculated.forEach((r,i) => r.rank = i+1);
+
+  return { start, end, optimal: recalculated[0], routes: recalculated,
            date: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,
            puzzleNum: Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1 };
 }
@@ -936,9 +946,12 @@ function clearStepError() {
 function removeStep(i) { userRoute.splice(i,1); clearStepError(); renderRoute(); }
 
 // ─── SCORING ──────────────────────────────────────────────────────────────────
-// Travel time only — no waiting. Interchange walking time is added at each line change.
-function calcUserMins(route) {
-  const stations = [puzzleData.start, ...route.map(s => s.station)];
+// Single shared function used for BOTH user routes and optimal route calculation.
+// This guarantees they are always scored on identical terms.
+// Input: array of {station, line} objects + the start station string
+function calcRouteMins(startStation, route) {
+  const stations = [startStation, ...route.map(s => s.station || s.to)];
+  const lines    = route.map(s => s.line);
   let total = 0;
 
   for (let i = 0; i < stations.length - 1; i++) {
@@ -947,7 +960,6 @@ function calcUserMins(route) {
     if (t !== null) {
       total += t;
     } else {
-      // Fallback: estimate from geographic distance at ~4 min/km underground
       const fc=COORDS[from], tc=COORDS[to];
       if (fc&&tc) {
         const d=Math.sqrt(Math.pow(fc[0]-tc[0],2)+Math.pow(fc[1]-tc[1],2))*111;
@@ -957,13 +969,18 @@ function calcUserMins(route) {
   }
 
   // Add interchange walking time at each line change
-  for (let i = 1; i < route.length; i++) {
-    if (route[i].line !== route[i-1].line) {
-      total += interchangeTime(route[i].station);
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i] !== lines[i-1]) {
+      total += interchangeTime(stations[i]);
     }
   }
 
   return total;
+}
+
+// Wrapper for user route (uses puzzleData.start as start station)
+function calcUserMins(route) {
+  return calcRouteMins(puzzleData.start, route);
 }
 
 // Compare user route against TFL's top-5 routes.
