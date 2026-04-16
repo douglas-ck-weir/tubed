@@ -393,6 +393,27 @@ const COORDS = {
   'Fulham Broadway':      [51.4802,-0.1936],
   'Barons Court':         [51.4901,-0.2138],
   'Bayswater':            [51.5121,-0.1877],
+  'Acton Town':           [51.5028,-0.2801],
+  'East Acton':           [51.5167,-0.2350],
+  'North Acton':          [51.5236,-0.2627],
+  'South Acton':          [51.5028,-0.2801],
+  'Ruislip':              [51.5713,-0.4194],
+  'Ruislip Manor':        [51.5680,-0.4127],
+  'South Ruislip':        [51.5541,-0.3988],
+  'West Ruislip':         [51.5713,-0.4352],
+  'Rayners Lane':         [51.5753,-0.3713],
+  'Eastcote':             [51.5764,-0.3957],
+  'Uxbridge':             [51.5463,-0.4783],
+  'Hillingdon':           [51.5529,-0.4495],
+  'Ickenham':             [51.5615,-0.4410],
+  'Harrow on the Hill':   [51.5792,-0.3365],
+  'North Harrow':         [51.5920,-0.3610],
+  'Harrow & Wealdstone':  [51.5925,-0.3351],
+  'Wembley Central':      [51.5521,-0.2966],
+  'Northwick Park':       [51.5785,-0.3241],
+  'Kenton':               [51.5817,-0.3175],
+  'South Kenton':         [51.5706,-0.3082],
+  'North Wembley':        [51.5628,-0.3041],
 };
 
 // ─── STATION → LINES LOOKUP ───────────────────────────────────────────────────
@@ -401,11 +422,11 @@ const LINE_STATIONS = {
   'Northern':           ['Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Warren Street','Tottenham Court Road','Leicester Square','Embankment','Waterloo','Stockwell','Brixton','Camden Town','Highbury & Islington','Charing Cross','Goodge Street'],
   'Victoria':           ['Brixton','Stockwell','Vauxhall','Pimlico','Victoria',"St. James's Park",'Green Park','Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras','Highbury & Islington','Finsbury Park'],
   'Jubilee':            ['Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Stratford','Green Park','Bond Street','Baker Street','Finchley Road','Wembley Park'],
-  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Holborn','Kings Cross St. Pancras','Finsbury Park'],
-  'District':           ['Wimbledon','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Hammersmith','Ealing Broadway'],
+  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Holborn','Kings Cross St. Pancras','Finsbury Park','Acton Town','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','West Ruislip','South Ruislip'],
+  'District':           ['Wimbledon','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Hammersmith','Ealing Broadway','Acton Town','Kensington (Olympia)'],
   'Circle':             ['Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater'],
-  'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington'],
-  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras','Baker Street','Marylebone','Paddington','Hammersmith'],
+  'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington','Harrow & Wealdstone','Kenton','South Kenton','North Wembley','Wembley Central','Stonebridge Park','Harlesden','Willesden Junction','Kensal Green','Queens Park'],
+  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras','Baker Street','Marylebone','Paddington','Hammersmith','Harrow on the Hill','North Harrow','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','Northwick Park','Kenton','Preston Road','Wembley Park'],
   'Hammersmith & City': ['Hammersmith',"Shepherd's Bush Market",'Goldhawk Road','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel','Mile End','West Ham'],
   'Elizabeth':          ['Paddington','Bond Street','Tottenham Court Road','Farringdon','Liverpool Street','Whitechapel','Canary Wharf','Stratford'],
   'Waterloo & City':    ['Waterloo','Bank'],
@@ -768,6 +789,10 @@ function renderAutocomplete(matches, query) {
     return `<div class="autocomplete-item" data-station="${s}" onmousedown="selectStation('${s.replace(/'/g,"\'")}')">${highlighted}</div>`;
   }).join('');
   list.classList.add('open');
+}
+
+function selectFromList(el) {
+  selectStation(el.dataset.station);
 }
 
 function selectStation(stn) {
