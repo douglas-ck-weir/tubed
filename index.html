@@ -761,10 +761,25 @@ let activeIdx = -1;       // keyboard navigation index
 
 function buildSelectors() {
   populateAllLines();
-  // Close autocomplete when clicking outside
+
+  // Event delegation — one listener on the list handles all station taps
+  // This avoids ANY inline handlers and works perfectly with apostrophes on mobile
+  const list = document.getElementById('autocomplete-list');
+  list.addEventListener('mousedown', handleAutocompleteSelect);
+  list.addEventListener('touchend', handleAutocompleteSelect);
+
+  // Close autocomplete when tapping outside
   document.addEventListener('click', e => {
     if (!e.target.closest('.search-wrap')) closeAutocomplete();
   });
+}
+
+function handleAutocompleteSelect(e) {
+  e.preventDefault(); // prevent input blur before selection
+  const item = e.target.closest('[data-station]');
+  if (item && item.dataset.station) {
+    selectStation(item.dataset.station);
+  }
 }
 
 function onStationInput() {
@@ -786,7 +801,7 @@ function renderAutocomplete(matches, query) {
     const highlighted = idx >= 0
       ? s.slice(0, idx) + '<mark>' + s.slice(idx, idx + query.length) + '</mark>' + s.slice(idx + query.length)
       : s;
-    return `<div class="autocomplete-item" data-station="${s}" onmousedown="selectStation('${s.replace(/'/g,"\'")}')">${highlighted}</div>`;
+    return `<div class="autocomplete-item" data-station="${s}">${highlighted}</div>`;
   }).join('');
   list.classList.add('open');
 }
