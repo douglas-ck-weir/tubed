@@ -202,7 +202,7 @@ select option{background:#111827;}
           <div class="add-label">Add a stop</div>
           <div class="step-form">
             <div class="search-wrap">
-              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off" oninput="onStationInput()" onkeydown="onStationKey(event)"/>
+              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off" oninput="onStationInput()" onkeydown="onStationKey(event)" onblur="closeAutocompleteDelayed()"/>
               <div class="autocomplete-list" id="autocomplete-list"></div>
             </div>
             <select id="sel-line"><option value="">Choose line...</option></select>
@@ -762,24 +762,36 @@ let activeIdx = -1;       // keyboard navigation index
 function buildSelectors() {
   populateAllLines();
 
-  // Event delegation — one listener on the list handles all station taps
-  // This avoids ANY inline handlers and works perfectly with apostrophes on mobile
   const list = document.getElementById('autocomplete-list');
-  list.addEventListener('mousedown', handleAutocompleteSelect);
-  list.addEventListener('touchend', handleAutocompleteSelect);
 
-  // Close autocomplete when tapping outside
+  // Handle tap on mobile (touchend) and click on desktop (mousedown)
+  // Both read from data-station — no apostrophe issues
+  list.addEventListener('touchend', e => {
+    const item = e.target.closest('[data-station]');
+    if (item && item.dataset.station) {
+      e.preventDefault();
+      selectStation(item.dataset.station);
+    }
+  });
+
+  list.addEventListener('mousedown', e => {
+    const item = e.target.closest('[data-station]');
+    if (item && item.dataset.station) {
+      e.preventDefault();
+      selectStation(item.dataset.station);
+    }
+  });
+
+  // Close when tapping outside the search area
   document.addEventListener('click', e => {
     if (!e.target.closest('.search-wrap')) closeAutocomplete();
   });
 }
 
 function handleAutocompleteSelect(e) {
-  e.preventDefault(); // prevent input blur before selection
+  e.preventDefault();
   const item = e.target.closest('[data-station]');
-  if (item && item.dataset.station) {
-    selectStation(item.dataset.station);
-  }
+  if (item && item.dataset.station) selectStation(item.dataset.station);
 }
 
 function onStationInput() {
@@ -822,6 +834,12 @@ function selectStation(stn) {
 function closeAutocomplete() {
   document.getElementById('autocomplete-list').classList.remove('open');
   activeIdx = -1;
+}
+
+function closeAutocompleteDelayed() {
+  // Small delay gives touchend time to fire and register the selection
+  // before the list disappears — fixes iOS and Android tap issues
+  setTimeout(closeAutocomplete, 200);
 }
 
 function onStationKey(e) {
