@@ -393,6 +393,12 @@ const COORDS = {
   'Fulham Broadway':      [51.4802,-0.1936],
   'Barons Court':         [51.4901,-0.2138],
   'Bayswater':            [51.5121,-0.1877],
+  'Balham':               [51.4437,-0.1527],
+  'Covent Garden':         [51.5129,-0.1245],
+  'Kentish Town':          [51.5503,-0.1426],
+  "St. John's Wood":       [51.5352,-0.1738],
+  'Swiss Cottage':         [51.5432,-0.1738],
+  'Tufnell Park':          [51.5567,-0.1376],
   'Acton Town':           [51.5028,-0.2801],
   'East Acton':           [51.5167,-0.2350],
   'North Acton':          [51.5236,-0.2627],
@@ -419,10 +425,10 @@ const COORDS = {
 // ─── STATION → LINES LOOKUP ───────────────────────────────────────────────────
 const LINE_STATIONS = {
   'Central':            ['Bethnal Green','Mile End','Stratford','Liverpool Street','Bank',"St. Paul's",'Holborn','Tottenham Court Road','Oxford Circus','Bond Street','Notting Hill Gate',"Shepherd's Bush",'White City','Ealing Broadway'],
-  'Northern':           ['Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Warren Street','Tottenham Court Road','Leicester Square','Embankment','Waterloo','Stockwell','Brixton','Camden Town','Highbury & Islington','Charing Cross','Goodge Street'],
+  'Northern':           ['Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Warren Street','Tottenham Court Road','Leicester Square','Embankment','Waterloo','Kennington','Stockwell','Clapham North','Clapham Common','Clapham South','Balham','Tooting Bec','Tooting Broadway','Brixton','Camden Town','Mornington Crescent','Kentish Town','Tufnell Park','Archway','Highgate','Highbury & Islington','Charing Cross','Goodge Street'],
   'Victoria':           ['Brixton','Stockwell','Vauxhall','Pimlico','Victoria',"St. James's Park",'Green Park','Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras','Highbury & Islington','Finsbury Park'],
-  'Jubilee':            ['Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Stratford','Green Park','Bond Street','Baker Street','Finchley Road','Wembley Park'],
-  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Holborn','Kings Cross St. Pancras','Finsbury Park','Acton Town','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','West Ruislip','South Ruislip'],
+  'Jubilee':            ['Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford','Green Park','Bond Street','Baker Street','Swiss Cottage',"St. John's Wood",'Finchley Road','West Hampstead','Kilburn','Willesden Green','Stanmore','Queensbury','Kingsbury','Neasden','Dollis Hill','Wembley Park'],
+  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square','Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park','Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate','Oakwood','Cockfosters','Acton Town','South Ealing','Northfields','Boston Manor','Osterley','Hounslow East','Hounslow Central','Hounslow West','Hatton Cross','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','West Ruislip','South Ruislip'],
   'District':           ['Wimbledon','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Hammersmith','Ealing Broadway','Acton Town','Kensington (Olympia)'],
   'Circle':             ['Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater'],
   'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington','Harrow & Wealdstone','Kenton','South Kenton','North Wembley','Wembley Central','Stonebridge Park','Harlesden','Willesden Junction','Kensal Green','Queens Park'],
@@ -840,7 +846,7 @@ function seededRng(seed) {
 const PUZZLE_STATIONS = [
   'Angel','Baker Street','Bank','Bethnal Green','Bond Street','Borough',
   'Brixton','Camden Town','Canary Wharf','Clapham Common','Clapham North',
-  "Earl's Court","Ealing Broadway",'Elephant & Castle','Embankment',
+  "Earl's Court",'Ealing Broadway','Elephant & Castle','Embankment',
   'Euston','Farringdon','Finsbury Park','Green Park','Hammersmith',
   'Highbury & Islington','Holborn','Hyde Park Corner','Kennington',
   'Kings Cross St. Pancras','Knightsbridge','Leicester Square',
@@ -849,7 +855,11 @@ const PUZZLE_STATIONS = [
   'Pimlico','Putney Bridge','Sloane Square','South Kensington',
   'Southwark','Stockwell','Stratford','Tottenham Court Road',
   'Tower Hill','Vauxhall','Victoria','Waterloo','Westminster',
-  "Wimbledon","Shepherd's Bush","Canary Wharf","Camden Town",
+  "Wimbledon","Shepherd's Bush",
+  'Balham','Bermondsey','Canada Water','Clapham South',
+  'Covent Garden','Charing Cross','East Putney','Fulham Broadway',
+  'Kentish Town','Parsons Green','Piccadilly Circus',
+  "St. John's Wood",'Swiss Cottage','Tufnell Park',
 ];
 
 // Get the lines serving a station
