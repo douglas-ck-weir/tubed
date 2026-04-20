@@ -237,11 +237,16 @@ select option{background:#111827;}
 const LC = {
   'Central':            {bg:'#E32017',txt:'#fff'},
   'Northern':           {bg:'#000000',txt:'#fff'},
+  'Northern_HB':        {bg:'#000000',txt:'#fff'},
+  'Northern_MHE':       {bg:'#000000',txt:'#fff'},
+  'Northern_CC':        {bg:'#000000',txt:'#fff'},
   'Jubilee':            {bg:'#A0A5AE',txt:'#fff'},
   'Victoria':           {bg:'#0098D4',txt:'#fff'},
   'Bakerloo':           {bg:'#B36305',txt:'#fff'},
   'Piccadilly':         {bg:'#003688',txt:'#fff'},
   'District':           {bg:'#00782A',txt:'#fff'},
+  'District_Rich':      {bg:'#00782A',txt:'#fff'},
+  'District_Eal':       {bg:'#00782A',txt:'#fff'},
   'Circle':             {bg:'#FFD300',txt:'#000'},
   'Hammersmith & City': {bg:'#F3A9BB',txt:'#000'},
   'Metropolitan':       {bg:'#9B0056',txt:'#fff'},
@@ -399,6 +404,18 @@ const COORDS = {
   "St. John's Wood":       [51.5352,-0.1738],
   'Swiss Cottage':         [51.5432,-0.1738],
   'Tufnell Park':          [51.5567,-0.1376],
+  "Earl's Court":          [51.4915,-0.1937],
+  'Lancaster Gate':        [51.5121,-0.1757],
+  "Regent's Park":         [51.5234,-0.1466],
+  "St. James's Park":      [51.4994,-0.1335],
+  "St. Paul's":            [51.5146,-0.0973],
+  'Archway':               [51.5654,-0.1353],
+  'Highgate':              [51.5777,-0.1463],
+  'Mornington Crescent':   [51.5344,-0.1388],
+  "Shepherd's Bush Market":[51.5048,-0.2264],
+  "St. John's Wood":       [51.5352,-0.1738],
+  'Tooting Bec':           [51.4352,-0.1478],
+  'Tooting Broadway':      [51.4275,-0.1680],
   'Acton Town':           [51.5028,-0.2801],
   'East Acton':           [51.5167,-0.2350],
   'North Acton':          [51.5236,-0.2627],
@@ -424,19 +441,29 @@ const COORDS = {
 
 // ─── STATION → LINES LOOKUP ───────────────────────────────────────────────────
 const LINE_STATIONS = {
-  'Central':            ['Bethnal Green','Mile End','Stratford','Liverpool Street','Bank',"St. Paul's",'Holborn','Tottenham Court Road','Oxford Circus','Bond Street','Notting Hill Gate',"Shepherd's Bush",'White City','Ealing Broadway'],
-  'Northern':           ['Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Warren Street','Tottenham Court Road','Leicester Square','Embankment','Waterloo','Kennington','Stockwell','Clapham North','Clapham Common','Clapham South','Balham','Tooting Bec','Tooting Broadway','Brixton','Camden Town','Mornington Crescent','Kentish Town','Tufnell Park','Archway','Highgate','Highbury & Islington','Charing Cross','Goodge Street'],
+  'Central':            ['Ealing Broadway','West Acton','North Acton','East Acton','White City',
+                       "Shepherd's Bush",'Holland Park','Notting Hill Gate','Queensway',
+                       'Lancaster Gate','Marble Arch','Bond Street','Oxford Circus',
+                       'Tottenham Court Road','Holborn','Chancery Lane',"St. Paul's",
+                       'Bank','Liverpool Street','Bethnal Green','Mile End','Stratford'],
+  // Northern line — three separate sequences for each branch
+  'Northern':           ['Morden','South Wimbledon','Colliers Wood','Tooting Broadway','Tooting Bec','Balham','Clapham South','Clapham Common','Clapham North','Stockwell','Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Mornington Crescent','Camden Town','Chalk Farm','Belsize Park','Hampstead','Golders Green','Brent Cross','Hendon Central','Colindale','Burnt Oak','Edgware'],
+  'Northern_HB':        ['High Barnet','Totteridge & Whetstone','Woodside Park','West Finchley','Finchley Central','East Finchley','Highgate','Archway','Tufnell Park','Kentish Town','Camden Town'],
+  'Northern_MHE':       ['Mill Hill East','Finchley Central'],
+  'Northern_CC':        ['Warren Street','Goodge Street','Tottenham Court Road','Leicester Square','Charing Cross','Embankment','Waterloo','Kennington'],
   'Victoria':           ['Brixton','Stockwell','Vauxhall','Pimlico','Victoria',"St. James's Park",'Green Park','Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras','Highbury & Islington','Finsbury Park'],
-  'Jubilee':            ['Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford','Green Park','Bond Street','Baker Street','Swiss Cottage',"St. John's Wood",'Finchley Road','West Hampstead','Kilburn','Willesden Green','Stanmore','Queensbury','Kingsbury','Neasden','Dollis Hill','Wembley Park'],
+  'Jubilee':            ['Stanmore','Queensbury','Kingsbury','Wembley Park','Neasden','Dollis Hill','Willesden Green','Kilburn','West Hampstead','Finchley Road',"St. John's Wood",'Swiss Cottage','Baker Street','Bond Street','Green Park','Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford'],
   'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square','Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park','Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate','Oakwood','Cockfosters','Acton Town','South Ealing','Northfields','Boston Manor','Osterley','Hounslow East','Hounslow Central','Hounslow West','Hatton Cross','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','West Ruislip','South Ruislip'],
-  'District':           ['Wimbledon','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Hammersmith','Paddington','Bayswater','Notting Hill Gate','Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green','Stamford Brook','Ravenscourt Park','Kensington (Olympia)'],
-  'Circle':             ['Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater'],
+  'District':           ['Wimbledon','Wimbledon Park','Southfields','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','Plaistow','Upton Park','East Ham','Barking'],
+  'District_Rich':      ['Richmond','Gunnersbury','Kew Gardens','Turnham Green','Stamford Brook','Ravenscourt Park','Hammersmith','Barons Court',"Earl's Court"],
+  'District_Eal':       ['Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green','Stamford Brook','Ravenscourt Park','Hammersmith'],
+  'Circle':             ['Hammersmith','Goldhawk Road',"Shepherd's Bush Market",'Wood Lane','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater','Paddington'],
   'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington','Harrow & Wealdstone','Kenton','South Kenton','North Wembley','Wembley Central','Stonebridge Park','Harlesden','Willesden Junction','Kensal Green','Queens Park'],
-  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Kings Cross St. Pancras','Baker Street','Marylebone','Paddington','Hammersmith','Harrow on the Hill','North Harrow','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','Northwick Park','Kenton','Preston Road','Wembley Park'],
+  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras','Euston Square','Great Portland Street','Baker Street','Marylebone','Edgware Road','Paddington','Royal Oak','Westbourne Park','Ladbroke Grove','Latimer Road','Goldhawk Road',"Shepherd's Bush Market",'Hammersmith','Wembley Park','Preston Road','Northwick Park','Harrow on the Hill','North Harrow','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','Kenton'],
   'Hammersmith & City': ['Hammersmith',"Shepherd's Bush Market",'Goldhawk Road','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Kings Cross St. Pancras','Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel','Mile End','West Ham'],
-  'Elizabeth':          ['Paddington','Bond Street','Tottenham Court Road','Liverpool Street','Whitechapel','Canary Wharf','Stratford'],
+  'Elizabeth':          ['Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver','West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing','Acton Main Line','Paddington','Bond Street','Tottenham Court Road','Farringdon','Liverpool Street','Whitechapel','Canary Wharf','Custom House','Maryland','Forest Gate','Manor Park','Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford','Gidea Park','Harold Wood','Brentwood','Shenfield'],
   'Waterloo & City':    ['Waterloo','Bank'],
-  'Overground':         ['Highbury & Islington','Canonbury','Dalston Kingsland','Hackney Central','Stratford','Clapham Junction'],
+  'Overground':         ['Highbury & Islington','Canonbury','Dalston Kingsland','Hackney Central','Stratford'],
   'DLR':                ['Bank','Shadwell','Limehouse','Westferry','Poplar','Canary Wharf','Heron Quays','South Quay','Mudchute','Island Gardens','Cutty Sark','Greenwich'],
 };
 
@@ -729,6 +756,66 @@ const JOURNEY_TIMES = {
   'Maidenhead|Twyford':6,
   'Twyford|Reading':8,
   'Waterloo|Bank':4,
+  // Gap-fill from TfL Timetable API
+  'Lewisham|Elverson Road':1,
+  'Elverson Road|Deptford Bridge':2,
+  'Deptford Bridge|Cutty Sark':1,
+  'Cutty Sark|Island Gardens':2,
+  'Island Gardens|Mudchute':1,
+  'Mudchute|Crossharbour':2,
+  'Crossharbour|South Quay':1,
+  'South Quay|Heron Quays':2,
+  'Heron Quays|West India Quay':1,
+  'West India Quay|Westferry':1,
+  'Westferry|Limehouse':2,
+  'Limehouse|Shadwell':2,
+  'Earl\'s Court|High Street Kensington':2,
+  'High Street Kensington|Notting Hill Gate':2,
+  'Baker Street|Oxford Circus':2,
+  'Waterloo|Elephant & Castle':4,
+  'Royal Oak|Edgware Road':4,
+  'Gloucester Road|High Street Kensington':4,
+
+  // Additional adjacent pairs
+  'Oxford Circus|Regent\'s Park':2,
+  'White City|Shepherd\'s Bush':1,
+  'Shepherd\'s Bush|Holland Park':1,
+  'Westminster|St. James\'s Park':2,
+  'Victoria|St. James\'s Park':1,
+  'Wimbledon|East Putney':4,
+  'West Brompton|Earl\'s Court':3,
+  'Barons Court|Earl\'s Court':2,
+  'Bank|Shadwell':5,
+  'Westferry|Poplar':2,
+  'Poplar|Canary Wharf':3,
+  'Canary Wharf|Heron Quays':1,
+  'South Quay|Mudchute':1,
+  'Cutty Sark|Greenwich':3,
+  'Canary Wharf|Stratford':7,
+  'Canning Town|West Ham':3,
+  'West Ham|Stratford':4,
+  'Swiss Cottage|St. John\'s Wood':1,
+  'Baker Street|Swiss Cottage':3,
+  'West Hampstead|Finchley Road':2,
+  'Moorgate|Farringdon':2,
+  'Latimer Road|Goldhawk Road':2,
+  'Goldhawk Road|Shepherd\'s Bush Market':2,
+  'Shepherd\'s Bush Market|Hammersmith':1,
+  'Hammersmith|Wembley Park':20,
+  'Kenton|Preston Road':2,
+  'Uxbridge|Northwick Park':5,
+  'Northwick Park|Kenton':3,
+  'Highbury & Islington|Canonbury':3,
+  'Canonbury|Dalston Kingsland':3,
+  'Dalston Kingsland|Hackney Central':4,
+  'Hackney Central|Stratford':8,
+
+  // District Richmond branch + Jubilee additions
+  'Richmond|Gunnersbury':3,
+  'Gunnersbury|Kew Gardens':2,
+  'Kilburn|West Hampstead':2,
+  'Finchley Road|St. John\'s Wood':2,
+
 };
 // Total: 286 pairs
 
@@ -764,7 +851,10 @@ function seededRng(seed) {
 }
 
 // All valid puzzle stations — well-connected, spread across London
+// Sorted alphabetically within each zone group for RNG stability.
+// Never remove or reorder existing entries — only append to the end.
 const PUZZLE_STATIONS = [
+  // Zone 1 — original pool
   'Angel','Baker Street','Bank','Bethnal Green','Bond Street','Borough',
   'Brixton','Camden Town','Canary Wharf','Clapham Common','Clapham North',
   "Earl's Court",'Ealing Broadway','Elephant & Castle','Embankment',
@@ -777,13 +867,37 @@ const PUZZLE_STATIONS = [
   'Southwark','Stockwell','Stratford','Tottenham Court Road',
   'Tower Hill','Vauxhall','Victoria','Waterloo','Westminster',
   "Wimbledon","Shepherd's Bush",
+  // Zone 1 & 2 — first expansion
   'Balham','Bermondsey','Canada Water','Clapham South',
   'Covent Garden','Charing Cross','East Putney','Fulham Broadway','Kentish Town',
-'Parsons Green','Piccadilly Circus',
-  "St. John's Wood",'Swiss Cottage','Tufnell Park',
+  'Parsons Green','Piccadilly Circus',"St. John's Wood",'Swiss Cottage','Tufnell Park',
+  // Zone 1 additions
+  'Aldgate','Aldgate East','Barbican','Barons Court','Bayswater',
+  'Blackfriars','Cannon Street','Edgware Road','Euston Square',
+  'Goodge Street','Great Portland Street','Lambeth North','Lancaster Gate',
+  'Mansion House','Marylebone','Monument',"Regent's Park",
+  "St. James's Park","St. Paul's",'Temple','White City',
+  // Zone 2 additions
+  'Acton Town','Archway','Canonbury','Clapham Junction','Cutty Sark',
+  'Dalston Kingsland','Greenwich','Hackney Central','Heron Quays',
+  'Highgate','Island Gardens','Limehouse','Mornington Crescent',
+  'Mudchute','North Greenwich','Poplar','Shadwell',
+  "Shepherd's Bush Market",'South Quay','Tooting Bec','Tooting Broadway',
+  'Warren Street','West Brompton','West Ham','Westbourne Park',
+  'Westferry','Whitechapel',
+  // Zone 3+ interchange stations
+  'Eastcote','Harrow on the Hill','Hillingdon','Ickenham',
+  'Kenton','Rayners Lane','Ruislip','Ruislip Manor','Uxbridge','Wembley Park',
 ];
 
 // Get the lines serving a station
+// Normalise sub-line names to their parent line for display
+function normaliseLineName(line) {
+  if (line.startsWith('Northern_')) return 'Northern';
+  if (line.startsWith('District_')) return 'District';
+  return line;
+}
+
 function linesForStation(stn) {
   return Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l);
 }
@@ -808,107 +922,193 @@ function estimateJourneyMins(from, to) {
   return 15;
 }
 
-// Find the best interchange station between two stations
-function findBestInterchange(from, to) {
-  const fromLines = linesForStation(from);
-  const toLines   = linesForStation(to);
-  let best = null, bestTime = Infinity;
+// ─── ROUTE GENERATION — DIJKSTRA OVER TUBE GRAPH ─────────────────────────────
+// Models the network as a graph where nodes are (station, line) pairs.
+// Edges:
+//   Travel    — move to adjacent station on same line (cost = JOURNEY_TIMES value)
+//   Interchange — change line at same station (cost = interchangeTime())
+// Guarantees finding the true optimal regardless of number of interchanges.
 
-  // Look for stations that are on both a fromLine and a toLine
+function buildGraph() {
+  const graph = {}; // graph[station][line] = [{station, line, cost, type}]
+
+  function ensure(stn, line) {
+    if (!graph[stn]) graph[stn] = {};
+    if (!graph[stn][line]) graph[stn][line] = [];
+  }
+
+  // Travel edges from JOURNEY_TIMES — only use known times, no estimates
   for (const [line, stns] of Object.entries(LINE_STATIONS)) {
-    if (!fromLines.includes(line)) continue;
-    for (const stn of stns) {
-      const stnLines = linesForStation(stn);
-      const sharedWithTo = stnLines.filter(l => toLines.includes(l));
-      if (sharedWithTo.length === 0) continue;
-      const t = estimateJourneyMins(from, stn) + interchangeTime(stn) + estimateJourneyMins(stn, to);
-      if (t < bestTime) { bestTime = t; best = { stn, lineIn: line, lineOut: sharedWithTo[0], totalMins: t }; }
+    for (let i = 0; i < stns.length - 1; i++) {
+      const a = stns[i], b = stns[i+1];
+      const t = getJourneyTime(a, b);
+      if (t === null) continue;
+      ensure(a, line); ensure(b, line);
+      graph[a][line].push({station: b, line, cost: t, type: 'travel'});
+      graph[b][line].push({station: a, line, cost: t, type: 'travel'});
     }
   }
-  return best;
+
+  // Interchange edges — between all lines at each multi-line station
+  for (const stn of Object.keys(graph)) {
+    const lineList = Object.keys(graph[stn]);
+    if (lineList.length < 2) continue;
+    const walkCost = interchangeTime(stn);
+    for (const la of lineList) {
+      for (const lb of lineList) {
+        if (la === lb) continue;
+        graph[stn][la].push({station: stn, line: lb, cost: walkCost, type: 'interchange'});
+      }
+    }
+  }
+
+  return graph;
 }
 
-// Generate top 3 routes for a puzzle pair
 function generateRoutes(start, end) {
+  const graph = buildGraph();
+  if (!graph[start] || !graph[end]) return [];
+
+  // Dijkstra over (station, line) nodes
+  // dist[station][line] = {cost, path: [{station, line, type}]}
+  const dist = {};
+  // Simple priority queue as sorted array — fine for ~1000 nodes
+  const pq = []; // [{cost, station, line, path}]
+
+  function pqPush(item) {
+    pq.push(item);
+    pq.sort((a, b) => a.cost - b.cost);
+  }
+
+  // Initialise from all lines at start station (cost 0, no line chosen yet)
+  for (const line of Object.keys(graph[start])) {
+    if (!dist[start]) dist[start] = {};
+    dist[start][line] = {cost: 0, path: [{station: start, line, type: 'start'}]};
+    pqPush({cost: 0, station: start, line, path: [{station: start, line, type: 'start'}]});
+  }
+
+  const visited = new Set();
+
+  while (pq.length > 0) {
+    const {cost, station, line, path} = pq.shift();
+    const key = `${station}|${line}`;
+    if (visited.has(key)) continue;
+    visited.add(key);
+
+    if (!graph[station] || !graph[station][line]) continue;
+
+    for (const edge of graph[station][line]) {
+      const newCost = cost + edge.cost;
+      if (!dist[edge.station]) dist[edge.station] = {};
+      const existing = dist[edge.station][edge.line];
+      if (!existing || newCost < existing.cost) {
+        const newPath = [...path, {station: edge.station, line: edge.line, type: edge.type}];
+        dist[edge.station][edge.line] = {cost: newCost, path: newPath};
+        pqPush({cost: newCost, station: edge.station, line: edge.line, path: newPath});
+      }
+    }
+  }
+
+  if (!dist[end]) return [];
+
+  // Convert a Dijkstra path to legs.
+  // Path is [{station, line, type}]. We group consecutive nodes on the same line
+  // into one leg, recording travel time by summing adjacent-pair journey times.
+  function pathToLegs(path) {
+    if (!path || path.length < 2) return [];
+    const legs = [];
+
+    // Find the first travel node to start from
+    let legStartIdx = 0;
+    while (legStartIdx < path.length - 1 && path[legStartIdx].type !== 'start' && path[legStartIdx].type !== 'travel') {
+      legStartIdx++;
+    }
+
+    let legFrom = path[legStartIdx].station;
+    let legLine  = path[legStartIdx].line;
+    let legMins  = 0;
+    let prevStation = path[legStartIdx].station;
+
+    for (let i = legStartIdx + 1; i < path.length; i++) {
+      const node = path[i];
+
+      if (node.type === 'travel') {
+        if (node.line === legLine) {
+          // Continue same leg
+          legMins += getJourneyTime(prevStation, node.station) || 0;
+          prevStation = node.station;
+        } else {
+          // Line changed mid-travel (shouldn't happen but handle gracefully)
+          if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
+          legFrom = prevStation;
+          legLine  = node.line;
+          legMins  = getJourneyTime(prevStation, node.station) || 0;
+          prevStation = node.station;
+        }
+      } else if (node.type === 'interchange') {
+        // Close current leg at this station
+        if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
+        legFrom = prevStation;
+        legLine  = node.line;
+        legMins  = 0;
+        // prevStation stays the same (interchange at same station)
+      }
+    }
+
+    // Close final leg
+    if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
+
+    return legs;
+  }
+
+  // Collect arrivals at end station, sorted by cost
+  const arrivals = Object.entries(dist[end])
+    .map(([line, node]) => ({line, cost: node.cost, path: node.path}))
+    .filter(a => a.cost > 0)
+    .sort((a, b) => a.cost - b.cost);
+
   const routes = [];
-  const startLines = linesForStation(start);
-  const endLines   = linesForStation(end);
+  const seenSigs = new Set();
 
-  // Strategy: try every (startLine, interchange, endLine) combination
-  const seen = new Set();
-  for (const sl of startLines) {
-    for (const el of endLines) {
-      if (sl === el) continue; // already filtered by requiresChange
-      // Find interchanges between sl and el
-      for (const [,stns] of Object.entries(LINE_STATIONS)) {
-        for (const stn of stns) {
-          if (stn === start || stn === end) continue;
-          const stnLines = linesForStation(stn);
-          if (!stnLines.includes(sl) || !stnLines.includes(el)) continue;
-          const key = `${sl}|${stn}|${el}`;
-          if (seen.has(key)) continue;
-          seen.add(key);
-
-          const leg1 = estimateJourneyMins(start, stn);
-          const walk = interchangeTime(stn);
-          const leg2 = estimateJourneyMins(stn, end);
-          const total = leg1 + walk + leg2;
-
-          routes.push({
-            mins: total,
-            legs: [
-              {from: start, to: stn,  line: sl, mins: leg1},
-              {from: stn,   to: end,  line: el, mins: leg2},
-            ]
-          });
-        }
-      }
-    }
+  for (const arrival of arrivals) {
+    if (routes.length >= 5) break;
+    const legs = pathToLegs(arrival.path);
+    if (legs.length < 2) continue; // must require at least one change
+    const sig = legs.map(l => l.line).join('>');
+    if (seenSigs.has(sig)) continue;
+    seenSigs.add(sig);
+    routes.push({rank: routes.length + 1, mins: arrival.cost, legs});
   }
 
-  // Also try 2-interchange routes (3 legs) for completeness
-  if (routes.length < 3) {
+  // Fallback if graph had insufficient data — old single-interchange method
+  if (routes.length === 0) {
+    const startLines = linesForStation(start);
+    const endLines   = linesForStation(end);
+    const seen = new Set();
+    const fallbacks = [];
     for (const sl of startLines) {
-      for (const [midLine, midStns] of Object.entries(LINE_STATIONS)) {
-        if (midLine === sl) continue;
-        for (const mid of midStns.slice(0,5)) {
-          const stnLines = linesForStation(mid);
-          if (!stnLines.includes(sl) || !stnLines.some(l => endLines.includes(l))) continue;
-          const el = stnLines.find(l => endLines.includes(l));
-          if (!el || el === sl) continue;
-          const leg1 = estimateJourneyMins(start, mid);
-          const leg2 = estimateJourneyMins(mid, end);
-          const total = leg1 + interchangeTime(mid) + leg2;
-          routes.push({mins: total, legs:[{from:start,to:mid,line:sl,mins:leg1},{from:mid,to:end,line:el,mins:leg2}]});
+      for (const el of endLines) {
+        if (sl === el) continue;
+        for (const [,stns] of Object.entries(LINE_STATIONS)) {
+          for (const stn of stns) {
+            if (stn === start || stn === end) continue;
+            const stnLines = linesForStation(stn);
+            if (!stnLines.includes(sl) || !stnLines.includes(el)) continue;
+            const key = `${sl}|${stn}|${el}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const l1 = estimateJourneyMins(start, stn);
+            const l2 = estimateJourneyMins(stn, end);
+            fallbacks.push({mins: l1+interchangeTime(stn)+l2, legs:[{from:start,to:stn,line:sl,mins:l1},{from:stn,to:end,line:el,mins:l2}]});
+          }
         }
       }
     }
+    fallbacks.sort((a,b) => a.mins - b.mins);
+    if (fallbacks[0]) routes.push({rank:1, ...fallbacks[0]});
   }
 
-  // Sort and deduplicate by first interchange station
-  routes.sort((a,b) => a.mins - b.mins);
-  const dedupedRoutes = [];
-  const usedInterchanges = new Set();
-  for (const r of routes) {
-    const interchangeKey = r.legs.map(l=>l.line).join('>');
-    if (!usedInterchanges.has(interchangeKey)) {
-      usedInterchanges.add(interchangeKey);
-      dedupedRoutes.push(r);
-    }
-    if (dedupedRoutes.length >= 5) break;
-  }
-
-  // Ensure we always have at least 1 route
-  if (dedupedRoutes.length === 0) {
-    const inter = findBestInterchange(start, end);
-    if (inter) {
-      const l1 = estimateJourneyMins(start, inter.stn);
-      const l2 = estimateJourneyMins(inter.stn, end);
-      dedupedRoutes.push({mins: l1+interchangeTime(inter.stn)+l2, legs:[{from:start,to:inter.stn,line:inter.lineIn,mins:l1},{from:inter.stn,to:end,line:inter.lineOut,mins:l2}]});
-    }
-  }
-
-  return dedupedRoutes.map((r,i) => ({rank:i+1, mins:r.mins, legs:r.legs}));
+  return routes;
 }
 
 // Generate today's puzzle deterministically from the date
@@ -937,13 +1137,9 @@ function todayPuzzle() {
     routes = [{rank:1,mins:24,legs:[{from:'Bethnal Green',to:'Bank',line:'Central',mins:9},{from:'Bank',to:'Oval',line:'Northern',mins:11}]}];
   }
 
-  // Recalculate all route times using the exact same formula as user scoring.
-  // This ensures no player can ever "beat" the optimal due to formula mismatch.
-  const recalculated = routes.map((r, i) => {
-    const recalcMins = calcRouteMins(start, r.legs.map(l => ({station: l.to, line: l.line})));
-    return { ...r, rank: i+1, mins: recalcMins };
-  });
-  // Re-sort after recalculation in case times shifted
+  // Use Dijkstra costs directly — they are already accurate sums of adjacent pairs
+  // plus interchange times. Re-sort to ensure correct ranking.
+  const recalculated = routes.map((r, i) => ({ ...r, rank: i+1 }));
   recalculated.sort((a,b) => a.mins - b.mins);
   recalculated.forEach((r,i) => r.rank = i+1);
 
@@ -1145,7 +1341,7 @@ function renderRoute() {
   c.innerHTML = userRoute.map((s,i) => {
     const lc = LC[s.line]||{bg:'#444',txt:'#fff'};
     const conn = i>0 ? `<div class="step-conn" style="background:${lc.bg};"></div>` : '';
-    return `<div class="step">${conn}<div class="step-dot" style="background:${lc.bg};"></div><div class="step-txt"><div class="step-stn">${s.station}</div><span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${s.line}</span></div><button class="step-rm" onclick="removeStep(${i})">&#x2715;</button></div>`;
+    return `<div class="step">${conn}<div class="step-dot" style="background:${lc.bg};"></div><div class="step-txt"><div class="step-stn">${s.station}</div><span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${normaliseLineName(s.line)}</span></div><button class="step-rm" onclick="removeStep(${i})">&#x2715;</button></div>`;
   }).join('');
   updateMapRoute();
   const hasEnd = userRoute.some(s => s.station.toLowerCase() === puzzleData.end.toLowerCase());
@@ -1316,7 +1512,7 @@ function submitRoute() {
   // Build optimal legs display
   const optLegsHtml = puzzleData.optimal.legs.filter(l=>l.from&&l.mode!=='walking').map(l => {
     const lc = LC[l.line]||{bg:'#888'};
-    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} &rarr; ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>&nbsp;${l.mins} min</div></div>`;
+    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} &rarr; ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${normaliseLineName(l.line)}</span>&nbsp;${l.mins} min</div></div>`;
   }).join('');
 
   // Build top-5 display
