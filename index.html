@@ -61,7 +61,6 @@ select option{background:#111827;}
 .bar-wrap{background:var(--bg);border-radius:20px;height:8px;margin:0 0 6px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:20px;transition:width 1.3s cubic-bezier(.22,1,.36,1);}
 .pct-lbl{font-size:13px;color:var(--muted);text-align:center;margin-bottom:16px;}
-.rank-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;margin:0 auto 16px;font-size:14px;font-weight:500;}
 .opt-legs{border-top:0.5px solid var(--brd);padding-top:14px;margin-bottom:16px;}
 .opt-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .opt-leg{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13px;color:var(--txt);}
@@ -77,37 +76,29 @@ select option{background:#111827;}
 .hist-row:last-child{border-bottom:none;}
 .hist-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .loading-state{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
-.error-banner{background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:12px 14px;font-size:13px;color:#f08080;margin-bottom:12px;line-height:1.5;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.note-bar{background:#0d1525;border:0.5px solid var(--brd);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--muted);text-align:center;margin-bottom:14px;line-height:1.5;}
 .btn-share{touch-action:manipulation;background:#162a16;color:#4ade80;border:1px solid #2d5a2d;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;margin-bottom:10px;}
 .btn-share:hover{background:#1f3a1f;}
 .btn-share.copied{color:#86efac;}
 .puzzle-num{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
-
-/* HOW TO PLAY MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
 .modal-overlay.open{opacity:1;pointer-events:auto;}
-.modal{background:var(--surf);border:0.5px solid var(--brd);border-radius:16px;padding:24px 22px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(20px);transition:transform 0.2s;will-change:transform;}
+.modal{background:var(--surf);border:0.5px solid var(--brd);border-radius:16px;padding:24px 22px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(20px);transition:transform 0.2s;}
 .modal-overlay.open .modal{transform:translateY(0);}
 .modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
-.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--txt);}
-.modal-close{touch-action:manipulation;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;line-height:1;border-radius:6px;}
-.modal-close:hover{color:var(--txt);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;padding:4px;line-height:1;border-radius:6px;}
 .how-step{display:flex;gap:14px;margin-bottom:18px;align-items:flex-start;}
-.how-num{width:28px;height:28px;border-radius:50%;background:var(--navy);color:white;font-weight:500;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.how-txt{font-size:14px;line-height:1.6;color:var(--txt);}
+.how-num{width:28px;height:28px;border-radius:50%;background:var(--navy);color:white;font-weight:500;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.how-txt{font-size:14px;line-height:1.6;}
 .how-txt strong{color:var(--yellow);}
 .how-divider{border:none;border-top:0.5px solid var(--brd);margin:18px 0;}
 .medal-row{display:flex;align-items:center;gap:12px;padding:6px 0;font-size:13px;color:var(--muted);}
-.medal-row span:first-child{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
-.btn-how{touch-action:manipulation;background:none;border:0.5px solid var(--brd);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;white-space:nowrap;}
+.medal-row span:first-child{font-size:20px;width:28px;text-align:center;}
+.btn-how{background:none;border:0.5px solid var(--brd);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;width:100%;justify-content:center;margin-bottom:12px;}
 .btn-how:hover{border-color:var(--txt);color:var(--txt);}
-.btn-got-it{touch-action:manipulation;background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;margin-top:6px;transition:background 0.15s;}
-.btn-got-it:hover{background:#0047b3;}
-
-/* STATION SEARCH AUTOCOMPLETE */
+.btn-got-it{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;margin-top:6px;}
 .search-wrap{position:relative;width:100%;}
 .search-input{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:11px 12px;font-size:16px;font-family:'DM Sans',sans-serif;width:100%;}
 .search-input:focus{outline:none;border-color:#4a6fa5;}
@@ -118,6 +109,7 @@ select option{background:#111827;}
 .autocomplete-item:last-child{border-bottom:none;}
 .autocomplete-item:hover,.autocomplete-item.active{background:#1a2a3a;color:var(--yellow);}
 .autocomplete-item mark{background:none;color:var(--yellow);font-weight:500;}
+.step-error{background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:10px 12px;font-size:13px;color:#f08080;margin-top:8px;line-height:1.5;}
 </style>
 <script data-goatcounter="https://playtubed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -127,7 +119,7 @@ select option{background:#111827;}
     <div style="font-size:46px;line-height:1;flex-shrink:0;">🚇</div>
     <div>
       <div class="gtitle">Tubed</div>
-      <div class="gsub">Daily London Underground Puzzle</div>
+      <div class="gsub" id="puzzle-sub">Daily London Underground Puzzle</div>
     </div>
     <div class="streak-box">
       <div class="streak-n" id="streak-disp">0</div>
@@ -135,44 +127,27 @@ select option{background:#111827;}
     </div>
   </div>
 
-  <!-- HOW TO PLAY MODAL -->
   <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnBg(event)">
     <div class="modal">
       <div class="modal-hdr">
         <div class="modal-title">How to play</div>
         <button class="modal-close" onclick="closeModal()">&#x2715;</button>
       </div>
-
-      <div class="how-step">
-        <div class="how-num">1</div>
-        <div class="how-txt">You are given a <strong>start station</strong> and a <strong>destination</strong> on the London Underground.</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">2</div>
-        <div class="how-txt">Build your route by selecting <strong>stations and lines</strong> one stop at a time. You must change lines at least once — no single-line routes!</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">3</div>
-        <div class="how-txt">Your final stop must be the <strong>destination station</strong>. Then hit <strong>Submit my route</strong>.</div>
-      </div>
-      <div class="how-step">
-        <div class="how-num">4</div>
-        <div class="how-txt">Your route is scored against the <strong>optimal journey time</strong>. The closer you are, the better your medal.</div>
-      </div>
-
+      <div class="how-step"><div class="how-num">1</div><div class="how-txt">You are given a <strong>start station</strong> and a <strong>destination</strong>.</div></div>
+      <div class="how-step"><div class="how-num">2</div><div class="how-txt">Build your route selecting <strong>stations and lines</strong> one stop at a time. You must change lines at least once.</div></div>
+      <div class="how-step"><div class="how-num">3</div><div class="how-txt">Your final stop must be the <strong>destination</strong>. Then hit <strong>Submit my route</strong>.</div></div>
+      <div class="how-step"><div class="how-num">4</div><div class="how-txt">Your route is scored against the <strong>optimal journey time</strong>.</div></div>
       <hr class="how-divider"/>
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Scoring</div>
-      <div class="medal-row"><span>🥇</span><span>Within 2 minutes of optimal — perfect!</span></div>
+      <div class="medal-row"><span>🥇</span><span>Within 2 minutes of optimal</span></div>
       <div class="medal-row"><span>🥈</span><span>Within 5 minutes of optimal</span></div>
       <div class="medal-row"><span>🥉</span><span>Within 10 minutes of optimal</span></div>
       <div class="medal-row"><span>⭐</span><span>Within 20 minutes of optimal</span></div>
-      <div class="medal-row"><span>🚇</span><span>More than 20 minutes off — keep practising!</span></div>
-
+      <div class="medal-row"><span>🚇</span><span>More than 20 minutes off</span></div>
       <hr class="how-divider"/>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        A new puzzle is available every day at midnight. Times are <strong style="color:var(--txt);">travel time only</strong> — no waiting or walking time is included. Everyone worldwide gets the same puzzle each day.
+        A new puzzle every day at midnight. Times are <strong style="color:var(--txt);">travel time only</strong> — no waiting. Same puzzle for everyone worldwide.
       </div>
-
       <button class="btn-got-it" onclick="closeModal()">Got it — let's play! 🚇</button>
     </div>
   </div>
@@ -180,11 +155,12 @@ select option{background:#111827;}
   <div id="main-panel">
     <div class="card challenge">
       <div class="st-box"><div class="st-role">Start</div><div class="st-name" id="start-stn">—</div></div>
-      <div class="arr">&#8594;</div>
+      <div class="arr">→</div>
       <div class="st-box"><div class="st-role">Destination</div><div class="st-name" id="end-stn">—</div></div>
     </div>
 
-    <button class="btn-how" onclick="openModal()" style="width:100%;justify-content:center;margin-bottom:12px;">How to play ?</button>
+    <button class="btn-how" onclick="openModal()">How to play ?</button>
+
     <div id="loading-puzzle" class="loading-state">
       <span class="spinner" style="border-top-color:var(--muted);"></span>&nbsp; Loading today's puzzle...
     </div>
@@ -202,7 +178,8 @@ select option{background:#111827;}
           <div class="add-label">Add a stop</div>
           <div class="step-form">
             <div class="search-wrap">
-              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off" oninput="onStationInput()" onkeydown="onStationKey(event)" onblur="closeAutocompleteDelayed()"/>
+              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off"
+                oninput="onStationInput()" onkeydown="onStationKey(event)" onblur="closeAutocompleteDelayed()"/>
               <div class="autocomplete-list" id="autocomplete-list"></div>
             </div>
             <select id="sel-line"><option value="">Choose line...</option></select>
@@ -210,11 +187,12 @@ select option{background:#111827;}
           <button class="btn-add" onclick="addStep()">
             <span style="font-size:20px;line-height:1;">+</span> Add this stop
           </button>
+          <div id="step-error" style="display:none;" class="step-error"></div>
         </div>
       </div>
 
       <button class="btn-sub" id="sub-btn" onclick="submitRoute()" disabled>
-        Submit my route &nbsp;&#8594;
+        Submit my route &nbsp;→
       </button>
       <div class="hint">Add stops ending at your destination, then submit</div>
     </div>
@@ -225,1304 +203,1500 @@ select option{background:#111827;}
   <div style="margin-top:8px;">
     <div class="sec-lbl" style="margin-bottom:10px;">Past results</div>
     <div class="card" style="padding:10px 18px;">
-      <div id="hist-list">
-        <div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>
-      </div>
+      <div id="hist-list"><div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div></div>
     </div>
+  </div>
+  <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:#4a5a6a;line-height:1.8;">
+    Powered by TfL Open Data · Not affiliated with Transport for London<br>© Tubed <span id="yr"></span>
   </div>
 </div>
 
 <script>
-// ─── LINE COLOURS ────────────────────────────────────────────────────────────
-const LC = {
-  'Central':            {bg:'#E32017',txt:'#fff'},
-  'Northern':           {bg:'#000000',txt:'#fff'},
-  'Northern_HB':        {bg:'#000000',txt:'#fff'},
-  'Northern_MHE':       {bg:'#000000',txt:'#fff'},
-  'Northern_CC':        {bg:'#000000',txt:'#fff'},
-  'Jubilee':            {bg:'#A0A5AE',txt:'#fff'},
-  'Victoria':           {bg:'#0098D4',txt:'#fff'},
-  'Bakerloo':           {bg:'#B36305',txt:'#fff'},
-  'Piccadilly':         {bg:'#003688',txt:'#fff'},
-  'District':           {bg:'#00782A',txt:'#fff'},
-  'District_Rich':      {bg:'#00782A',txt:'#fff'},
-  'District_Eal':       {bg:'#00782A',txt:'#fff'},
-  'Circle':             {bg:'#FFD300',txt:'#000'},
-  'Hammersmith & City': {bg:'#F3A9BB',txt:'#000'},
-  'Metropolitan':       {bg:'#9B0056',txt:'#fff'},
-  'Waterloo & City':    {bg:'#95CDBA',txt:'#000'},
-  'Elizabeth':          {bg:'#6950A1',txt:'#fff'},
-  'Overground':         {bg:'#EE7C0E',txt:'#fff'},
-  'DLR':                {bg:'#00A4A7',txt:'#fff'},
+// ═══════════════════════════════════════════════════════════════════════════════
+// NETWORK DATA
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ── Line colours ──────────────────────────────────────────────────────────────
+const LINE_COLOURS = {
+  'Bakerloo':           {bg:'#B36305', txt:'#fff'},
+  'Central':            {bg:'#E32017', txt:'#fff'},
+  'Circle':             {bg:'#FFD300', txt:'#000'},
+  'District':           {bg:'#00782A', txt:'#fff'},
+  'DLR':                {bg:'#00A4A7', txt:'#fff'},
+  'Elizabeth':          {bg:'#6950A1', txt:'#fff'},
+  'Hammersmith & City': {bg:'#F3A9BB', txt:'#000'},
+  'Jubilee':            {bg:'#A0A5AE', txt:'#fff'},
+  'Metropolitan':       {bg:'#9B0056', txt:'#fff'},
+  'Northern':           {bg:'#000000', txt:'#fff'},
+  'Overground':         {bg:'#EE7C0E', txt:'#fff'},
+  'Piccadilly':         {bg:'#003688', txt:'#fff'},
+  'Victoria':           {bg:'#0098D4', txt:'#fff'},
+  'Waterloo & City':    {bg:'#95CDBA', txt:'#000'},
 };
 
-// ─── INTERCHANGE WALKING TIMES (minutes) ─────────────────────────────────────
-// These are the known platform-to-platform walking times at major interchanges.
-// Source: TFL's own published interchange times.
-// If a pair isn't listed, we use 2 min as a conservative default.
+// ── Interchange times (minutes, platform-to-platform) ─────────────────────────
+// Source: TfL published interchange times. Default: 2 min.
 const INTERCHANGE_MINS = {
-  'Bank':                   4, // Long travelator + stairs between Central/Northern/W&C
-  'Kings Cross St. Pancras':3, // Multiple lines but reasonably connected
-  'Liverpool Street':       3,
-  'Paddington':             3, // Between Elizabeth and other lines
-  'Waterloo':               3,
-  'Victoria':               2,
-  'Oxford Circus':          2,
-  'Green Park':             2,
-  'Bond Street':            2,
-  'Moorgate':               2,
-  'Stockwell':              2,
-  'Canary Wharf':           3, // Jubilee <-> Elizabeth involves some walking
-  'Stratford':              3,
-  'Highbury & Islington':   2,
-  'Finsbury Park':          2,
-  'Hammersmith':            3, // Two separate Hammersmith stations
-  'Earls Court':            2,
-  'Embankment':             2,
-  'Westminster':            2,
-  'Elephant & Castle':      3,
-  'Camden Town':            2,
+  'Bank':                    4,
+  'Baker Street':            3,
+  'Canary Wharf':            3,
+  'Canada Water':            3,
+  'Earl\'s Court':           2,
+  'Elephant & Castle':       3,
+  'Embankment':              2,
+  'Farringdon':              2,
+  'Finsbury Park':           2,
+  'Hammersmith':             3,
+  'Highbury & Islington':    2,
+  'Kings Cross St. Pancras': 3,
+  'Liverpool Street':        3,
+  'Moorgate':                2,
+  'Oxford Circus':           2,
+  'Paddington':              3,
+  'Stockwell':               2,
+  'Stratford':               3,
+  'Victoria':                2,
+  'Waterloo':                3,
+  'Westminster':             2,
 };
+function interchangeTime(stn) { return INTERCHANGE_MINS[stn] || 2; }
 
-function interchangeTime(station) {
-  return INTERCHANGE_MINS[station] || 2;
-}
-
-// ─── STATION COORDINATES ─────────────────────────────────────────────────────
+// ── Station coordinates [lat, lng] ────────────────────────────────────────────
 const COORDS = {
-  'Aldgate':              [51.5143,-0.0755],
-  'Aldgate East':         [51.5152,-0.0726],
-  'Angel':                [51.5322,-0.1058],
-  'Baker Street':         [51.5226,-0.1571],
-  'Bank':                 [51.5133,-0.0886],
-  'Barbican':             [51.5203,-0.0979],
-  'Bermondsey':           [51.4995,-0.0640],
-  'Bethnal Green':        [51.5272,-0.0549],
-  'Blackfriars':          [51.5119,-0.1040],
-  'Bond Street':          [51.5142,-0.1494],
-  'Borough':              [51.5011,-0.0941],
-  'Brixton':              [51.4627,-0.1144],
-  'Camden Town':          [51.5392,-0.1426],
-  'Canada Water':         [51.4980,-0.0500],
-  'Canary Wharf':         [51.5051,-0.0209],
-  'Cannon Street':        [51.5113,-0.0904],
-  'Canonbury':            [51.5490,-0.0923],
-  'Charing Cross':        [51.5081,-0.1247],
-  'Clapham Common':       [51.4618,-0.1390],
-  'Clapham Junction':     [51.4642,-0.1702],
-  'Clapham North':        [51.4648,-0.1302],
-  'Clapham South':        [51.4565,-0.1480],
-  'Cutty Sark':           [51.4826,-0.0094],
-  'Dalston Kingsland':    [51.5492,-0.0757],
-  'Ealing Broadway':      [51.5150,-0.3018],
-  "Earl's Court":         [51.4915,-0.1937],
-  'Edgware Road':         [51.5199,-0.1686],
-  'Elephant & Castle':    [51.4958,-0.1007],
-  'Embankment':           [51.5072,-0.1221],
-  'Euston':               [51.5282,-0.1337],
-  'Euston Square':        [51.5261,-0.1350],
-  'Farringdon':           [51.5203,-0.1050],
-  'Finchley Road':        [51.5476,-0.1799],
-  'Finsbury Park':        [51.5642,-0.1058],
-  'Gloucester Road':      [51.4944,-0.1829],
-  'Goldhawk Road':        [51.5019,-0.2264],
-  'Goodge Street':        [51.5208,-0.1347],
-  'Great Portland Street':[51.5240,-0.1440],
-  'Green Park':           [51.5067,-0.1428],
-  'Greenwich':            [51.4779, 0.0147],
-  'Hackney Central':      [51.5466,-0.0555],
-  'Hammersmith':          [51.4934,-0.2226],
-  'Heathrow Terminal 5':  [51.4731,-0.4852],
-  'Heron Quays':          [51.5037,-0.0223],
-  'Highbury & Islington': [51.5463,-0.1038],
-  'Holborn':              [51.5174,-0.1200],
-  'Hyde Park Corner':     [51.5027,-0.1527],
-  'Island Gardens':       [51.4889,-0.0174],
-  'Kennington':           [51.4881,-0.1051],
-  'Kings Cross St. Pancras':[51.5308,-0.1238],
-  'Knightsbridge':        [51.5013,-0.1609],
-  'Ladbroke Grove':       [51.5172,-0.2120],
-  'Lambeth North':        [51.4988,-0.1119],
-  'Latimer Road':         [51.5134,-0.2172],
-  'Leicester Square':     [51.5113,-0.1281],
-  'Limehouse':            [51.5120,-0.0372],
-  'Liverpool Street':     [51.5178,-0.0823],
-  'London Bridge':        [51.5079,-0.0877],
-  'Mansion House':        [51.5123,-0.0942],
-  'Marylebone':           [51.5223,-0.1630],
-  'Mile End':             [51.5252,-0.0334],
-  'Monument':             [51.5103,-0.0862],
-  'Moorgate':             [51.5186,-0.0886],
-  'Mudchute':             [51.4941,-0.0165],
-  'North Greenwich':      [51.5004, 0.0039],
-  'Notting Hill Gate':    [51.5095,-0.1967],
-  'Old Street':           [51.5263,-0.0873],
-  'Oval':                 [51.4820,-0.1134],
-  'Oxford Circus':        [51.5154,-0.1416],
-  'Paddington':           [51.5154,-0.1755],
-  'Parsons Green':        [51.4754,-0.1993],
-  'Piccadilly Circus':    [51.5098,-0.1342],
-  'Pimlico':              [51.4893,-0.1334],
-  'Poplar':               [51.5074,-0.0170],
-  'Putney Bridge':        [51.4682,-0.2097],
-  "Regent's Park":        [51.5234,-0.1466],
-  'Royal Oak':            [51.5203,-0.1974],
-  'Shadwell':             [51.5116,-0.0564],
-  "Shepherd's Bush":      [51.5053,-0.2187],
-  "Shepherd's Bush Market":[51.5048,-0.2264],
-  'Sloane Square':        [51.4924,-0.1565],
-  'South Kensington':     [51.4941,-0.1738],
-  'South Quay':           [51.5011,-0.0188],
-  'Southwark':            [51.5041,-0.1050],
-  "St. James's Park":     [51.4994,-0.1335],
-  "St. Paul's":           [51.5146,-0.0973],
-  'Stockwell':            [51.4723,-0.1228],
-  'Stratford':            [51.5416,-0.0042],
-  'Temple':               [51.5113,-0.1141],
-  'Tottenham Court Road': [51.5165,-0.1300],
-  'Tower Hill':           [51.5099,-0.0766],
-  'Vauxhall':             [51.4861,-0.1228],
-  'Victoria':             [51.4965,-0.1447],
-  'Warren Street':        [51.5244,-0.1387],
-  'Waterloo':             [51.5036,-0.1143],
-  'Wembley Park':         [51.5634,-0.2795],
-  'West Brompton':        [51.4865,-0.1952],
-  'West Ham':             [51.5287, 0.0052],
-  'Westbourne Park':      [51.5210,-0.2042],
-  'Westferry':            [51.5094,-0.0269],
-  'Westminster':          [51.5010,-0.1254],
-  'White City':           [51.5121,-0.2244],
-  'Whitechapel':          [51.5196,-0.0600],
-  'Wimbledon':            [51.4214,-0.2060],
-  'East Putney':          [51.4607,-0.2082],
-  'Fulham Broadway':      [51.4802,-0.1936],
-  'Barons Court':         [51.4901,-0.2138],
-  'Bayswater':            [51.5121,-0.1877],
-  'Balham':               [51.4437,-0.1527],
-  'Covent Garden':         [51.5129,-0.1245],
-  'Kentish Town':          [51.5503,-0.1426],
-  "St. John's Wood":       [51.5352,-0.1738],
-  'Swiss Cottage':         [51.5432,-0.1738],
-  'Tufnell Park':          [51.5567,-0.1376],
-  "Earl's Court":          [51.4915,-0.1937],
+  // === BAKERLOO ===
+  'Elephant & Castle':     [51.4958,-0.1007],
+  'Lambeth North':         [51.4988,-0.1119],
+  'Waterloo':              [51.5036,-0.1143],
+  'Embankment':            [51.5072,-0.1221],
+  'Charing Cross':         [51.5081,-0.1247],
+  'Piccadilly Circus':     [51.5098,-0.1342],
+  'Oxford Circus':         [51.5154,-0.1416],
+  'Regent\'s Park':        [51.5234,-0.1466],
+  'Baker Street':          [51.5226,-0.1571],
+  'Marylebone':            [51.5223,-0.1630],
+  'Edgware Road':          [51.5199,-0.1686],
+  'Paddington':            [51.5154,-0.1755],
+  'Warwick Avenue':        [51.5237,-0.1840],
+  'Maida Vale':            [51.5296,-0.1853],
+  'Kilburn Park':          [51.5354,-0.1940],
+  'Queen\'s Park':         [51.5344,-0.2044],
+  'Kensal Green':          [51.5306,-0.2251],
+  'Willesden Junction':    [51.5325,-0.2417],
+  'Harlesden':             [51.5363,-0.2573],
+  'Stonebridge Park':      [51.5440,-0.2763],
+  'Wembley Central':       [51.5521,-0.2966],
+  'North Wembley':         [51.5628,-0.3041],
+  'South Kenton':          [51.5706,-0.3082],
+  'Kenton':                [51.5817,-0.3175],
+  'Harrow & Wealdstone':   [51.5925,-0.3351],
+  // === CENTRAL ===
+  'Ealing Broadway':       [51.5150,-0.3018],
+  'West Acton':            [51.5197,-0.2795],
+  'North Acton':           [51.5236,-0.2627],
+  'East Acton':            [51.5167,-0.2350],
+  'White City':            [51.5121,-0.2244],
+  'Shepherd\'s Bush':      [51.5053,-0.2187],
+  'Holland Park':          [51.5074,-0.2060],
+  'Notting Hill Gate':     [51.5095,-0.1967],
+  'Queensway':             [51.5103,-0.1876],
   'Lancaster Gate':        [51.5121,-0.1757],
-  "Regent's Park":         [51.5234,-0.1466],
-  "St. James's Park":      [51.4994,-0.1335],
-  "St. Paul's":            [51.5146,-0.0973],
-  'Archway':               [51.5654,-0.1353],
-  'Highgate':              [51.5777,-0.1463],
-  'Mornington Crescent':   [51.5344,-0.1388],
-  "Shepherd's Bush Market":[51.5048,-0.2264],
-  "St. John's Wood":       [51.5352,-0.1738],
-  'Tooting Bec':           [51.4352,-0.1478],
+  'Marble Arch':           [51.5135,-0.1586],
+  'Bond Street':           [51.5142,-0.1494],
+  'Tottenham Court Road':  [51.5165,-0.1300],
+  'Holborn':               [51.5174,-0.1200],
+  'Chancery Lane':         [51.5146,-0.1113],
+  'St. Paul\'s':           [51.5146,-0.0973],
+  'Bank':                  [51.5133,-0.0886],
+  'Liverpool Street':      [51.5178,-0.0823],
+  'Bethnal Green':         [51.5272,-0.0549],
+  'Mile End':              [51.5252,-0.0334],
+  'Stratford':             [51.5416,-0.0042],
+  // Central east branches
+  'Leyton':                [51.5562,-0.0051],
+  'Leytonstone':           [51.5567,-0.0075],
+  'Snaresbrook':           [51.5806, 0.0186],
+  'South Woodford':        [51.5920, 0.0277],
+  'Woodford':              [51.6073, 0.0337],
+  'Buckhurst Hill':        [51.6270, 0.0469],
+  'Loughton':              [51.6413, 0.0557],
+  'Debden':                [51.6450, 0.0837],
+  'Theydon Bois':          [51.6714, 0.1027],
+  'Epping':                [51.6942, 0.1139],
+  'Roding Valley':         [51.6156, 0.0434],
+  'Chigwell':              [51.6233, 0.0744],
+  'Grange Hill':           [51.6061, 0.0935],
+  'Hainault':              [51.6033, 0.0932],
+  'Newbury Park':          [51.5766, 0.0893],
+  'Barkingside':           [51.5883, 0.0901],
+  'Fairlop':               [51.5967, 0.0901],
+  'Redbridge':             [51.5782, 0.0419],
+  'Wanstead':              [51.5782, 0.0275],
+  // === CIRCLE / H&C (shared) ===
+  'Hammersmith':           [51.4934,-0.2226],
+  'Goldhawk Road':         [51.5019,-0.2264],
+  'Shepherd\'s Bush Market':[51.5048,-0.2264],
+  'Wood Lane':             [51.5090,-0.2260],
+  'Latimer Road':          [51.5134,-0.2172],
+  'Ladbroke Grove':        [51.5172,-0.2120],
+  'Westbourne Park':       [51.5210,-0.2042],
+  'Royal Oak':             [51.5203,-0.1974],
+  'Bayswater':             [51.5121,-0.1877],
+  'High Street Kensington':[51.5010,-0.1924],
+  'Gloucester Road':       [51.4944,-0.1829],
+  'South Kensington':      [51.4941,-0.1738],
+  'Sloane Square':         [51.4924,-0.1565],
+  'Victoria':              [51.4965,-0.1447],
+  'St. James\'s Park':     [51.4994,-0.1335],
+  'Westminster':           [51.5010,-0.1254],
+  'Temple':                [51.5113,-0.1141],
+  'Blackfriars':           [51.5119,-0.1040],
+  'Mansion House':         [51.5123,-0.0942],
+  'Cannon Street':         [51.5113,-0.0904],
+  'Monument':              [51.5103,-0.0862],
+  'Tower Hill':            [51.5099,-0.0766],
+  'Aldgate':               [51.5143,-0.0755],
+  'Aldgate East':          [51.5152,-0.0726],
+  'Whitechapel':           [51.5196,-0.0600],
+  'Stepney Green':         [51.5223,-0.0469],
+  'Mile End':              [51.5252,-0.0334],
+  'Bow Road':              [51.5270,-0.0264],
+  'Bromley-by-Bow':        [51.5226,-0.0115],
+  'West Ham':              [51.5287, 0.0052],
+  'Plaistow':              [51.5315, 0.0161],
+  'Upton Park':            [51.5352, 0.0351],
+  'East Ham':              [51.5398, 0.0530],
+  'Barking':               [51.5398, 0.0810],
+  // Circle only
+  'Edgware Road':          [51.5199,-0.1686],
+  'Great Portland Street': [51.5240,-0.1440],
+  'Euston Square':         [51.5261,-0.1350],
+  'Kings Cross St. Pancras':[51.5308,-0.1238],
+  'Farringdon':            [51.5203,-0.1050],
+  'Barbican':              [51.5203,-0.0979],
+  'Moorgate':              [51.5186,-0.0886],
+  // === DISTRICT ===
+  'Wimbledon':             [51.4214,-0.2060],
+  'Wimbledon Park':        [51.4343,-0.2030],
+  'Southfields':           [51.4450,-0.2069],
+  'East Putney':           [51.4607,-0.2082],
+  'Putney Bridge':         [51.4682,-0.2097],
+  'Parsons Green':         [51.4754,-0.1993],
+  'Fulham Broadway':       [51.4802,-0.1936],
+  'West Brompton':         [51.4865,-0.1952],
+  'Earl\'s Court':         [51.4915,-0.1937],
+  'Kensington (Olympia)':  [51.4985,-0.2103],
+  'Barons Court':          [51.4901,-0.2138],
+  // Richmond branch
+  'Richmond':              [51.4633,-0.3010],
+  'Kew Gardens':           [51.4738,-0.2851],
+  'Gunnersbury':           [51.4915,-0.2749],
+  'Turnham Green':         [51.4948,-0.2543],
+  'Stamford Brook':        [51.4948,-0.2395],
+  'Ravenscourt Park':      [51.4937,-0.2353],
+  // Ealing branch
+  'Acton Town':            [51.5028,-0.2801],
+  'Chiswick Park':         [51.4948,-0.2690],
+  'Ealing Common':         [51.5151,-0.3038],
+  // === DLR ===
+  'Shadwell':              [51.5116,-0.0564],
+  'Limehouse':             [51.5120,-0.0372],
+  'Westferry':             [51.5094,-0.0269],
+  'Poplar':                [51.5074,-0.0170],
+  'Canary Wharf':          [51.5051,-0.0209],
+  'Heron Quays':           [51.5037,-0.0223],
+  'South Quay':            [51.5011,-0.0188],
+  'Mudchute':              [51.4941,-0.0165],
+  'Island Gardens':        [51.4889,-0.0174],
+  'Cutty Sark':            [51.4826,-0.0094],
+  'Greenwich':             [51.4779, 0.0147],
+  'Deptford Bridge':       [51.4751, 0.0199],
+  'Elverson Road':         [51.4724, 0.0145],
+  'Lewisham':              [51.4655, 0.0136],
+  'West India Quay':       [51.5072,-0.0247],
+  'Canning Town':          [51.5148, 0.0082],
+  'East India':            [51.5087, 0.0020],
+  'Royal Victoria':        [51.5094, 0.0248],
+  'Custom House':          [51.5096, 0.0301],
+  'Prince Regent':         [51.5097, 0.0408],
+  'Royal Albert':          [51.5085, 0.0531],
+  'Beckton Park':          [51.5087, 0.0659],
+  'Cyprus':                [51.5082, 0.0731],
+  'Gallions Reach':        [51.5047, 0.0791],
+  'Beckton':               [51.5141, 0.0594],
+  'Woolwich Arsenal':      [51.4903, 0.0706],
+  'King George V':         [51.5008, 0.0602],
+  'North Greenwich':       [51.5004, 0.0039],
+  // === ELIZABETH ===
+  'Acton Main Line':       [51.5165,-0.2676],
+  'West Ealing':           [51.5150,-0.3128],
+  'Hanwell':               [51.5130,-0.3334],
+  'Southall':              [51.5103,-0.3784],
+  'Hayes & Harlington':    [51.5031,-0.4213],
+  // === JUBILEE ===
+  'Stanmore':              [51.6194,-0.3025],
+  'Canons Park':           [51.6082,-0.2940],
+  'Queensbury':            [51.5943,-0.2862],
+  'Kingsbury':             [51.5844,-0.2783],
+  'Wembley Park':          [51.5634,-0.2795],
+  'Neasden':               [51.5535,-0.2595],
+  'Dollis Hill':           [51.5528,-0.2340],
+  'Willesden Green':       [51.5492,-0.2191],
+  'Kilburn':               [51.5460,-0.2041],
+  'West Hampstead':        [51.5475,-0.1910],
+  'Finchley Road':         [51.5476,-0.1799],
+  'Swiss Cottage':         [51.5432,-0.1738],
+  'St. John\'s Wood':      [51.5352,-0.1738],
+  'Green Park':            [51.5067,-0.1428],
+  'Southwark':             [51.5041,-0.1050],
+  'London Bridge':         [51.5079,-0.0877],
+  'Bermondsey':            [51.4995,-0.0640],
+  'Canada Water':          [51.4980,-0.0500],
+  // === METROPOLITAN ===
+  'Aldgate':               [51.5143,-0.0755],
+  'Barbican':              [51.5203,-0.0979],
+  'Euston Square':         [51.5261,-0.1350],
+  'Great Portland Street': [51.5240,-0.1440],
+  'Marylebone':            [51.5223,-0.1630],
+  'Finchley Road':         [51.5476,-0.1799],
+  'Wembley Park':          [51.5634,-0.2795],
+  'Preston Road':          [51.5738,-0.2947],
+  'Northwick Park':        [51.5785,-0.3241],
+  'Harrow on the Hill':    [51.5792,-0.3365],
+  'North Harrow':          [51.5920,-0.3610],
+  'Rayners Lane':          [51.5753,-0.3713],
+  'Eastcote':              [51.5764,-0.3957],
+  'Ruislip Manor':         [51.5680,-0.4127],
+  'Ruislip':               [51.5713,-0.4194],
+  'Ickenham':              [51.5615,-0.4410],
+  'Hillingdon':            [51.5529,-0.4495],
+  'Uxbridge':              [51.5463,-0.4783],
+  'Chorleywood':           [51.6552,-0.5204],
+  'Croxley Green':         [51.6452,-0.4512],
+  'Watford':               [51.6571,-0.3943],
+  'Watford High Street':   [51.6558,-0.3972],
+  'Bushey':                [51.6471,-0.3830],
+  'Carpenders Park':       [51.6307,-0.3781],
+  'Hatch End':             [51.6108,-0.3705],
+  'Headstone Lane':        [51.6021,-0.3603],
+  'Amersham':              [51.6743,-0.6076],
+  'Chesham':               [51.7054,-0.6107],
+  'Chalfont & Latimer':    [51.6687,-0.5606],
+  'Chorleywood':           [51.6552,-0.5204],
+  'Rickmansworth':         [51.6437,-0.4771],
+  'Croxley Green':         [51.6452,-0.4512],
+  'Moor Park':             [51.6286,-0.4271],
+  'Northwood':             [51.6093,-0.4236],
+  'Northwood Hills':       [51.5989,-0.4096],
+  'Pinner':                [51.5927,-0.3879],
+  'North Harrow':          [51.5920,-0.3610],
+  'Kenton':                [51.5817,-0.3175],
+  // === NORTHERN ===
+  'Morden':                [51.4024,-0.1948],
+  'South Wimbledon':       [51.4122,-0.1906],
+  'Colliers Wood':         [51.4186,-0.1882],
   'Tooting Broadway':      [51.4275,-0.1680],
-  'Acton Town':           [51.5028,-0.2801],
-  'East Acton':           [51.5167,-0.2350],
-  'North Acton':          [51.5236,-0.2627],
-  'South Acton':          [51.5028,-0.2801],
-  'Ruislip':              [51.5713,-0.4194],
-  'Ruislip Manor':        [51.5680,-0.4127],
-  'South Ruislip':        [51.5541,-0.3988],
-  'West Ruislip':         [51.5713,-0.4352],
-  'Rayners Lane':         [51.5753,-0.3713],
-  'Eastcote':             [51.5764,-0.3957],
-  'Uxbridge':             [51.5463,-0.4783],
-  'Hillingdon':           [51.5529,-0.4495],
-  'Ickenham':             [51.5615,-0.4410],
-  'Harrow on the Hill':   [51.5792,-0.3365],
-  'North Harrow':         [51.5920,-0.3610],
-  'Harrow & Wealdstone':  [51.5925,-0.3351],
-  'Wembley Central':      [51.5521,-0.2966],
-  'Northwick Park':       [51.5785,-0.3241],
-  'Kenton':               [51.5817,-0.3175],
-  'South Kenton':         [51.5706,-0.3082],
-  'North Wembley':        [51.5628,-0.3041],
+  'Tooting Bec':           [51.4352,-0.1478],
+  'Balham':                [51.4437,-0.1527],
+  'Clapham South':         [51.4565,-0.1480],
+  'Clapham Common':        [51.4618,-0.1390],
+  'Clapham North':         [51.4648,-0.1302],
+  'Stockwell':             [51.4723,-0.1228],
+  'Oval':                  [51.4820,-0.1134],
+  'Kennington':            [51.4881,-0.1051],
+  'Borough':               [51.5011,-0.0941],
+  'London Bridge':         [51.5079,-0.0877],
+  'Mornington Crescent':   [51.5344,-0.1388],
+  'Camden Town':           [51.5392,-0.1426],
+  'Chalk Farm':            [51.5446,-0.1545],
+  'Belsize Park':          [51.5502,-0.1645],
+  'Hampstead':             [51.5566,-0.1780],
+  'Golders Green':         [51.5727,-0.1941],
+  'Brent Cross':           [51.5765,-0.2132],
+  'Hendon Central':        [51.5832,-0.2270],
+  'Colindale':             [51.5951,-0.2499],
+  'Burnt Oak':             [51.6027,-0.2659],
+  'Edgware':               [51.6134,-0.2756],
+  // Northern - High Barnet branch
+  'High Barnet':           [51.6502,-0.1941],
+  'Totteridge & Whetstone':[51.6306,-0.1797],
+  'Woodside Park':         [51.6205,-0.1810],
+  'West Finchley':         [51.6096,-0.1887],
+  'Finchley Central':      [51.5990,-0.1924],
+  'East Finchley':         [51.5876,-0.1655],
+  'Highgate':              [51.5777,-0.1463],
+  'Archway':               [51.5654,-0.1353],
+  'Tufnell Park':          [51.5567,-0.1376],
+  'Kentish Town':          [51.5503,-0.1426],
+  // Northern - Mill Hill East
+  'Mill Hill East':        [51.6085,-0.2177],
+  // Northern - Bank branch (Charing Cross branch)
+  'Warren Street':         [51.5244,-0.1387],
+  'Goodge Street':         [51.5208,-0.1347],
+  'Leicester Square':      [51.5113,-0.1281],
+  'Pimlico':               [51.4893,-0.1334],
+  // === PICCADILLY ===
+  'Cockfosters':           [51.6511,-0.1498],
+  'Oakwood':               [51.6404,-0.1523],
+  'Southgate':             [51.6318,-0.1275],
+  'Arnos Grove':           [51.6163,-0.1255],
+  'Bounds Green':          [51.6013,-0.1238],
+  'Wood Green':            [51.5946,-0.1095],
+  'Turnpike Lane':         [51.5899,-0.1026],
+  'Manor House':           [51.5712,-0.0987],
+  'Finsbury Park':         [51.5642,-0.1058],
+  'Arsenal':               [51.5581,-0.1062],
+  'Holloway Road':         [51.5539,-0.1131],
+  'Caledonian Road':       [51.5425,-0.1188],
+  'Russell Square':        [51.5234,-0.1240],
+  'Covent Garden':         [51.5129,-0.1245],
+  'Hyde Park Corner':      [51.5027,-0.1527],
+  'Knightsbridge':         [51.5013,-0.1609],
+  'South Harrow':          [51.5641,-0.3539],
+  'Sudbury Hill':          [51.5572,-0.3767],
+  'Sudbury Town':          [51.5495,-0.3851],
+  'Alperton':              [51.5410,-0.2996],
+  'Park Royal':            [51.5268,-0.2881],
+  'North Ealing':          [51.5088,-0.2993],
+  'Boston Manor':          [51.4961,-0.3387],
+  'Northfields':           [51.4989,-0.3145],
+  'South Ealing':          [51.5004,-0.3063],
+  'Osterley':              [51.4793,-0.3534],
+  'Hounslow East':         [51.4752,-0.3564],
+  'Hounslow Central':      [51.4718,-0.3686],
+  'Hounslow West':         [51.4733,-0.3860],
+  'Hatton Cross':          [51.4660,-0.4233],
+  'Heathrow Terminals 2&3':[51.4713,-0.4523],
+  'Heathrow Terminal 4':   [51.4590,-0.4454],
+  'Heathrow Terminal 5':   [51.4731,-0.4852],
+  // === VICTORIA ===
+  'Brixton':               [51.4627,-0.1144],
+  'Vauxhall':              [51.4861,-0.1228],
+  'Highbury & Islington':  [51.5463,-0.1038],
+  'Seven Sisters':         [51.5839,-0.0726],
+  'Tottenham Hale':        [51.5882,-0.0600],
+  'Blackhorse Road':       [51.5866,-0.0408],
+  'Walthamstow Central':   [51.5830,-0.0196],
+  // === WATERLOO & CITY ===
+  // (Bank and Waterloo already defined)
+  // === OVERGROUND ===
+  // Lioness: Watford Junction → Euston
+  'Watford Junction':      [51.6636,-0.3966],
+  'Watford High Street':   [51.6558,-0.3972],
+  'Bushey':                [51.6471,-0.3830],
+  'Carpenders Park':       [51.6307,-0.3781],
+  'Hatch End':             [51.6108,-0.3705],
+  'Headstone Lane':        [51.6021,-0.3603],
+  'Harrow & Wealdstone':   [51.5925,-0.3351],
+  'Euston':                [51.5282,-0.1337],
+  // Mildmay: Stratford ↔ Richmond / Clapham Junction
+  'Hackney Wick':          [51.5434,-0.0282],
+  'Homerton':              [51.5471,-0.0462],
+  'Hackney Central':       [51.5466,-0.0555],
+  'London Fields':         [51.5404,-0.0576],
+  'Cambridge Heath':       [51.5318,-0.0580],
+  'Bethnal Green (Overground)':[51.5270,-0.0614],
+  'Haggerston':            [51.5376,-0.0759],
+  'Hoxton':                [51.5316,-0.0797],
+  'Canonbury':             [51.5490,-0.0923],
+  'Dalston Junction':      [51.5463,-0.0756],
+  'Dalston Kingsland':     [51.5492,-0.0757],
+  'Islington':             [51.5322,-0.1058],
+  // (Highbury & Islington, Canonbury, Dalston Kingsland, Hackney Central, Stratford already defined)
+  'Clapham Junction':      [51.4642,-0.1702],
+  'Wandsworth Road':       [51.4703,-0.1388],
+  'Clapham High Street':   [51.4624,-0.1302],
+  'Brixton (Overground)':  [51.4627,-0.1144],
+  'Loughborough Junction': [51.4668,-0.1017],
+  'Denmark Hill':          [51.4684,-0.0896],
+  'Peckham Rye':           [51.4697,-0.0698],
+  'Queens Road Peckham':   [51.4710,-0.0588],
+  'South Bermondsey':      [51.4862,-0.0540],
+  'New Cross Gate':        [51.4761,-0.0391],
+  'Brockley':              [51.4643,-0.0373],
+  'Honor Oak Park':        [51.4474,-0.0526],
+  'Forest Hill':           [51.4437,-0.0556],
+  'Sydenham':              [51.4279,-0.0571],
+  'Crystal Palace':        [51.4180,-0.0718],
+  'Gipsy Hill':            [51.4266,-0.0898],
+  'West Norwood':          [51.4328,-0.1039],
+  'Tulse Hill':            [51.4431,-0.1078],
+  'Streatham Hill':        [51.4367,-0.1234],
+  'Balham':                [51.4437,-0.1527],
+  // Windrush: Highbury & Islington ↔ Clapham Junction / Crystal Palace / West Croydon / New Cross Gate
+  'Surrey Quays':          [51.4929,-0.0494],
+  'New Cross':             [51.4762,-0.0364],
+  'Whitechapel':           [51.5196,-0.0600],
+  'Shadwell (Overground)': [51.5116,-0.0564],
+  'Wapping':               [51.5041,-0.0574],
+  'Rotherhithe':           [51.5008,-0.0529],
+  'West Croydon':          [51.3756,-0.1020],
+  'Norwood Junction':      [51.3988,-0.0793],
+  'Anerley':               [51.4096,-0.0661],
+  'Penge West':            [51.4124,-0.0584],
+  'Sydenham':              [51.4279,-0.0571],
+  // Weaver: Liverpool Street → Enfield Town / Cheshunt / Chingford
+  'Cheshunt':              [51.7040,-0.0232],
+  'Enfield Town':          [51.6525,-0.0804],
+  'Chingford':             [51.6319,-0.0157],
+  'Clapton':               [51.5572,-0.0578],
+  'Stoke Newington':       [51.5651,-0.0738],
+  'Stamford Hill':         [51.5727,-0.0749],
+  'Seven Sisters (Overground)':[51.5839,-0.0726],
+  'St. James Street':      [51.5842,-0.0367],
+  'Walthamstow Queens Road':[51.5827,-0.0237],
+  'Wood Street':           [51.5885,-0.0159],
+  'Highams Park':          [51.6058,-0.0047],
+  'Chingford':             [51.6319,-0.0157],
+  'Enfield Lock':          [51.6672,-0.0231],
+  'Brimsdown':             [51.6551,-0.0350],
+  'Ponders End':           [51.6472,-0.0336],
+  'Southbury':             [51.6463,-0.0541],
+  'Turkey Street':         [51.6723,-0.0688],
+  'Theobald\'s Grove':     [51.6894,-0.0675],
+  'Waltham Cross':         [51.6850,-0.0286],
+  // Suffragette: Gospel Oak ↔ Barking
+  'Gospel Oak':            [51.5551,-0.1490],
+  'Upper Holloway':        [51.5714,-0.1332],
+  'Crouch Hill':           [51.5780,-0.1068],
+  'Harringay Green Lanes': [51.5831,-0.1020],
+  'South Tottenham':       [51.5841,-0.0760],
+  'Blackhorse Road (Overground)':[51.5866,-0.0408],
+  'Walthamstow Queens Road':[51.5827,-0.0237],
+  'Leyton Midland Road':   [51.5657, 0.0001],
+  'Leytonstone High Road': [51.5648, 0.0153],
+  'Wanstead Park':         [51.5605, 0.0327],
+  'Woodgrange Park':       [51.5511, 0.0474],
+  'Barking':               [51.5398, 0.0810],
+  // Liberty: Romford ↔ Upminster
+  'Romford':               [51.5754, 0.1809],
+  'Emerson Park':          [51.5730, 0.2140],
+  'Upminster':             [51.5588, 0.2508],
+  // Missing stations
+  'Old Street':            [51.5263,-0.0873],
+  'Angel':                 [51.5322,-0.1058],
+  'All Saints':            [51.5093,-0.0129],
+  'Blackwall':             [51.5079,-0.0019],
+  'Bow Church':            [51.5272,-0.0200],
+  'Brentwood':             [51.6237, 0.3068],
+  'Caledonian Road & Barnsbury':[51.5423,-0.1186],
+  'Camden Road':           [51.5421,-0.1386],
+  'Chadwell Heath':        [51.5634, 0.1326],
+  'Crossharbour':          [51.4985,-0.0153],
+  'Devons Road':           [51.5227,-0.0178],
+  'Finchley Road & Frognal':[51.5556,-0.1795],
+  'Forest Gate':           [51.5495, 0.0344],
+  'Gidea Park':            [51.5792, 0.2127],
+  'Goodmayes':             [51.5686, 0.1093],
+  'Hackney Downs':         [51.5491,-0.0589],
+  'Hampstead Heath':       [51.5550,-0.1656],
+  'Harold Wood':           [51.5908, 0.2326],
+  'Ilford':                [51.5594, 0.0700],
+  'Kentish Town West':     [51.5503,-0.1483],
+  'Langdon Park':          [51.5121,-0.0082],
+  'Manor Park':            [51.5502, 0.0462],
+  'Maryland':              [51.5463, 0.0069],
+  'Pudding Mill Lane':     [51.5355,-0.0058],
+  'Seven Kings':           [51.5673, 0.0900],
+  'Shenfield':             [51.6422, 0.3272],
+  'Shoreditch High Street':[51.5233,-0.0782],
+  // Additional Mildmay stations
+  'Acton Central':         [51.5090,-0.2638],
+  'South Acton':           [51.4990,-0.2701],
+  'Gunnersbury':           [51.4915,-0.2749],
+  'Kew Gardens':           [51.4738,-0.2851],
+  'Richmond':              [51.4633,-0.3010],
+  'Brondesbury':           [51.5414,-0.2048],
+  'Brondesbury Park':      [51.5367,-0.2191],
+  'Kensal Rise':           [51.5340,-0.2279],
+  'Shepherd\'s Bush (Overground)':[51.5053,-0.2187],
+  'Kensington Olympia':    [51.4985,-0.2103],
+  'Imperial Wharf':        [51.4771,-0.1785],
 };
 
-// ─── STATION → LINES LOOKUP ───────────────────────────────────────────────────
-const LINE_STATIONS = {
-  'Central':            ['Ealing Broadway','West Acton','North Acton','East Acton','White City',
-                       "Shepherd's Bush",'Holland Park','Notting Hill Gate','Queensway',
-                       'Lancaster Gate','Marble Arch','Bond Street','Oxford Circus',
-                       'Tottenham Court Road','Holborn','Chancery Lane',"St. Paul's",
-                       'Bank','Liverpool Street','Bethnal Green','Mile End','Stratford'],
-  // Northern line — three separate sequences for each branch
-  'Northern':           ['Morden','South Wimbledon','Colliers Wood','Tooting Broadway','Tooting Bec','Balham','Clapham South','Clapham Common','Clapham North','Stockwell','Oval','Kennington','Elephant & Castle','Borough','London Bridge','Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston','Mornington Crescent','Camden Town','Chalk Farm','Belsize Park','Hampstead','Golders Green','Brent Cross','Hendon Central','Colindale','Burnt Oak','Edgware'],
-  'Northern_HB':        ['High Barnet','Totteridge & Whetstone','Woodside Park','West Finchley','Finchley Central','East Finchley','Highgate','Archway','Tufnell Park','Kentish Town','Camden Town'],
-  'Northern_MHE':       ['Mill Hill East','Finchley Central'],
-  'Northern_CC':        ['Warren Street','Goodge Street','Tottenham Court Road','Leicester Square','Charing Cross','Embankment','Waterloo','Kennington'],
-  'Victoria':           ['Brixton','Stockwell','Vauxhall','Pimlico','Victoria',"St. James's Park",'Green Park','Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras','Highbury & Islington','Finsbury Park'],
-  'Jubilee':            ['Stanmore','Queensbury','Kingsbury','Wembley Park','Neasden','Dollis Hill','Willesden Green','Kilburn','West Hampstead','Finchley Road',"St. John's Wood",'Swiss Cottage','Baker Street','Bond Street','Green Park','Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water','Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford'],
-  'Piccadilly':         ['Hammersmith','Barons Court',"Earl's Court",'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park','Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square','Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park','Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate','Oakwood','Cockfosters','Acton Town','South Ealing','Northfields','Boston Manor','Osterley','Hounslow East','Hounslow Central','Hounslow West','Hatton Cross','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','West Ruislip','South Ruislip'],
-  'District':           ['Wimbledon','Wimbledon Park','Southfields','East Putney','Putney Bridge','Parsons Green','Fulham Broadway','West Brompton',"Earl's Court",'Gloucester Road','South Kensington','Sloane Square','Victoria',"St. James's Park",'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','Plaistow','Upton Park','East Ham','Barking'],
-  'District_Rich':      ['Richmond','Gunnersbury','Kew Gardens','Turnham Green','Stamford Brook','Ravenscourt Park','Hammersmith','Barons Court',"Earl's Court"],
-  'District_Eal':       ['Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green','Stamford Brook','Ravenscourt Park','Hammersmith'],
-  'Circle':             ['Hammersmith','Goldhawk Road',"Shepherd's Bush Market",'Wood Lane','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment','Westminster',"St. James's Park",'Victoria','Sloane Square','South Kensington','Gloucester Road','Notting Hill Gate','Bayswater','Paddington'],
-  'Bakerloo':           ['Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross','Piccadilly Circus','Oxford Circus',"Regent's Park",'Baker Street','Marylebone','Edgware Road','Paddington','Harrow & Wealdstone','Kenton','South Kenton','North Wembley','Wembley Central','Stonebridge Park','Harlesden','Willesden Junction','Kensal Green','Queens Park'],
-  'Metropolitan':       ['Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras','Euston Square','Great Portland Street','Baker Street','Marylebone','Edgware Road','Paddington','Royal Oak','Westbourne Park','Ladbroke Grove','Latimer Road','Goldhawk Road',"Shepherd's Bush Market",'Hammersmith','Wembley Park','Preston Road','Northwick Park','Harrow on the Hill','North Harrow','Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge','Kenton'],
-  'Hammersmith & City': ['Hammersmith',"Shepherd's Bush Market",'Goldhawk Road','Latimer Road','Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street','Kings Cross St. Pancras','Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel','Mile End','West Ham'],
-  'Elizabeth':          ['Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver','West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing','Acton Main Line','Paddington','Bond Street','Tottenham Court Road','Farringdon','Liverpool Street','Whitechapel','Canary Wharf','Custom House','Maryland','Forest Gate','Manor Park','Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford','Gidea Park','Harold Wood','Brentwood','Shenfield'],
-  'Waterloo & City':    ['Waterloo','Bank'],
-  'Overground':         ['Highbury & Islington','Canonbury','Dalston Kingsland','Hackney Central','Stratford'],
-  'DLR':                ['Bank','Shadwell','Limehouse','Westferry','Poplar','Canary Wharf','Heron Quays','South Quay','Mudchute','Island Gardens','Cutty Sark','Greenwich'],
+// ── Network: line → ordered station list ─────────────────────────────────────
+// Only adjacent stations matter. Direction is irrelevant — treated bidirectionally.
+// Branch lines are separate entries.
+const NETWORK = {
+  'Bakerloo': [
+    'Elephant & Castle','Lambeth North','Waterloo','Embankment','Charing Cross',
+    'Piccadilly Circus','Oxford Circus','Regent\'s Park','Baker Street','Marylebone',
+    'Edgware Road','Paddington','Warwick Avenue','Maida Vale','Kilburn Park',
+    'Queen\'s Park','Kensal Green','Willesden Junction','Harlesden','Stonebridge Park',
+    'Wembley Central','North Wembley','South Kenton','Kenton','Harrow & Wealdstone',
+  ],
+  'Central': [
+    'Ealing Broadway','West Acton','North Acton','East Acton','White City',
+    'Shepherd\'s Bush','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green','Mile End','Stratford',
+  ],
+  'Central_Hainault_loop_via_Woodford': [
+    'Woodford','Roding Valley','Chigwell','Grange Hill','Hainault',
+  ],
+  'Central_Hainault_loop_via_Newbury': [
+    'Hainault','Fairlop','Barkingside','Newbury Park','Redbridge','Wanstead','Leytonstone',
+  ],
+  'Central_Epping': [
+    'Stratford','Leyton','Leytonstone','Snaresbrook','South Woodford','Woodford',
+    'Buckhurst Hill','Loughton','Debden','Theydon Bois','Epping',
+  ],
+  'Circle': [
+    'Hammersmith','Goldhawk Road','Shepherd\'s Bush Market','Wood Lane','Latimer Road',
+    'Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road',
+    'Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras',
+    'Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate','Tower Hill',
+    'Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment',
+    'Westminster','St. James\'s Park','Victoria','Sloane Square','South Kensington',
+    'Gloucester Road','High Street Kensington','Notting Hill Gate','Bayswater','Paddington',
+  ],
+  'District_main': [
+    'Wimbledon','Wimbledon Park','Southfields','East Putney','Putney Bridge','Parsons Green',
+    'Fulham Broadway','West Brompton','Earl\'s Court','Gloucester Road','South Kensington',
+    'Sloane Square','Victoria','St. James\'s Park','Westminster','Embankment','Temple',
+    'Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East',
+    'Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','Plaistow',
+    'Upton Park','East Ham','Barking',
+  ],
+  'District_Richmond': [
+    'Richmond','Kew Gardens','Gunnersbury','Turnham Green','Stamford Brook',
+    'Ravenscourt Park','Hammersmith','Barons Court','Earl\'s Court',
+  ],
+  'District_Ealing': [
+    'Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green',
+    'Stamford Brook','Ravenscourt Park','Hammersmith',
+  ],
+  'District_Kensington': [
+    'Earl\'s Court','High Street Kensington','Notting Hill Gate',
+  ],
+  'DLR_Bank_Lewisham': [
+    'Bank','Shadwell','Limehouse','Westferry','Poplar','West India Quay','Canary Wharf',
+    'Heron Quays','South Quay','Crossharbour','Mudchute','Island Gardens',
+    'Cutty Sark','Greenwich','Deptford Bridge','Elverson Road','Lewisham',
+  ],
+  'DLR_Stratford_Lewisham': [
+    'Stratford','Pudding Mill Lane','Bow Church','Devons Road','Bromley-by-Bow',
+    'Langdon Park','All Saints','Poplar','Blackwall','East India',
+    'Canning Town','North Greenwich',
+  ],
+  'DLR_Woolwich': [
+    'Canning Town','Royal Victoria','Custom House','Prince Regent','Royal Albert',
+    'Beckton Park','Cyprus','Gallions Reach','Beckton',
+  ],
+  'DLR_Woolwich_Arsenal': [
+    'North Greenwich','Woolwich Arsenal',
+  ],
+  'DLR_Heron_Quays': [
+    'Heron Quays','West India Quay','Westferry',
+  ],
+  'Elizabeth': [
+    'Paddington','Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
+    'Whitechapel','Canary Wharf','Custom House','Woolwich Arsenal',
+    'Maryland','Forest Gate','Manor Park','Ilford','Seven Kings','Goodmayes',
+    'Chadwell Heath','Romford','Gidea Park','Harold Wood','Brentwood','Shenfield',
+  ],
+  'Elizabeth_west': [
+    'Paddington','Acton Main Line','West Ealing','Hanwell','Southall',
+    'Hayes & Harlington',
+  ],
+  'Hammersmith & City': [
+    'Hammersmith','Shepherd\'s Bush Market','Goldhawk Road','Latimer Road','Ladbroke Grove',
+    'Westbourne Park','Royal Oak','Paddington','Edgware Road','Baker Street',
+    'Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon',
+    'Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel',
+    'Mile End','Bow Road','Bromley-by-Bow','West Ham',
+  ],
+  'Jubilee': [
+    'Stanmore','Canons Park','Queensbury','Kingsbury','Wembley Park','Neasden',
+    'Dollis Hill','Willesden Green','Kilburn','West Hampstead','Finchley Road',
+    'Swiss Cottage','St. John\'s Wood','Baker Street','Bond Street','Green Park',
+    'Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water',
+    'Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford',
+  ],
+  'Metropolitan_main': [
+    'Aldgate','Liverpool Street','Moorgate','Farringdon','Kings Cross St. Pancras',
+    'Euston Square','Great Portland Street','Baker Street','Finchley Road',
+    'Wembley Park','Preston Road','Northwick Park','Harrow on the Hill',
+  ],
+  'Metropolitan_Uxbridge': [
+    'Harrow on the Hill','North Harrow','Pinner','Northwood Hills','Northwood',
+    'Moor Park','Rickmansworth','Chorleywood','Chalfont & Latimer','Amersham',
+  ],
+  'Metropolitan_Chesham': [
+    'Chalfont & Latimer','Chesham',
+  ],
+  'Metropolitan_Watford': [
+    'Croxley Green','Watford High Street','Watford',
+  ],
+  'Metropolitan_Uxbridge_direct': [
+    'Harrow on the Hill','Rayners Lane','Eastcote','Ruislip Manor','Ruislip',
+    'Ickenham','Hillingdon','Uxbridge',
+  ],
+  'Metropolitan_Kenton': [
+    'Baker Street','Marylebone','Edgware Road','Paddington','Royal Oak','Westbourne Park',
+    'Ladbroke Grove','Latimer Road','Goldhawk Road','Shepherd\'s Bush Market','Hammersmith',
+  ],
+  'Northern_Morden_Bank': [
+    'Morden','South Wimbledon','Colliers Wood','Tooting Broadway','Tooting Bec',
+    'Balham','Clapham South','Clapham Common','Clapham North','Stockwell','Oval',
+    'Kennington','Elephant & Castle','Borough','London Bridge','Bank',
+  ],
+  'Northern_Bank_Edgware': [
+    'Bank','Moorgate','Old Street','Angel','Kings Cross St. Pancras','Euston',
+    'Mornington Crescent','Camden Town','Chalk Farm','Belsize Park','Hampstead',
+    'Golders Green','Brent Cross','Hendon Central','Colindale','Burnt Oak','Edgware',
+  ],
+  'Northern_Charing_Cross': [
+    'Kennington','Waterloo','Embankment','Charing Cross','Leicester Square',
+    'Tottenham Court Road','Goodge Street','Warren Street','Euston',
+  ],
+  'Northern_High_Barnet': [
+    'Camden Town','Kentish Town','Tufnell Park','Archway','Highgate','East Finchley',
+    'Finchley Central','West Finchley','Woodside Park','Totteridge & Whetstone','High Barnet',
+  ],
+  'Northern_Mill_Hill_East': [
+    'Finchley Central','Mill Hill East',
+  ],
+  'Northern_Highbury': [
+    'Euston','Warren Street','Goodge Street','Tottenham Court Road','Leicester Square',
+    'Charing Cross','Embankment','Waterloo','Kennington',
+  ],
+  'Piccadilly_main': [
+    'Cockfosters','Oakwood','Southgate','Arnos Grove','Bounds Green','Wood Green',
+    'Turnpike Lane','Manor House','Finsbury Park','Arsenal','Holloway Road',
+    'Caledonian Road','Kings Cross St. Pancras','Russell Square','Holborn','Covent Garden',
+    'Leicester Square','Piccadilly Circus','Green Park','Hyde Park Corner','Knightsbridge',
+    'South Kensington','Gloucester Road','Earl\'s Court','Barons Court','Hammersmith',
+  ],
+  'Piccadilly_Heathrow': [
+    'Earl\'s Court','Acton Town','South Ealing','Northfields','Boston Manor','Osterley',
+    'Hounslow East','Hounslow Central','Hounslow West','Hatton Cross','Heathrow Terminals 2&3',
+  ],
+  'Piccadilly_Heathrow_T4': [
+    'Hatton Cross','Heathrow Terminal 4',
+  ],
+  'Piccadilly_Heathrow_T5': [
+    'Heathrow Terminals 2&3','Heathrow Terminal 5',
+  ],
+  'Piccadilly_Uxbridge': [
+    'Acton Town','Park Royal','Alperton','Sudbury Town','Sudbury Hill','South Harrow',
+    'Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge',
+  ],
+  'Victoria': [
+    'Brixton','Stockwell','Vauxhall','Pimlico','Victoria','St. James\'s Park','Green Park',
+    'Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras',
+    'Highbury & Islington','Finsbury Park','Seven Sisters','Tottenham Hale',
+    'Blackhorse Road','Walthamstow Central',
+  ],
+  'Waterloo & City': [
+    'Waterloo','Bank',
+  ],
+  // Overground lines
+  'Overground_Lioness': [
+    'Watford Junction','Watford High Street','Bushey','Carpenders Park','Hatch End',
+    'Headstone Lane','Harrow & Wealdstone','Kenton','South Kenton','North Wembley',
+    'Wembley Central','Stonebridge Park','Harlesden','Willesden Junction','Kensal Green',
+    'Queen\'s Park','Kilburn Park','Maida Vale','Warwick Avenue','Paddington',
+    'Euston',
+  ],
+  'Overground_Mildmay_Richmond': [
+    'Stratford','Hackney Wick','Homerton','Hackney Central','London Fields',
+    'Cambridge Heath','Bethnal Green (Overground)','Hoxton','Haggerston',
+    'Dalston Junction','Canonbury','Highbury & Islington',
+    'Caledonian Road & Barnsbury','Camden Road','Kentish Town West',
+    'Gospel Oak','Hampstead Heath','Finchley Road & Frognal',
+    'West Hampstead','Brondesbury Park','Brondesbury','Kensal Rise',
+    'Shepherd\'s Bush (Overground)','Kensington Olympia','Imperial Wharf',
+    'Clapham Junction',
+  ],
+  'Overground_Mildmay_Clapham': [
+    'Stratford','Hackney Wick','Homerton','Hackney Central','Dalston Kingsland',
+    'Dalston Junction','Highbury & Islington',
+  ],
+  'Overground_Windrush_Clapham': [
+    'Highbury & Islington','Canonbury','Dalston Kingsland','Dalston Junction',
+    'Haggerston','Hoxton','Shoreditch High Street','Whitechapel',
+    'Shadwell (Overground)','Wapping','Rotherhithe','Canada Water','Surrey Quays',
+    'New Cross Gate','Brockley','Honor Oak Park','Forest Hill','Sydenham',
+    'Crystal Palace','Gipsy Hill','West Norwood','Tulse Hill','Streatham Hill',
+    'Balham','Wandsworth Road','Clapham High Street','Clapham Junction',
+  ],
+  'Overground_Windrush_WCroydon': [
+    'Crystal Palace','Norwood Junction','Anerley','Penge West','Sydenham',
+    'New Cross Gate','Surrey Quays','Canada Water','Rotherhithe','Wapping',
+    'Shadwell (Overground)','Whitechapel','Shoreditch High Street',
+    'Hoxton','Haggerston','Dalston Junction','Dalston Kingsland',
+    'Canonbury','Highbury & Islington',
+  ],
+  'Overground_Weaver_Enfield': [
+    'Liverpool Street','Cambridge Heath','London Fields','Hackney Downs',
+    'Clapton','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
+    'Enfield Town',
+  ],
+  'Overground_Weaver_Cheshunt': [
+    'Liverpool Street','Cambridge Heath','London Fields','Hackney Downs',
+    'Clapton','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
+    'Enfield Lock','Brimsdown','Ponders End','Southbury','Turkey Street',
+    'Theobald\'s Grove','Cheshunt',
+  ],
+  'Overground_Weaver_Chingford': [
+    'Liverpool Street','Cambridge Heath','London Fields','Hackney Downs',
+    'St. James Street','Walthamstow Queens Road','Wood Street','Highams Park','Chingford',
+  ],
+  'Overground_Suffragette': [
+    'Gospel Oak','Upper Holloway','Crouch Hill','Harringay Green Lanes',
+    'South Tottenham','Blackhorse Road (Overground)','Walthamstow Queens Road',
+    'Leyton Midland Road','Leytonstone High Road','Wanstead Park','Woodgrange Park','Barking',
+  ],
+  'Overground_Liberty': [
+    'Romford','Emerson Park','Upminster',
+  ],
 };
 
-// ─── JOURNEY TIMES (travel time only, no waiting) ────────────────────────────
-// Source: TfL Timetable API, April 2026
-const JOURNEY_TIMES = {
-  'Morden|South Wimbledon':2,
-  'South Wimbledon|Colliers Wood':2,
-  'Colliers Wood|Tooting Broadway':2,
-  'Tooting Broadway|Tooting Bec':2,
-  'Tooting Bec|Balham':1,
-  'Balham|Clapham South':2,
-  'Clapham South|Clapham Common':2,
-  'Clapham Common|Clapham North':2,
-  'Clapham North|Stockwell':1,
-  'Stockwell|Oval':2,
-  'Oval|Kennington':3,
-  'Kennington|Elephant & Castle':2,
-  'Elephant & Castle|Borough':2,
-  'Borough|London Bridge':1,
-  'London Bridge|Bank':2,
-  'Bank|Moorgate':2,
-  'Moorgate|Old Street':2,
-  'Old Street|Angel':2,
-  'Angel|Kings Cross St. Pancras':2,
-  'Kings Cross St. Pancras|Euston':2,
-  'Euston|Camden Town':4,
-  'Camden Town|Chalk Farm':1,
-  'Chalk Farm|Belsize Park':2,
-  'Belsize Park|Hampstead':2,
-  'Hampstead|Golders Green':5,
-  'Golders Green|Brent Cross':2,
-  'Brent Cross|Hendon Central':2,
-  'Hendon Central|Colindale':3,
-  'Colindale|Burnt Oak':3,
-  'Burnt Oak|Edgware':2,
-  'High Barnet|Totteridge & Whetstone':3,
-  'Totteridge & Whetstone|Woodside Park':3,
-  'Woodside Park|West Finchley':1,
-  'West Finchley|Finchley Central':3,
-  'Finchley Central|East Finchley':3,
-  'East Finchley|Highgate':2,
-  'Highgate|Archway':3,
-  'Archway|Tufnell Park':1,
-  'Tufnell Park|Kentish Town':2,
-  'Kentish Town|Camden Town':3,
-  'Mill Hill East|Finchley Central':3,
-  'Camden Town|Mornington Crescent':1,
-  'Mornington Crescent|Euston':2,
-  'Warren Street|Goodge Street':1,
-  'Goodge Street|Tottenham Court Road':1,
-  'Tottenham Court Road|Leicester Square':2,
-  'Leicester Square|Charing Cross':1,
-  'Charing Cross|Embankment':1,
-  'Embankment|Waterloo':1,
-  'Waterloo|Kennington':4,
-  'Highbury & Islington|Angel':3,
-  'Brixton|Stockwell':2,
-  'Stockwell|Vauxhall':2,
-  'Vauxhall|Pimlico':1,
-  'Pimlico|Victoria':2,
-  'Victoria|Green Park':2,
-  'Green Park|Oxford Circus':2,
-  'Oxford Circus|Warren Street':2,
-  'Euston|Warren Street':2,
-  'Kings Cross St. Pancras|Highbury & Islington':2,
-  'Highbury & Islington|Finsbury Park':3,
-  'Finsbury Park|Seven Sisters':3,
-  'Seven Sisters|Tottenham Hale':2,
-  'Tottenham Hale|Blackhorse Road':2,
-  'Blackhorse Road|Walthamstow Central':2,
-  'Victoria|St. James\'s Park':1,
-  'St. James\'s Park|Green Park':2,
-  'Ealing Broadway|West Acton':1,
-  'West Acton|North Acton':2,
-  'North Acton|East Acton':1,
-  'East Acton|White City':2,
-  'White City|Holland Park':1,
-  'Holland Park|Notting Hill Gate':1,
-  'Notting Hill Gate|Queensway':1,
-  'Queensway|Lancaster Gate':1,
-  'Lancaster Gate|Marble Arch':2,
-  'Marble Arch|Bond Street':1,
-  'Bond Street|Oxford Circus':1,
-  'Oxford Circus|Tottenham Court Road':1,
-  'Tottenham Court Road|Holborn':1,
-  'Holborn|Chancery Lane':1,
-  'Chancery Lane|St. Paul\'s':1,
-  'St. Paul\'s|Bank':1,
-  'Bank|Liverpool Street':1,
-  'Liverpool Street|Bethnal Green':3,
-  'Bethnal Green|Mile End':2,
-  'Mile End|Stratford':3,
-  'Stratford|Leytonstone':3,
-  'Leytonstone|Snaresbrook':2,
-  'Snaresbrook|Buckhurst Hill':2,
-  'Epping|Buckhurst Hill':2,
-  'North Acton|Ruislip Gardens':1,
-  'Stanmore|Queensbury':2,
-  'Queensbury|Kingsbury':2,
-  'Kingsbury|Wembley Park':5,
-  'Wembley Park|Neasden':2,
-  'Neasden|Dollis Hill':2,
-  'Dollis Hill|Willesden Green':2,
-  'Willesden Green|Kilburn':2,
-  'Kilburn|Finchley Road':1,
-  'Finchley Road|Swiss Cottage':2,
-  'Swiss Cottage|St. John\'s Wood':1,
-  'St. John\'s Wood|Baker Street':3,
-  'Baker Street|Bond Street':2,
-  'Bond Street|Green Park':2,
-  'Green Park|Westminster':3,
-  'Westminster|Waterloo':1,
-  'Waterloo|Southwark':1,
-  'Southwark|London Bridge':2,
-  'London Bridge|Bermondsey':3,
-  'Bermondsey|Canada Water':1,
-  'Canada Water|Canary Wharf':3,
-  'Canary Wharf|North Greenwich':2,
-  'North Greenwich|Canning Town':3,
-  'Canning Town|Stratford':4,
-  'Cockfosters|Oakwood':2,
-  'Oakwood|Southgate':3,
-  'Southgate|Arnos Grove':4,
-  'Arnos Grove|Bounds Green':3,
-  'Bounds Green|Wood Green':2,
-  'Wood Green|Turnpike Lane':2,
-  'Turnpike Lane|Manor House':3,
-  'Manor House|Finsbury Park':2,
-  'Finsbury Park|Arsenal':2,
-  'Arsenal|Holloway Road':1,
-  'Holloway Road|Caledonian Road':2,
-  'Caledonian Road|Kings Cross St. Pancras':3,
-  'Kings Cross St. Pancras|Russell Square':2,
-  'Russell Square|Holborn':2,
-  'Holborn|Covent Garden':2,
-  'Covent Garden|Leicester Square':2,
-  'Leicester Square|Piccadilly Circus':1,
-  'Piccadilly Circus|Green Park':2,
-  'Green Park|Hyde Park Corner':2,
-  'Hyde Park Corner|Knightsbridge':2,
-  'Knightsbridge|South Kensington':2,
-  'South Kensington|Gloucester Road':2,
-  'Gloucester Road|Earl\'s Court':2,
-  'Earl\'s Court|Barons Court':3,
-  'Barons Court|Hammersmith':2,
-  'Heathrow Terminal 5|Hatton Cross':3,
-  'Hatton Cross|Hounslow West':4,
-  'Hounslow West|Hounslow Central':2,
-  'Hounslow Central|Hounslow East':2,
-  'Hounslow East|Osterley':2,
-  'Osterley|Boston Manor':3,
-  'Boston Manor|Northfields':3,
-  'Northfields|South Ealing':1,
-  'South Ealing|Acton Town':5,
-  'Heathrow Terminal 4|Hatton Cross':3,
-  'Hatton Cross|Heathrow Terminals 2 & 3':5,
-  'Heathrow Terminals 2 & 3|Heathrow Terminal 5':4,
-  'Uxbridge|Hillingdon':2,
-  'Hillingdon|Ickenham':2,
-  'Ickenham|Ruislip':3,
-  'Ruislip|Ruislip Manor':1,
-  'Ruislip Manor|Eastcote':2,
-  'Eastcote|Rayners Lane':4,
-  'Rayners Lane|South Harrow':3,
-  'South Harrow|Sudbury Hill':2,
-  'Sudbury Hill|Sudbury Town':3,
-  'Sudbury Town|Alperton':2,
-  'Alperton|Park Royal':3,
-  'Park Royal|Ealing Common':2,
-  'Ealing Common|Acton Town':4,
-  'Acton Town|Turnham Green':4,
-  'Turnham Green|Hammersmith':4,
-  'Wimbledon|Wimbledon Park':2,
-  'Wimbledon Park|Southfields':3,
-  'Southfields|East Putney':2,
-  'East Putney|Putney Bridge':3,
-  'Putney Bridge|Parsons Green':2,
-  'Parsons Green|Fulham Broadway':1,
-  'Fulham Broadway|West Brompton':2,
-  'West Brompton|Earl\'s Court':4,
-  'Earl\'s Court|Notting Hill Gate':2,
-  'Notting Hill Gate|Bayswater':2,
+// ── Adjacent journey times (minutes, travel time only) ───────────────────────
+// Source: TfL timetable data. Only adjacent station pairs.
+// Key format: "StationA|StationB" — lookup is bidirectional.
+const TIMES = {
+  // BAKERLOO
+  'Elephant & Castle|Lambeth North':2,'Lambeth North|Waterloo':2,
+  'Waterloo|Embankment':2,'Embankment|Charing Cross':1,'Charing Cross|Piccadilly Circus':3,
+  'Piccadilly Circus|Oxford Circus':2,'Oxford Circus|Regent\'s Park':2,
+  'Regent\'s Park|Baker Street':2,'Baker Street|Marylebone':2,'Marylebone|Edgware Road':2,
+  'Edgware Road|Paddington':3,'Paddington|Warwick Avenue':2,'Warwick Avenue|Maida Vale':2,
+  'Maida Vale|Kilburn Park':2,'Kilburn Park|Queen\'s Park':2,'Queen\'s Park|Kensal Green':2,
+  'Kensal Green|Willesden Junction':3,'Willesden Junction|Harlesden':2,'Harlesden|Stonebridge Park':2,
+  'Stonebridge Park|Wembley Central':3,'Wembley Central|North Wembley':2,
+  'North Wembley|South Kenton':2,'South Kenton|Kenton':2,'Kenton|Harrow & Wealdstone':3,
+  // CENTRAL
+  'Ealing Broadway|West Acton':2,'West Acton|North Acton':2,'North Acton|East Acton':2,
+  'East Acton|White City':2,'White City|Shepherd\'s Bush':1,'Shepherd\'s Bush|Holland Park':2,
+  'Holland Park|Notting Hill Gate':1,'Notting Hill Gate|Queensway':1,'Queensway|Lancaster Gate':2,
+  'Lancaster Gate|Marble Arch':2,'Marble Arch|Bond Street':2,'Bond Street|Oxford Circus':1,
+  'Oxford Circus|Tottenham Court Road':1,'Tottenham Court Road|Holborn':1,'Holborn|Chancery Lane':2,
+  'Chancery Lane|St. Paul\'s':1,'St. Paul\'s|Bank':1,'Bank|Liverpool Street':2,
+  'Liverpool Street|Bethnal Green':3,'Bethnal Green|Mile End':2,'Mile End|Stratford':3,
+  'Stratford|Leyton':3,'Leyton|Leytonstone':2,'Leytonstone|Snaresbrook':2,
+  'Snaresbrook|South Woodford':2,'South Woodford|Woodford':2,'Woodford|Buckhurst Hill':2,
+  'Buckhurst Hill|Loughton':3,'Loughton|Debden':2,'Debden|Theydon Bois':4,'Theydon Bois|Epping':3,
+  'Woodford|Roding Valley':3,'Roding Valley|Chigwell':3,'Chigwell|Grange Hill':3,
+  'Grange Hill|Hainault':2,'Hainault|Fairlop':2,'Fairlop|Barkingside':2,
+  'Barkingside|Newbury Park':2,'Newbury Park|Redbridge':2,'Redbridge|Wanstead':2,'Wanstead|Leytonstone':2,
+  // CIRCLE / H&C shared
+  'Hammersmith|Goldhawk Road':2,'Goldhawk Road|Shepherd\'s Bush Market':2,
+  'Shepherd\'s Bush Market|Wood Lane':1,'Wood Lane|Latimer Road':2,'Latimer Road|Ladbroke Grove':2,
+  'Ladbroke Grove|Westbourne Park':1,'Westbourne Park|Royal Oak':2,'Royal Oak|Paddington':2,
+  'Paddington|Edgware Road':4,'Edgware Road|Baker Street':3,'Baker Street|Great Portland Street':1,
+  'Great Portland Street|Euston Square':2,'Euston Square|Kings Cross St. Pancras':2,
+  'Kings Cross St. Pancras|Farringdon':3,'Farringdon|Barbican':2,'Barbican|Moorgate':2,
+  'Moorgate|Liverpool Street':2,'Liverpool Street|Aldgate':2,'Aldgate|Tower Hill':3,
+  'Tower Hill|Monument':3,'Monument|Cannon Street':1,'Cannon Street|Mansion House':2,
+  'Mansion House|Blackfriars':1,'Blackfriars|Temple':2,'Temple|Embankment':1,
+  'Embankment|Westminster':2,'Westminster|St. James\'s Park':2,'St. James\'s Park|Victoria':2,
+  'Victoria|Sloane Square':2,'Sloane Square|South Kensington':3,
+  'South Kensington|Gloucester Road':2,'Gloucester Road|High Street Kensington':3,
+  'High Street Kensington|Notting Hill Gate':2,'Notting Hill Gate|Bayswater':2,
   'Bayswater|Paddington':2,
-  'Richmond|Kew Gardens':3,
-  'Kew Gardens|Turnham Green':4,
-  'Turnham Green|Stamford Brook':1,
-  'Stamford Brook|Ravenscourt Park':2,
-  'Ravenscourt Park|Hammersmith':2,
-  'South Kensington|Sloane Square':2,
-  'Sloane Square|Victoria':2,
-  'St. James\'s Park|Westminster':2,
-  'Westminster|Embankment':2,
-  'Embankment|Temple':1,
-  'Temple|Blackfriars':2,
-  'Blackfriars|Mansion House':1,
-  'Mansion House|Cannon Street':2,
-  'Cannon Street|Monument':1,
-  'Monument|Tower Hill':3,
+  // DISTRICT extra
+  'Wimbledon|Wimbledon Park':2,'Wimbledon Park|Southfields':3,'Southfields|East Putney':2,
+  'East Putney|Putney Bridge':3,'Putney Bridge|Parsons Green':2,'Parsons Green|Fulham Broadway':1,
+  'Fulham Broadway|West Brompton':2,'West Brompton|Earl\'s Court':3,
+  'Earl\'s Court|Gloucester Road':2,'Earl\'s Court|Barons Court':3,
+  'Barons Court|Hammersmith':2,
+  'Richmond|Kew Gardens':3,'Kew Gardens|Gunnersbury':2,'Gunnersbury|Turnham Green':4,
+  'Turnham Green|Stamford Brook':1,'Stamford Brook|Ravenscourt Park':2,'Ravenscourt Park|Hammersmith':2,
+  'Ealing Broadway|Ealing Common':3,'Ealing Common|Acton Town':4,
+  'Acton Town|Chiswick Park':2,'Chiswick Park|Turnham Green':2,
+  'Aldgate East|Whitechapel':2,'Whitechapel|Stepney Green':2,'Stepney Green|Mile End':2,
+  'Mile End|Bow Road':1,'Bow Road|Bromley-by-Bow':2,'Bromley-by-Bow|West Ham':2,
+  'Bromley-by-Bow|Plaistow':1,'Plaistow|Upton Park':2,'Upton Park|East Ham':2,'East Ham|Barking':4,
   'Tower Hill|Aldgate East':2,
-  'Aldgate East|Whitechapel':2,
-  'Whitechapel|Stepney Green':2,
-  'Stepney Green|Mile End':2,
-  'Mile End|Bow Road':1,
-  'Bow Road|Bromley-by-Bow':2,
-  'Bromley-by-Bow|Plaistow':1,
-  'Plaistow|Upton Park':2,
-  'Upton Park|East Ham':2,
-  'East Ham|Barking':4,
-  'Ealing Broadway|Ealing Common':3,
-  'Acton Town|Chiswick Park':2,
-  'Chiswick Park|Turnham Green':2,
-  'Hammersmith|Goldhawk Road':1,
-  'Goldhawk Road|Shepherd\'s Bush Market':2,
-  'Shepherd\'s Bush Market|Latimer Road':1,
-  'Latimer Road|Ladbroke Grove':2,
-  'Ladbroke Grove|Westbourne Park':1,
-  'Westbourne Park|Royal Oak':2,
-  'Royal Oak|Paddington':2,
-  'Paddington|Edgware Road':4,
-  'Edgware Road|Baker Street':3,
-  'Baker Street|Great Portland Street':1,
-  'Great Portland Street|Euston Square':2,
-  'Euston Square|Kings Cross St. Pancras':2,
-  'Kings Cross St. Pancras|Farringdon':3,
-  'Farringdon|Barbican':2,
-  'Barbican|Moorgate':2,
-  'Moorgate|Liverpool Street':2,
-  'Liverpool Street|Aldgate':2,
-  'Aldgate|Tower Hill':3,
-  'Gloucester Road|Notting Hill Gate':4,
-  'Harrow & Wealdstone|Willesden Junction':2,
-  'Willesden Junction|Queens Park':4,
-  'Queens Park|Kilburn Park':1,
-  'Kilburn Park|Maida Vale':2,
-  'Maida Vale|Warwick Avenue':2,
-  'Warwick Avenue|Paddington':2,
-  'Edgware Road|Marylebone':2,
-  'Marylebone|Baker Street':1,
-  'Baker Street|Regent\'s Park':2,
-  'Regent\'s Park|Oxford Circus':2,
-  'Oxford Circus|Piccadilly Circus':2,
-  'Piccadilly Circus|Charing Cross':2,
-  'Waterloo|Lambeth North':1,
-  'Lambeth North|Elephant & Castle':4,
-  'Baker Street|Finchley Road':6,
-  'Finchley Road|Wembley Park':7,
-  'Wembley Park|Preston Road':2,
-  'Preston Road|Northwick Park':3,
+  // DLR
+  'Bank|Shadwell':5,'Shadwell|Limehouse':3,'Limehouse|Westferry':2,
+  'Westferry|Poplar':2,'Poplar|West India Quay':1,'West India Quay|Canary Wharf':2,
+  'Canary Wharf|Heron Quays':1,'Heron Quays|South Quay':2,'South Quay|Crossharbour':1,
+  'Crossharbour|Mudchute':2,'Mudchute|Island Gardens':1,'Island Gardens|Cutty Sark':2,
+  'Cutty Sark|Greenwich':3,'Greenwich|Deptford Bridge':2,'Deptford Bridge|Elverson Road':1,
+  'Elverson Road|Lewisham':1,
+  'Stratford|Pudding Mill Lane':2,'Pudding Mill Lane|Bow Church':2,'Bow Church|Devons Road':2,
+  'Devons Road|Langdon Park':1,'Langdon Park|All Saints':2,'All Saints|Poplar':1,
+  'Poplar|Blackwall':1,'Blackwall|East India':2,'East India|Canning Town':2,
+  'Canning Town|Royal Victoria':2,'Royal Victoria|Custom House':2,'Custom House|Prince Regent':2,
+  'Prince Regent|Royal Albert':2,'Royal Albert|Beckton Park':2,'Beckton Park|Cyprus':2,
+  'Cyprus|Gallions Reach':2,'Gallions Reach|Beckton':2,
+  'Canning Town|North Greenwich':2,
+  'North Greenwich|Woolwich Arsenal':5,
+  // ELIZABETH
+  'Paddington|Bond Street':4,'Bond Street|Tottenham Court Road':3,
+  'Tottenham Court Road|Farringdon':3,'Farringdon|Liverpool Street':3,
+  'Liverpool Street|Whitechapel':3,'Whitechapel|Canary Wharf':6,
+  'Canary Wharf|Custom House':4,'Custom House|Woolwich Arsenal':4,
+  'Woolwich Arsenal|Maryland':6,'Maryland|Forest Gate':2,'Forest Gate|Manor Park':2,
+  'Manor Park|Ilford':2,'Ilford|Seven Kings':3,'Seven Kings|Goodmayes':2,
+  'Goodmayes|Chadwell Heath':2,'Chadwell Heath|Romford':4,'Romford|Gidea Park':3,
+  'Gidea Park|Harold Wood':3,'Harold Wood|Brentwood':4,'Brentwood|Shenfield':5,
+  'Paddington|Acton Main Line':5,'Acton Main Line|West Ealing':3,
+  'West Ealing|Hanwell':3,'Hanwell|Southall':4,'Southall|Hayes & Harlington':3,
+  // JUBILEE — full line including northern section
+  'Stanmore|Canons Park':2,'Canons Park|Queensbury':2,'Queensbury|Kingsbury':2,
+  'Kingsbury|Wembley Park':5,'Wembley Park|Neasden':2,'Neasden|Dollis Hill':2,
+  'Dollis Hill|Willesden Green':2,'Willesden Green|Kilburn':2,'Kilburn|West Hampstead':2,
+  'West Hampstead|Finchley Road':2,'Finchley Road|Swiss Cottage':2,
+  'Swiss Cottage|St. John\'s Wood':1,'St. John\'s Wood|Baker Street':3,
+  'Baker Street|Bond Street':2,'Bond Street|Green Park':2,'Green Park|Westminster':3,
+  'Westminster|Waterloo':1,'Waterloo|Southwark':1,'Southwark|London Bridge':2,
+  'London Bridge|Bermondsey':3,'Bermondsey|Canada Water':1,'Canada Water|Canary Wharf':3,
+  'Canary Wharf|North Greenwich':2,'North Greenwich|Canning Town':2,
+  'Canning Town|West Ham':2,'West Ham|Stratford':3,
+  // METROPOLITAN
+  'Aldgate|Liverpool Street':3,'Liverpool Street|Moorgate':2,'Moorgate|Farringdon':2,
+  'Farringdon|Kings Cross St. Pancras':3,'Kings Cross St. Pancras|Euston Square':2,
+  'Euston Square|Great Portland Street':2,'Great Portland Street|Baker Street':1,
+  'Baker Street|Finchley Road':6,'Finchley Road|Wembley Park':7,
+  'Wembley Park|Preston Road':2,'Preston Road|Northwick Park':3,
   'Northwick Park|Harrow on the Hill':3,
-  'Harrow on the Hill|Rayners Lane':2,
-  'Amersham|Chalfont & Latimer':3,
-  'Chalfont & Latimer|Moor Park':4,
-  'Moor Park|Northwood':3,
-  'Northwood|Northwood Hills':2,
-  'Northwood Hills|Pinner':3,
-  'Pinner|North Harrow':2,
-  'North Harrow|Harrow on the Hill':3,
-  'Paddington|Bond Street':4,
-  'Bond Street|Tottenham Court Road':3,
-  'Tottenham Court Road|Farringdon':3,
-  'Farringdon|Liverpool Street':3,
-  'Liverpool Street|Whitechapel':3,
-  'Whitechapel|Canary Wharf':6,
-  'Canary Wharf|Custom House':4,
-  'Custom House|Maryland':5,
-  'Maryland|Forest Gate':2,
-  'Forest Gate|Manor Park':2,
-  'Manor Park|Ilford':2,
-  'Ilford|Seven Kings':3,
-  'Seven Kings|Goodmayes':2,
-  'Goodmayes|Chadwell Heath':2,
-  'Chadwell Heath|Romford':4,
-  'Romford|Gidea Park':3,
-  'Gidea Park|Harold Wood':3,
-  'Harold Wood|Brentwood':4,
-  'Brentwood|Shenfield':5,
-  'Paddington|Acton Main Line':5,
-  'Acton Main Line|West Ealing':3,
-  'West Ealing|Hanwell':3,
-  'Hanwell|Southall':4,
-  'Southall|Hayes & Harlington':3,
-  'Hayes & Harlington|West Drayton':3,
-  'West Drayton|Iver':3,
-  'Iver|Langley':3,
-  'Langley|Slough':3,
-  'Slough|Burnham':4,
-  'Burnham|Taplow':3,
-  'Taplow|Maidenhead':3,
-  'Maidenhead|Twyford':6,
-  'Twyford|Reading':8,
-  'Waterloo|Bank':4,
-  // Gap-fill from TfL Timetable API
-  'Lewisham|Elverson Road':1,
-  'Elverson Road|Deptford Bridge':2,
-  'Deptford Bridge|Cutty Sark':1,
-  'Cutty Sark|Island Gardens':2,
-  'Island Gardens|Mudchute':1,
-  'Mudchute|Crossharbour':2,
-  'Crossharbour|South Quay':1,
-  'South Quay|Heron Quays':2,
-  'Heron Quays|West India Quay':1,
-  'West India Quay|Westferry':1,
-  'Westferry|Limehouse':2,
-  'Limehouse|Shadwell':2,
-  'Earl\'s Court|High Street Kensington':2,
-  'High Street Kensington|Notting Hill Gate':2,
-  'Baker Street|Oxford Circus':2,
-  'Waterloo|Elephant & Castle':4,
-  'Royal Oak|Edgware Road':4,
-  'Gloucester Road|High Street Kensington':4,
-
-  // Additional adjacent pairs
-  'Oxford Circus|Regent\'s Park':2,
-  'White City|Shepherd\'s Bush':1,
-  'Shepherd\'s Bush|Holland Park':1,
-  'Westminster|St. James\'s Park':2,
-  'Victoria|St. James\'s Park':1,
-  'Wimbledon|East Putney':4,
-  'West Brompton|Earl\'s Court':3,
-  'Barons Court|Earl\'s Court':2,
-  'Bank|Shadwell':5,
-  'Westferry|Poplar':2,
-  'Poplar|Canary Wharf':3,
-  'Canary Wharf|Heron Quays':1,
-  'South Quay|Mudchute':1,
-  'Cutty Sark|Greenwich':3,
-  'Canary Wharf|Stratford':7,
-  'Canning Town|West Ham':3,
-  'West Ham|Stratford':4,
-  'Swiss Cottage|St. John\'s Wood':1,
-  'Baker Street|Swiss Cottage':3,
-  'West Hampstead|Finchley Road':2,
-  'Moorgate|Farringdon':2,
-  'Latimer Road|Goldhawk Road':2,
-  'Goldhawk Road|Shepherd\'s Bush Market':2,
-  'Shepherd\'s Bush Market|Hammersmith':1,
-  'Hammersmith|Wembley Park':20,
+  'Harrow on the Hill|North Harrow':3,'North Harrow|Pinner':3,
+  'Pinner|Northwood Hills':3,'Northwood Hills|Northwood':2,'Northwood|Moor Park':3,
+  'Moor Park|Rickmansworth':3,'Rickmansworth|Chorleywood':4,
+  'Chorleywood|Chalfont & Latimer':4,'Chalfont & Latimer|Amersham':3,
+  'Chalfont & Latimer|Chesham':8,
+  'Croxley Green|Watford High Street':2,'Watford High Street|Watford':2,
+  'Harrow on the Hill|Rayners Lane':2,'Rayners Lane|Eastcote':4,
+  'Eastcote|Ruislip Manor':2,'Ruislip Manor|Ruislip':1,'Ruislip|Ickenham':3,
+  'Ickenham|Hillingdon':2,'Hillingdon|Uxbridge':2,
+  'Baker Street|Marylebone':1,'Marylebone|Edgware Road':2,'Edgware Road|Paddington':3,
+  'Paddington|Royal Oak':2,'Royal Oak|Westbourne Park':2,'Westbourne Park|Ladbroke Grove':1,
+  'Ladbroke Grove|Latimer Road':2,'Latimer Road|Goldhawk Road':2,
+  'Goldhawk Road|Shepherd\'s Bush Market':2,'Shepherd\'s Bush Market|Hammersmith':1,
   'Kenton|Preston Road':2,
-  'Uxbridge|Northwick Park':5,
-  'Northwick Park|Kenton':3,
+  // NORTHERN
+  'Morden|South Wimbledon':2,'South Wimbledon|Colliers Wood':2,'Colliers Wood|Tooting Broadway':2,
+  'Tooting Broadway|Tooting Bec':2,'Tooting Bec|Balham':1,'Balham|Clapham South':2,
+  'Clapham South|Clapham Common':2,'Clapham Common|Clapham North':2,'Clapham North|Stockwell':1,
+  'Stockwell|Oval':2,'Oval|Kennington':3,'Kennington|Elephant & Castle':2,
+  'Elephant & Castle|Borough':2,'Borough|London Bridge':1,'London Bridge|Bank':2,
+  'Bank|Moorgate':2,'Moorgate|Old Street':2,'Old Street|Angel':2,
+  'Angel|Kings Cross St. Pancras':2,'Kings Cross St. Pancras|Euston':2,
+  'Euston|Mornington Crescent':2,'Mornington Crescent|Camden Town':1,
+  'Camden Town|Chalk Farm':1,'Chalk Farm|Belsize Park':2,'Belsize Park|Hampstead':2,
+  'Hampstead|Golders Green':5,'Golders Green|Brent Cross':2,'Brent Cross|Hendon Central':2,
+  'Hendon Central|Colindale':3,'Colindale|Burnt Oak':3,'Burnt Oak|Edgware':2,
+  'Camden Town|Kentish Town':3,'Kentish Town|Tufnell Park':2,'Tufnell Park|Archway':1,
+  'Archway|Highgate':3,'Highgate|East Finchley':2,'East Finchley|Finchley Central':3,
+  'Finchley Central|West Finchley':1,'West Finchley|Woodside Park':3,
+  'Woodside Park|Totteridge & Whetstone':3,'Totteridge & Whetstone|High Barnet':3,
+  'Finchley Central|Mill Hill East':3,
+  'Kennington|Waterloo':4,'Waterloo|Embankment':1,'Embankment|Charing Cross':1,
+  'Charing Cross|Leicester Square':1,'Leicester Square|Tottenham Court Road':2,
+  'Tottenham Court Road|Goodge Street':1,'Goodge Street|Warren Street':1,'Warren Street|Euston':2,
+  'Highbury & Islington|Angel':3,
+  // PICCADILLY
+  'Cockfosters|Oakwood':2,'Oakwood|Southgate':3,'Southgate|Arnos Grove':4,
+  'Arnos Grove|Bounds Green':3,'Bounds Green|Wood Green':2,'Wood Green|Turnpike Lane':2,
+  'Turnpike Lane|Manor House':3,'Manor House|Finsbury Park':2,'Finsbury Park|Arsenal':2,
+  'Arsenal|Holloway Road':1,'Holloway Road|Caledonian Road':2,
+  'Caledonian Road|Kings Cross St. Pancras':3,'Kings Cross St. Pancras|Russell Square':2,
+  'Russell Square|Holborn':2,'Holborn|Covent Garden':2,'Covent Garden|Leicester Square':1,
+  'Leicester Square|Piccadilly Circus':1,'Piccadilly Circus|Green Park':2,
+  'Green Park|Hyde Park Corner':2,'Hyde Park Corner|Knightsbridge':2,
+  'Knightsbridge|South Kensington':2,'South Kensington|Gloucester Road':2,
+  'Gloucester Road|Earl\'s Court':2,'Earl\'s Court|Barons Court':3,
+  'Acton Town|South Ealing':5,'South Ealing|Northfields':1,'Northfields|Boston Manor':3,
+  'Boston Manor|Osterley':3,'Osterley|Hounslow East':2,'Hounslow East|Hounslow Central':2,
+  'Hounslow Central|Hounslow West':2,'Hounslow West|Hatton Cross':4,
+  'Hatton Cross|Heathrow Terminals 2&3':5,'Heathrow Terminals 2&3|Heathrow Terminal 5':4,
+  'Hatton Cross|Heathrow Terminal 4':3,
+  'Acton Town|Park Royal':3,'Park Royal|Alperton':3,'Alperton|Sudbury Town':2,
+  'Sudbury Town|Sudbury Hill':2,'Sudbury Hill|South Harrow':2,'South Harrow|Rayners Lane':3,
+  // VICTORIA
+  'Brixton|Stockwell':2,'Stockwell|Vauxhall':3,'Vauxhall|Pimlico':1,'Pimlico|Victoria':2,
+  'Victoria|St. James\'s Park':1,'St. James\'s Park|Green Park':2,
+  'Green Park|Oxford Circus':3,'Oxford Circus|Warren Street':2,
+  'Warren Street|Euston':2,'Euston|Kings Cross St. Pancras':2,
+  'Kings Cross St. Pancras|Highbury & Islington':2,
+  'Highbury & Islington|Finsbury Park':3,'Finsbury Park|Seven Sisters':3,
+  'Seven Sisters|Tottenham Hale':2,'Tottenham Hale|Blackhorse Road':2,
+  'Blackhorse Road|Walthamstow Central':2,
+  // WATERLOO & CITY
+  'Waterloo|Bank':4,
+  // OVERGROUND — Lioness
+  'Watford Junction|Watford High Street':3,'Watford High Street|Bushey':3,
+  'Bushey|Carpenders Park':3,'Carpenders Park|Hatch End':3,'Hatch End|Headstone Lane':3,
+  'Headstone Lane|Harrow & Wealdstone':3,
+  // Mildmay
+  'Stratford|Hackney Wick':4,'Hackney Wick|Homerton':3,'Homerton|Hackney Central':2,
+  'Hackney Central|London Fields':2,'London Fields|Cambridge Heath':2,
+  'Cambridge Heath|Bethnal Green (Overground)':2,
+  'Hackney Central|Dalston Kingsland':4,
+  'Dalston Kingsland|Dalston Junction':2,'Dalston Junction|Haggerston':2,
+  'Haggerston|Hoxton':2,'Hoxton|Shoreditch High Street':2,
+  'Dalston Junction|Canonbury':3,'Canonbury|Highbury & Islington':3,
+  'Highbury & Islington|Caledonian Road & Barnsbury':3,
+  'Caledonian Road & Barnsbury|Camden Road':3,'Camden Road|Kentish Town West':2,
+  'Kentish Town West|Gospel Oak':3,'Gospel Oak|Hampstead Heath':3,
+  'Hampstead Heath|Finchley Road & Frognal':3,'Finchley Road & Frognal|West Hampstead':2,
+  'West Hampstead|Brondesbury Park':2,'Brondesbury Park|Brondesbury':2,
+  'Brondesbury|Kensal Rise':2,'Kensal Rise|Shepherd\'s Bush (Overground)':5,
+  'Shepherd\'s Bush (Overground)|Kensington Olympia':3,
+  'Kensington Olympia|Imperial Wharf':4,'Imperial Wharf|Clapham Junction':4,
+  // Windrush
   'Highbury & Islington|Canonbury':3,
-  'Canonbury|Dalston Kingsland':3,
-  'Dalston Kingsland|Hackney Central':4,
-  'Hackney Central|Stratford':8,
-
-  // District Richmond branch + Jubilee additions
-  'Richmond|Gunnersbury':3,
-  'Gunnersbury|Kew Gardens':2,
-  'Kilburn|West Hampstead':2,
-  'Finchley Road|St. John\'s Wood':2,
-
+  'Shoreditch High Street|Whitechapel':3,
+  'Whitechapel|Shadwell (Overground)':3,'Shadwell (Overground)|Wapping':2,
+  'Wapping|Rotherhithe':2,'Rotherhithe|Canada Water':2,'Canada Water|Surrey Quays':2,
+  'Surrey Quays|New Cross Gate':3,'New Cross Gate|Brockley':3,'Brockley|Honor Oak Park':3,
+  'Honor Oak Park|Forest Hill':2,'Forest Hill|Sydenham':2,'Sydenham|Crystal Palace':3,
+  'Crystal Palace|Gipsy Hill':3,'Gipsy Hill|West Norwood':2,'West Norwood|Tulse Hill':2,
+  'Tulse Hill|Streatham Hill':3,'Streatham Hill|Balham':3,
+  'Balham|Wandsworth Road':4,'Wandsworth Road|Clapham High Street':2,
+  'Clapham High Street|Clapham Junction':2,
+  'Crystal Palace|Norwood Junction':3,'Norwood Junction|Anerley':2,
+  'Anerley|Penge West':2,'Penge West|Sydenham':2,
+  'Surrey Quays|New Cross':3,
+  // Weaver
+  'Liverpool Street|Cambridge Heath':4,'Cambridge Heath|London Fields':2,
+  'London Fields|Hackney Downs':2,'Hackney Downs|Clapton':3,'Clapton|Stoke Newington':2,
+  'Stoke Newington|Stamford Hill':2,'Stamford Hill|Seven Sisters (Overground)':2,
+  'Seven Sisters (Overground)|Enfield Town':10,
+  'Seven Sisters (Overground)|Enfield Lock':8,
+  'Enfield Lock|Brimsdown':2,'Brimsdown|Ponders End':2,'Ponders End|Southbury':3,
+  'Southbury|Turkey Street':3,'Turkey Street|Theobald\'s Grove':3,
+  'Theobald\'s Grove|Cheshunt':3,
+  'Hackney Downs|St. James Street':4,'St. James Street|Walthamstow Queens Road':2,
+  'Walthamstow Queens Road|Wood Street':2,'Wood Street|Highams Park':3,'Highams Park|Chingford':3,
+  // Suffragette
+  'Gospel Oak|Upper Holloway':3,'Upper Holloway|Crouch Hill':3,
+  'Crouch Hill|Harringay Green Lanes':2,'Harringay Green Lanes|South Tottenham':2,
+  'South Tottenham|Blackhorse Road (Overground)':2,'Blackhorse Road (Overground)|Walthamstow Queens Road':2,
+  'Walthamstow Queens Road|Leyton Midland Road':3,'Leyton Midland Road|Leytonstone High Road':2,
+  'Leytonstone High Road|Wanstead Park':2,'Wanstead Park|Woodgrange Park':2,'Woodgrange Park|Barking':3,
+  // Liberty
+  'Romford|Emerson Park':4,'Emerson Park|Upminster':4,
 };
-// Total: 286 pairs
 
-function getJourneyTime(from, to) {
-  return JOURNEY_TIMES[`${from}|${to}`] || JOURNEY_TIMES[`${to}|${from}`] || null;
+function getTime(a, b) {
+  return TIMES[`${a}|${b}`] || TIMES[`${b}|${a}`] || null;
 }
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let puzzleData  = null; // set by todayPuzzle()
-let userRoute   = [];
-let map, mapLayers = [];
-
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
-function getStore() {
-  try { return JSON.parse(localStorage.getItem('tubepzl_v4') || 'null') || {streak:0,lastPlayed:null,history:[]}; }
-  catch(e) { return {streak:0,lastPlayed:null,history:[]}; }
-}
-function setStore(d) { try { localStorage.setItem('tubepzl_v4', JSON.stringify(d)); } catch(e) {} }
-
-// ─── ENDLESS DAILY PUZZLE GENERATOR ─────────────────────────────────────────
-// Uses the date as a seed to generate a unique puzzle every day, forever.
-// Same seed = same puzzle for all players on the same day (like Wordle).
-// Guaranteed to require at least 2 different lines.
-
-// Seeded pseudo-random number generator (mulberry32)
-function seededRng(seed) {
-  return function() {
-    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
-    var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-
-// All valid puzzle stations — well-connected, spread across London
-// Sorted alphabetically within each zone group for RNG stability.
-// Never remove or reorder existing entries — only append to the end.
-const PUZZLE_STATIONS = [
-  // Zone 1 — original pool
-  'Angel','Baker Street','Bank','Bethnal Green','Bond Street','Borough',
-  'Brixton','Camden Town','Canary Wharf','Clapham Common','Clapham North',
-  "Earl's Court",'Ealing Broadway','Elephant & Castle','Embankment',
-  'Euston','Farringdon','Finsbury Park','Green Park','Hammersmith',
-  'Highbury & Islington','Holborn','Hyde Park Corner','Kennington',
-  'Kings Cross St. Pancras','Knightsbridge','Leicester Square',
-  'Liverpool Street','London Bridge','Mile End','Moorgate',
-  'Notting Hill Gate','Old Street','Oval','Oxford Circus','Paddington',
-  'Pimlico','Putney Bridge','Sloane Square','South Kensington',
-  'Southwark','Stockwell','Stratford','Tottenham Court Road',
-  'Tower Hill','Vauxhall','Victoria','Waterloo','Westminster',
-  "Wimbledon","Shepherd's Bush",
-  // Zone 1 & 2 — first expansion
-  'Balham','Bermondsey','Canada Water','Clapham South',
-  'Covent Garden','Charing Cross','East Putney','Fulham Broadway','Kentish Town',
-  'Parsons Green','Piccadilly Circus',"St. John's Wood",'Swiss Cottage','Tufnell Park',
-  // Zone 1 additions
-  'Aldgate','Aldgate East','Barbican','Barons Court','Bayswater',
-  'Blackfriars','Cannon Street','Edgware Road','Euston Square',
-  'Goodge Street','Great Portland Street','Lambeth North','Lancaster Gate',
-  'Mansion House','Marylebone','Monument',"Regent's Park",
-  "St. James's Park","St. Paul's",'Temple','White City',
-  // Zone 2 additions
-  'Acton Town','Archway','Canonbury','Clapham Junction','Cutty Sark',
-  'Dalston Kingsland','Greenwich','Hackney Central','Heron Quays',
-  'Highgate','Island Gardens','Limehouse','Mornington Crescent',
-  'Mudchute','North Greenwich','Poplar','Shadwell',
-  "Shepherd's Bush Market",'South Quay','Tooting Bec','Tooting Broadway',
-  'Warren Street','West Brompton','West Ham','Westbourne Park',
-  'Westferry','Whitechapel',
-  // Zone 3+ interchange stations
-  'Eastcote','Harrow on the Hill','Hillingdon','Ickenham',
-  'Kenton','Rayners Lane','Ruislip','Ruislip Manor','Uxbridge','Wembley Park',
-];
-
-// Get the lines serving a station
-// Normalise sub-line names to their parent line for display
-function normaliseLineName(line) {
-  if (line.startsWith('Northern_')) return 'Northern';
-  if (line.startsWith('District_')) return 'District';
+// ── Normalise branch/sub-line names to parent for display ────────────────────
+function displayLine(line) {
+  if (line.startsWith('Northern')) return 'Northern';
+  if (line.startsWith('District')) return 'District';
+  if (line.startsWith('Central')) return 'Central';
+  if (line.startsWith('Metropolitan')) return 'Metropolitan';
+  if (line.startsWith('Piccadilly')) return 'Piccadilly';
+  if (line.startsWith('Overground')) return 'Overground';
+  if (line.startsWith('DLR')) return 'DLR';
+  if (line.startsWith('Elizabeth')) return 'Elizabeth';
   return line;
 }
 
-function linesForStation(stn) {
-  return Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l);
+function lineColour(line) {
+  return LINE_COLOURS[displayLine(line)] || {bg:'#666', txt:'#fff'};
 }
 
-// Check two stations share NO common line (forces interchange)
-function requiresChange(a, b) {
-  const la = new Set(linesForStation(a));
-  const lb = new Set(linesForStation(b));
-  for (const l of la) { if (lb.has(l)) return false; }
-  return true;
-}
-
-// Estimate journey time between any two stations using JOURNEY_TIMES + distance fallback
-function estimateJourneyMins(from, to) {
-  const t = getJourneyTime(from, to);
-  if (t !== null) return t;
-  const fc = COORDS[from], tc = COORDS[to];
-  if (fc && tc) {
-    const d = Math.sqrt(Math.pow(fc[0]-tc[0],2)+Math.pow(fc[1]-tc[1],2))*111;
-    return Math.round(Math.max(5, d * 4));
+// ── Stations that appear in each display-line (for the selector) ─────────────
+function stationsForDisplayLine(dline) {
+  const stns = new Set();
+  for (const [key, arr] of Object.entries(NETWORK)) {
+    if (displayLine(key) === dline) arr.forEach(s => stns.add(s));
   }
-  return 15;
+  return [...stns];
 }
 
-// ─── ROUTE GENERATION — DIJKSTRA OVER TUBE GRAPH ─────────────────────────────
-// Models the network as a graph where nodes are (station, line) pairs.
-// Edges:
-//   Travel    — move to adjacent station on same line (cost = JOURNEY_TIMES value)
-//   Interchange — change line at same station (cost = interchangeTime())
-// Guarantees finding the true optimal regardless of number of interchanges.
+// ── Display lines that serve a station ───────────────────────────────────────
+function linesAtStation(stn) {
+  const lines = new Set();
+  for (const [key, arr] of Object.entries(NETWORK)) {
+    if (arr.includes(stn)) lines.add(displayLine(key));
+  }
+  return [...lines];
+}
+
+// ── All routable stations (have coords + appear in network) ──────────────────
+const ALL_STATIONS = [...new Set(Object.values(NETWORK).flat())]
+  .filter(s => COORDS[s])
+  .sort();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// PUZZLE STATIONS (~150 well-connected stations, zones 1–3)
+// Used only as puzzle start/end. Players can route through ANY station.
+// ═══════════════════════════════════════════════════════════════════════════════
+const PUZZLE_STATIONS = [
+  // Zone 1 core
+  'Aldgate','Angel','Baker Street','Bank','Barbican','Bond Street','Borough',
+  'Cannon Street','Charing Cross','Covent Garden','Edgware Road','Elephant & Castle',
+  'Embankment','Euston','Farringdon','Green Park','Holborn','Hyde Park Corner',
+  'Kennington','Kings Cross St. Pancras','Knightsbridge','Lambeth North',
+  'Lancaster Gate','Leicester Square','Liverpool Street','London Bridge',
+  'Mansion House','Marylebone','Monument','Moorgate','Notting Hill Gate',
+  'Old Street','Oxford Circus','Paddington','Piccadilly Circus','Pimlico',
+  'Regent\'s Park','Sloane Square','South Kensington','Southwark',
+  'St. James\'s Park','St. Paul\'s','Temple','Tottenham Court Road',
+  'Tower Hill','Vauxhall','Victoria','Warren Street','Waterloo','Westminster',
+  // Zone 1/2 boundary
+  'Bermondsey','Bethnal Green','Brixton','Canada Water','Canary Wharf',
+  'Earl\'s Court','Highbury & Islington','Mile End','Oval','Stockwell','Whitechapel',
+  // Zone 2
+  'Archway','Balham','Barons Court','Belsize Park','Camden Town','Canning Town',
+  'Clapham Common','Clapham Junction','Clapham North','Clapham South',
+  'Dalston Kingsland','East Putney','Finchley Road','Finsbury Park',
+  'Fulham Broadway','Goldhawk Road','Greenwich','Hackney Central','Hammersmith',
+  'Hampstead','Highgate','Island Gardens','Kilburn','Lewisham','Limehouse',
+  'Mile End','Mornington Crescent','North Greenwich','Parsons Green',
+  'Putney Bridge','Queen\'s Park','Shadwell','Shepherd\'s Bush',
+  'Shepherd\'s Bush Market','South Kensington','Stepney Green','Stratford',
+  'Swiss Cottage','Tufnell Park','Turnham Green','West Brompton','West Ham',
+  'West Hampstead','White City','Wimbledon',
+  // Zone 3 key interchanges
+  'Acton Town','Ealing Broadway','Harrow & Wealdstone','Harrow on the Hill',
+  'Richmond','Wembley Park','Wembley Central','Willesden Junction',
+];
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// DIJKSTRA PATHFINDING
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function buildGraph() {
-  const graph = {}; // graph[station][line] = [{station, line, cost, type}]
-
-  function ensure(stn, line) {
-    if (!graph[stn]) graph[stn] = {};
-    if (!graph[stn][line]) graph[stn][line] = [];
+  // graph[station][line] = [{station, line, cost, type}]
+  const graph = {};
+  function ensure(s, l) {
+    if (!graph[s]) graph[s] = {};
+    if (!graph[s][l]) graph[s][l] = [];
   }
-
-  // Travel edges from JOURNEY_TIMES — only use known times, no estimates
-  for (const [line, stns] of Object.entries(LINE_STATIONS)) {
+  // Travel edges — only adjacent pairs with known times
+  for (const [lineKey, stns] of Object.entries(NETWORK)) {
     for (let i = 0; i < stns.length - 1; i++) {
       const a = stns[i], b = stns[i+1];
-      const t = getJourneyTime(a, b);
+      const t = getTime(a, b);
       if (t === null) continue;
-      ensure(a, line); ensure(b, line);
-      graph[a][line].push({station: b, line, cost: t, type: 'travel'});
-      graph[b][line].push({station: a, line, cost: t, type: 'travel'});
+      ensure(a, lineKey); ensure(b, lineKey);
+      graph[a][lineKey].push({station:b, line:lineKey, cost:t, type:'travel'});
+      graph[b][lineKey].push({station:a, line:lineKey, cost:t, type:'travel'});
     }
   }
-
-  // Interchange edges — between all lines at each multi-line station
+  // Interchange edges
   for (const stn of Object.keys(graph)) {
     const lineList = Object.keys(graph[stn]);
     if (lineList.length < 2) continue;
-    const walkCost = interchangeTime(stn);
+    const w = interchangeTime(stn);
     for (const la of lineList) {
       for (const lb of lineList) {
         if (la === lb) continue;
-        graph[stn][la].push({station: stn, line: lb, cost: walkCost, type: 'interchange'});
+        graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
       }
     }
   }
-
   return graph;
 }
 
-function generateRoutes(start, end) {
-  const graph = buildGraph();
+function dijkstra(graph, start, end) {
   if (!graph[start] || !graph[end]) return [];
 
-  // Dijkstra over (station, line) nodes
-  // dist[station][line] = {cost, path: [{station, line, type}]}
-  const dist = {};
-  // Simple priority queue as sorted array — fine for ~1000 nodes
-  const pq = []; // [{cost, station, line, path}]
-
-  function pqPush(item) {
+  const dist = {}; // dist[stn][line] = {cost, path}
+  const pq = [];   // min-heap by cost
+  function push(item) {
     pq.push(item);
-    pq.sort((a, b) => a.cost - b.cost);
+    pq.sort((a,b) => a.cost - b.cost);
   }
 
-  // Initialise from all lines at start station (cost 0, no line chosen yet)
   for (const line of Object.keys(graph[start])) {
     if (!dist[start]) dist[start] = {};
-    dist[start][line] = {cost: 0, path: [{station: start, line, type: 'start'}]};
-    pqPush({cost: 0, station: start, line, path: [{station: start, line, type: 'start'}]});
+    const entry = {cost:0, path:[{station:start, line, type:'start'}]};
+    dist[start][line] = entry;
+    push({cost:0, station:start, line, path:entry.path});
   }
 
   const visited = new Set();
-
-  while (pq.length > 0) {
+  while (pq.length) {
     const {cost, station, line, path} = pq.shift();
     const key = `${station}|${line}`;
     if (visited.has(key)) continue;
     visited.add(key);
-
-    if (!graph[station] || !graph[station][line]) continue;
-
+    if (!graph[station]?.[line]) continue;
     for (const edge of graph[station][line]) {
-      const newCost = cost + edge.cost;
+      const nc = cost + edge.cost;
       if (!dist[edge.station]) dist[edge.station] = {};
-      const existing = dist[edge.station][edge.line];
-      if (!existing || newCost < existing.cost) {
-        const newPath = [...path, {station: edge.station, line: edge.line, type: edge.type}];
-        dist[edge.station][edge.line] = {cost: newCost, path: newPath};
-        pqPush({cost: newCost, station: edge.station, line: edge.line, path: newPath});
+      const ex = dist[edge.station][edge.line];
+      if (!ex || nc < ex.cost) {
+        const np = [...path, {station:edge.station, line:edge.line, type:edge.type}];
+        dist[edge.station][edge.line] = {cost:nc, path:np};
+        push({cost:nc, station:edge.station, line:edge.line, path:np});
       }
     }
   }
 
   if (!dist[end]) return [];
 
-  // Convert a Dijkstra path to legs.
-  // Path is [{station, line, type}]. We group consecutive nodes on the same line
-  // into one leg, recording travel time by summing adjacent-pair journey times.
+  // Convert paths to legs, deduplicate by display-line signature, return top 5
   function pathToLegs(path) {
-    if (!path || path.length < 2) return [];
     const legs = [];
-
-    // Find the first travel node to start from
-    let legStartIdx = 0;
-    while (legStartIdx < path.length - 1 && path[legStartIdx].type !== 'start' && path[legStartIdx].type !== 'travel') {
-      legStartIdx++;
-    }
-
-    let legFrom = path[legStartIdx].station;
-    let legLine  = path[legStartIdx].line;
-    let legMins  = 0;
-    let prevStation = path[legStartIdx].station;
-
-    for (let i = legStartIdx + 1; i < path.length; i++) {
-      const node = path[i];
-
+    let legFrom = null, legLine = null, legMins = 0, prev = null;
+    for (const node of path) {
+      if (node.type === 'start') { legFrom = node.station; legLine = node.line; prev = node.station; continue; }
       if (node.type === 'travel') {
         if (node.line === legLine) {
-          // Continue same leg
-          legMins += getJourneyTime(prevStation, node.station) || 0;
-          prevStation = node.station;
+          legMins += getTime(prev, node.station) || 0;
+          prev = node.station;
         } else {
-          // Line changed mid-travel (shouldn't happen but handle gracefully)
-          if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
-          legFrom = prevStation;
-          legLine  = node.line;
-          legMins  = getJourneyTime(prevStation, node.station) || 0;
-          prevStation = node.station;
+          if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
+          legFrom = prev; legLine = node.line;
+          legMins = getTime(prev, node.station) || 0;
+          prev = node.station;
         }
       } else if (node.type === 'interchange') {
-        // Close current leg at this station
-        if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
-        legFrom = prevStation;
-        legLine  = node.line;
-        legMins  = 0;
-        // prevStation stays the same (interchange at same station)
+        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
+        legFrom = prev; legLine = node.line; legMins = 0;
       }
     }
-
-    // Close final leg
-    if (legMins > 0) legs.push({from: legFrom, to: prevStation, line: legLine, mins: legMins});
-
+    if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
     return legs;
   }
 
-  // Collect arrivals at end station, sorted by cost
   const arrivals = Object.entries(dist[end])
-    .map(([line, node]) => ({line, cost: node.cost, path: node.path}))
+    .map(([l, d]) => ({line:l, cost:d.cost, path:d.path}))
     .filter(a => a.cost > 0)
-    .sort((a, b) => a.cost - b.cost);
+    .sort((a,b) => a.cost - b.cost);
 
-  const routes = [];
-  const seenSigs = new Set();
-
-  for (const arrival of arrivals) {
+  const routes = [], seen = new Set();
+  for (const a of arrivals) {
     if (routes.length >= 5) break;
-    const legs = pathToLegs(arrival.path);
-    if (legs.length < 2) continue; // must require at least one change
+    const legs = pathToLegs(a.path);
+    if (legs.length < 2) continue;
     const sig = legs.map(l => l.line).join('>');
-    if (seenSigs.has(sig)) continue;
-    seenSigs.add(sig);
-    routes.push({rank: routes.length + 1, mins: arrival.cost, legs});
+    if (seen.has(sig)) continue;
+    seen.add(sig);
+    routes.push({rank:routes.length+1, mins:a.cost, legs});
   }
-
-  // Fallback if graph had insufficient data — old single-interchange method
-  if (routes.length === 0) {
-    const startLines = linesForStation(start);
-    const endLines   = linesForStation(end);
-    const seen = new Set();
-    const fallbacks = [];
-    for (const sl of startLines) {
-      for (const el of endLines) {
-        if (sl === el) continue;
-        for (const [,stns] of Object.entries(LINE_STATIONS)) {
-          for (const stn of stns) {
-            if (stn === start || stn === end) continue;
-            const stnLines = linesForStation(stn);
-            if (!stnLines.includes(sl) || !stnLines.includes(el)) continue;
-            const key = `${sl}|${stn}|${el}`;
-            if (seen.has(key)) continue;
-            seen.add(key);
-            const l1 = estimateJourneyMins(start, stn);
-            const l2 = estimateJourneyMins(stn, end);
-            fallbacks.push({mins: l1+interchangeTime(stn)+l2, legs:[{from:start,to:stn,line:sl,mins:l1},{from:stn,to:end,line:el,mins:l2}]});
-          }
-        }
-      }
-    }
-    fallbacks.sort((a,b) => a.mins - b.mins);
-    if (fallbacks[0]) routes.push({rank:1, ...fallbacks[0]});
-  }
-
   return routes;
 }
 
-// Generate today's puzzle deterministically from the date
-function todayPuzzle() {
-  const now   = new Date();
-  const seed  = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
-  const rng   = seededRng(seed);
-  const stns  = PUZZLE_STATIONS.filter(s => COORDS[s] && linesForStation(s).length > 0);
-
-  // Try up to 50 random pairs until we find one that requires a change
-  // and has a reasonable journey time (10-50 mins optimal)
-  let start, end, routes;
-  for (let attempt = 0; attempt < 50; attempt++) {
-    const si = Math.floor(rng() * stns.length);
-    let   ei = Math.floor(rng() * stns.length);
-    if (ei === si) ei = (ei + 1) % stns.length;
-    start = stns[si]; end = stns[ei];
-    if (!requiresChange(start, end)) continue;
-    routes = generateRoutes(start, end);
-    if (routes.length > 0 && routes[0].mins >= 10 && routes[0].mins <= 55) break;
+// ═══════════════════════════════════════════════════════════════════════════════
+// USER ROUTE SCORING
+// ═══════════════════════════════════════════════════════════════════════════════
+// Scores a player's route: array of {station, line} objects.
+// Uses the same TIMES table + interchange costs as Dijkstra.
+function scoreUserRoute(start, route) {
+  const stations = [start, ...route.map(s => s.station)];
+  const lines    = route.map(s => s.line);
+  let total = 0;
+  // Travel time
+  for (let i = 0; i < stations.length - 1; i++) {
+    const t = getTime(stations[i], stations[i+1]);
+    total += t !== null ? t : 8; // 8 min penalty for unknown pair
   }
-
-  // Fallback to a known-good puzzle if generation fails
-  if (!routes || routes.length === 0) {
-    start = 'Bethnal Green'; end = 'Oval';
-    routes = [{rank:1,mins:24,legs:[{from:'Bethnal Green',to:'Bank',line:'Central',mins:9},{from:'Bank',to:'Oval',line:'Northern',mins:11}]}];
+  // Interchange time at each line change
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i] !== lines[i-1]) total += interchangeTime(stations[i]);
   }
-
-  // Use Dijkstra costs directly — they are already accurate sums of adjacent pairs
-  // plus interchange times. Re-sort to ensure correct ranking.
-  const recalculated = routes.map((r, i) => ({ ...r, rank: i+1 }));
-  recalculated.sort((a,b) => a.mins - b.mins);
-  recalculated.forEach((r,i) => r.rank = i+1);
-
-  return { start, end, optimal: recalculated[0], routes: recalculated,
-           date: `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,
-           puzzleNum: Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1 };
+  return total;
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════════════
+// DAILY PUZZLE GENERATOR
+// ═══════════════════════════════════════════════════════════════════════════════
+function seededRng(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function requiresChange(a, b) {
+  const la = new Set(linesAtStation(a));
+  const lb = new Set(linesAtStation(b));
+  for (const l of la) if (lb.has(l)) return false;
+  return true;
+}
+
+function todayPuzzle() {
+  const now  = new Date();
+  const seed = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
+  const rng  = seededRng(seed);
+  const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
+  const GRAPH = buildGraph();
+
+  let start, end, routes;
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const si = Math.floor(rng() * pool.length);
+    let   ei = Math.floor(rng() * pool.length);
+    if (ei === si) ei = (ei + 1) % pool.length;
+    start = pool[si]; end = pool[ei];
+    if (!requiresChange(start, end)) continue;
+    routes = dijkstra(GRAPH, start, end);
+    if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
+  }
+
+  if (!routes || routes.length === 0) {
+    start = 'Bethnal Green'; end = 'Oval';
+    routes = dijkstra(GRAPH, start, end);
+  }
+
+  const puzzleNum = Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1;
+  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════════
+let puzzleData = null;
+let userRoute  = [];
+let map, mapLayers = [];
+let selectedStation = '';
+let acActiveIdx = -1;
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// LOCAL STORAGE
+// ═══════════════════════════════════════════════════════════════════════════════
+function getStore() {
+  try { return JSON.parse(localStorage.getItem('tubepzl_v5') || 'null') || {streak:0,lastPlayed:null,history:[]}; }
+  catch(e) { return {streak:0,lastPlayed:null,history:[]}; }
+}
+function setStore(d) { try { localStorage.setItem('tubepzl_v5', JSON.stringify(d)); } catch(e){} }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════════════
 function init() {
-  renderStore();
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  renderHistory();
   puzzleData = todayPuzzle();
   document.getElementById('start-stn').textContent = puzzleData.start;
   document.getElementById('end-stn').textContent   = puzzleData.end;
-  // Show puzzle number like Wordle does
-  const sub = document.querySelector('.gsub');
-  if (sub) sub.textContent = `Daily London Underground Puzzle #${puzzleData.puzzleNum}`;
+  document.getElementById('puzzle-sub').textContent = `Daily London Puzzle #${puzzleData.puzzleNum}`;
   document.getElementById('loading-puzzle').style.display = 'none';
   document.getElementById('game-body').style.display      = 'block';
-  buildSelectors();
+  initAutocomplete();
   initMap();
-  maybeShowWelcome();
+  if (!localStorage.getItem('tubed_seen_how')) { setTimeout(openModal, 600); localStorage.setItem('tubed_seen_how','1'); }
 }
 
-// All stations sorted alphabetically, filtered to ones with coordinates
-const ALL_STATIONS_LIST = [...new Set(Object.values(LINE_STATIONS).flat())].filter(s => COORDS[s]).sort();
-
-let selectedStation = ''; // tracks the currently confirmed station selection
-let activeIdx = -1;       // keyboard navigation index
-
-function buildSelectors() {
-  populateAllLines();
-
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTOCOMPLETE + LINE SELECTOR
+// ═══════════════════════════════════════════════════════════════════════════════
+function initAutocomplete() {
   const list = document.getElementById('autocomplete-list');
-
-  // Handle tap on mobile (touchend) and click on desktop (mousedown)
-  // Both read from data-station — no apostrophe issues
   list.addEventListener('touchend', e => {
-    const item = e.target.closest('[data-station]');
-    if (item && item.dataset.station) {
-      e.preventDefault();
-      selectStation(item.dataset.station);
-    }
+    const el = e.target.closest('[data-stn]');
+    if (el) { e.preventDefault(); pickStation(el.dataset.stn); }
   });
-
   list.addEventListener('mousedown', e => {
-    const item = e.target.closest('[data-station]');
-    if (item && item.dataset.station) {
-      e.preventDefault();
-      selectStation(item.dataset.station);
-    }
+    const el = e.target.closest('[data-stn]');
+    if (el) { e.preventDefault(); pickStation(el.dataset.stn); }
   });
-
-  // Close when tapping outside the search area
   document.addEventListener('click', e => {
-    if (!e.target.closest('.search-wrap')) closeAutocomplete();
+    if (!e.target.closest('.search-wrap')) closeAc();
   });
-}
-
-function handleAutocompleteSelect(e) {
-  e.preventDefault();
-  const item = e.target.closest('[data-station]');
-  if (item && item.dataset.station) selectStation(item.dataset.station);
+  setLineSelector('');
 }
 
 function onStationInput() {
-  const val = document.getElementById('sel-stn').value.trim();
-  selectedStation = ''; // clear confirmed selection when user types
-  updateLineSelector('');
-  if (val.length < 1) { closeAutocomplete(); return; }
-  const matches = ALL_STATIONS_LIST.filter(s => s.toLowerCase().includes(val.toLowerCase()));
-  renderAutocomplete(matches, val);
-}
-
-function renderAutocomplete(matches, query) {
+  selectedStation = '';
+  setLineSelector('');
+  const q = document.getElementById('sel-stn').value.trim();
+  if (q.length < 1) { closeAc(); return; }
+  const matches = ALL_STATIONS.filter(s => s.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
   const list = document.getElementById('autocomplete-list');
-  activeIdx = -1;
-  if (!matches.length) { list.innerHTML = '<div class="autocomplete-item" style="color:var(--muted);cursor:default;">No stations found</div>'; list.classList.add('open'); return; }
-  list.innerHTML = matches.slice(0, 8).map((s, i) => {
-    // Highlight matching part
-    const idx = s.toLowerCase().indexOf(query.toLowerCase());
-    const highlighted = idx >= 0
-      ? s.slice(0, idx) + '<mark>' + s.slice(idx, idx + query.length) + '</mark>' + s.slice(idx + query.length)
-      : s;
-    return `<div class="autocomplete-item" data-station="${s}">${highlighted}</div>`;
-  }).join('');
+  acActiveIdx = -1;
+  if (!matches.length) {
+    list.innerHTML = '<div class="autocomplete-item" style="color:var(--muted);cursor:default;">No stations found</div>';
+  } else {
+    list.innerHTML = matches.map(s => {
+      const qi = s.toLowerCase().indexOf(q.toLowerCase());
+      const hl = qi >= 0 ? s.slice(0,qi)+'<mark>'+s.slice(qi,qi+q.length)+'</mark>'+s.slice(qi+q.length) : s;
+      return `<div class="autocomplete-item" data-stn="${s}">${hl}</div>`;
+    }).join('');
+  }
   list.classList.add('open');
-}
-
-function selectFromList(el) {
-  selectStation(el.dataset.station);
-}
-
-function selectStation(stn) {
-  selectedStation = stn;
-  document.getElementById('sel-stn').value = stn;
-  closeAutocomplete();
-  updateLineSelector(stn);
-  // Focus the line selector for quick keyboard flow
-  document.getElementById('sel-line').focus();
-}
-
-function closeAutocomplete() {
-  document.getElementById('autocomplete-list').classList.remove('open');
-  activeIdx = -1;
-}
-
-function closeAutocompleteDelayed() {
-  // Small delay gives touchend time to fire and register the selection
-  // before the list disappears — fixes iOS and Android tap issues
-  setTimeout(closeAutocomplete, 200);
 }
 
 function onStationKey(e) {
   const list = document.getElementById('autocomplete-list');
-  const items = list.querySelectorAll('.autocomplete-item[data-station]');
-  if (e.key === 'ArrowDown') {
-    e.preventDefault();
-    activeIdx = Math.min(activeIdx + 1, items.length - 1);
-    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
-  } else if (e.key === 'ArrowUp') {
-    e.preventDefault();
-    activeIdx = Math.max(activeIdx - 1, 0);
-    items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    if (activeIdx >= 0 && items[activeIdx]) {
-      selectStation(items[activeIdx].dataset.station);
-    } else if (items.length === 1) {
-      selectStation(items[0].dataset.station);
-    }
-  } else if (e.key === 'Escape') {
-    closeAutocomplete();
-  }
+  const items = list.querySelectorAll('[data-stn]');
+  if (e.key === 'ArrowDown')  { e.preventDefault(); acActiveIdx = Math.min(acActiveIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('active', i===acActiveIdx)); }
+  else if (e.key === 'ArrowUp')   { e.preventDefault(); acActiveIdx = Math.max(acActiveIdx-1, 0); items.forEach((el,i) => el.classList.toggle('active', i===acActiveIdx)); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (acActiveIdx >= 0 && items[acActiveIdx]) pickStation(items[acActiveIdx].dataset.stn); else if (items.length === 1) pickStation(items[0].dataset.stn); }
+  else if (e.key === 'Escape') closeAc();
 }
 
-function updateLineSelector(stn) {
+function closeAcDelayed() { setTimeout(closeAc, 200); }
+function closeAc() { document.getElementById('autocomplete-list').classList.remove('open'); acActiveIdx = -1; }
+
+function pickStation(stn) {
+  selectedStation = stn;
+  document.getElementById('sel-stn').value = stn;
+  closeAc();
+  setLineSelector(stn);
+  document.getElementById('sel-line').focus();
+}
+
+function setLineSelector(stn) {
   const sl = document.getElementById('sel-line');
   sl.innerHTML = '<option value="">Choose line...</option>';
-  const lines = stn
-    ? Object.entries(LINE_STATIONS).filter(([,stns]) => stns.includes(stn)).map(([l]) => l)
-    : Object.keys(LC);
-  lines.forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l + ' line'; sl.appendChild(o); });
-  // Auto-select if only one line serves this station
+  const lines = stn ? linesAtStation(stn) : Object.keys(LINE_COLOURS);
+  lines.sort().forEach(l => {
+    const o = document.createElement('option');
+    o.value = l; o.textContent = l + ' line'; sl.appendChild(o);
+  });
   if (stn && lines.length === 1) sl.value = lines[0];
 }
 
-function populateAllLines() {
-  updateLineSelector('');
-}
-
-// ─── MAP ──────────────────────────────────────────────────────────────────────
-function initMap() {
-  map = L.map('map', {zoomControl:true,attributionControl:false,scrollWheelZoom:false});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
-  const sc = COORDS[puzzleData.start], ec = COORDS[puzzleData.end];
-  if (sc) addPinMarker(sc, puzzleData.start, '#00e87a', 'S');
-  if (ec) addPinMarker(ec, puzzleData.end,   '#FFD300', 'E');
-  if (sc && ec) map.fitBounds(L.latLngBounds([sc,ec]).pad(0.45));
-  else map.setView([51.505,-0.09],12);
-}
-
-function addPinMarker(coords, label, color, letter) {
-  const icon = L.divIcon({className:'',html:`<div style="width:28px;height:28px;background:${color};border-radius:50%;border:2.5px solid white;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:#000;box-shadow:0 2px 8px rgba(0,0,0,0.6);">${letter}</div>`,iconSize:[28,28],iconAnchor:[14,14]});
-  L.marker(coords,{icon}).bindTooltip(label,{permanent:false,direction:'top'}).addTo(map);
-}
-
-function updateMapRoute() {
-  mapLayers.forEach(l => map.removeLayer(l)); mapLayers = [];
-  const startCoord = COORDS[puzzleData.start];
-  if (startCoord) {
-    const lc = userRoute.length ? (LC[userRoute[0].line]||{bg:'#00e87a'}) : {bg:'#00e87a'};
-    const icon = L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2.5px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.6);"></div>`,iconSize:[13,13],iconAnchor:[6,6]});
-    const sm = L.marker(startCoord,{icon}).bindTooltip(puzzleData.start+' (Start)',{direction:'top'});
-    sm.addTo(map); mapLayers.push(sm);
+// ═══════════════════════════════════════════════════════════════════════════════
+// ROUTE BUILDING
+// ═══════════════════════════════════════════════════════════════════════════════
+function addStep() {
+  // Resolve station
+  let stn = selectedStation;
+  if (!stn) {
+    const typed = document.getElementById('sel-stn').value.trim();
+    stn = ALL_STATIONS.find(s => s.toLowerCase() === typed.toLowerCase()) || '';
   }
-  if (!userRoute.length) return;
-  userRoute.forEach((step,i) => {
-    const coord = COORDS[step.station]; if (!coord) return;
-    const lc = LC[step.line]||{bg:'#888',txt:'#fff'};
-    const prevCoord = i===0 ? COORDS[puzzleData.start] : COORDS[userRoute[i-1].station];
-    if (prevCoord) { const pl=L.polyline([prevCoord,coord],{color:lc.bg,weight:5,opacity:0.95,lineCap:'round',lineJoin:'round'}); pl.addTo(map); mapLayers.push(pl); }
-    const icon=L.divIcon({className:'',html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.5);"></div>`,iconSize:[13,13],iconAnchor:[6,6]});
-    const mk=L.marker(coord,{icon}).bindTooltip(`${step.station} · ${step.line}`,{direction:'top'}); mk.addTo(map); mapLayers.push(mk);
-  });
-  const pts=[COORDS[puzzleData.start],COORDS[puzzleData.end],...userRoute.filter(s=>COORDS[s.station]).map(s=>COORDS[s.station])].filter(Boolean);
-  if (pts.length>1) map.fitBounds(L.latLngBounds(pts).pad(0.3));
+  const line = document.getElementById('sel-line').value;
+
+  if (!stn)  { showStepErr('Please select a station from the list.'); return; }
+  if (!line) { showStepErr('Please choose a line.'); return; }
+
+  const fromStn  = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
+  const fromLine = userRoute.length === 0 ? null              : userRoute[userRoute.length-1].line;
+
+  // Station must be served by chosen line
+  if (!stationsForDisplayLine(line).includes(stn)) {
+    showStepErr(`${stn} is not on the ${line} line.`); return;
+  }
+  // Departure station must be served by chosen line
+  if (!stationsForDisplayLine(line).includes(fromStn)) {
+    showStepErr(`You can't take the ${line} line from ${fromStn}.`); return;
+  }
+  // Can't stay at same station
+  if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
+
+  userRoute.push({station:stn, line});
+  document.getElementById('sel-stn').value = '';
+  selectedStation = '';
+  closeAc();
+  setLineSelector('');
+  clearStepErr();
+  renderRoute();
+  document.getElementById('sel-stn').focus();
 }
 
-// ─── ROUTE BUILDING ───────────────────────────────────────────────────────────
+function removeStep(i) { userRoute.splice(i, 1); clearStepErr(); renderRoute(); }
+
 function renderRoute() {
   const c = document.getElementById('route-steps');
   if (!userRoute.length) {
     c.innerHTML = '<div class="empty-route">Add stops below to build your route</div>';
     document.getElementById('sub-btn').disabled = true;
-    updateMapRoute(); return;
+    updateMap(); return;
   }
   c.innerHTML = userRoute.map((s,i) => {
-    const lc = LC[s.line]||{bg:'#444',txt:'#fff'};
-    const conn = i>0 ? `<div class="step-conn" style="background:${lc.bg};"></div>` : '';
-    return `<div class="step">${conn}<div class="step-dot" style="background:${lc.bg};"></div><div class="step-txt"><div class="step-stn">${s.station}</div><span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${normaliseLineName(s.line)}</span></div><button class="step-rm" onclick="removeStep(${i})">&#x2715;</button></div>`;
+    const lc = lineColour(s.line);
+    const conn = i > 0 ? `<div class="step-conn" style="background:${lc.bg};"></div>` : '';
+    return `<div class="step">${conn}
+      <div class="step-dot" style="background:${lc.bg};"></div>
+      <div class="step-txt">
+        <div class="step-stn">${s.station}</div>
+        <span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${s.line}</span>
+      </div>
+      <button class="step-rm" onclick="removeStep(${i})">&#x2715;</button>
+    </div>`;
   }).join('');
-  updateMapRoute();
-  const hasEnd = userRoute.some(s => s.station.toLowerCase() === puzzleData.end.toLowerCase());
-  document.getElementById('sub-btn').disabled = !(userRoute.length >= 1 && hasEnd);
+  const atEnd = userRoute.some(s => s.station === puzzleData.end);
+  document.getElementById('sub-btn').disabled = !atEnd;
+  updateMap();
 }
 
-function stationOnLine(station, line) {
-  return LINE_STATIONS[line] && LINE_STATIONS[line].includes(station);
-}
-
-function addStep() {
-  let stn = selectedStation;
-  if (!stn) {
-    const typed = document.getElementById('sel-stn').value.trim();
-    const exact = ALL_STATIONS_LIST.find(s => s.toLowerCase() === typed.toLowerCase());
-    if (exact) stn = exact;
-  }
-  const line = document.getElementById('sel-line').value;
-  if (!stn || !line) {
-    alert(!stn ? 'Please select a station from the list.' : 'Please choose a line.');
-    return;
-  }
-
-  // Validate the leg is actually possible on the chosen line
-  const fromStation = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length - 1].station;
-  const fromLine    = userRoute.length === 0 ? null             : userRoute[userRoute.length - 1].line;
-
-  // Check the destination station is served by the chosen line
-  if (!stationOnLine(stn, line)) {
-    showStepError(`${stn} is not on the ${line} line. Please choose a different line.`);
-    return;
-  }
-
-  // Check the departure station is served by the chosen line
-  if (!stationOnLine(fromStation, line)) {
-    showStepError(`You can't take the ${line} line from ${fromStation} — that line doesn't stop there.`);
-    return;
-  }
-
-  // Prevent adding the same station twice in a row
-  if (stn === fromStation) {
-    showStepError(`You're already at ${stn}!`);
-    return;
-  }
-
-  userRoute.push({station:stn, line});
-  document.getElementById('sel-stn').value = '';
-  selectedStation = '';
-  closeAutocomplete();
-  populateAllLines();
-  renderRoute();
-  clearStepError();
-  document.getElementById('sel-stn').focus();
-}
-
-function showStepError(msg) {
-  let el = document.getElementById('step-error');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'step-error';
-    el.style.cssText = 'background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:10px 12px;font-size:13px;color:#f08080;margin-top:8px;line-height:1.5;touch-action:manipulation;';
-    document.querySelector('.add-area').appendChild(el);
-  }
-  el.textContent = '⚠ ' + msg;
-}
-
-function clearStepError() {
+function showStepErr(msg) {
   const el = document.getElementById('step-error');
-  if (el) el.remove();
+  el.textContent = '⚠ ' + msg;
+  el.style.display = 'block';
+}
+function clearStepErr() { document.getElementById('step-error').style.display = 'none'; }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAP
+// ═══════════════════════════════════════════════════════════════════════════════
+function initMap() {
+  map = L.map('map', {zoomControl:true, attributionControl:false, scrollWheelZoom:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
+  const sc = COORDS[puzzleData.start], ec = COORDS[puzzleData.end];
+  if (sc) addPin(sc, 'S', '#00e87a', puzzleData.start + ' (Start)');
+  if (ec) addPin(ec, 'E', '#FFD300', puzzleData.end + ' (End)');
+  if (sc && ec) map.fitBounds(L.latLngBounds([sc, ec]).pad(0.45));
+  else map.setView([51.505, -0.09], 12);
 }
 
-function removeStep(i) { userRoute.splice(i,1); clearStepError(); renderRoute(); }
+function addPin(coords, letter, color, tooltip) {
+  const icon = L.divIcon({className:'', html:`<div style="width:28px;height:28px;background:${color};border-radius:50%;border:2.5px solid white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#000;box-shadow:0 2px 8px rgba(0,0,0,.6);">${letter}</div>`, iconSize:[28,28], iconAnchor:[14,14]});
+  L.marker(coords, {icon}).bindTooltip(tooltip, {permanent:false, direction:'top'}).addTo(map);
+}
 
-// ─── SCORING ──────────────────────────────────────────────────────────────────
-// Single shared function used for BOTH user routes and optimal route calculation.
-// This guarantees they are always scored on identical terms.
-// Input: array of {station, line} objects + the start station string
-function calcRouteMins(startStation, route) {
-  const stations = [startStation, ...route.map(s => s.station || s.to)];
-  const lines    = route.map(s => s.line);
-  let total = 0;
-
-  for (let i = 0; i < stations.length - 1; i++) {
-    const from = stations[i], to = stations[i+1];
-    const t = getJourneyTime(from, to);
-    if (t !== null) {
-      total += t;
-    } else {
-      const fc=COORDS[from], tc=COORDS[to];
-      if (fc&&tc) {
-        const d=Math.sqrt(Math.pow(fc[0]-tc[0],2)+Math.pow(fc[1]-tc[1],2))*111;
-        total += Math.round(Math.max(2, d*4));
-      } else { total += 8; }
+function updateMap() {
+  mapLayers.forEach(l => map.removeLayer(l)); mapLayers = [];
+  if (!userRoute.length) return;
+  userRoute.forEach((step, i) => {
+    const coord = COORDS[step.station]; if (!coord) return;
+    const lc = lineColour(step.line);
+    const prevCoord = i === 0 ? COORDS[puzzleData.start] : COORDS[userRoute[i-1].station];
+    if (prevCoord) {
+      const pl = L.polyline([prevCoord, coord], {color:lc.bg, weight:5, opacity:0.95});
+      pl.addTo(map); mapLayers.push(pl);
     }
-  }
-
-  // Add interchange walking time at each line change
-  for (let i = 1; i < lines.length; i++) {
-    if (lines[i] !== lines[i-1]) {
-      total += interchangeTime(stations[i]);
-    }
-  }
-
-  return total;
+    const icon = L.divIcon({className:'', html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.5);"></div>`, iconSize:[13,13], iconAnchor:[6,6]});
+    const mk = L.marker(coord, {icon}).bindTooltip(`${step.station} · ${step.line}`, {direction:'top'});
+    mk.addTo(map); mapLayers.push(mk);
+  });
+  const pts = [COORDS[puzzleData.start], COORDS[puzzleData.end], ...userRoute.filter(s=>COORDS[s.station]).map(s=>COORDS[s.station])].filter(Boolean);
+  if (pts.length > 1) map.fitBounds(L.latLngBounds(pts).pad(0.3));
 }
 
-// Wrapper for user route (uses puzzleData.start as start station)
-function calcUserMins(route) {
-  return calcRouteMins(puzzleData.start, route);
-}
-
-// Compare user route against TFL's top-5 routes.
-// Returns { rank, matched, userMins, optimalMins, top5 }
-function scoreRoute(route) {
-  const userMins    = calcUserMins(route);
-  const optimalMins = puzzleData.optimal.mins;
-  const top5        = puzzleData.routes;
-
-  // Find rank: within X% of each ranked route
-  let rank = null;
-  const TOLERANCE = 0.10; // within 10% of a ranked route counts as matching it
-
-  for (const r of top5) {
-    if (userMins <= r.mins * (1 + TOLERANCE)) {
-      rank = r.rank;
-      break;
-    }
-  }
-
-  return { rank, userMins, optimalMins, top5 };
-}
-
+// ═══════════════════════════════════════════════════════════════════════════════
+// SUBMIT + RESULTS
+// ═══════════════════════════════════════════════════════════════════════════════
 function submitRoute() {
   const btn = document.getElementById('sub-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring your route...';
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring...';
 
-  const existing = document.getElementById('route-error');
-  if (existing) existing.remove();
+  const userMins    = scoreUserRoute(puzzleData.start, userRoute);
+  const optimalMins = puzzleData.optimal.mins;
+  const diff        = userMins - optimalMins;
 
-  const { rank, userMins, optimalMins, top5 } = scoreRoute(userRoute);
-
-  // Medal & messaging — scored by time difference vs optimal, not rank position
-  const diff = userMins - optimalMins;
   let medal, color, title, subtitle;
-  if (diff <= 0)       { medal='🥇'; color='#FFD300'; title='Optimal route!';     subtitle='You matched the fastest possible route!'; }
-  else if (diff <= 2)  { medal='🥇'; color='#FFD300'; title='Perfect!';           subtitle=`Only ${diff} min off optimal — outstanding!`; }
-  else if (diff <= 5)  { medal='🥈'; color='#C0C0C0'; title='Nearly optimal!';    subtitle=`${diff} min off optimal — great route!`; }
-  else if (diff <= 10) { medal='🥉'; color='#CD7F32'; title='Good effort!';       subtitle=`${diff} min off optimal`; }
-  else if (diff <= 20) { medal='⭐'; color='#4a9eff'; title='Not bad!';           subtitle=`${diff} min off optimal — keep practising`; }
-  else                 { medal='🚇'; color='var(--muted)'; title='Room to improve'; subtitle=`${diff} min off optimal — try again tomorrow!`; }
+  if (diff <= 0)       { medal='🥇'; color='#FFD300'; title='Optimal!';        subtitle='You matched the fastest possible route!'; }
+  else if (diff <= 2)  { medal='🥇'; color='#FFD300'; title='Perfect!';        subtitle=`Only ${diff} min off optimal`; }
+  else if (diff <= 5)  { medal='🥈'; color='#C0C0C0'; title='Nearly optimal!'; subtitle=`${diff} min off optimal`; }
+  else if (diff <= 10) { medal='🥉'; color='#CD7F32'; title='Good effort!';    subtitle=`${diff} min off optimal`; }
+  else if (diff <= 20) { medal='⭐'; color='#4a9eff'; title='Not bad!';        subtitle=`${diff} min off optimal`; }
+  else                 { medal='🚇'; color='var(--muted)'; title='Keep practising!'; subtitle=`${diff} min off optimal`; }
 
-  // Also note if they matched a top-5 route specifically
-  const rankLabel = rank ? ` (rank #${rank} route)` : '';
+  const pct = Math.max(0, Math.min(100, Math.round(optimalMins / Math.max(userMins, 1) * 100)));
 
-  const pct = Math.max(0, Math.min(100, Math.round((optimalMins / Math.max(userMins,1)) * 100)));
-
-  // Save to history
-  const data  = getStore();
+  // Save
+  const store = getStore();
   const today = new Date().toDateString();
-  if (data.lastPlayed !== today) {
-    data.streak = (data.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? data.streak+1 : 1;
-    data.lastPlayed = today;
+  if (store.lastPlayed !== today) {
+    store.streak = (store.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? store.streak+1 : 1;
+    store.lastPlayed = today;
   }
-  data.history.push({start:puzzleData.start,end:puzzleData.end,userMins,optimalMins,medal,rank,date:today});
-  setStore(data);
+  store.history.push({start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today});
+  setStore(store);
+  document.getElementById('streak-disp').textContent = store.streak;
 
-  // Build optimal legs display
-  const optLegsHtml = puzzleData.optimal.legs.filter(l=>l.from&&l.mode!=='walking').map(l => {
-    const lc = LC[l.line]||{bg:'#888'};
-    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} &rarr; ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${normaliseLineName(l.line)}</span>&nbsp;${l.mins} min</div></div>`;
+  // Optimal legs HTML
+  const optLegsHtml = puzzleData.optimal.legs.map(l => {
+    const lc = lineColour(l.line);
+    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} → ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span> &nbsp;${l.mins} min</div></div>`;
   }).join('');
 
-  // Build top-5 display
+  // Top 5 HTML
   const rankEmojis = ['🥇','🥈','🥉','4️⃣','5️⃣'];
-  const top5Html = top5.map(r => {
-    const highlight = r.rank === rank;
-    const legSummary = r.legs.filter(l=>l.mode!=='walking').map(l=>`${l.line}`).join(' → ');
-    return `<div class="top5-row" style="${highlight?'background:#1a2a3a;border-radius:6px;padding:7px 8px;':''}">
+  const top5Html = puzzleData.routes.map(r => {
+    const legSummary = r.legs.map(l => l.line).join(' → ');
+    return `<div class="top5-row">
       <div class="top5-rank">${rankEmojis[r.rank-1]}</div>
-      <div style="flex:1;font-size:12px;color:${highlight?'var(--txt)':'var(--muted)'};">${legSummary}</div>
+      <div style="flex:1;font-size:12px;color:var(--muted);">${legSummary}</div>
       <div class="top5-mins">${r.mins} min</div>
     </div>`;
   }).join('');
@@ -1534,121 +1708,74 @@ function submitRoute() {
     <div class="result-card">
       <div class="result-medal">${medal}</div>
       <div class="result-title" style="color:${color};">${title}</div>
-      <div class="result-sub">${puzzleData.start} &rarr; ${puzzleData.end}</div>
+      <div class="result-sub">${puzzleData.start} → ${puzzleData.end}</div>
       <div class="times-grid">
         <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your time (min)</div></div>
         <div class="time-box"><div class="time-val" style="color:${color};">${optimalMins}</div><div class="time-lbl">Optimal (min)</div></div>
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:6px;">Efficiency vs optimal</div>
       <div class="bar-wrap"><div class="bar-fill" id="score-bar" style="width:0%;background:${color};"></div></div>
-      <div class="pct-lbl">${pct}% &mdash; ${subtitle}${rankLabel}</div>
+      <div class="pct-lbl">${pct}% — ${subtitle}</div>
       <div class="opt-legs">
-        <div class="opt-lbl">Optimal route (from TFL)</div>
+        <div class="opt-lbl">Optimal route</div>
         ${optLegsHtml}
       </div>
       <div class="top5-section">
-        <div class="opt-lbl">Today's top 5 routes</div>
+        <div class="opt-lbl">Top 5 routes today</div>
         ${top5Html}
       </div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">
-        Times are travel time only — no waiting included
-      </div>
-      <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} &middot; ${puzzleData.date}</div>
-      <button class="btn-share" id="share-btn" onclick="shareResult('${medal}', ${diff}, '${title}', ${pct})">
-        &#128279; Share my result
-      </button>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
+      <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
+      <button class="btn-share" id="share-btn" onclick="shareResult('${medal}',${diff},${pct})">&#128279; Share my result</button>
       <button class="btn-reset" onclick="resetGame()">Back to stats</button>
     </div>`;
-  setTimeout(() => { const b=document.getElementById('score-bar'); if(b) b.style.width=pct+'%'; }, 150);
-  renderStore();
+
+  setTimeout(() => { const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%'; }, 150);
+  renderHistory();
 }
 
-function showError(msg) {
-  const el=document.createElement('div'); el.id='route-error';
-  el.className='error-banner'; el.style.marginTop='8px';
-  el.textContent='⚠ '+msg;
-  document.getElementById('sub-btn').insertAdjacentElement('afterend',el);
-  setTimeout(()=>el.remove(),6000);
-}
-
-function renderStore() {
-  const d = getStore();
-  document.getElementById('streak-disp').textContent = d.streak;
-  const h = document.getElementById('hist-list');
-  if (!d.history.length) { h.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>'; return; }
-  h.innerHTML = d.history.slice().reverse().slice(0,5).map(e =>
-    `<div class="hist-row"><div><div>${e.start} &rarr; ${e.end}</div><div class="hist-sub">${e.userMins} min &middot; optimal ${e.optimalMins} min &middot; ${e.rank ? 'rank #'+e.rank : 'outside top 5'} &middot; ${e.date}</div></div><div style="font-size:20px;">${e.medal}</div></div>`
-  ).join('');
+function shareResult(medal, diff, pct) {
+  const rankLine = diff <= 0 ? 'Matched optimal!' : `${diff} min off optimal`;
+  const text = [`🚇 Tubed #${puzzleData.puzzleNum}`,`${puzzleData.start} → ${puzzleData.end}`,`${medal} ${rankLine}`,`Efficiency: ${pct}%`,`playtubed.co.uk`].join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const b = document.getElementById('share-btn');
+      if(b) { b.textContent = '✓ Copied!'; b.classList.add('copied'); }
+    });
+  }
 }
 
 function resetGame() {
-  document.getElementById('result-panel').style.display='none';
-  document.getElementById('result-panel').innerHTML='';
-  document.getElementById('main-panel').style.display='block';
-  const btn=document.getElementById('sub-btn'); btn.disabled=true; btn.innerHTML='Submit my route &nbsp;&#8594;';
-  userRoute=[]; renderRoute(); renderStore();
-  setTimeout(()=>map.invalidateSize(),100);
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('result-panel').innerHTML = '';
+  document.getElementById('main-panel').style.display = 'block';
+  const btn = document.getElementById('sub-btn');
+  btn.disabled = true; btn.innerHTML = 'Submit my route &nbsp;→';
+  userRoute = []; renderRoute(); renderHistory();
+  setTimeout(() => map.invalidateSize(), 100);
 }
 
-function shareResult(medal, diff, title, pct) {
-  const routeSummary = userRoute.map(s => s.line).join(' → ');
-  const rankLine = diff <= 0 ? 'Matched the optimal route!' : `${diff} min off optimal`;
-  const text = [
-    `🚇 Tubed #${puzzleData.puzzleNum}`,
-    `${puzzleData.start} → ${puzzleData.end}`,
-    `${medal} ${title}`,
-    rankLine,
-    `Efficiency: ${pct}%`,
-    `Play at playtubed.co.uk`
-  ].join('\n');
-
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('share-btn');
-      if (btn) { btn.textContent = '✓ Copied to clipboard!'; btn.classList.add('copied'); }
-    }).catch(() => fallbackCopy(text));
-  } else {
-    fallbackCopy(text);
-  }
+function renderHistory() {
+  const d = getStore();
+  document.getElementById('streak-disp').textContent = d.streak;
+  const h = document.getElementById('hist-list');
+  if (!d.history.length) { h.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>'; return; }
+  h.innerHTML = d.history.slice().reverse().slice(0,5).map(e =>
+    `<div class="hist-row">
+      <div><div>${e.start} → ${e.end}</div><div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
+      <div style="font-size:20px;">${e.medal}</div>
+    </div>`
+  ).join('');
 }
 
-function fallbackCopy(text) {
-  const ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select();
-  try { document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta);
-  const btn = document.getElementById('share-btn');
-  if (btn) { btn.textContent = '✓ Copied!'; btn.classList.add('copied'); }
-}
-
-function openModal() {
-  const m = document.getElementById('modal-overlay');
-  m.style.display = 'flex';
-  requestAnimationFrame(() => m.classList.add('open'));
-}
-
-function closeModal() {
-  const m = document.getElementById('modal-overlay');
-  m.classList.remove('open');
-  setTimeout(() => { m.style.display = 'none'; }, 200);
-}
-
-function closeModalOnBg(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-// Show modal automatically for first-time visitors
-function maybeShowWelcome() {
-  if (!localStorage.getItem('tubed_played_before')) {
-    setTimeout(openModal, 600);
-    localStorage.setItem('tubed_played_before', '1');
-  }
-}
+// ═══════════════════════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════════════════════
+function openModal() { const m = document.getElementById('modal-overlay'); m.style.display='flex'; requestAnimationFrame(()=>m.classList.add('open')); }
+function closeModal() { const m = document.getElementById('modal-overlay'); m.classList.remove('open'); setTimeout(()=>m.style.display='none',200); }
+function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 
 window.addEventListener('load', init);
-document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
-  <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:#4a5a6a;line-height:1.8;">Powered by TfL Open Data &middot; Not affiliated with Transport for London<br>&copy; Tubed <span id="yr"></span></div>
 </body>
 </html>
