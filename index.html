@@ -12,44 +12,44 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{--bg:#0a0f1e;--surf:#111827;--brd:#1e2d4a;--red:#E32017;--navy:#003688;--yellow:#FFD300;--txt:#f0f4ff;--muted:#7a8ba8;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
-.wrap{max-width:540px;margin:0 auto;padding:24px 18px 48px;}
-.hdr{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
-.gtitle{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;line-height:1;}
-.gsub{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
-.streak-box{margin-left:auto;background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:8px 14px;text-align:center;flex-shrink:0;}
-.streak-n{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--yellow);line-height:1;}
+.wrap{max-width:540px;margin:0 auto;padding:16px 16px 40px;}
+.hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.gtitle{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;}
+.gsub{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.streak-box{margin-left:auto;background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:6px 12px;text-align:center;flex-shrink:0;}
+.streak-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--yellow);line-height:1;}
 .streak-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-.card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:18px;margin-bottom:16px;}
+.card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:12px;}
 .challenge{display:flex;align-items:center;}
 .st-box{flex:1;text-align:center;}
-.st-role{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:4px;}
-.st-name{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1.1;color:var(--txt);}
-.arr{font-size:22px;color:var(--red);padding:0 12px;flex-shrink:0;}
-.sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:10px;}
-#map{width:100%;height:280px;border-radius:10px;margin-bottom:16px;border:0.5px solid var(--brd);}
-.route-steps{display:flex;flex-direction:column;margin-bottom:14px;min-height:48px;}
-.empty-route{text-align:center;color:var(--muted);font-size:13px;padding:14px 0;}
-.step{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--brd);position:relative;}
+.st-role{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:2px;}
+.st-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1.1;color:var(--txt);}
+.arr{font-size:20px;color:var(--red);padding:0 10px;flex-shrink:0;}
+.sec-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;}
+#map{width:100%;height:220px;border-radius:10px;margin-bottom:12px;border:0.5px solid var(--brd);}
+.route-steps{display:flex;flex-direction:column;margin-bottom:10px;min-height:40px;}
+.empty-route{text-align:center;color:var(--muted);font-size:13px;padding:10px 0;}
+.step{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--brd);position:relative;}
 .step:last-child{border-bottom:none;}
 .step-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;z-index:1;}
-.step-conn{position:absolute;left:5.5px;top:-9px;width:2px;height:9px;}
+.step-conn{position:absolute;left:5.5px;top:-7px;width:2px;height:7px;}
 .step-txt{flex:1;}
 .step-stn{font-size:14px;font-weight:500;color:var(--txt);}
-.step-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:3px;font-weight:500;letter-spacing:0.3px;}
-.step-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:8px;line-height:1;border-radius:4px;touch-action:manipulation;}
+.step-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:2px;font-weight:500;letter-spacing:0.3px;}
+.step-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:6px;line-height:1;border-radius:4px;touch-action:manipulation;}
 .step-rm:hover{color:var(--red);}
-.add-area{background:#0d1525;border-radius:10px;padding:14px;margin-top:6px;}
-.add-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:10px;}
-.step-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-select{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:11px 12px;font-size:16px;font-family:'DM Sans',sans-serif;width:100%;appearance:none;cursor:pointer;touch-action:manipulation;}
+.add-area{background:#0d1525;border-radius:10px;padding:10px;margin-top:4px;}
+.add-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:8px;}
+.step-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+select{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:9px 10px;font-size:15px;font-family:'DM Sans',sans-serif;width:100%;appearance:none;cursor:pointer;touch-action:manipulation;}
 select:focus{outline:none;border-color:#4a6fa5;}
 select option{background:#111827;}
-.btn-add{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;letter-spacing:0.3px;touch-action:manipulation;}
+.btn-add{background:var(--navy);color:white;width:100%;padding:11px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;letter-spacing:0.3px;touch-action:manipulation;}
 .btn-add:hover{background:#0047b3;}
-.btn-sub{background:var(--red);color:white;width:100%;padding:16px;font-size:17px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.15s;margin-bottom:8px;letter-spacing:0.5px;touch-action:manipulation;}
+.btn-sub{background:var(--red);color:white;width:100%;padding:14px;font-size:16px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.15s;margin-bottom:6px;letter-spacing:0.5px;touch-action:manipulation;}
 .btn-sub:hover:not(:disabled){background:#c01a10;}
 .btn-sub:disabled{background:#3a1210;color:#6a3030;cursor:not-allowed;}
-.hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.hint{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;}
 .result-card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:24px 20px;margin-bottom:16px;}
 .result-medal{font-size:52px;text-align:center;margin-bottom:8px;}
 .result-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;text-align:center;margin-bottom:4px;}
@@ -96,7 +96,7 @@ select option{background:#111827;}
 .how-divider{border:none;border-top:0.5px solid var(--brd);margin:18px 0;}
 .medal-row{display:flex;align-items:center;gap:12px;padding:6px 0;font-size:13px;color:var(--muted);}
 .medal-row span:first-child{font-size:20px;width:28px;text-align:center;}
-.btn-how{background:none;border:0.5px solid var(--brd);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;width:100%;justify-content:center;margin-bottom:12px;}
+.btn-how{background:none;border:0.5px solid var(--brd);color:var(--muted);border-radius:8px;padding:5px 12px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;width:100%;justify-content:center;margin-bottom:10px;}
 .btn-how:hover{border-color:var(--txt);color:var(--txt);}
 .btn-got-it{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;margin-top:6px;}
 .search-wrap{position:relative;width:100%;}
@@ -122,7 +122,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 .feedback-success{text-align:center;padding:20px 0 8px;color:#4ade80;font-size:14px;line-height:1.6;}
 
 /* ── Hints ── */
-.hints-area{margin-bottom:16px;}
+.hints-area{margin-bottom:12px;}
 .hints-inline{display:flex;align-items:center;gap:8px;}
 .hint-pill-sep{color:var(--brd);font-size:14px;user-select:none;flex-shrink:0;}
 .hint-pill-wrap{flex:1;}
@@ -140,7 +140,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 <body>
 <div class="wrap">
   <div class="hdr">
-    <div style="font-size:46px;line-height:1;flex-shrink:0;">🚇</div>
+    <a href="https://playtubed.co.uk" style="font-size:38px;line-height:1;flex-shrink:0;text-decoration:none;">🚇</a>
     <div>
       <div class="gtitle">Tubed</div>
       <div class="gsub" id="puzzle-sub">Daily London Underground Puzzle</div>
@@ -1353,7 +1353,7 @@ function dijkstra(graph, start, end) {
     if (routes.length >= 5) break;
     const legs = pathToLegs(a.path);
     if (legs.length < 2) continue;
-    const sig = legs.map(l => l.line).join('>');
+    const sig = legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
     if (seen.has(sig)) continue;
     seen.add(sig);
     routes.push({rank:routes.length+1, mins:a.cost, legs});
@@ -1779,7 +1779,7 @@ function submitRoute() {
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
       <button class="btn-share" id="share-btn" onclick="shareResult('${medal}',${diff},${pct},${hintsUsed})">&#128279; Share my result</button>
       <button class="btn-feedback" onclick="openFeedback()">💬 Give feedback</button>
-      <button class="btn-reset" onclick="resetGame()">Back to stats</button>
+      <button class="btn-reset" onclick="resetGame()">Back to the puzzle</button>
     </div>`;
 
   setTimeout(() => { const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%'; }, 150);
