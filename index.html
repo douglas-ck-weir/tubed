@@ -110,6 +110,16 @@ select option{background:#111827;}
 .autocomplete-item:hover,.autocomplete-item.active{background:#1a2a3a;color:var(--yellow);}
 .autocomplete-item mark{background:none;color:var(--yellow);font-weight:500;}
 .step-error{background:#3d0f0f;border:0.5px solid #7a1a1a;border-radius:8px;padding:10px 12px;font-size:13px;color:#f08080;margin-top:8px;line-height:1.5;}
+.btn-feedback{touch-action:manipulation;background:none;border:0.5px solid var(--brd);color:var(--muted);width:100%;padding:12px;font-size:13px;font-family:'DM Sans',sans-serif;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;margin-bottom:10px;}
+.btn-feedback:hover{border-color:var(--txt);color:var(--txt);}
+.feedback-input{background:#0a0f1e;border:1px solid #2a3d5e;border-radius:8px;color:var(--txt);padding:11px 12px;font-size:15px;font-family:'DM Sans',sans-serif;width:100%;margin-bottom:10px;}
+.feedback-input:focus{outline:none;border-color:#4a6fa5;}
+.feedback-input::placeholder{color:var(--muted);}
+textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
+.btn-feedback-send{background:var(--navy);color:white;width:100%;padding:13px;font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;transition:background 0.15s;}
+.btn-feedback-send:hover:not(:disabled){background:#0047b3;}
+.btn-feedback-send:disabled{opacity:0.5;cursor:not-allowed;}
+.feedback-success{text-align:center;padding:20px 0 8px;color:#4ade80;font-size:14px;line-height:1.6;}
 </style>
 <script data-goatcounter="https://playtubed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -149,6 +159,24 @@ select option{background:#111827;}
         A new puzzle every day at midnight. Times are <strong style="color:var(--txt);">travel time only</strong> — no waiting. Same puzzle for everyone worldwide.
       </div>
       <button class="btn-got-it" onclick="closeModal()">Got it — let's play! 🚇</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="feedback-overlay" onclick="closeFeedbackOnBg(event)">
+    <div class="modal">
+      <div class="modal-hdr">
+        <div class="modal-title">Feedback</div>
+        <button class="modal-close" onclick="closeFeedback()">&#x2715;</button>
+      </div>
+      <div id="feedback-form-wrap">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Found a bug, got a suggestion, or just want to say hi? We'd love to hear from you.</p>
+        <textarea id="feedback-msg" class="feedback-input" placeholder="Your feedback..."></textarea>
+        <input type="email" id="feedback-email" class="feedback-input" placeholder="Your email (optional — only if you'd like a reply)"/>
+        <button class="btn-feedback-send" id="feedback-send-btn" onclick="submitFeedback()">Send feedback</button>
+      </div>
+      <div id="feedback-success" class="feedback-success" style="display:none;">
+        &#10003; Thanks for your feedback!<br><span style="color:var(--muted);font-size:12px;">It's been sent to the Tubed team.</span>
+      </div>
     </div>
   </div>
 
@@ -1727,6 +1755,7 @@ function submitRoute() {
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
       <button class="btn-share" id="share-btn" onclick="shareResult('${medal}',${diff},${pct})">&#128279; Share my result</button>
+      <button class="btn-feedback" onclick="openFeedback()">💬 Give feedback</button>
       <button class="btn-reset" onclick="resetGame()">Back to stats</button>
     </div>`;
 
@@ -1774,6 +1803,46 @@ function renderHistory() {
 function openModal() { const m = document.getElementById('modal-overlay'); m.style.display='flex'; requestAnimationFrame(()=>m.classList.add('open')); }
 function closeModal() { const m = document.getElementById('modal-overlay'); m.classList.remove('open'); setTimeout(()=>m.style.display='none',200); }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
+
+function openFeedback() {
+  document.getElementById('feedback-msg').value = '';
+  document.getElementById('feedback-email').value = '';
+  document.getElementById('feedback-form-wrap').style.display = 'block';
+  document.getElementById('feedback-success').style.display = 'none';
+  document.getElementById('feedback-send-btn').disabled = false;
+  document.getElementById('feedback-send-btn').textContent = 'Send feedback';
+  const m = document.getElementById('feedback-overlay');
+  m.style.display = 'flex'; requestAnimationFrame(() => m.classList.add('open'));
+}
+function closeFeedback() {
+  const m = document.getElementById('feedback-overlay');
+  m.classList.remove('open'); setTimeout(() => m.style.display = 'none', 200);
+}
+function closeFeedbackOnBg(e) { if (e.target === document.getElementById('feedback-overlay')) closeFeedback(); }
+
+async function submitFeedback() {
+  const msg = document.getElementById('feedback-msg').value.trim();
+  if (!msg) { document.getElementById('feedback-msg').focus(); return; }
+  const email = document.getElementById('feedback-email').value.trim();
+  const btn = document.getElementById('feedback-send-btn');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: '24bf0458-2dcb-492b-840c-a8e37b6a8b7d',
+        subject: `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`,
+        message: msg,
+        email: email || 'Not provided',
+        puzzle: puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown',
+      })
+    });
+  } catch(e) { /* silently fail — still show success to user */ }
+  document.getElementById('feedback-form-wrap').style.display = 'none';
+  document.getElementById('feedback-success').style.display = 'block';
+  setTimeout(closeFeedback, 3000);
+}
 
 window.addEventListener('load', init);
 </script>
