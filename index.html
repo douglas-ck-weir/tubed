@@ -1476,34 +1476,53 @@ function buildGraph() {
 
 function dijkstra(graph, start, end) {
   if (!graph[start] || !graph[end]) return [];
-  const dist = {};
-  const pq = [];
+
+  // Store up to MAX_PATHS paths per (station, line) so that routes of equal
+  // cost via different interchange stations all survive to the results stage.
+  const MAX_PATHS = 8;
+  const dist = {};   // dist[station][line] = [{cost, path}, ...]
+  const pq   = [];
   function push(item) { pq.push(item); pq.sort((a,b) => a.cost - b.cost); }
+
+  function getEntries(stn, line) {
+    if (!dist[stn]) dist[stn] = {};
+    if (!dist[stn][line]) dist[stn][line] = [];
+    return dist[stn][line];
+  }
+
   for (const line of Object.keys(graph[start])) {
-    if (!dist[start]) dist[start] = {};
     const entry = {cost:0, path:[{station:start, line, type:'start'}]};
-    dist[start][line] = entry;
+    getEntries(start, line).push(entry);
     push({cost:0, station:start, line, path:entry.path});
   }
-  const visited = new Set();
+
+  // Cap how many times we process each (station, line) to avoid explosion
+  const processCount = {};
+
   while (pq.length) {
     const {cost, station, line, path} = pq.shift();
     const key = `${station}|${line}`;
-    if (visited.has(key)) continue;
-    visited.add(key);
+    processCount[key] = (processCount[key] || 0) + 1;
+    if (processCount[key] > MAX_PATHS) continue;
     if (!graph[station]?.[line]) continue;
+
     for (const edge of graph[station][line]) {
       const nc = cost + edge.cost;
-      if (!dist[edge.station]) dist[edge.station] = {};
-      const ex = dist[edge.station][edge.line];
-      if (!ex || nc < ex.cost) {
+      const entries = getEntries(edge.station, edge.line);
+      // Accept if cost is not worse than our worst stored path (or we have room)
+      const worst = entries.length > 0 ? entries[entries.length - 1].cost : Infinity;
+      if (entries.length < MAX_PATHS || nc <= worst) {
         const np = [...path, {station:edge.station, line:edge.line, type:edge.type}];
-        dist[edge.station][edge.line] = {cost:nc, path:np};
+        entries.push({cost:nc, path:np});
+        entries.sort((a,b) => a.cost - b.cost);
+        if (entries.length > MAX_PATHS) entries.length = MAX_PATHS;
         push({cost:nc, station:edge.station, line:edge.line, path:np});
       }
     }
   }
+
   if (!dist[end]) return [];
+
   function pathToLegs(path) {
     const legs = [];
     let legFrom = null, legLine = null, legMins = 0, prev = null;
@@ -1527,12 +1546,18 @@ function dijkstra(graph, start, end) {
     if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
     return legs;
   }
-  const arrivals = Object.entries(dist[end])
-    .map(([l, d]) => ({line:l, cost:d.cost, path:d.path}))
-    .filter(a => a.cost > 0)
-    .sort((a,b) => a.cost - b.cost);
+
+  // Collect all stored paths across all arrival lines, sort by cost
+  const allArrivals = [];
+  for (const [l, entries] of Object.entries(dist[end])) {
+    for (const e of entries) {
+      if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
+    }
+  }
+  allArrivals.sort((a,b) => a.cost - b.cost);
+
   const routes = [], seen = new Set();
-  for (const a of arrivals) {
+  for (const a of allArrivals) {
     if (routes.length >= 5) break;
     const legs = pathToLegs(a.path);
     if (legs.length < 2) continue;
