@@ -1576,6 +1576,28 @@ function scoreUserRoute(start, route) {
   return buildUserLegs(start, route).totalMins;
 }
 
+// Returns the travel time between any two stations on a named line by walking
+// every intermediate stop in NETWORK. Takes the shortest path found across
+// all sub-lines that share the same display name (e.g. all 'Circle' variants).
+function travelTimeOnLine(from, to, displayLineName) {
+  let best = Infinity;
+  for (const [key, stops] of Object.entries(NETWORK)) {
+    if (displayLine(key) !== displayLineName) continue;
+    const ai = stops.indexOf(from);
+    const bi = stops.indexOf(to);
+    if (ai === -1 || bi === -1) continue;
+    const start = Math.min(ai, bi), end = Math.max(ai, bi);
+    let t = 0, valid = true;
+    for (let i = start; i < end; i++) {
+      const seg = getTime(stops[i], stops[i + 1]);
+      if (seg === null) { valid = false; break; }
+      t += seg;
+    }
+    if (valid) best = Math.min(best, t);
+  }
+  return best === Infinity ? null : best;
+}
+
 // Converts userRoute into legs matching the optimal route format,
 // plus interchange segments, and a total. Returns {legs, interchanges, totalMins}
 // legs: [{from, to, line, mins}]
@@ -1603,7 +1625,6 @@ function buildUserLegs(start, route) {
     if (i > 0 && curLine !== lines[i - 1]) {
       // Line change — close previous leg
       legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
-      // Record interchange
       const ic = interchangeTime(from);
       interchanges.push({at: from, mins: ic});
       totalMins += ic;
@@ -1612,9 +1633,11 @@ function buildUserLegs(start, route) {
       legMins = 0;
     }
 
-    const t = getTime(from, to);
-    legMins += t !== null ? t : 8;
-    totalMins += t !== null ? t : 8;
+    // Walk every intermediate stop on the line rather than looking up a direct
+    // TIMES entry (which only exists for adjacent stations).
+    const t = travelTimeOnLine(from, to, curLine) ?? 8;
+    legMins += t;
+    totalMins += t;
   }
   // Close final leg
   legs.push({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
