@@ -849,10 +849,7 @@ const NETWORK = {
     'Harrow on the Hill','Rayners Lane','Eastcote','Ruislip Manor','Ruislip',
     'Ickenham','Hillingdon','Uxbridge',
   ],
-  'Metropolitan_Kenton': [
-    'Baker Street','Marylebone','Edgware Road','Paddington','Royal Oak','Westbourne Park',
-    'Ladbroke Grove','Latimer Road','Goldhawk Road','Shepherd\'s Bush Market','Hammersmith',
-  ],
+
   'Northern_Morden_Bank': [
     'Morden','South Wimbledon','Colliers Wood','Tooting Broadway','Tooting Bec',
     'Balham','Clapham South','Clapham Common','Clapham North','Stockwell','Oval',
@@ -1476,53 +1473,34 @@ function buildGraph() {
 
 function dijkstra(graph, start, end) {
   if (!graph[start] || !graph[end]) return [];
-
-  // Store up to MAX_PATHS paths per (station, line) so that routes of equal
-  // cost via different interchange stations all survive to the results stage.
-  const MAX_PATHS = 8;
-  const dist = {};   // dist[station][line] = [{cost, path}, ...]
-  const pq   = [];
+  const dist = {};
+  const pq = [];
   function push(item) { pq.push(item); pq.sort((a,b) => a.cost - b.cost); }
-
-  function getEntries(stn, line) {
-    if (!dist[stn]) dist[stn] = {};
-    if (!dist[stn][line]) dist[stn][line] = [];
-    return dist[stn][line];
-  }
-
   for (const line of Object.keys(graph[start])) {
+    if (!dist[start]) dist[start] = {};
     const entry = {cost:0, path:[{station:start, line, type:'start'}]};
-    getEntries(start, line).push(entry);
+    dist[start][line] = entry;
     push({cost:0, station:start, line, path:entry.path});
   }
-
-  // Cap how many times we process each (station, line) to avoid explosion
-  const processCount = {};
-
+  const visited = new Set();
   while (pq.length) {
     const {cost, station, line, path} = pq.shift();
     const key = `${station}|${line}`;
-    processCount[key] = (processCount[key] || 0) + 1;
-    if (processCount[key] > MAX_PATHS) continue;
+    if (visited.has(key)) continue;
+    visited.add(key);
     if (!graph[station]?.[line]) continue;
-
     for (const edge of graph[station][line]) {
       const nc = cost + edge.cost;
-      const entries = getEntries(edge.station, edge.line);
-      // Accept if cost is not worse than our worst stored path (or we have room)
-      const worst = entries.length > 0 ? entries[entries.length - 1].cost : Infinity;
-      if (entries.length < MAX_PATHS || nc <= worst) {
+      if (!dist[edge.station]) dist[edge.station] = {};
+      const ex = dist[edge.station][edge.line];
+      if (!ex || nc < ex.cost) {
         const np = [...path, {station:edge.station, line:edge.line, type:edge.type}];
-        entries.push({cost:nc, path:np});
-        entries.sort((a,b) => a.cost - b.cost);
-        if (entries.length > MAX_PATHS) entries.length = MAX_PATHS;
+        dist[edge.station][edge.line] = {cost:nc, path:np};
         push({cost:nc, station:edge.station, line:edge.line, path:np});
       }
     }
   }
-
   if (!dist[end]) return [];
-
   function pathToLegs(path) {
     const legs = [];
     let legFrom = null, legLine = null, legMins = 0, prev = null;
@@ -1546,18 +1524,12 @@ function dijkstra(graph, start, end) {
     if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
     return legs;
   }
-
-  // Collect all stored paths across all arrival lines, sort by cost
-  const allArrivals = [];
-  for (const [l, entries] of Object.entries(dist[end])) {
-    for (const e of entries) {
-      if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
-    }
-  }
-  allArrivals.sort((a,b) => a.cost - b.cost);
-
+  const arrivals = Object.entries(dist[end])
+    .map(([l, d]) => ({line:l, cost:d.cost, path:d.path}))
+    .filter(a => a.cost > 0)
+    .sort((a,b) => a.cost - b.cost);
   const routes = [], seen = new Set();
-  for (const a of allArrivals) {
+  for (const a of arrivals) {
     if (routes.length >= 5) break;
     const legs = pathToLegs(a.path);
     if (legs.length < 2) continue;
@@ -1573,76 +1545,17 @@ function dijkstra(graph, start, end) {
 // USER ROUTE SCORING
 // ═══════════════════════════════════════════════════════════════════════════════
 function scoreUserRoute(start, route) {
-  return buildUserLegs(start, route).totalMins;
-}
-
-// Returns the travel time between any two stations on a named line by walking
-// every intermediate stop in NETWORK. Takes the shortest path found across
-// all sub-lines that share the same display name (e.g. all 'Circle' variants).
-function travelTimeOnLine(from, to, displayLineName) {
-  let best = Infinity;
-  for (const [key, stops] of Object.entries(NETWORK)) {
-    if (displayLine(key) !== displayLineName) continue;
-    const ai = stops.indexOf(from);
-    const bi = stops.indexOf(to);
-    if (ai === -1 || bi === -1) continue;
-    const start = Math.min(ai, bi), end = Math.max(ai, bi);
-    let t = 0, valid = true;
-    for (let i = start; i < end; i++) {
-      const seg = getTime(stops[i], stops[i + 1]);
-      if (seg === null) { valid = false; break; }
-      t += seg;
-    }
-    if (valid) best = Math.min(best, t);
-  }
-  return best === Infinity ? null : best;
-}
-
-// Converts userRoute into legs matching the optimal route format,
-// plus interchange segments, and a total. Returns {legs, interchanges, totalMins}
-// legs: [{from, to, line, mins}]
-// interchanges: [{at, mins}]  — one per line change
-function buildUserLegs(start, route) {
-  if (!route.length) return {legs:[], interchanges:[], totalMins:0};
-
   const stations = [start, ...route.map(s => s.station)];
   const lines    = route.map(s => s.line);
-
-  const legs = [];
-  const interchanges = [];
-  let totalMins = 0;
-
-  // Build travel legs (group consecutive stops on same line)
-  let legFrom = start;
-  let legLine = lines[0];
-  let legMins = 0;
-
-  for (let i = 0; i < lines.length; i++) {
-    const curLine = lines[i];
-    const from = stations[i];
-    const to   = stations[i + 1];
-
-    if (i > 0 && curLine !== lines[i - 1]) {
-      // Line change — close previous leg
-      legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
-      const ic = interchangeTime(from);
-      interchanges.push({at: from, mins: ic});
-      totalMins += ic;
-      legFrom = from;
-      legLine = curLine;
-      legMins = 0;
-    }
-
-    // Walk every intermediate stop on the line rather than looking up a direct
-    // TIMES entry (which only exists for adjacent stations).
-    const t = travelTimeOnLine(from, to, curLine) ?? 8;
-    legMins += t;
-    totalMins += t;
+  let total = 0;
+  for (let i = 0; i < stations.length - 1; i++) {
+    const t = getTime(stations[i], stations[i+1]);
+    total += t !== null ? t : 8;
   }
-  // Close final leg
-  legs.push({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
-
-  return {legs, interchanges, totalMins};
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i] !== lines[i-1]) total += interchangeTime(stations[i]);
+  }
+  return total;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1862,7 +1775,19 @@ function pickStation(stn) {
 function setLineSelector(stn) {
   const sl = document.getElementById('sel-line');
   sl.innerHTML = '<option value="">Choose line...</option>';
-  const lines = stn ? linesAtStation(stn) : Object.keys(LINE_COLOURS);
+  let lines;
+  if (!stn) {
+    lines = Object.keys(LINE_COLOURS);
+  } else {
+    // Only show lines that serve BOTH the destination station AND
+    // the current departure station — prevents invalid combinations
+    const fromStn = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
+    const atDest  = new Set(linesAtStation(stn));
+    const atFrom  = new Set(linesAtStation(fromStn));
+    lines = [...atDest].filter(l => atFrom.has(l));
+    // If no shared lines, show all lines at destination (addStep will reject anyway with clear error)
+    if (lines.length === 0) lines = [...atDest];
+  }
   lines.sort().forEach(l => {
     const o = document.createElement('option');
     o.value = l; o.textContent = l + ' line'; sl.appendChild(o);
@@ -1969,38 +1894,12 @@ function updateMap() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // SUBMIT + RESULTS
 // ═══════════════════════════════════════════════════════════════════════════════
-
-// Renders a list of legs with interchange rows interleaved.
-// legs: [{from, to, line, mins}]
-// interchanges: [{at, mins}] — indexed by position between legs
-function renderRouteLegsHtml(legs, interchanges) {
-  let html = '';
-  legs.forEach((l, i) => {
-    const lc = lineColour(l.line);
-    html += `<div class="opt-leg">
-      <div class="opt-dot" style="background:${lc.bg};"></div>
-      <div>
-        ${l.from} → ${l.to}
-        &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>
-        &nbsp;<span style="color:var(--muted);">${l.mins} min</span>
-      </div>
-    </div>`;
-    if (interchanges[i]) {
-      html += `<div class="opt-leg" style="padding-left:4px;">
-        <div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--brd);flex-shrink:0;"></div>
-        <div style="color:var(--muted);font-size:12px;">Change at ${interchanges[i].at} &nbsp;+${interchanges[i].mins} min</div>
-      </div>`;
-    }
-  });
-  return html;
-}
 function submitRoute() {
   const btn = document.getElementById('sub-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring...';
 
-  const userLegsData = buildUserLegs(puzzleData.start, userRoute);
-  const userMins    = userLegsData.totalMins;
+  const userMins    = scoreUserRoute(puzzleData.start, userRoute);
   const optimalMins = puzzleData.optimal.mins;
   const diff        = userMins - optimalMins;
 
@@ -2024,13 +1923,10 @@ function submitRoute() {
   setStore(store);
   document.getElementById('streak-disp').textContent = store.streak;
 
-  // Build optimal route interchanges from leg boundaries
-  const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map(l => ({
-    at: l.to,
-    mins: interchangeTime(l.to),
-  }));
-  const optLegsHtml = renderRouteLegsHtml(puzzleData.optimal.legs, optInterchanges);
-  const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
+  const optLegsHtml = puzzleData.optimal.legs.map(l => {
+    const lc = lineColour(l.line);
+    return `<div class="opt-leg"><div class="opt-dot" style="background:${lc.bg};"></div><div>${l.from} → ${l.to} &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span> &nbsp;${l.mins} min</div></div>`;
+  }).join('');
 
   const rankEmojis = ['🥇','🥈','🥉','4️⃣','5️⃣'];
   const top5Html = puzzleData.routes.map(r => {
@@ -2063,10 +1959,6 @@ function submitRoute() {
       <div class="bar-wrap"><div class="bar-fill" id="score-bar" style="width:0%;background:${color};"></div></div>
       <div class="pct-lbl">${pct}% — ${subtitle}</div>
       ${hintsLine}
-      <div class="opt-legs">
-        <div class="opt-lbl">Your route</div>
-        ${userLegsHtml}
-      </div>
       <div class="opt-legs">
         <div class="opt-lbl">Optimal route</div>
         ${optLegsHtml}
