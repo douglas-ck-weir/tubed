@@ -62,7 +62,7 @@ Tubed is a **single static HTML file** — no backend, no database, no server-si
 - **Frontend** — vanilla HTML, CSS and JavaScript
 - **Map** — [Leaflet.js](https://leafletjs.com) with CartoDB Voyager tiles
 - **Fonts** — Bebas Neue + DM Sans via Google Fonts
-- **Journey times** — pre-calculated from TFL timetable data, travel time only (no waiting)
+- **Journey times** — extracted from the TfL Timetable API per line, pre-calculated and baked into the HTML as a static lookup table; travel time only (no waiting)
 - **Interchange times** — per-station platform-to-platform walk times, used in both scoring and pathfinding
 - **Pathfinding** — Dijkstra's algorithm across a full multi-line graph, returning up to 5 distinct optimal routes
 - **Puzzle generation** — seeded random algorithm using the date, ensuring everyone gets the same puzzle
@@ -82,19 +82,6 @@ git clone https://github.com/douglas-ck-weir/tubed.git
 cd tubed
 open index.html
 ```
-
----
-
-## Updating journey times
-
-Journey times are pre-calculated from TfL's GTFS feed using `build_times.py`. Re-run this quarterly or after major TfL timetable changes.
-
-```bash
-pip install requests
-python3 build_times.py --api-key YOUR_TFL_API_KEY
-```
-
-This outputs `times.js` and `times.json`. Replace the `TIMES` constant in `index.html` with the contents of `times.js`. A cached copy of the GTFS feed (`gtfs_tube.zip`) is reused on subsequent runs unless `--no-cache` is passed.
 
 ---
 
