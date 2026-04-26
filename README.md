@@ -17,7 +17,7 @@ A new puzzle is generated every day at midnight. Everyone in the world gets the 
 ## How to play
 
 1. You are given a **start station** and a **destination**
-2. Build your route by selecting stations and lines one stop at a time
+2. Build your route by selecting stations and lines one stop at a time using the **station search** — type to find stations instantly, then pick a line
 3. You must change lines at least once — no single-line routes
 4. Your final stop must be the destination station
 5. Submit your route and see how it compares to the optimal
@@ -39,11 +39,18 @@ A new puzzle is generated every day at midnight. Everyone in the world gets the 
 - **Endless daily puzzles** — algorithmically generated from the date, unique every day forever
 - **Route validation** — impossible routes are rejected with a clear explanation
 - **Live map** — your route is drawn on a real London map as you build it, with each line coloured correctly
-- **Station search** — type to find stations instantly rather than scrolling
-- **Top 5 routes** — see the best possible routes after submitting
-- **Share your result** — one tap copies your score to share with friends
+- **Station search with autocomplete** — type to find stations instantly with highlighted matches; keyboard navigation supported
+- **Top 5 routes** — see the best possible routes after submitting, each ranked with line-by-line breakdown
+- **Your route vs optimal** — results screen shows your route and the optimal route side-by-side, with interchange times itemised
+- **Efficiency score** — animated progress bar showing how close you were to optimal, expressed as a percentage
+- **Hints system** — three optional hints per puzzle, tracked and reported in your final score:
+  - Hint 1: Lines serving the start station
+  - Hint 2: Lines serving the destination station
+  - Hint 3: Which line to start on
+- **Share your result** — one tap copies your score to share with friends, including hints used
 - **Day streak** — tracks how many consecutive days you've played
-- **How to play modal** — built-in tutorial for new players
+- **How to play modal** — built-in tutorial for new players, shown automatically on first visit
+- **Feedback** — in-app feedback form sends directly to the Tubed team
 - **Works on mobile** — fully optimised for phones
 
 ---
@@ -53,11 +60,15 @@ A new puzzle is generated every day at midnight. Everyone in the world gets the 
 Tubed is a **single static HTML file** — no backend, no database, no server-side code.
 
 - **Frontend** — vanilla HTML, CSS and JavaScript
-- **Map** — [Leaflet.js](https://leafletjs.com) with CartoDB dark tiles
+- **Map** — [Leaflet.js](https://leafletjs.com) with CartoDB Voyager tiles
 - **Fonts** — Bebas Neue + DM Sans via Google Fonts
 - **Journey times** — pre-calculated from TFL timetable data, travel time only (no waiting)
+- **Interchange times** — per-station platform-to-platform walk times, used in both scoring and pathfinding
+- **Pathfinding** — Dijkstra's algorithm across a full multi-line graph, returning up to 5 distinct optimal routes
 - **Puzzle generation** — seeded random algorithm using the date, ensuring everyone gets the same puzzle
 - **Score storage** — browser localStorage (no accounts, no data sent anywhere)
+- **Feedback** — submitted via [Web3Forms](https://web3forms.com) (no backend required)
+- **Analytics** — privacy-friendly page-view counting via [GoatCounter](https://www.goatcounter.com)
 - **Hosting** — GitHub Pages (free, static)
 
 ---
@@ -74,13 +85,26 @@ open index.html
 
 ---
 
+## Updating journey times
+
+Journey times are pre-calculated from TfL's GTFS feed using `build_times.py`. Re-run this quarterly or after major TfL timetable changes.
+
+```bash
+pip install requests
+python3 build_times.py --api-key YOUR_TFL_API_KEY
+```
+
+This outputs `times.js` and `times.json`. Replace the `TIMES` constant in `index.html` with the contents of `times.js`. A cached copy of the GTFS feed (`gtfs_tube.zip`) is reused on subsequent runs unless `--no-cache` is passed.
+
+---
+
 ## Data sources
 
 Journey times and station data are sourced from TFL timetable information.
 
 > Powered by TfL Open Data · Not affiliated with Transport for London
 
-Station coordinates, line colours and network topology are based on publicly available London Underground data.
+Station coordinates, line colours and network topology are based on publicly available London Underground data. Lines covered: Bakerloo, Central, Circle, District, DLR, Elizabeth, Hammersmith & City, Jubilee, Metropolitan, Northern, Overground, Piccadilly, Victoria, Waterloo & City.
 
 ---
 
