@@ -1753,7 +1753,7 @@ function todayPuzzle() {
     start = 'Bethnal Green'; end = 'Oval';
     routes = dijkstra(GRAPH, start, end);
   }
-  const puzzleNum = Math.floor((Date.now() - new Date('2024-01-01').getTime()) / 86400000) + 1;
+  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
   const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
 }
