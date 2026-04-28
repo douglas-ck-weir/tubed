@@ -134,6 +134,52 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 .hint-popover{background:#eff6ff;border:0.5px solid #93c5fd;border-radius:10px;padding:12px 14px;margin-top:10px;font-size:13px;color:var(--txt);line-height:1.6;animation:fadeIn 0.15s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 .hint-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:12px;font-weight:500;margin-left:4px;vertical-align:middle;}
+
+/* ── Node-based route builder ── */
+.route-builder{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:12px 14px;margin-bottom:12px;}
+.nb-endpoint-row{display:flex;align-items:center;}
+.nb-col{width:32px;flex-shrink:0;display:flex;justify-content:center;}
+.nb-ep-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:2px solid white;}
+.nb-ep-content{flex:1;padding-left:10px;}
+.nb-ep-role{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);line-height:1;}
+.nb-ep-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--txt);line-height:1.2;}
+.nb-connector{display:flex;min-height:14px;}
+.nb-conn-track{width:32px;flex-shrink:0;display:flex;justify-content:center;align-items:stretch;}
+.nb-conn-line{width:1px;flex:none;align-self:stretch;}
+.nb-stop-row{display:flex;align-items:center;}
+.nb-stop-dot{width:12px;height:12px;border-radius:50%;border:2px solid white;flex-shrink:0;}
+.nb-stop-content{flex:1;padding-left:2px;}
+.nb-stop-inner{display:flex;align-items:center;background:#f8fafc;border:0.5px solid var(--brd);border-radius:8px;padding:6px 8px;gap:8px;}
+.nb-stop-texts{flex:1;}
+.nb-stop-name{font-size:13px;font-weight:500;color:var(--txt);line-height:1.2;}
+.nb-stop-tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:20px;font-weight:500;letter-spacing:0.3px;margin-top:2px;}
+.nb-stop-rm{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px;line-height:1;border-radius:4px;flex-shrink:0;touch-action:manipulation;}
+.nb-stop-rm:hover{color:var(--red);}
+.nb-add-row{display:flex;align-items:center;}
+.nb-add-dot{width:18px;height:18px;border-radius:50%;background:var(--surf);border:1.5px dashed #94a3b8;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#94a3b8;line-height:1;flex-shrink:0;touch-action:manipulation;}
+.nb-add-content{flex:1;padding-left:2px;}
+.nb-add-btn{background:#f1f5f9;border:1.5px dashed #cbd5e1;border-radius:8px;padding:7px 10px;display:flex;align-items:center;gap:8px;cursor:pointer;width:100%;font-family:'DM Sans',sans-serif;transition:all 0.15s;touch-action:manipulation;}
+.nb-add-btn:hover{border-color:#1d4ed8;background:#eff6ff;}
+.nb-add-btn:hover .nb-add-txt{color:#1d4ed8;}
+.nb-add-txt{font-size:13px;color:var(--muted);}
+.nb-add-panel{background:#f1f5f9;border-radius:8px;padding:10px;}
+.nb-add-panel-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);margin-bottom:7px;}
+.nb-search-wrap{position:relative;width:100%;margin-bottom:7px;}
+.nb-search-input{background:var(--surf);border:1px solid var(--brd);border-radius:8px;color:var(--txt);padding:9px 12px;font-size:16px;font-family:'DM Sans',sans-serif;width:100%;}
+.nb-search-input:focus{outline:none;border-color:#1d4ed8;}
+.nb-search-input::placeholder{color:var(--muted);}
+.nb-ac-list{position:absolute;top:calc(100% + 3px);left:0;right:0;background:var(--surf);border:1px solid var(--brd);border-radius:8px;max-height:200px;overflow-y:auto;z-index:100;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.nb-ac-list.open{display:block;}
+.nb-ac-item{padding:11px 12px;font-size:14px;cursor:pointer;color:var(--txt);border-bottom:0.5px solid var(--brd);touch-action:manipulation;}
+.nb-ac-item:last-child{border-bottom:none;}
+.nb-ac-item:hover,.nb-ac-item.active{background:#eff6ff;color:#1d4ed8;}
+.nb-ac-item mark{background:none;color:#1d4ed8;font-weight:500;}
+.nb-line-sel{background:var(--surf);border:1px solid var(--brd);border-radius:8px;color:var(--txt);padding:9px 10px;font-size:15px;font-family:'DM Sans',sans-serif;width:100%;appearance:none;cursor:pointer;margin-bottom:7px;touch-action:manipulation;}
+.nb-line-sel:focus{outline:none;border-color:#1d4ed8;}
+.nb-line-sel option{background:var(--surf);}
+.nb-btn-add{background:var(--navy);color:white;width:100%;padding:10px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;letter-spacing:0.3px;touch-action:manipulation;}
+.nb-btn-add:hover{background:#1e3a8a;}
+.nb-step-error{background:#fef2f2;border:0.5px solid #fca5a5;border-radius:8px;padding:9px 12px;font-size:13px;color:#dc2626;margin-top:7px;line-height:1.5;}
 </style>
 <script data-goatcounter="https://playtubed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -211,27 +257,8 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <div class="sec-lbl">Route map</div>
       <div id="map"></div>
 
-      <div class="card">
-        <div class="sec-lbl">Your route</div>
-        <div class="route-steps" id="route-steps">
-          <div class="empty-route">Add stops below to build your route</div>
-        </div>
-        <div class="add-area">
-          <div class="add-label">Add a stop</div>
-          <div class="step-form">
-            <div class="search-wrap">
-              <input type="text" id="sel-stn" class="search-input" placeholder="Search station..." autocomplete="off"
-                oninput="onStationInput()" onkeydown="onStationKey(event)" onblur="closeAutocompleteDelayed()"/>
-              <div class="autocomplete-list" id="autocomplete-list"></div>
-            </div>
-            <select id="sel-line"><option value="">Choose line...</option></select>
-          </div>
-          <button class="btn-add" onclick="addStep()">
-            <span style="font-size:20px;line-height:1;">+</span> Add this stop
-          </button>
-          <div id="step-error" style="display:none;" class="step-error"></div>
-        </div>
-      </div>
+      <div class="sec-lbl">Your route</div>
+      <div class="route-builder" id="route-builder"></div>
 
       <!-- ── Hints ── -->
       <div class="hints-area" id="hints-area">
@@ -257,7 +284,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <button class="btn-sub" id="sub-btn" onclick="submitRoute()" disabled>
         Submit my route &nbsp;→
       </button>
-      <div class="hint">Add stops ending at your destination, then submit</div>
+      <div class="hint" id="route-hint">Add stops above, ending at your destination</div>
     </div>
   </div>
 
@@ -1768,6 +1795,9 @@ let selectedStation = '';
 let acActiveIdx = -1;
 let hintsUsed = 0;           // number of hints revealed this session
 let hintsRevealed = [false, false, false]; // which hints have been shown
+// Node builder state
+let nbAdding = false;        // is the inline add panel open?
+let nbDestLocked = false;    // has the destination been reached?
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // LOCAL STORAGE
@@ -1792,6 +1822,7 @@ function init() {
   document.getElementById('game-body').style.display      = 'block';
   initAutocomplete();
   initMap();
+  renderRoute();
   if (!localStorage.getItem('tubed_seen_how')) { setTimeout(openModal, 600); localStorage.setItem('tubed_seen_how','1'); }
 }
 
@@ -1869,67 +1900,80 @@ function closeHintPopover() {
 
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// AUTOCOMPLETE + LINE SELECTOR
+// AUTOCOMPLETE + LINE SELECTOR (node builder)
 // ═══════════════════════════════════════════════════════════════════════════════
 function initAutocomplete() {
-  const list = document.getElementById('autocomplete-list');
-  list.addEventListener('touchend', e => {
-    const el = e.target.closest('[data-stn]');
-    if (el) { e.preventDefault(); pickStation(el.dataset.stn); }
+  // Delegated listeners on document for dynamically rendered ac list
+  document.addEventListener('touchend', e => {
+    const el = e.target.closest('.nb-ac-item[data-stn]');
+    if (el) { e.preventDefault(); nbPickStation(el.dataset.stn); }
   });
-  list.addEventListener('mousedown', e => {
-    const el = e.target.closest('[data-stn]');
-    if (el) { e.preventDefault(); pickStation(el.dataset.stn); }
+  document.addEventListener('mousedown', e => {
+    const el = e.target.closest('.nb-ac-item[data-stn]');
+    if (el) { e.preventDefault(); nbPickStation(el.dataset.stn); }
   });
   document.addEventListener('click', e => {
-    if (!e.target.closest('.search-wrap')) closeAc();
+    if (!e.target.closest('.nb-search-wrap')) nbCloseAc();
     if (!e.target.closest('.hints-area')) closeHintPopover();
   });
-  setLineSelector('');
+}
+
+function nbGetAcList()    { return document.getElementById('nb-ac-list'); }
+function nbGetInput()     { return document.getElementById('nb-stn-input'); }
+function nbGetLineSel()   { return document.getElementById('nb-line-sel'); }
+
+function nbCloseAc() {
+  const l = nbGetAcList();
+  if (l) { l.classList.remove('open'); }
+  acActiveIdx = -1;
 }
 
 function onStationInput() {
   selectedStation = '';
-  setLineSelector('');
-  const q = document.getElementById('sel-stn').value.trim();
-  if (q.length < 1) { closeAc(); return; }
-  const matches = ALL_STATIONS.filter(s => s.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
-  const list = document.getElementById('autocomplete-list');
+  nbSetLineSelector('');
+  const inp = nbGetInput(); if (!inp) return;
+  const q = inp.value.trim();
+  const list = nbGetAcList(); if (!list) return;
   acActiveIdx = -1;
+  if (q.length < 1) { nbCloseAc(); return; }
+  // Exclude start station to prevent cheating
+  const matches = ALL_STATIONS
+    .filter(s => s !== puzzleData.start && s.toLowerCase().includes(q.toLowerCase()))
+    .slice(0, 8);
   if (!matches.length) {
-    list.innerHTML = '<div class="autocomplete-item" style="color:var(--muted);cursor:default;">No stations found</div>';
+    list.innerHTML = '<div class="nb-ac-item" style="color:var(--muted);cursor:default;">No stations found</div>';
   } else {
     list.innerHTML = matches.map(s => {
       const qi = s.toLowerCase().indexOf(q.toLowerCase());
       const hl = qi >= 0 ? s.slice(0,qi)+'<mark>'+s.slice(qi,qi+q.length)+'</mark>'+s.slice(qi+q.length) : s;
-      return `<div class="autocomplete-item" data-stn="${s}">${hl}</div>`;
+      const isEnd = s === puzzleData.end;
+      return `<div class="nb-ac-item" data-stn="${s}">${hl}${isEnd ? ' <span style="font-size:10px;color:#16a34a;font-weight:500;">· destination</span>' : ''}</div>`;
     }).join('');
   }
   list.classList.add('open');
 }
 
 function onStationKey(e) {
-  const list = document.getElementById('autocomplete-list');
+  const list = nbGetAcList(); if (!list) return;
   const items = list.querySelectorAll('[data-stn]');
   if (e.key === 'ArrowDown')  { e.preventDefault(); acActiveIdx = Math.min(acActiveIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('active', i===acActiveIdx)); }
   else if (e.key === 'ArrowUp')   { e.preventDefault(); acActiveIdx = Math.max(acActiveIdx-1, 0); items.forEach((el,i) => el.classList.toggle('active', i===acActiveIdx)); }
-  else if (e.key === 'Enter') { e.preventDefault(); if (acActiveIdx >= 0 && items[acActiveIdx]) pickStation(items[acActiveIdx].dataset.stn); else if (items.length === 1) pickStation(items[0].dataset.stn); }
-  else if (e.key === 'Escape') closeAc();
+  else if (e.key === 'Enter') { e.preventDefault(); if (acActiveIdx >= 0 && items[acActiveIdx]) nbPickStation(items[acActiveIdx].dataset.stn); else if (items.length === 1) nbPickStation(items[0].dataset.stn); }
+  else if (e.key === 'Escape') { nbAdding = false; renderRoute(); }
 }
 
-function closeAutocompleteDelayed() { setTimeout(closeAc, 200); }
-function closeAc() { document.getElementById('autocomplete-list').classList.remove('open'); acActiveIdx = -1; }
+function closeAutocompleteDelayed() { setTimeout(nbCloseAc, 200); }
 
-function pickStation(stn) {
+function nbPickStation(stn) {
   selectedStation = stn;
-  document.getElementById('sel-stn').value = stn;
-  closeAc();
-  setLineSelector(stn);
-  document.getElementById('sel-line').focus();
+  const inp = nbGetInput(); if (inp) inp.value = stn;
+  nbCloseAc();
+  nbSetLineSelector(stn);
+  const ls = nbGetLineSel(); if (ls) ls.focus();
 }
 
-function setLineSelector(stn) {
-  const sl = document.getElementById('sel-line');
+function nbSetLineSelector(stn) {
+  const sl = nbGetLineSel(); if (!sl) return;
   sl.innerHTML = '<option value="">Choose line...</option>';
   const lines = stn ? linesAtStation(stn) : Object.keys(LINE_COLOURS);
   lines.sort().forEach(l => {
@@ -1940,63 +1984,163 @@ function setLineSelector(stn) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ROUTE BUILDING
+// ROUTE BUILDING — NODE BUILDER
 // ═══════════════════════════════════════════════════════════════════════════════
+
+function nbConnector(color, minH) {
+  return `<div class="nb-connector" style="min-height:${minH||14}px;"><div class="nb-conn-track"><div class="nb-conn-line" style="background:${color||'rgba(15,23,42,0.2)'};"></div></div><div style="flex:1;"></div></div>`;
+}
+
+function renderRoute() {
+  const container = document.getElementById('route-builder');
+  if (!container) return;
+
+  const lastLineColor = userRoute.length ? lineColour(userRoute[userRoute.length-1].line).bg : null;
+  let h = '';
+
+  // ── Start node ──
+  h += `<div class="nb-endpoint-row">
+    <div class="nb-col"><div class="nb-ep-dot" style="background:#00c853;box-shadow:0 0 0 3px rgba(0,200,83,.2);"></div></div>
+    <div class="nb-ep-content"><div class="nb-ep-role">Start</div><div class="nb-ep-name">${puzzleData.start}</div></div>
+  </div>`;
+
+  // ── Added stops ──
+  userRoute.forEach((stop, i) => {
+    const lc = lineColour(stop.line);
+    h += nbConnector(lc.bg, 10);
+    h += `<div class="nb-stop-row">
+      <div class="nb-col"><div class="nb-stop-dot" style="background:${lc.bg};outline:1.5px solid ${lc.bg};"></div></div>
+      <div class="nb-stop-content">
+        <div class="nb-stop-inner">
+          <div class="nb-stop-texts">
+            <div class="nb-stop-name">${stop.station}</div>
+            <span class="nb-stop-tag" style="background:${lc.bg};color:${lc.txt};">${stop.line}</span>
+          </div>
+          <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // ── Add stop row / inline panel (only when destination not locked) ──
+  if (!nbDestLocked) {
+    h += nbConnector(lastLineColor, 10);
+    if (nbAdding) {
+      h += `<div class="nb-add-row">
+        <div class="nb-col"><div style="width:18px;height:18px;border-radius:50%;background:#f1f5f9;border:1.5px dashed #94a3b8;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94a3b8;flex-shrink:0;">+</div></div>
+        <div class="nb-add-content">
+          <div class="nb-add-panel">
+            <div class="nb-add-panel-lbl">Add a stop</div>
+            <div class="nb-search-wrap">
+              <input type="text" id="nb-stn-input" class="nb-search-input" placeholder="Search station..." autocomplete="off"
+                oninput="onStationInput()" onkeydown="onStationKey(event)" onblur="closeAutocompleteDelayed()"/>
+              <div class="nb-ac-list" id="nb-ac-list"></div>
+            </div>
+            <select id="nb-line-sel" class="nb-line-sel"><option value="">Choose line...</option></select>
+            <button class="nb-btn-add" onclick="addStep()"><span style="font-size:18px;line-height:1;">+</span> Add this stop</button>
+            <div id="step-error" style="display:none;" class="nb-step-error"></div>
+          </div>
+        </div>
+      </div>`;
+      h += nbConnector(null, 14);
+    } else {
+      h += `<div class="nb-add-row">
+        <div class="nb-col"><div class="nb-add-dot" onclick="nbStartAdd()">+</div></div>
+        <div class="nb-add-content">
+          <button class="nb-add-btn" onclick="nbStartAdd()">
+            <span class="nb-add-txt">${userRoute.length === 0 ? 'Add your first stop...' : 'Add another stop...'}</span>
+          </button>
+        </div>
+      </div>`;
+      h += nbConnector(null, 14);
+    }
+  } else {
+    // Destination locked — draw final connector in arrival line colour
+    h += nbConnector(lastLineColor, 10);
+  }
+
+  // ── Destination node ──
+  const destDotColor = nbDestLocked ? lastLineColor : '#0f172a';
+  const destGlow     = nbDestLocked ? `box-shadow:0 0 0 3px ${lastLineColor}33;` : '';
+  const destCheck    = nbDestLocked ? ` <span style="font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;color:${lastLineColor};">✓</span>` : '';
+  h += `<div class="nb-endpoint-row">
+    <div class="nb-col"><div class="nb-ep-dot" style="background:${destDotColor};${destGlow}transition:background 0.3s,box-shadow 0.3s;"></div></div>
+    <div class="nb-ep-content"><div class="nb-ep-role">Destination</div><div class="nb-ep-name">${puzzleData.end}${destCheck}</div></div>
+  </div>`;
+
+  container.innerHTML = h;
+
+  // Focus input if panel just opened
+  if (nbAdding) {
+    const inp = document.getElementById('nb-stn-input');
+    if (inp) setTimeout(() => inp.focus(), 30);
+    nbSetLineSelector('');
+  }
+
+  // Submit button
+  document.getElementById('sub-btn').disabled = !nbDestLocked;
+  // Hint text
+  const hint = document.getElementById('route-hint');
+  if (hint) hint.textContent = nbDestLocked
+    ? 'Route complete — submit when ready!'
+    : 'Add stops above, ending at your destination';
+
+  updateMap();
+}
+
+function nbStartAdd() {
+  nbAdding = true;
+  selectedStation = '';
+  renderRoute();
+}
+
 function addStep() {
   let stn = selectedStation;
   if (!stn) {
-    const typed = document.getElementById('sel-stn').value.trim();
-    stn = ALL_STATIONS.find(s => s.toLowerCase() === typed.toLowerCase()) || '';
+    const inp = nbGetInput();
+    if (inp) stn = ALL_STATIONS.find(s => s.toLowerCase() === inp.value.trim().toLowerCase()) || '';
   }
-  const line = document.getElementById('sel-line').value;
+  const ls = nbGetLineSel();
+  const line = ls ? ls.value : '';
+
   if (!stn)  { showStepErr('Please select a station from the list.'); return; }
   if (!line) { showStepErr('Please choose a line.'); return; }
-  const fromStn  = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
-  if (!stationsForDisplayLine(line).includes(stn)) { showStepErr(`${stn} is not on the ${line} line.`); return; }
+
+  const fromStn = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
+
+  if (!stationsForDisplayLine(line).includes(stn))     { showStepErr(`${stn} is not on the ${line} line.`); return; }
   if (!stationsForDisplayLine(line).includes(fromStn)) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
   if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
-  userRoute.push({station:stn, line});
-  document.getElementById('sel-stn').value = '';
+  if (stn === puzzleData.start) { showStepErr(`That's your start station.`); return; }
+
+  userRoute.push({station: stn, line});
+
+  if (stn === puzzleData.end) {
+    nbDestLocked = true;
+  }
+
+  nbAdding = false;
   selectedStation = '';
-  closeAc();
-  setLineSelector('');
-  clearStepErr();
   renderRoute();
-  document.getElementById('sel-stn').focus();
 }
 
-function removeStep(i) { userRoute.splice(i, 1); clearStepErr(); renderRoute(); }
-
-function renderRoute() {
-  const c = document.getElementById('route-steps');
-  if (!userRoute.length) {
-    c.innerHTML = '<div class="empty-route">Add stops below to build your route</div>';
-    document.getElementById('sub-btn').disabled = true;
-    updateMap(); return;
-  }
-  c.innerHTML = userRoute.map((s,i) => {
-    const lc = lineColour(s.line);
-    const conn = i > 0 ? `<div class="step-conn" style="background:${lc.bg};"></div>` : '';
-    return `<div class="step">${conn}
-      <div class="step-dot" style="background:${lc.bg};"></div>
-      <div class="step-txt">
-        <div class="step-stn">${s.station}</div>
-        <span class="step-tag" style="background:${lc.bg};color:${lc.txt};">${s.line}</span>
-      </div>
-      <button class="step-rm" onclick="removeStep(${i})">&#x2715;</button>
-    </div>`;
-  }).join('');
-  const atEnd = userRoute.some(s => s.station === puzzleData.end);
-  document.getElementById('sub-btn').disabled = !atEnd;
-  updateMap();
+function removeStep(i) {
+  userRoute.splice(i, 1);
+  // If we removed a stop, destination can't be locked anymore
+  nbDestLocked = false;
+  nbAdding = false;
+  clearStepErr();
+  renderRoute();
 }
 
 function showStepErr(msg) {
   const el = document.getElementById('step-error');
-  el.textContent = '⚠ ' + msg;
-  el.style.display = 'block';
+  if (el) { el.textContent = '⚠ ' + msg; el.style.display = 'block'; }
 }
-function clearStepErr() { document.getElementById('step-error').style.display = 'none'; }
+function clearStepErr() {
+  const el = document.getElementById('step-error');
+  if (el) el.style.display = 'none';
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // MAP
@@ -2181,6 +2325,10 @@ function resetGame() {
   const btn = document.getElementById('sub-btn');
   btn.disabled = true; btn.innerHTML = 'Submit my route &nbsp;→';
   userRoute = [];
+  // Reset node builder state
+  nbAdding = false;
+  nbDestLocked = false;
+  selectedStation = '';
   // Reset hints
   hintsUsed = 0;
   hintsRevealed = [false, false, false];
