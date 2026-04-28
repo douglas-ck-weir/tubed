@@ -78,9 +78,12 @@ select option{background:var(--surf);}
 .loading-state{text-align:center;padding:20px;color:var(--muted);font-size:13px;}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,0.15);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.btn-share{touch-action:manipulation;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;margin-bottom:10px;}
-.btn-share:hover{background:#dcfce7;}
-.btn-share.copied{color:#15803d;}
+.btn-share{touch-action:manipulation;background:#16a34a;color:white;border:none;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.15s;margin-bottom:6px;}
+.btn-share:hover{background:#15803d;}
+.btn-share.success{background:#15803d;}
+.btn-copy-fallback{touch-action:manipulation;background:none;border:0.5px solid var(--brd);color:var(--muted);width:100%;padding:10px;font-size:13px;font-family:'DM Sans',sans-serif;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;margin-bottom:10px;}
+.btn-copy-fallback:hover{border-color:var(--txt);color:var(--txt);}
+.btn-copy-fallback.copied{color:#16a34a;border-color:#16a34a;}
 .puzzle-num{font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;letter-spacing:0.5px;}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity 0.2s;pointer-events:none;}
 .modal-overlay.open{opacity:1;pointer-events:auto;}
@@ -2245,6 +2248,7 @@ function submitRoute() {
   const optLegsHtml = renderRouteLegsHtml(puzzleData.optimal.legs, optInterchanges);
   const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
 
+  const numChanges = userLegsData.legs.length - 1;
   const rankEmojis = ['🥇','🥈','🥉','4️⃣','5️⃣'];
   const top5Html = puzzleData.routes.map(r => {
     const legSummary = r.legs.map(l => l.line).join(' → ');
@@ -2272,9 +2276,7 @@ function submitRoute() {
         <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your time (min)</div></div>
         <div class="time-box"><div class="time-val" style="color:${color};">${optimalMins}</div><div class="time-lbl">Optimal (min)</div></div>
       </div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:6px;">Efficiency vs optimal</div>
-      <div class="bar-wrap"><div class="bar-fill" id="score-bar" style="width:0%;background:${color};"></div></div>
-      <div class="pct-lbl">${pct}% — ${subtitle}</div>
+      <div class="pct-lbl">${subtitle}</div>
       ${hintsLine}
       <div class="opt-legs">
         <div class="opt-lbl">Your route</div>
@@ -2290,31 +2292,88 @@ function submitRoute() {
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
-      <button class="btn-share" id="share-btn" onclick="shareResult('${medal}',${diff},${pct},${hintsUsed})">&#128279; Share my result</button>
+      <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hintsUsed},${numChanges})">&#128172; Share my result</button>
+      <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hintsUsed},${numChanges})" style="display:none;">&#128203; Copy to clipboard</button>
       <button class="btn-feedback" onclick="openFeedback()">💬 Give feedback</button>
       <button class="btn-reset" onclick="resetGame()">Back to the puzzle</button>
     </div>`;
 
-  setTimeout(() => { const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%'; }, 150);
+  setTimeout(() => {
+    const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%';
+    // Use native share sheet only on mobile; on desktop always use clipboard copy
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const useShare = isMobile && !!navigator.share;
+    const sb = document.getElementById('share-btn');
+    const cb = document.getElementById('copy-btn');
+    if (!useShare) {
+      if (sb) sb.style.display = 'none';
+      if (cb) cb.style.display = 'flex';
+    }
+  }, 150);
   renderHistory();
 }
 
-function shareResult(medal, diff, pct, hints) {
-  const rankLine  = diff <= 0 ? 'Matched optimal!' : `${diff} min off optimal`;
-  const hintsLine = hints === 0 ? '✨ No hints needed' : `🔍 ${hints}/3 hint${hints > 1 ? 's' : ''} used`;
-  const text = [
-    `🚇 Tubed #${puzzleData.puzzleNum}`,
+function buildShareBlocks(diff) {
+  // 5 blocks: green = good, yellow = close, white = off
+  // Thresholds: <=0 all green, <=2 drop 0, <=5 drop 1, <=10 drop 2, <=20 drop 3, >20 drop 4
+  if (diff <= 0)  return '🟩🟩🟩🟩🟩';
+  if (diff <= 2)  return '🟩🟩🟩🟩🟨';
+  if (diff <= 5)  return '🟩🟩🟩🟨🟨';
+  if (diff <= 10) return '🟩🟩🟨🟨⬜';
+  if (diff <= 20) return '🟩🟨⬜⬜⬜';
+  return              '🟨⬜⬜⬜⬜';
+}
+
+function buildShareBlockLabel(diff) {
+  if (diff <= 0)  return 'Optimal!';
+  if (diff <= 2)  return `+${diff} min`;
+  if (diff <= 5)  return `+${diff} min`;
+  if (diff <= 10) return `+${diff} min`;
+  if (diff <= 20) return `+${diff} min`;
+  return `+${diff} min`;
+}
+
+function buildShareHintsLine(hints) {
+  if (hints === 0) return '🧭 No hints';
+  if (hints === 1) return '🔍 1 hint used';
+  return `🔍 ${hints} hints used`;
+}
+
+function buildShareText(diff, hints, changes) {
+  const blocks = buildShareBlocks(diff);
+  const label  = buildShareBlockLabel(diff);
+  const hintsLine = buildShareHintsLine(hints);
+  const changeLine = `${changes} change${changes !== 1 ? 's' : ''}`;
+  return [
+    `Tubed #${puzzleData.puzzleNum} 🚇`,
     `${puzzleData.start} → ${puzzleData.end}`,
-    `${medal} ${rankLine}`,
-    `Efficiency: ${pct}%`,
-    hintsLine,
-    `playtubed.co.uk`
+    `${blocks} ${label}`,
+    `${hintsLine} · ${changeLine}`,
+    `playtubed.co.uk`,
   ].join('\n');
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      const b = document.getElementById('share-btn');
-      if(b) { b.textContent = '✓ Copied!'; b.classList.add('copied'); }
-    });
+}
+
+async function shareResult(diff, hints, changes) {
+  const text = buildShareText(diff, hints, changes);
+  const btn = document.getElementById('share-btn');
+  try {
+    await navigator.share({ text });
+    // Briefly confirm
+    if (btn) { btn.innerHTML = '✓ Shared!'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = '&#128172; Share my result'; btn.classList.remove('success'); }, 2500); }
+  } catch(e) {
+    // User cancelled or error — do nothing (don't fall back to clipboard on cancel)
+  }
+}
+
+async function copyResult(diff, hints, changes) {
+  const text = buildShareText(diff, hints, changes);
+  const btn = document.getElementById('copy-btn');
+  try {
+    await navigator.clipboard.writeText(text);
+    if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '&#128203; Copy to clipboard'; btn.classList.remove('copied'); }, 2500); }
+  } catch(e) {
+    // Clipboard not available — show text for manual copy
+    prompt('Copy your result:', text);
   }
 }
 
