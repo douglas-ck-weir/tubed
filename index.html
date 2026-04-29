@@ -2294,7 +2294,7 @@ function submitRoute() {
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
       <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hintsUsed},${numChanges})">&#128172; Share my result</button>
       <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hintsUsed},${numChanges})" style="display:none;">&#128203; Copy to clipboard</button>
-      <button class="btn-feedback" onclick="openFeedback()">💬 Give feedback</button>
+      <button class="btn-feedback" onclick="openFeedback()">✏️ Give feedback</button>
       <button class="btn-reset" onclick="resetGame()">Back to the puzzle</button>
     </div>`;
 
@@ -2444,22 +2444,32 @@ async function submitFeedback() {
   const email = document.getElementById('feedback-email').value.trim();
   const btn = document.getElementById('feedback-send-btn');
   btn.disabled = true; btn.textContent = 'Sending...';
+
+  const formData = new FormData();
+  formData.append('access_key', '24bf0458-2dcb-492b-840c-a8e37b6a8b7d');
+  formData.append('subject', `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`);
+  formData.append('message', msg);
+  formData.append('email', email || 'Not provided');
+  formData.append('puzzle', puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown');
+
   try {
-    await fetch('https://api.web3forms.com/submit', {
+    const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        access_key: '24bf0458-2dcb-492b-840c-a8e37b6a8b7d',
-        subject: `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`,
-        message: msg,
-        email: email || 'Not provided',
-        puzzle: puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown',
-      })
+      body: formData
     });
-  } catch(e) { /* silently fail */ }
-  document.getElementById('feedback-form-wrap').style.display = 'none';
-  document.getElementById('feedback-success').style.display = 'block';
-  setTimeout(closeFeedback, 3000);
+    const data = await response.json();
+    if (response.ok) {
+      document.getElementById('feedback-form-wrap').style.display = 'none';
+      document.getElementById('feedback-success').style.display = 'block';
+      setTimeout(closeFeedback, 3000);
+    } else {
+      alert('Error sending feedback: ' + data.message);
+      btn.disabled = false; btn.textContent = 'Send feedback';
+    }
+  } catch(e) {
+    alert('Something went wrong. Please try again.');
+    btn.disabled = false; btn.textContent = 'Send feedback';
+  }
 }
 
 window.addEventListener('load', init);
