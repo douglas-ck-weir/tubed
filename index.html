@@ -2370,44 +2370,31 @@ function submitRoute() {
 }
 
 function buildShareBlocks(diff) {
-  // 5 blocks: green = good, yellow = close, white = off
-  // Thresholds: <=0 all green, <=2 drop 0, <=5 drop 1, <=10 drop 2, <=20 drop 3, >20 drop 4
   if (diff <= 0)  return '🟩🟩🟩🟩🟩';
   if (diff <= 2)  return '🟩🟩🟩🟩🟨';
   if (diff <= 5)  return '🟩🟩🟩🟨🟨';
   if (diff <= 10) return '🟩🟩🟨🟨⬜';
   if (diff <= 20) return '🟩🟨⬜⬜⬜';
-  return              '🟨⬜⬜⬜⬜';
-}
-
-function buildShareBlockLabel(diff) {
-  if (diff <= 0)  return 'Optimal!';
-  if (diff <= 2)  return `+${diff} min`;
-  if (diff <= 5)  return `+${diff} min`;
-  if (diff <= 10) return `+${diff} min`;
-  if (diff <= 20) return `+${diff} min`;
-  return `+${diff} min`;
-}
-
-function buildShareHintsLine(hints) {
-  if (hints === 0) return '🧭 No hints';
-  if (hints === 1) return '🔍 1 hint used';
-  return `🔍 ${hints} hints used`;
+  return                 '🟨⬜⬜⬜⬜';
 }
 
 function buildShareText(diff, hints, changes, secs) {
   const blocks = buildShareBlocks(diff);
-  const label  = buildShareBlockLabel(diff);
-  const hintsLine = buildShareHintsLine(hints);
-  const changeLine = `${changes} change${changes !== 1 ? 's' : ''}`;
-  const timeLine = `⏱ ${timerFmt(secs)}`;
+  const scoreLine = diff <= 0
+    ? `${blocks}  Optimal route!`
+    : `${blocks}  ${diff} min off optimal route`;
+  const challengeLine = diff <= 0
+    ? `🏆 Can anyone match this?`
+    : `🤔 Think you know the Tube better?`;
+  const hintsLine = hints === 0
+    ? `✨ No hints used`
+    : `💡 ${hints} hint${hints > 1 ? 's' : ''} used`;
   return [
-    `Tubed #${puzzleData.puzzleNum} 🚇`,
-    `${puzzleData.start} → ${puzzleData.end}`,
-    `${blocks} ${label}`,
-    `${hintsLine} · ${changeLine}`,
-    `${timeLine}`,
-    `playtubed.co.uk`,
+    `🚇 Tubed #${puzzleData.puzzleNum} · solved in ${timerFmt(secs)}`,
+    scoreLine,
+    hintsLine,
+    challengeLine,
+    `➡️ playtubed.co.uk`,
   ].join('\n');
 }
 
