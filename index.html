@@ -16,9 +16,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-
 .hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .gtitle{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;}
 .gsub{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
-.streak-box{margin-left:auto;background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:6px 12px;text-align:center;flex-shrink:0;}
+.timer-box{background:var(--surf);border:0.5px solid #fca5a5;border-radius:10px;padding:6px 0;text-align:center;flex-shrink:0;width:80px;}
+.streak-box{background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:6px 0;text-align:center;flex-shrink:0;width:80px;}
+.hdr-pills{margin-left:auto;display:flex;gap:8px;align-items:center;flex-shrink:0;}
 .streak-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--yellow);line-height:1;}
 .streak-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.timer-box.done{border-color:var(--brd);}
+.timer-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--red);line-height:1;letter-spacing:1px;font-variant-numeric:tabular-nums;}
+.timer-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.timer-box.done .timer-n{color:var(--muted);}
 .card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:12px;}
 .challenge{display:flex;align-items:center;}
 .st-box{flex:1;text-align:center;}
@@ -194,9 +200,15 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <div class="gtitle">Tubed</div>
       <div class="gsub" id="puzzle-sub">Daily London Underground Puzzle</div>
     </div>
-    <div class="streak-box">
-      <div class="streak-n" id="streak-disp">0</div>
-      <div class="streak-l">Day Streak</div>
+    <div class="hdr-pills">
+      <div class="timer-box" id="timer-box">
+        <div class="timer-n" id="timer-disp">0:00</div>
+        <div class="timer-l">Timer</div>
+      </div>
+      <div class="streak-box">
+        <div class="streak-n" id="streak-disp">0</div>
+        <div class="streak-l">Day Streak</div>
+      </div>
     </div>
   </div>
 
@@ -1796,11 +1808,14 @@ let userRoute  = [];
 let map, mapLayers = [];
 let selectedStation = '';
 let acActiveIdx = -1;
-let hintsUsed = 0;           // number of hints revealed this session
-let hintsRevealed = [false, false, false]; // which hints have been shown
-// Node builder state
-let nbAdding = false;        // is the inline add panel open?
-let nbDestLocked = false;    // has the destination been reached?
+let hintsUsed = 0;
+let hintsRevealed = [false, false, false];
+let nbAdding = false;
+let nbDestLocked = false;
+// ── Timer state ──
+let timerInterval = null;
+let timerSeconds  = 0;
+let timerStopped  = false;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // LOCAL STORAGE
@@ -1810,6 +1825,42 @@ function getStore() {
   catch(e) { return {streak:0,lastPlayed:null,history:[]}; }
 }
 function setStore(d) { try { localStorage.setItem('tubepzl_v5', JSON.stringify(d)); } catch(e){} }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════════════════════════════
+function timerFmt(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2,'0')}`;
+}
+function startTimer() {
+  timerSeconds = 0; timerStopped = false;
+  const disp = document.getElementById('timer-disp');
+  const box  = document.getElementById('timer-box');
+  if (disp) disp.textContent = '0:00';
+  if (box)  box.classList.remove('done');
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    if (timerStopped) return;
+    timerSeconds++;
+    if (disp) disp.textContent = timerFmt(timerSeconds);
+  }, 1000);
+}
+function stopTimer() {
+  timerStopped = true;
+  clearInterval(timerInterval);
+  const box = document.getElementById('timer-box');
+  if (box) box.classList.add('done');
+}
+function resetTimer() {
+  stopTimer();
+  timerSeconds = 0; timerStopped = false;
+  const disp = document.getElementById('timer-disp');
+  const box  = document.getElementById('timer-box');
+  if (disp) disp.textContent = '0:00';
+  if (box)  box.classList.remove('done');
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // INIT
@@ -1827,6 +1878,7 @@ function init() {
   initMap();
   renderRoute();
   if (!localStorage.getItem('tubed_seen_how')) { setTimeout(openModal, 600); localStorage.setItem('tubed_seen_how','1'); }
+  startTimer();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2215,6 +2267,9 @@ function submitRoute() {
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring...';
 
+  stopTimer();
+  const completionSecs = timerSeconds;
+
   const userLegsData = buildUserLegs(puzzleData.start, userRoute);
   const userMins    = userLegsData.totalMins;
   const optimalMins = puzzleData.optimal.mins;
@@ -2272,9 +2327,10 @@ function submitRoute() {
       <div class="result-medal">${medal}</div>
       <div class="result-title" style="color:${color};">${title}</div>
       <div class="result-sub">${puzzleData.start} → ${puzzleData.end}</div>
-      <div class="times-grid">
-        <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your time (min)</div></div>
+      <div class="times-grid" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your route (min)</div></div>
         <div class="time-box"><div class="time-val" style="color:${color};">${optimalMins}</div><div class="time-lbl">Optimal (min)</div></div>
+        <div class="time-box"><div class="time-val" style="color:var(--muted);font-size:28px;">${timerFmt(completionSecs)}</div><div class="time-lbl">Time taken</div></div>
       </div>
       <div class="pct-lbl">${subtitle}</div>
       ${hintsLine}
@@ -2292,8 +2348,8 @@ function submitRoute() {
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
-      <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hintsUsed},${numChanges})">&#128172; Share my result</button>
-      <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hintsUsed},${numChanges})" style="display:none;">&#128203; Copy to clipboard</button>
+      <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hintsUsed},${numChanges},${completionSecs})">&#128172; Share my result</button>
+      <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hintsUsed},${numChanges},${completionSecs})" style="display:none;">&#128203; Copy to clipboard</button>
       <button class="btn-feedback" onclick="openFeedback()">✏️ Give feedback</button>
       <button class="btn-reset" onclick="resetGame()">Back to the puzzle</button>
     </div>`;
@@ -2339,40 +2395,38 @@ function buildShareHintsLine(hints) {
   return `🔍 ${hints} hints used`;
 }
 
-function buildShareText(diff, hints, changes) {
+function buildShareText(diff, hints, changes, secs) {
   const blocks = buildShareBlocks(diff);
   const label  = buildShareBlockLabel(diff);
   const hintsLine = buildShareHintsLine(hints);
   const changeLine = `${changes} change${changes !== 1 ? 's' : ''}`;
+  const timeLine = `⏱ ${timerFmt(secs)}`;
   return [
     `Tubed #${puzzleData.puzzleNum} 🚇`,
     `${puzzleData.start} → ${puzzleData.end}`,
     `${blocks} ${label}`,
     `${hintsLine} · ${changeLine}`,
+    `${timeLine}`,
     `playtubed.co.uk`,
   ].join('\n');
 }
 
-async function shareResult(diff, hints, changes) {
-  const text = buildShareText(diff, hints, changes);
+async function shareResult(diff, hints, changes, secs) {
+  const text = buildShareText(diff, hints, changes, secs);
   const btn = document.getElementById('share-btn');
   try {
     await navigator.share({ text });
-    // Briefly confirm
     if (btn) { btn.innerHTML = '✓ Shared!'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = '&#128172; Share my result'; btn.classList.remove('success'); }, 2500); }
-  } catch(e) {
-    // User cancelled or error — do nothing (don't fall back to clipboard on cancel)
-  }
+  } catch(e) {}
 }
 
-async function copyResult(diff, hints, changes) {
-  const text = buildShareText(diff, hints, changes);
+async function copyResult(diff, hints, changes, secs) {
+  const text = buildShareText(diff, hints, changes, secs);
   const btn = document.getElementById('copy-btn');
   try {
     await navigator.clipboard.writeText(text);
     if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '&#128203; Copy to clipboard'; btn.classList.remove('copied'); }, 2500); }
   } catch(e) {
-    // Clipboard not available — show text for manual copy
     prompt('Copy your result:', text);
   }
 }
@@ -2398,6 +2452,8 @@ function resetGame() {
     if (hb) { hb.classList.remove('used','active'); }
   }
   document.getElementById('hints-count').textContent = '';
+  resetTimer();
+  startTimer();
   renderRoute(); renderHistory();
   setTimeout(() => map.invalidateSize(), 100);
 }
