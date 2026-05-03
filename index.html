@@ -82,11 +82,7 @@ select option{background:var(--surf);}
 .opt-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 .opt-leg{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:13px;color:var(--txt);}
 .opt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.top5-section{border-top:0.5px solid var(--brd);padding-top:14px;margin-bottom:16px;}
-.top5-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:0.5px solid var(--brd);font-size:13px;}
-.top5-row:last-child{border-bottom:none;}
-.top5-rank{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);width:24px;flex-shrink:0;}
-.top5-mins{margin-left:auto;font-weight:500;color:#1d4ed8;}
+
 .btn-reset{touch-action:manipulation;background:var(--navy);color:white;width:100%;padding:14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:500;border:none;border-radius:9px;cursor:pointer;transition:background 0.15s;}
 .btn-reset:hover{background:#1e3a8a;}
 .hist-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--brd);font-size:13px;}
@@ -2315,15 +2311,7 @@ function submitRoute() {
   const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
 
   const numChanges = userLegsData.legs.length - 1;
-  const rankEmojis = ['🥇','🥈','🥉','4️⃣','5️⃣'];
-  const top5Html = puzzleData.routes.map(r => {
-    const legSummary = r.legs.map(l => l.line).join(' → ');
-    return `<div class="top5-row">
-      <div class="top5-rank">${rankEmojis[r.rank-1]}</div>
-      <div style="flex:1;font-size:12px;color:var(--muted);">${legSummary}</div>
-      <div class="top5-mins">${r.mins} min</div>
-    </div>`;
-  }).join('');
+
 
   // Hints line for results
   const hintsLine = hintsUsed === 0
@@ -2352,10 +2340,6 @@ function submitRoute() {
       <div class="opt-legs">
         <div class="opt-lbl">Optimal route</div>
         ${optLegsHtml}
-      </div>
-      <div class="top5-section">
-        <div class="opt-lbl">Top 5 routes today</div>
-        ${top5Html}
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
       <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
