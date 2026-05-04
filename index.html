@@ -347,30 +347,175 @@ const LINE_COLOURS = {
 };
 
 // ── Interchange times (minutes, platform-to-platform) ─────────────────────────
+// Sourced from TfL Stop Structure API (footpathInfo shortest-path Dijkstra).
+// Line-pair specific. Falls back to worst-case at that station, then 2 min.
 const INTERCHANGE_MINS = {
-  'Bank':                    4,
-  'Baker Street':            3,
-  'Canary Wharf':            3,
-  'Canada Water':            3,
-  'Earl\'s Court':           2,
-  'Elephant & Castle':       3,
-  'Embankment':              2,
-  'Farringdon':              2,
-  'Finsbury Park':           2,
-  'Hammersmith':             3,
-  'Highbury & Islington':    2,
-  'Kings Cross St. Pancras': 3,
-  'Liverpool Street':        3,
-  'Moorgate':                2,
-  'Oxford Circus':           2,
-  'Paddington':              3,
-  'Stockwell':               2,
-  'Stratford':               3,
-  'Victoria':                2,
-  'Waterloo':                3,
-  'Westminster':             2,
+  'Acton Town': {
+    'Circle|Piccadilly': 1,
+    'District|Piccadilly': 1,
+  },
+  'Aldgate': {
+    'Circle|Metropolitan': 2,
+  },
+  'Aldgate East': {
+    'District|Hammersmith & City': 1,
+  },
+  'Baker Street': {
+    'Bakerloo|Circle': 7,
+    'Bakerloo|Jubilee': 2,
+    'Bakerloo|Metropolitan': 4,
+    'Circle|Jubilee': 9,
+    'Circle|Metropolitan': 4,
+    'Jubilee|Metropolitan': 6,
+  },
+  'Bank': {
+    'Central|DLR': 4,
+    'Central|Northern': 5,
+    'Central|Waterloo & City': 5,
+    'DLR|Northern': 3,
+    'DLR|Waterloo & City': 6,
+    'Northern|Waterloo & City': 8,
+  },
+  'Canary Wharf': {
+    'DLR|Jubilee': 8,
+  },
+  'Canning Town': {
+    'DLR|Jubilee': 1,
+  },
+  "Earl's Court": {
+    'Circle|District': 2,
+    'Circle|Piccadilly': 3,
+    'District|Piccadilly': 3,
+  },
+  'Elephant & Castle': {
+    'Bakerloo|Northern': 2,
+  },
+  'Embankment': {
+    'Bakerloo|Circle': 6,
+    'Bakerloo|District': 6,
+    'Bakerloo|Northern': 4,
+    'Circle|District': 1,
+    'Circle|Northern': 5,
+    'District|Northern': 5,
+  },
+  'Farringdon': {
+    'Circle|Elizabeth': 4,
+    'Circle|Hammersmith & City': 1,
+    'Circle|Metropolitan': 1,
+    'Elizabeth|Hammersmith & City': 4,
+    'Elizabeth|Metropolitan': 4,
+    'Hammersmith & City|Metropolitan': 1,
+  },
+  'Finsbury Park': {
+    'Piccadilly|Victoria': 1,
+  },
+  'Green Park': {
+    'Jubilee|Piccadilly': 4,
+    'Jubilee|Victoria': 7,
+    'Piccadilly|Victoria': 4,
+  },
+  'Hammersmith': {
+    'Circle|District': 1,
+    'Circle|Hammersmith & City': 1,
+    'Circle|Piccadilly': 1,
+    'District|Hammersmith & City': 1,
+    'District|Piccadilly': 1,
+    'Hammersmith & City|Piccadilly': 1,
+  },
+  'Kings Cross St. Pancras': {
+    'Circle|Metropolitan': 2,
+    'Circle|Northern': 6,
+    'Circle|Piccadilly': 6,
+    'Circle|Victoria': 6,
+    'Metropolitan|Northern': 6,
+    'Metropolitan|Piccadilly': 6,
+    'Metropolitan|Victoria': 6,
+    'Northern|Piccadilly': 3,
+    'Northern|Victoria': 7,
+    'Piccadilly|Victoria': 5,
+  },
+  'Liverpool Street': {
+    'Central|Circle': 3,
+    'Central|Hammersmith & City': 3,
+    'Central|Metropolitan': 3,
+    'Circle|Hammersmith & City': 1,
+    'Circle|Metropolitan': 1,
+    'Hammersmith & City|Metropolitan': 1,
+  },
+  'London Bridge': {
+    'Jubilee|Northern': 6,
+  },
+  'Monument': {
+    'Circle|District': 1,
+  },
+  'Moorgate': {
+    'Circle|Hammersmith & City': 1,
+    'Circle|Metropolitan': 2,
+    'Circle|Northern': 5,
+    'Hammersmith & City|Metropolitan': 1,
+    'Hammersmith & City|Northern': 5,
+    'Metropolitan|Northern': 5,
+  },
+  'Oxford Circus': {
+    'Bakerloo|Central': 4,
+    'Bakerloo|Victoria': 2,
+    'Central|Victoria': 4,
+  },
+  'Paddington': {
+    'Bakerloo|Circle': 10,
+    'Bakerloo|District': 10,
+    'Bakerloo|Elizabeth': 10,
+    'Bakerloo|Hammersmith & City': 10,
+    'Circle|District': 1,
+    'Circle|Elizabeth': 5,
+    'Circle|Hammersmith & City': 1,
+    'District|Elizabeth': 5,
+    'District|Hammersmith & City': 1,
+    'Elizabeth|Hammersmith & City': 5,
+  },
+  'Stockwell': {
+    'Northern|Victoria': 2,
+  },
+  'Stratford': {
+    'Central|DLR': 4,
+    'Central|Jubilee': 4,
+    'DLR|Jubilee': 4,
+  },
+  'Victoria': {
+    'Circle|District': 1,
+    'Circle|Victoria': 3,
+    'District|Victoria': 3,
+  },
+  'Waterloo': {
+    'Bakerloo|Jubilee': 6,
+    'Bakerloo|Northern': 4,
+    'Bakerloo|Waterloo & City': 6,
+    'Jubilee|Northern': 6,
+    'Jubilee|Waterloo & City': 8,
+    'Northern|Waterloo & City': 6,
+  },
+  'Wembley Park': {
+    'Jubilee|Metropolitan': 3,
+  },
+  'Westminster': {
+    'Circle|District': 1,
+    'Circle|Jubilee': 4,
+    'District|Jubilee': 4,
+  },
 };
-function interchangeTime(stn) { return INTERCHANGE_MINS[stn] || 2; }
+
+function interchangeTime(stn, fromLine, toLine) {
+  const entry = INTERCHANGE_MINS[stn];
+  if (!entry) return 2;
+  if (typeof entry === 'number') return entry;
+  if (fromLine && toLine) {
+    const key = [displayLine(fromLine), displayLine(toLine)].sort().join('|');
+    if (key in entry) return entry[key];
+    // Fall back to worst case at this station so we never under-penalise
+    return Math.max(...Object.values(entry));
+  }
+  return Math.max(...Object.values(entry));
+}
 
 // ── Station coordinates [lat, lng] ────────────────────────────────────────────
 const COORDS = {
@@ -1581,14 +1726,28 @@ function buildGraph() {
   for (const stn of Object.keys(graph)) {
     const lineList = Object.keys(graph[stn]);
     if (lineList.length < 2) continue;
-    const w = interchangeTime(stn);
     for (const la of lineList) {
       for (const lb of lineList) {
         if (la === lb) continue;
+        const w = interchangeTime(stn, la, lb);
         graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
       }
     }
   }
+
+  // Bank / Monument cross-platform walk (same station complex, ~3 min)
+  const BANK_MONUMENT_WALK = 3;
+  function addCrossWalk(fromStn, toStn) {
+    if (!graph[fromStn] || !graph[toStn]) return;
+    for (const fromLine of Object.keys(graph[fromStn])) {
+      for (const toLine of Object.keys(graph[toStn])) {
+        graph[fromStn][fromLine].push({station:toStn, line:toLine, cost:BANK_MONUMENT_WALK, type:'interchange'});
+      }
+    }
+  }
+  addCrossWalk('Bank', 'Monument');
+  addCrossWalk('Monument', 'Bank');
+
   return graph;
 }
 
@@ -1718,8 +1877,9 @@ function travelTimeOnLine(from, to, displayLineName) {
 
 // Converts userRoute into legs matching the optimal route format,
 // plus interchange segments, and a total. Returns {legs, interchanges, totalMins}
-// legs: [{from, to, line, mins}]
-// interchanges: [{at, mins}]  — one per line change
+const BANK_MONUMENT_PAIR = new Set(['Bank', 'Monument']);
+const BANK_MONUMENT_WALK_MINS = 3;
+
 function buildUserLegs(start, route) {
   if (!route.length) return {legs:[], interchanges:[], totalMins:0};
 
@@ -1730,7 +1890,6 @@ function buildUserLegs(start, route) {
   const interchanges = [];
   let totalMins = 0;
 
-  // Build travel legs (group consecutive stops on same line)
   let legFrom = start;
   let legLine = lines[0];
   let legMins = 0;
@@ -1740,24 +1899,31 @@ function buildUserLegs(start, route) {
     const from = stations[i];
     const to   = stations[i + 1];
 
-    if (i > 0 && curLine !== lines[i - 1]) {
-      // Line change — close previous leg
-      legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
-      const ic = interchangeTime(from);
-      interchanges.push({at: from, mins: ic});
-      totalMins += ic;
-      legFrom = from;
+    const isBankMonumentCross = BANK_MONUMENT_PAIR.has(from) && BANK_MONUMENT_PAIR.has(to) && from !== to;
+    const isLineChange = i > 0 && curLine !== lines[i - 1];
+
+    if (isLineChange || isBankMonumentCross) {
+      if (legMins > 0) {
+        legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
+      }
+      if (isBankMonumentCross) {
+        interchanges.push({at: `${from}↔${to}`, mins: BANK_MONUMENT_WALK_MINS});
+        totalMins += BANK_MONUMENT_WALK_MINS;
+      } else {
+        const ic = interchangeTime(from, legLine, curLine);
+        interchanges.push({at: from, mins: ic});
+        totalMins += ic;
+      }
+      legFrom = isBankMonumentCross ? to : from;
       legLine = curLine;
       legMins = 0;
+      if (isBankMonumentCross) continue;
     }
 
-    // Walk every intermediate stop on the line rather than looking up a direct
-    // TIMES entry (which only exists for adjacent stations).
     const t = travelTimeOnLine(from, to, curLine) ?? 8;
     legMins += t;
     totalMins += t;
   }
-  // Close final leg
   legs.push({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
 
   return {legs, interchanges, totalMins};
@@ -1863,6 +2029,7 @@ function stopTimer() {
 function resetTimer() {
   stopTimer();
   timerSeconds = 0; timerStopped = false;
+  timerInterval = null;
   const disp = document.getElementById('timer-disp');
   const box  = document.getElementById('timer-box');
   if (disp) disp.textContent = '0:00';
@@ -1884,8 +2051,13 @@ function init() {
   initAutocomplete();
   initMap();
   renderRoute();
-  if (!localStorage.getItem('tubed_seen_how')) { setTimeout(openModal, 600); localStorage.setItem('tubed_seen_how','1'); }
-  startTimer();
+  if (!localStorage.getItem('tubed_seen_how')) {
+    localStorage.setItem('tubed_seen_how','1');
+    setTimeout(openModal, 600);
+    // Timer will be started by closeModal() once the player dismisses the how-to
+  } else {
+    startTimer();
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1999,14 +2171,22 @@ function onStationInput() {
   acActiveIdx = -1;
   if (q.length < 1) { nbCloseAc(); return; }
   // Exclude start station to prevent cheating
-  const matches = ALL_STATIONS
-    .filter(s => s !== puzzleData.start && s.toLowerCase().includes(q.toLowerCase()))
-    .slice(0, 8);
+  const ql = q.toLowerCase();
+  const allMatches = ALL_STATIONS
+    .filter(s => s !== puzzleData.start && s.toLowerCase().includes(ql));
+  allMatches.sort((a, b) => {
+    const aPrefix = a.toLowerCase().startsWith(ql);
+    const bPrefix = b.toLowerCase().startsWith(ql);
+    if (aPrefix && !bPrefix) return -1;
+    if (!aPrefix && bPrefix) return 1;
+    return a.localeCompare(b);
+  });
+  const matches = allMatches.slice(0, 8);
   if (!matches.length) {
     list.innerHTML = '<div class="nb-ac-item" style="color:var(--muted);cursor:default;">No stations found</div>';
   } else {
     list.innerHTML = matches.map(s => {
-      const qi = s.toLowerCase().indexOf(q.toLowerCase());
+      const qi = s.toLowerCase().indexOf(ql);
       const hl = qi >= 0 ? s.slice(0,qi)+'<mark>'+s.slice(qi,qi+q.length)+'</mark>'+s.slice(qi+q.length) : s;
       const isEnd = s === puzzleData.end;
       return `<div class="nb-ac-item" data-stn="${s}">${hl}${isEnd ? ' <span style="font-size:10px;color:#16a34a;font-weight:500;">· destination</span>' : ''}</div>`;
@@ -2170,8 +2350,11 @@ function addStep() {
 
   const fromStn = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
 
+  const BANK_MONUMENT = new Set(['Bank', 'Monument']);
   if (!stationsForDisplayLine(line).includes(stn))     { showStepErr(`${stn} is not on the ${line} line.`); return; }
-  if (!stationsForDisplayLine(line).includes(fromStn)) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
+  const lineServesFrom = stationsForDisplayLine(line).includes(fromStn);
+  const isBankMonumentWalk = BANK_MONUMENT.has(fromStn) && BANK_MONUMENT.has(stn) && fromStn !== stn;
+  if (!lineServesFrom && !isBankMonumentWalk) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
   if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
   if (stn === puzzleData.start) { showStepErr(`That's your start station.`); return; }
 
@@ -2288,7 +2471,7 @@ function submitRoute() {
   else if (diff <= 5)  { medal='🥈'; color='#64748b'; title='Nearly optimal!'; subtitle=`${diff} min off optimal`; }
   else if (diff <= 10) { medal='🥉'; color='#92400e'; title='Good effort!';    subtitle=`${diff} min off optimal`; }
   else if (diff <= 20) { medal='⭐'; color='#1d4ed8'; title='Not bad!';        subtitle=`${diff} min off optimal`; }
-  else                 { medal='🚇'; color='var(--muted)'; title='Keep practising!'; subtitle=`${diff} min off optimal`; }
+  else                 { medal='🚇'; color='var(--muted)'; title='Keep practicing!'; subtitle=`${diff} min off optimal`; }
 
   const pct = Math.max(0, Math.min(100, Math.round(optimalMins / Math.max(userMins, 1) * 100)));
 
@@ -2303,9 +2486,9 @@ function submitRoute() {
   document.getElementById('streak-disp').textContent = store.streak;
 
   // Build optimal route interchanges from leg boundaries
-  const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map(l => ({
+  const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map((l, i) => ({
     at: l.to,
-    mins: interchangeTime(l.to),
+    mins: interchangeTime(l.to, l.line, puzzleData.optimal.legs[i + 1].line),
   }));
   const optLegsHtml = renderRouteLegsHtml(puzzleData.optimal.legs, optInterchanges);
   const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
@@ -2457,7 +2640,12 @@ function renderHistory() {
 // MODAL
 // ═══════════════════════════════════════════════════════════════════════════════
 function openModal() { const m = document.getElementById('modal-overlay'); m.style.display='flex'; requestAnimationFrame(()=>m.classList.add('open')); }
-function closeModal() { const m = document.getElementById('modal-overlay'); m.classList.remove('open'); setTimeout(()=>m.style.display='none',200); }
+function closeModal() {
+  const m = document.getElementById('modal-overlay');
+  m.classList.remove('open');
+  setTimeout(()=>m.style.display='none',200);
+  if (!timerInterval && !timerStopped) startTimer();
+}
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 
 function openFeedback() {
