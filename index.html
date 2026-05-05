@@ -982,7 +982,7 @@ const NETWORK = {
     'Fulham Broadway','West Brompton','Earl\'s Court','Gloucester Road','South Kensington',
     'Sloane Square','Victoria','St. James\'s Park','Westminster','Embankment','Temple',
     'Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East',
-    'Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','Plaistow',
+    'Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','West Ham','Plaistow',
     'Upton Park','East Ham','Barking',
   ],
   'District_Richmond': [
@@ -1033,7 +1033,7 @@ const NETWORK = {
     'Abbey Wood',
   ],
   'Elizabeth_east': [
-    'Liverpool Street','Whitechapel','Maryland','Forest Gate','Manor Park',
+    'Liverpool Street','Whitechapel','Stratford','Maryland','Forest Gate','Manor Park',
     'Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford',
     'Gidea Park','Harold Wood','Brentwood','Shenfield',
   ],
@@ -1143,7 +1143,7 @@ const NETWORK = {
     'Gospel Oak','Hampstead Heath','Finchley Road & Frognal',
     'West Hampstead','Brondesbury Park','Brondesbury','Kensal Rise',
     'Willesden Junction','Shepherd\'s Bush (Overground)','Kensington Olympia',
-    'West Brompton','Imperial Wharf','Clapham Junction',
+    'Imperial Wharf','West Brompton','Clapham Junction',
   ],
   'Overground_Windrush_Clapham': [
     'Highbury & Islington','Canonbury','Dalston Junction',
@@ -1883,6 +1883,8 @@ const BANK_MONUMENT_WALK_MINS = 3;
 function buildUserLegs(start, route) {
   if (!route.length) return {legs:[], interchanges:[], totalMins:0};
 
+  const BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
+
   const stations = [start, ...route.map(s => s.station)];
   const lines    = route.map(s => s.line);
 
@@ -1899,28 +1901,45 @@ function buildUserLegs(start, route) {
     const from = stations[i];
     const to   = stations[i + 1];
 
+    // Explicit Bank↔Monument cross-walk step
     const isBankMonumentCross = BANK_MONUMENT_PAIR.has(from) && BANK_MONUMENT_PAIR.has(to) && from !== to;
     const isLineChange = i > 0 && curLine !== lines[i - 1];
 
-    if (isLineChange || isBankMonumentCross) {
+    // Implicit cross-walk: player is at Bank/Monument but the chosen line only
+    // serves the partner station (e.g. at Bank, taking District which serves Monument)
+    const partner = BM_PARTNER[from];
+    const needsImplicitCrossWalk = partner &&
+      !stationsForDisplayLine(curLine).includes(from) &&
+      stationsForDisplayLine(curLine).includes(partner);
+
+    if (isLineChange || isBankMonumentCross || needsImplicitCrossWalk) {
       if (legMins > 0) {
         legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
       }
       if (isBankMonumentCross) {
         interchanges.push({at: `${from}↔${to}`, mins: BANK_MONUMENT_WALK_MINS});
         totalMins += BANK_MONUMENT_WALK_MINS;
+      } else if (needsImplicitCrossWalk) {
+        // Cross-walk to partner station covers the interchange — one entry only
+        interchanges.push({at: `${from}↔${partner}`, mins: BANK_MONUMENT_WALK_MINS});
+        totalMins += BANK_MONUMENT_WALK_MINS;
       } else {
         const ic = interchangeTime(from, legLine, curLine);
         interchanges.push({at: from, mins: ic});
         totalMins += ic;
       }
-      legFrom = isBankMonumentCross ? to : from;
+      // Update legFrom: if implicit cross-walk, we're now at the partner station
+      legFrom = (isBankMonumentCross || needsImplicitCrossWalk) ? (partner || to) : from;
       legLine = curLine;
       legMins = 0;
       if (isBankMonumentCross) continue;
     }
 
-    const t = travelTimeOnLine(from, to, curLine) ?? 8;
+    // Use partner as effective 'from' for travelTimeOnLine if implicit cross-walk
+    const effectiveFrom = (partner && !stationsForDisplayLine(curLine).includes(from) &&
+      stationsForDisplayLine(curLine).includes(partner)) ? partner : from;
+
+    const t = travelTimeOnLine(effectiveFrom, to, curLine) ?? 8;
     legMins += t;
     totalMins += t;
   }
@@ -2351,10 +2370,15 @@ function addStep() {
   const fromStn = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
 
   const BANK_MONUMENT = new Set(['Bank', 'Monument']);
+  const BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
+
   if (!stationsForDisplayLine(line).includes(stn))     { showStepErr(`${stn} is not on the ${line} line.`); return; }
   const lineServesFrom = stationsForDisplayLine(line).includes(fromStn);
+  // Allow if the line serves the Bank/Monument partner station (implicit cross-walk)
+  const partner = BM_PARTNER[fromStn];
+  const lineServesPartner = partner && stationsForDisplayLine(line).includes(partner);
   const isBankMonumentWalk = BANK_MONUMENT.has(fromStn) && BANK_MONUMENT.has(stn) && fromStn !== stn;
-  if (!lineServesFrom && !isBankMonumentWalk) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
+  if (!lineServesFrom && !isBankMonumentWalk && !lineServesPartner) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
   if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
   if (stn === puzzleData.start) { showStepErr(`That's your start station.`); return; }
 
@@ -2485,11 +2509,26 @@ function submitRoute() {
   setStore(store);
   document.getElementById('streak-disp').textContent = store.streak;
 
-  // Build optimal route interchanges from leg boundaries
-  const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map((l, i) => ({
-    at: l.to,
-    mins: interchangeTime(l.to, l.line, puzzleData.optimal.legs[i + 1].line),
-  }));
+  // Build optimal route interchanges from leg boundaries.
+  // Special case: if the interchange is at Bank→Monument or Monument→Bank
+  // (i.e. the leg ends at Bank/Monument and the next leg starts from the partner),
+  // treat it as a cross-walk rather than a standard line interchange.
+  const BM_PAIR = new Set(['Bank', 'Monument']);
+  const BM_PARTNER_MAP = {'Bank': 'Monument', 'Monument': 'Bank'};
+  const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map((l, i) => {
+    const nextLeg = puzzleData.optimal.legs[i + 1];
+    const at = l.to;
+    const partner = BM_PARTNER_MAP[at];
+    // If this leg ends at Bank/Monument and next leg is on a line that only
+    // serves the partner (cross-walk), show as cross-walk with 3 min
+    const isCrossWalk = partner &&
+      !stationsForDisplayLine(nextLeg.line).includes(at) &&
+      stationsForDisplayLine(nextLeg.line).includes(partner);
+    return {
+      at: isCrossWalk ? `${at}↔${partner}` : at,
+      mins: isCrossWalk ? 3 : interchangeTime(at, l.line, nextLeg.line),
+    };
+  });
   const optLegsHtml = renderRouteLegsHtml(puzzleData.optimal.legs, optInterchanges);
   const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
 
