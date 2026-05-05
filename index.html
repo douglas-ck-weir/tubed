@@ -351,7 +351,6 @@ const LINE_COLOURS = {
 // Line-pair specific. Falls back to worst-case at that station, then 2 min.
 const INTERCHANGE_MINS = {
   'Acton Town': {
-    'Circle|Piccadilly': 1,
     'District|Piccadilly': 1,
   },
   'Aldgate': {
@@ -383,8 +382,6 @@ const INTERCHANGE_MINS = {
     'DLR|Jubilee': 1,
   },
   "Earl's Court": {
-    'Circle|District': 2,
-    'Circle|Piccadilly': 3,
     'District|Piccadilly': 3,
   },
   'Elephant & Castle': {
@@ -1375,7 +1372,6 @@ const TIMES = {
   'Highams Park|Chingford':3,
   'Highbury & Islington|Angel':3,
   'Highbury & Islington|Caledonian Road & Barnsbury':3,
-  'Highbury & Islington|Canonbury':3,
   'Highbury & Islington|Finsbury Park':2,
   'Hillingdon|Uxbridge':2,
   'Holborn|Chancery Lane':2,
@@ -1423,7 +1419,6 @@ const TIMES = {
   'Liverpool Street|Whitechapel':3,
   'London Bridge|Bank':2,
   'London Bridge|Bermondsey':3,
-  'London Fields|Cambridge Heath':2,
   'London Fields|Hackney Downs':2,
   'Loughton|Debden':2,
   'Maida Vale|Warwick Avenue':2,
@@ -1616,7 +1611,6 @@ const TIMES = {
   'Lower Edmonton|Angel Road':2,
   'Angel Road|Meridian Water':3,
   'Meridian Water|Ponders End':3,
-  'Seven Sisters (Overground)|Bruce Grove':3,
   'Edmonton Green|Enfield Town':5,
   'Queens Road Peckham|Surrey Quays':4,
   'Queens Road Peckham|Peckham Rye':2,
@@ -1629,7 +1623,90 @@ const TIMES = {
   'Willesden Junction|Shepherd\'s Bush (Overground)':8,
   'West Brompton|Imperial Wharf':3,
   'Dalston Junction|Canonbury':3,
-  'Canonbury|Highbury & Islington':3,
+  // ── Segments added from TfL timetable data (73 entries) ─────────────
+  // District — Wimbledon branch + other branches
+  'Wimbledon|Wimbledon Park':2,
+  'Wimbledon Park|Southfields':2,
+  'Southfields|East Putney':3,
+  'East Putney|Putney Bridge':2,
+  'Putney Bridge|Parsons Green':2,
+  'Parsons Green|Fulham Broadway':2,
+  'Fulham Broadway|West Brompton':2,
+  "West Brompton|Earl's Court":2,
+  "Earl's Court|High Street Kensington":3,
+  "Earl's Court|Paddington":7,
+  'Richmond|Kew Gardens':3,
+  'Kew Gardens|Gunnersbury':3,
+  'Gunnersbury|Turnham Green':2,
+  // DLR — Woolwich Arsenal spur + Heron Quays loop
+  'King George V|Woolwich Arsenal':3,
+  'Heron Quays|West India Quay':2,
+  'West India Quay|Westferry':2,
+  // Elizabeth line — western extension
+  'Reading|Twyford':8,
+  'Twyford|Maidenhead':5,
+  'Maidenhead|Taplow':4,
+  'Taplow|Burnham':3,
+  'Burnham|Slough':3,
+  'Slough|Langley':4,
+  'Langley|Iver':3,
+  'Iver|West Drayton':3,
+  'West Drayton|Hayes & Harlington':4,
+  'West Ealing|Ealing Broadway':2,
+  'Ealing Broadway|Acton Main Line':4,
+  // Northern — Bank/Edgware branch
+  'Euston|Mornington Crescent':2,
+  'Mornington Crescent|Camden Town':2,
+  'Camden Town|Chalk Farm':2,
+  // Northern — Charing Cross branch
+  'Kennington|Waterloo':3,
+  'Charing Cross|Leicester Square':1,
+  'Leicester Square|Tottenham Court Road':2,
+  'Tottenham Court Road|Goodge Street':1,
+  'Goodge Street|Warren Street':2,
+  // Northern — High Barnet branch + Mill Hill East
+  'Camden Town|Kentish Town':2,
+  'Kentish Town|Tufnell Park':2,
+  'Tufnell Park|Archway':2,
+  'Archway|Highgate':3,
+  'Highgate|East Finchley':3,
+  'East Finchley|Finchley Central':2,
+  'Finchley Central|West Finchley':2,
+  'West Finchley|Woodside Park':2,
+  'Woodside Park|Totteridge & Whetstone':2,
+  'Totteridge & Whetstone|High Barnet':2,
+  'Finchley Central|Mill Hill East':3,
+  // Piccadilly — Cockfosters northern extension
+  'Cockfosters|Oakwood':3,
+  'Oakwood|Southgate':2,
+  'Southgate|Arnos Grove':2,
+  // Piccadilly — Heathrow branch
+  "Earl's Court|Acton Town":12,
+  'Acton Town|South Ealing':3,
+  'South Ealing|Northfields':2,
+  'Northfields|Boston Manor':3,
+  'Boston Manor|Osterley':3,
+  'Osterley|Hounslow East':3,
+  'Hounslow East|Hounslow Central':2,
+  'Hounslow Central|Hounslow West':2,
+  'Hounslow West|Hatton Cross':4,
+  'Hatton Cross|Heathrow Terminals 2&3':4,
+  'Hatton Cross|Heathrow Terminal 4':3,
+  'Heathrow Terminals 2&3|Heathrow Terminal 5':4,
+  // Piccadilly — Uxbridge branch
+  'Acton Town|Park Royal':3,
+  // Overground — Mildmay gaps
+  'Dalston Kingsland|Canonbury':3,
+  'Kensal Rise|Willesden Junction':3,
+  'West Brompton|Clapham Junction':7,
+  // Overground — Windrush gaps
+  'Wandsworth Road|Clapham Junction':3,
+  'Sydenham|Anerley':2,
+  'Norwood Junction|West Croydon':4,
+  // Overground — Weaver gaps
+  'Liverpool Street|Bethnal Green (Overground)':3,
+  'Enfield Lock|Waltham Cross':4,
+  'Waltham Cross|Turkey Street':4,
 };
 
 
@@ -1659,6 +1736,17 @@ function stationsForDisplayLine(dline) {
     if (displayLine(key) === dline) arr.forEach(s => stns.add(s));
   }
   return [...stns];
+}
+
+// Returns true if both stations appear on the same sub-line array.
+// This is the real reachability check — e.g. Stratford and Bank are both
+// "DLR" stations but are on different sub-lines and require a change at Poplar.
+function shareSubLine(stnA, stnB, dline) {
+  for (const [key, arr] of Object.entries(NETWORK)) {
+    if (displayLine(key) !== dline) continue;
+    if (arr.includes(stnA) && arr.includes(stnB)) return true;
+  }
+  return false;
 }
 
 function linesAtStation(stn) {
@@ -2379,6 +2467,13 @@ function addStep() {
   const lineServesPartner = partner && stationsForDisplayLine(line).includes(partner);
   const isBankMonumentWalk = BANK_MONUMENT.has(fromStn) && BANK_MONUMENT.has(stn) && fromStn !== stn;
   if (!lineServesFrom && !isBankMonumentWalk && !lineServesPartner) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
+  // Check both stations are on the same sub-line — catches e.g. Stratford→Bank on DLR
+  // which are on different branches and require a change at Poplar.
+  const effectiveFrom = lineServesPartner ? partner : fromStn;
+  if (!isBankMonumentWalk && !shareSubLine(effectiveFrom, stn, line)) {
+    showStepErr(`You can't go directly from ${fromStn} to ${stn} on the ${line} line — a change is required.`);
+    return;
+  }
   if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
   if (stn === puzzleData.start) { showStepErr(`That's your start station.`); return; }
 
