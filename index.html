@@ -548,7 +548,7 @@ const COORDS = {
   'North Acton':           [51.5236,-0.2627],
   'East Acton':            [51.5167,-0.2350],
   'White City':            [51.5121,-0.2244],
-  'Shepherd\'s Bush':      [51.5053,-0.2187],
+  'Shepherd\'s Bush (Underground)':      [51.5053,-0.2187],
   'Holland Park':          [51.5074,-0.2060],
   'Notting Hill Gate':     [51.5095,-0.1967],
   'Queensway':             [51.5103,-0.1876],
@@ -561,7 +561,7 @@ const COORDS = {
   'St. Paul\'s':           [51.5146,-0.0973],
   'Bank':                  [51.5133,-0.0886],
   'Liverpool Street':      [51.5178,-0.0823],
-  'Bethnal Green':         [51.5272,-0.0549],
+  'Bethnal Green (Underground)':         [51.5272,-0.0549],
   'Mile End':              [51.5252,-0.0334],
   'Stratford':             [51.5416,-0.0042],
   'Leyton':                [51.5562,-0.0051],
@@ -645,7 +645,7 @@ const COORDS = {
   'Chiswick Park':         [51.4948,-0.2690],
   'Ealing Common':         [51.5151,-0.3038],
   // === DLR ===
-  'Shadwell':              [51.5116,-0.0564],
+  'Shadwell (Underground)':              [51.5116,-0.0564],
   'Limehouse':             [51.5120,-0.0372],
   'Westferry':             [51.5094,-0.0269],
   'Poplar':                [51.5074,-0.0170],
@@ -806,9 +806,9 @@ const COORDS = {
   'Brixton':               [51.4627,-0.1144],
   'Vauxhall':              [51.4861,-0.1228],
   'Highbury & Islington':  [51.5463,-0.1038],
-  'Seven Sisters':         [51.5839,-0.0726],
+  'Seven Sisters (Underground)':         [51.5839,-0.0726],
   'Tottenham Hale':        [51.5882,-0.0600],
-  'Blackhorse Road':       [51.5866,-0.0408],
+  'Blackhorse Road (Underground)':       [51.5866,-0.0408],
   'Walthamstow Central':   [51.5830,-0.0196],
   // === OVERGROUND ===
   'Watford Junction':      [51.6636,-0.3966],
@@ -951,9 +951,9 @@ const NETWORK = {
   ],
   'Central': [
     'Ealing Broadway','West Acton','North Acton','East Acton','White City',
-    'Shepherd\'s Bush','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
     'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
-    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green','Mile End','Stratford',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
   ],
   'Central_Hainault_loop_via_Woodford': [
     'Woodford','Roding Valley','Chigwell','Grange Hill','Hainault',
@@ -1003,7 +1003,7 @@ const NETWORK = {
     'South Kensington','Gloucester Road','Earl\'s Court','Paddington',
   ],
   'DLR_Bank_Lewisham': [
-    'Bank','Shadwell','Limehouse','Westferry','Poplar','West India Quay','Canary Wharf',
+    'Bank','Shadwell (Underground)','Limehouse','Westferry','Poplar','West India Quay','Canary Wharf',
     'Heron Quays','South Quay','Crossharbour','Mudchute','Island Gardens',
     'Cutty Sark','Greenwich','Deptford Bridge','Elverson Road','Lewisham',
   ],
@@ -1112,8 +1112,8 @@ const NETWORK = {
   'Victoria': [
     'Brixton','Stockwell','Vauxhall','Pimlico','Victoria','Green Park',
     'Oxford Circus','Warren Street','Euston','Kings Cross St. Pancras',
-    'Highbury & Islington','Finsbury Park','Seven Sisters','Tottenham Hale',
-    'Blackhorse Road','Walthamstow Central',
+    'Highbury & Islington','Finsbury Park','Seven Sisters (Underground)','Tottenham Hale',
+    'Blackhorse Road (Underground)','Walthamstow Central',
   ],
   'Waterloo & City': [
     'Waterloo','Bank',
@@ -1162,14 +1162,6 @@ const NETWORK = {
   'Overground_Windrush_CrystalPalace': [
     'Sydenham','Crystal Palace',
   ],
-  'Overground_Weaver_Enfield': [
-    'Liverpool Street','Bethnal Green (Overground)','Cambridge Heath','London Fields',
-    'Hackney Downs','Rectory Road','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
-    'Bruce Grove','White Hart Lane','Silver Street','Edmonton Green',
-    'Lower Edmonton','Angel Road','Meridian Water','Ponders End',
-    'Brimsdown','Enfield Lock','Waltham Cross','Turkey Street',
-    'Theobald\'s Grove','Cheshunt',
-  ],
   'Overground_Weaver_Cheshunt': [
     'Liverpool Street','Bethnal Green (Overground)','Cambridge Heath','London Fields',
     'Hackney Downs','Rectory Road','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
@@ -1217,7 +1209,7 @@ const TIMES = {
   'Balham|Wandsworth Road':4,
   'Bank|Liverpool Street':3,
   'Bank|Moorgate':2,
-  'Bank|Shadwell':5,
+  'Bank|Shadwell (Underground)':5,
   'Barbican|Moorgate':1,
   'Barkingside|Newbury Park':2,
   'Barons Court|Earl\'s Court':3,
@@ -1225,11 +1217,11 @@ const TIMES = {
   'Beckton Park|Cyprus':1,
   'Belsize Park|Hampstead':2,
   'Bermondsey|Canada Water':1,
-  'Bethnal Green|Mile End':2,
+  'Bethnal Green (Underground)|Mile End':2,
   'Blackfriars|Mansion House':1,
   'Blackfriars|Temple':1,
   'Blackhorse Road (Overground)|Walthamstow Queens Road':2,
-  'Blackhorse Road|Walthamstow Central':2,
+  'Blackhorse Road (Underground)|Walthamstow Central':2,
   'Blackwall|East India':2,
   'Bond Street|Green Park':2,
   'Bond Street|Oxford Circus':2,
@@ -1327,7 +1319,7 @@ const TIMES = {
   'Finchley Road|Baker Street':7,
   'Finchley Road|Swiss Cottage':2,
   'Finsbury Park|Manor House':2,
-  'Finsbury Park|Seven Sisters':4,
+  'Finsbury Park|Seven Sisters (Underground)':4,
   'Forest Gate|Manor Park':2,
   'Forest Hill|Sydenham':2,
   'Gallions Reach|Beckton':3,
@@ -1414,7 +1406,7 @@ const TIMES = {
   'Limehouse|Westferry':1,
   'Liverpool Street|Aldgate':2,
   'Liverpool Street|Aldgate East':3,
-  'Liverpool Street|Bethnal Green':3,
+  'Liverpool Street|Bethnal Green (Underground)':3,
   'Liverpool Street|Cambridge Heath':4,
   'Liverpool Street|Whitechapel':3,
   'London Bridge|Bank':2,
@@ -1491,13 +1483,13 @@ const TIMES = {
   'Seven Kings|Goodmayes':2,
   'Seven Sisters (Overground)|Enfield Lock':8,
   'Seven Sisters (Overground)|Enfield Town':10,
-  'Seven Sisters|Tottenham Hale':2,
+  'Seven Sisters (Underground)|Tottenham Hale':2,
   'Shadwell (Overground)|Wapping':2,
-  'Shadwell|Limehouse':3,
+  'Shadwell (Underground)|Limehouse':3,
   'Shepherd\'s Bush (Overground)|Kensington Olympia':3,
   'Shepherd\'s Bush Market|Hammersmith':1,
   'Shepherd\'s Bush Market|Wood Lane':1,
-  'Shepherd\'s Bush|Holland Park':2,
+  'Shepherd\'s Bush (Underground)|Holland Park':2,
   'Shoreditch High Street|Whitechapel':3,
   'Sloane Square|South Kensington':2,
   'Sloane Square|Victoria':2,
@@ -1542,7 +1534,7 @@ const TIMES = {
   'Tooting Broadway|Tooting Bec':2,
   'Tottenham Court Road|Farringdon':3,
   'Tottenham Court Road|Holborn':2,
-  'Tottenham Hale|Blackhorse Road':2,
+  'Tottenham Hale|Blackhorse Road (Underground)':2,
   'Tower Hill|Aldgate East':2,
   'Tulse Hill|Streatham Hill':3,
   'Turkey Street|Theobald\'s Grove':3,
@@ -1580,7 +1572,7 @@ const TIMES = {
   'Westbourne Park|Ladbroke Grove':1,
   'Westferry|Poplar':2,
   'Westminster|Waterloo':1,
-  'White City|Shepherd\'s Bush':2,
+  'White City|Shepherd\'s Bush (Underground)':2,
   'Whitechapel|Canary Wharf':6,
   'Whitechapel|Shadwell (Overground)':3,
   'Whitechapel|Stepney Green':2,
@@ -1775,16 +1767,16 @@ const PUZZLE_STATIONS = [
   'Regent\'s Park','Sloane Square','South Kensington','Southwark',
   'St. James\'s Park','St. Paul\'s','Temple','Tottenham Court Road',
   'Tower Hill','Vauxhall','Victoria','Warren Street','Waterloo','Westminster',
-  'Bermondsey','Bethnal Green','Brixton','Canada Water','Canary Wharf',
+  'Bermondsey','Bethnal Green (Underground)','Brixton','Canada Water','Canary Wharf',
   'Earl\'s Court','Highbury & Islington','Mile End','Oval','Stockwell','Whitechapel',
   'Archway','Balham','Barons Court','Belsize Park','Camden Town','Canning Town',
   'Clapham Common','Clapham Junction','Clapham North','Clapham South',
   'Dalston Kingsland','East Putney','Finchley Road','Finsbury Park',
   'Fulham Broadway','Goldhawk Road','Greenwich','Hackney Central','Hammersmith',
   'Hampstead','Highgate','Island Gardens','Kilburn','Lewisham','Limehouse',
-  'Mile End','Mornington Crescent','North Greenwich','Parsons Green',
-  'Putney Bridge','Queen\'s Park','Shadwell','Shepherd\'s Bush',
-  'Shepherd\'s Bush Market','South Kensington','Stepney Green','Stratford',
+  'Mornington Crescent','North Greenwich','Parsons Green',
+  'Putney Bridge','Queen\'s Park','Shadwell (Underground)','Shepherd\'s Bush (Underground)',
+  'Shepherd\'s Bush Market','Stepney Green','Stratford',
   'Swiss Cottage','Tufnell Park','Turnham Green','West Brompton','West Ham',
   'West Hampstead','White City','Wimbledon',
   'Acton Town','Ealing Broadway','Harrow & Wealdstone','Harrow on the Hill',
@@ -1905,7 +1897,12 @@ function dijkstra(graph, start, end) {
         }
       } else if (node.type === 'interchange') {
         if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
-        legFrom = prev; legLine = node.line; legMins = 0;
+        // For same-station interchanges, node.station === prev. For cross-station
+        // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
+        // and we need to update both legFrom AND prev so the next travel leg's
+        // getTime() lookup uses our actual current location.
+        legFrom = node.station; legLine = node.line; legMins = 0;
+        prev = node.station;
       }
     }
     if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
@@ -2062,17 +2059,31 @@ function todayPuzzle() {
   const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
   const GRAPH = buildGraph();
   let start, end, routes;
-  for (let attempt = 0; attempt < 100; attempt++) {
-    const si = Math.floor(rng() * pool.length);
-    let   ei = Math.floor(rng() * pool.length);
-    if (ei === si) ei = (ei + 1) % pool.length;
-    start = pool[si]; end = pool[ei];
-    if (!requiresChange(start, end)) continue;
+
+  // ─── DATE OVERRIDE ──────────────────────────────────────────────────────────
+  // Hard-codes today's live puzzle (2026-05-06: Oval → Shadwell) so that data
+  // changes (PUZZLE_STATIONS dedupe, NETWORK fixes) don't shift the daily seed
+  // for players mid-day. Safe to remove on any deploy after 2026-05-06.
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  if (todayKey === '2026-05-06') {
+    start = 'Oval';
+    end   = 'Shadwell (Underground)';
     routes = dijkstra(GRAPH, start, end);
-    if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
+  } else {
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const si = Math.floor(rng() * pool.length);
+      let   ei = Math.floor(rng() * pool.length);
+      if (ei === si) ei = (ei + 1) % pool.length;
+      start = pool[si]; end = pool[ei];
+      if (!requiresChange(start, end)) continue;
+      routes = dijkstra(GRAPH, start, end);
+      if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
+    }
   }
+  // ────────────────────────────────────────────────────────────────────────────
+
   if (!routes || routes.length === 0) {
-    start = 'Bethnal Green'; end = 'Oval';
+    start = 'Bethnal Green (Underground)'; end = 'Oval';
     routes = dijkstra(GRAPH, start, end);
   }
   const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
@@ -2443,6 +2454,60 @@ function nbStartAdd() {
   renderRoute();
 }
 
+// ─── ROUTE VALIDATION HELPERS ─────────────────────────────────────────────────
+// Used by both addStep (single new stop) and submitRoute (whole route at submit
+// time). Submit-time validation is the safety gate against invalid routes that
+// can be left behind by remove operations — addStep checks each stop against
+// its predecessor at insert time, but predecessors change when stops are
+// removed, so the same sequence of stops can become invalid without anything
+// re-checking it. validateRoute walks the route fresh and catches all of it.
+const _BANK_MONUMENT_SET = new Set(['Bank', 'Monument']);
+const _BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
+
+function validateStep(fromStn, toStn, line) {
+  if (!stationsForDisplayLine(line).includes(toStn)) {
+    return {ok: false, error: `${toStn} is not on the ${line} line.`};
+  }
+  const lineServesFrom = stationsForDisplayLine(line).includes(fromStn);
+  const partner = _BM_PARTNER[fromStn];
+  const lineServesPartner = partner && stationsForDisplayLine(line).includes(partner);
+  const isBankMonumentWalk = _BANK_MONUMENT_SET.has(fromStn) && _BANK_MONUMENT_SET.has(toStn) && fromStn !== toStn;
+  if (!lineServesFrom && !isBankMonumentWalk && !lineServesPartner) {
+    return {ok: false, error: `You can't take the ${line} line from ${fromStn}.`};
+  }
+  const effectiveFrom = lineServesPartner ? partner : fromStn;
+  if (!isBankMonumentWalk && !shareSubLine(effectiveFrom, toStn, line)) {
+    return {ok: false, error: `You can't go directly from ${fromStn} to ${toStn} on the ${line} line — a change is required.`};
+  }
+  if (toStn === fromStn) {
+    return {ok: false, error: `You're already at ${toStn}.`};
+  }
+  if (toStn === puzzleData.start) {
+    return {ok: false, error: `That's your start station.`};
+  }
+  return {ok: true};
+}
+
+function validateRoute(start, route) {
+  if (!route.length) {
+    return {ok: false, error: 'Your route is empty.'};
+  }
+  let from = start;
+  for (let i = 0; i < route.length; i++) {
+    const step = route[i];
+    const r = validateStep(from, step.station, step.line);
+    if (!r.ok) return {ok: false, error: r.error, atIndex: i};
+    // Advance to the new station. The implicit Bank/Monument cross-walk is
+    // folded into the leg's travel time inside buildUserLegs, so the user
+    // ends up at step.station regardless.
+    from = step.station;
+  }
+  if (route[route.length - 1].station !== puzzleData.end) {
+    return {ok: false, error: `Your route doesn't end at ${puzzleData.end}.`};
+  }
+  return {ok: true};
+}
+
 function addStep() {
   let stn = selectedStation;
   if (!stn) {
@@ -2457,25 +2522,8 @@ function addStep() {
 
   const fromStn = userRoute.length === 0 ? puzzleData.start : userRoute[userRoute.length-1].station;
 
-  const BANK_MONUMENT = new Set(['Bank', 'Monument']);
-  const BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
-
-  if (!stationsForDisplayLine(line).includes(stn))     { showStepErr(`${stn} is not on the ${line} line.`); return; }
-  const lineServesFrom = stationsForDisplayLine(line).includes(fromStn);
-  // Allow if the line serves the Bank/Monument partner station (implicit cross-walk)
-  const partner = BM_PARTNER[fromStn];
-  const lineServesPartner = partner && stationsForDisplayLine(line).includes(partner);
-  const isBankMonumentWalk = BANK_MONUMENT.has(fromStn) && BANK_MONUMENT.has(stn) && fromStn !== stn;
-  if (!lineServesFrom && !isBankMonumentWalk && !lineServesPartner) { showStepErr(`You can't take the ${line} line from ${fromStn}.`); return; }
-  // Check both stations are on the same sub-line — catches e.g. Stratford→Bank on DLR
-  // which are on different branches and require a change at Poplar.
-  const effectiveFrom = lineServesPartner ? partner : fromStn;
-  if (!isBankMonumentWalk && !shareSubLine(effectiveFrom, stn, line)) {
-    showStepErr(`You can't go directly from ${fromStn} to ${stn} on the ${line} line — a change is required.`);
-    return;
-  }
-  if (stn === fromStn) { showStepErr(`You're already at ${stn}.`); return; }
-  if (stn === puzzleData.start) { showStepErr(`That's your start station.`); return; }
+  const r = validateStep(fromStn, stn, line);
+  if (!r.ok) { showStepErr(r.error); return; }
 
   userRoute.push({station: stn, line});
 
@@ -2490,8 +2538,12 @@ function addStep() {
 
 function removeStep(i) {
   userRoute.splice(i, 1);
-  // If we removed a stop, destination can't be locked anymore
-  nbDestLocked = false;
+  // Recompute lock from the actual route state — it should only be locked if
+  // the destination is still the final stop. Always-clearing this flag was a
+  // bug: removing a non-destination stop left the destination in place but
+  // unlocked the add panel, allowing stops to be added past the destination.
+  nbDestLocked = userRoute.length > 0 &&
+                 userRoute[userRoute.length - 1].station === puzzleData.end;
   nbAdding = false;
   clearStepErr();
   renderRoute();
@@ -2573,6 +2625,28 @@ function renderRouteLegsHtml(legs, interchanges) {
 }
 function submitRoute() {
   const btn = document.getElementById('sub-btn');
+
+  // Submit-time validation gate. addStep checks each new stop against its
+  // predecessor at insert time, but predecessors change when stops are
+  // removed via removeStep, so a stop that was valid when added can become
+  // invalid later. validateRoute walks the whole route fresh.
+  const v = validateRoute(puzzleData.start, userRoute);
+  if (!v.ok) {
+    const hint = document.getElementById('route-hint');
+    if (hint) {
+      hint.textContent = '⚠ ' + v.error + ' Please fix your route and try again.';
+      hint.style.color = '#dc2626';
+      // Restore the normal hint style after a few seconds
+      setTimeout(() => {
+        hint.style.color = '';
+        hint.textContent = nbDestLocked
+          ? 'Route complete — submit when ready!'
+          : 'Add stops above, ending at your destination';
+      }, 5000);
+    }
+    return;
+  }
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>&nbsp; Scoring...';
 
