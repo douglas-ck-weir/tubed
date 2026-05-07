@@ -346,158 +346,436 @@ const LINE_COLOURS = {
   'Waterloo & City':    {bg:'#95CDBA', txt:'#000'},
 };
 
-// ── Interchange times (minutes, platform-to-platform) ─────────────────────────
-// Sourced from TfL Stop Structure API (footpathInfo shortest-path Dijkstra).
-// Line-pair specific. Falls back to worst-case at that station, then 2 min.
+// ── Interchange times (minutes, walking-only) ────────────────────────────────
+// Sourced from TfL FOI response (LU/LO/DLR interchange values, 2012)
+// + Diamond Geezer Crossrail measurements (May 2022) for Elizabeth pairs
+// + 2022 Bank station walkway upgrade values
+// + Bank/Monument cross-complex pairs duplicated under both stations
+//   so interchangeTime() works regardless of which station is queried.
+// All values are in MINUTES. Walking-only — matches TIMES{} convention.
 const INTERCHANGE_MINS = {
   'Acton Town': {
-    'District|Piccadilly': 1,
+    'District|Piccadilly': 2,
   },
   'Aldgate': {
-    'Circle|Metropolitan': 2,
+    'Circle|Metropolitan': 4,
   },
   'Aldgate East': {
-    'District|Hammersmith & City': 1,
+    'District|Hammersmith & City': 2,
   },
   'Baker Street': {
-    'Bakerloo|Circle': 7,
+    'Bakerloo|Circle': 8,
+    'Bakerloo|Hammersmith & City': 8,
     'Bakerloo|Jubilee': 2,
-    'Bakerloo|Metropolitan': 4,
-    'Circle|Jubilee': 9,
-    'Circle|Metropolitan': 4,
-    'Jubilee|Metropolitan': 6,
+    'Bakerloo|Metropolitan': 3,
+    'Circle|Hammersmith & City': 2,
+    'Circle|Jubilee': 8,
+    'Circle|Metropolitan': 8,
+    'Hammersmith & City|Jubilee': 8,
+    'Hammersmith & City|Metropolitan': 5,
+    'Jubilee|Metropolitan': 3,
   },
   'Bank': {
-    'Central|DLR': 4,
-    'Central|Northern': 5,
-    'Central|Waterloo & City': 5,
+    'Central|Circle': 7,
+    'Central|DLR': 3,
+    'Central|District': 7,
+    'Central|Northern': 3,
+    'Central|Waterloo & City': 4,
+    'Circle|DLR': 4,
+    'Circle|Northern': 4,
+    'Circle|Waterloo & City': 10,
+    'DLR|District': 4,
     'DLR|Northern': 3,
-    'DLR|Waterloo & City': 6,
-    'Northern|Waterloo & City': 8,
+    'DLR|Waterloo & City': 5,
+    'District|Northern': 4,
+    'District|Waterloo & City': 10,
+    'Northern|Waterloo & City': 6,
+  },
+  'Barbican': {
+    'Circle|Hammersmith & City': 2,
+    'Circle|Metropolitan': 2,
+    'Hammersmith & City|Metropolitan': 2,
+  },
+  'Barking': {
+    'District|Overground': 4,
+  },
+  'Barons Court': {
+    'District|Piccadilly': 4,
+  },
+  'Blackfriars': {
+    'Circle|District': 2,
+  },
+  'Bond Street': {
+    'Central|Elizabeth': 5,
+    'Central|Jubilee': 4,
+    'Elizabeth|Jubilee': 4,
+  },
+  'Bow Road': {
+    'District|Hammersmith & City': 2,
+  },
+  'Bromley-by-Bow': {
+    'District|Hammersmith & City': 4,
+  },
+  'Canada Water': {
+    'Jubilee|Overground': 3,
   },
   'Canary Wharf': {
-    'DLR|Jubilee': 8,
+    'DLR|Elizabeth': 5,
+    'DLR|Jubilee': 7,
+    'Elizabeth|Jubilee': 7,
   },
   'Canning Town': {
-    'DLR|Jubilee': 1,
+    'DLR|Jubilee': 4,
+  },
+  'Cannon Street': {
+    'Circle|District': 3,
+  },
+  'Charing Cross': {
+    'Bakerloo|Northern': 7,
+  },
+  'Custom House': {
+    'DLR|Elizabeth': 2,
+  },
+  'Ealing Broadway': {
+    'Central|District': 4,
+    'Central|Elizabeth': 3,
+    'District|Elizabeth': 3,
   },
   "Earl's Court": {
     'District|Piccadilly': 3,
+  },
+  'Eastcote': {
+    'Metropolitan|Piccadilly': 4,
   },
   'Elephant & Castle': {
     'Bakerloo|Northern': 2,
   },
   'Embankment': {
-    'Bakerloo|Circle': 6,
-    'Bakerloo|District': 6,
-    'Bakerloo|Northern': 4,
-    'Circle|District': 1,
+    'Bakerloo|Circle': 5,
+    'Bakerloo|District': 5,
+    'Bakerloo|Northern': 5,
+    'Circle|District': 4,
     'Circle|Northern': 5,
     'District|Northern': 5,
   },
+  'Euston': {
+    'Northern|Overground': 10,
+    'Northern|Victoria': 5,
+    'Overground|Victoria': 9,
+  },
+  'Euston Square': {
+    'Circle|Hammersmith & City': 2,
+    'Circle|Metropolitan': 2,
+    'Hammersmith & City|Metropolitan': 2,
+  },
   'Farringdon': {
     'Circle|Elizabeth': 4,
-    'Circle|Hammersmith & City': 1,
-    'Circle|Metropolitan': 1,
+    'Circle|Hammersmith & City': 4,
+    'Circle|Metropolitan': 4,
     'Elizabeth|Hammersmith & City': 4,
     'Elizabeth|Metropolitan': 4,
-    'Hammersmith & City|Metropolitan': 1,
+    'Hammersmith & City|Metropolitan': 4,
+  },
+  'Finchley Road': {
+    'Jubilee|Metropolitan': 3,
   },
   'Finsbury Park': {
-    'Piccadilly|Victoria': 1,
-  },
-  'Green Park': {
-    'Jubilee|Piccadilly': 4,
-    'Jubilee|Victoria': 7,
     'Piccadilly|Victoria': 4,
   },
+  'Gloucester Road': {
+    'Circle|District': 4,
+    'Circle|Piccadilly': 7,
+    'District|Piccadilly': 7,
+  },
+  'Goldhawk Road': {
+    'Circle|Hammersmith & City': 2,
+  },
+  'Great Portland Street': {
+    'Circle|Hammersmith & City': 4,
+    'Circle|Metropolitan': 4,
+    'Hammersmith & City|Metropolitan': 4,
+  },
+  'Green Park': {
+    'Jubilee|Piccadilly': 6,
+    'Jubilee|Victoria': 5,
+    'Piccadilly|Victoria': 4,
+  },
+  'Gunnersbury': {
+    'District|Overground': 4,
+  },
   'Hammersmith': {
-    'Circle|District': 1,
-    'Circle|Hammersmith & City': 1,
-    'Circle|Piccadilly': 1,
-    'District|Hammersmith & City': 1,
-    'District|Piccadilly': 1,
-    'Hammersmith & City|Piccadilly': 1,
+    'District|Piccadilly': 4,
+  },
+  'Harlesden': {
+    'Bakerloo|Overground': 5,
+  },
+  'Harrow & Wealdstone': {
+    'Bakerloo|Overground': 5,
+  },
+  'High Street Kensington': {
+    'Circle|District': 4,
+  },
+  'Highbury & Islington': {
+    'Overground|Victoria': 6,
+  },
+  'Hillingdon': {
+    'Metropolitan|Piccadilly': 4,
+  },
+  'Holborn': {
+    'Central|Piccadilly': 6,
+  },
+  'Ickenham': {
+    'Metropolitan|Piccadilly': 4,
+  },
+  'Kensal Green': {
+    'Bakerloo|Overground': 5,
+  },
+  'Kenton': {
+    'Bakerloo|Overground': 5,
+  },
+  'Kew Gardens': {
+    'District|Overground': 5,
   },
   'Kings Cross St. Pancras': {
+    'Circle|Hammersmith & City': 2,
     'Circle|Metropolitan': 2,
-    'Circle|Northern': 6,
-    'Circle|Piccadilly': 6,
-    'Circle|Victoria': 6,
-    'Metropolitan|Northern': 6,
-    'Metropolitan|Piccadilly': 6,
-    'Metropolitan|Victoria': 6,
+    'Circle|Northern': 8,
+    'Circle|Piccadilly': 5,
+    'Circle|Victoria': 5,
+    'Hammersmith & City|Metropolitan': 2,
+    'Hammersmith & City|Northern': 8,
+    'Hammersmith & City|Piccadilly': 5,
+    'Hammersmith & City|Victoria': 5,
+    'Metropolitan|Northern': 8,
+    'Metropolitan|Piccadilly': 5,
+    'Metropolitan|Victoria': 5,
     'Northern|Piccadilly': 3,
-    'Northern|Victoria': 7,
-    'Piccadilly|Victoria': 5,
+    'Northern|Victoria': 5,
+    'Piccadilly|Victoria': 2,
+  },
+  'Ladbroke Grove': {
+    'Circle|Hammersmith & City': 4,
+  },
+  'Latimer Road': {
+    'Circle|Hammersmith & City': 4,
+  },
+  'Leicester Square': {
+    'Northern|Piccadilly': 4,
   },
   'Liverpool Street': {
-    'Central|Circle': 3,
-    'Central|Hammersmith & City': 3,
-    'Central|Metropolitan': 3,
-    'Circle|Hammersmith & City': 1,
-    'Circle|Metropolitan': 1,
-    'Hammersmith & City|Metropolitan': 1,
+    'Central|Circle': 6,
+    'Central|Elizabeth': 3,
+    'Central|Hammersmith & City': 6,
+    'Central|Metropolitan': 6,
+    'Central|Overground': 5,
+    'Circle|Elizabeth': 4,
+    'Circle|Hammersmith & City': 4,
+    'Circle|Metropolitan': 4,
+    'Circle|Overground': 4,
+    'Elizabeth|Hammersmith & City': 4,
+    'Elizabeth|Metropolitan': 4,
+    'Elizabeth|Overground': 5,
+    'Hammersmith & City|Metropolitan': 4,
+    'Hammersmith & City|Overground': 4,
+    'Metropolitan|Overground': 4,
   },
   'London Bridge': {
     'Jubilee|Northern': 6,
   },
+  'Mansion House': {
+    'Circle|District': 4,
+  },
+  'Mile End': {
+    'Central|District': 3,
+    'Central|Hammersmith & City': 3,
+    'District|Hammersmith & City': 3,
+  },
   'Monument': {
-    'Circle|District': 1,
+    'Central|Circle': 7,
+    'Central|DLR': 3,
+    'Central|District': 7,
+    'Central|Northern': 3,
+    'Central|Waterloo & City': 4,
+    'Circle|DLR': 4,
+    'Circle|District': 4,
+    'Circle|Northern': 4,
+    'Circle|Waterloo & City': 10,
+    'DLR|District': 4,
+    'DLR|Northern': 3,
+    'DLR|Waterloo & City': 5,
+    'District|Northern': 4,
+    'District|Waterloo & City': 10,
+    'Northern|Waterloo & City': 6,
   },
   'Moorgate': {
-    'Circle|Hammersmith & City': 1,
-    'Circle|Metropolitan': 2,
-    'Circle|Northern': 5,
-    'Hammersmith & City|Metropolitan': 1,
-    'Hammersmith & City|Northern': 5,
-    'Metropolitan|Northern': 5,
+    'Circle|Hammersmith & City': 4,
+    'Circle|Metropolitan': 4,
+    'Circle|Northern': 7,
+    'Hammersmith & City|Metropolitan': 4,
+    'Hammersmith & City|Northern': 7,
+    'Metropolitan|Northern': 7,
+  },
+  'North Wembley': {
+    'Bakerloo|Overground': 5,
+  },
+  'Notting Hill Gate': {
+    'Central|Circle': 4,
+    'Central|District': 4,
+    'Circle|District': 4,
   },
   'Oxford Circus': {
     'Bakerloo|Central': 4,
-    'Bakerloo|Victoria': 2,
+    'Bakerloo|Victoria': 4,
     'Central|Victoria': 4,
   },
   'Paddington': {
-    'Bakerloo|Circle': 10,
-    'Bakerloo|District': 10,
-    'Bakerloo|Elizabeth': 10,
-    'Bakerloo|Hammersmith & City': 10,
-    'Circle|District': 1,
-    'Circle|Elizabeth': 5,
-    'Circle|Hammersmith & City': 1,
-    'District|Elizabeth': 5,
-    'District|Hammersmith & City': 1,
-    'Elizabeth|Hammersmith & City': 5,
+    'Bakerloo|Circle': 7,
+    'Bakerloo|District': 7,
+    'Bakerloo|Elizabeth': 4,
+    'Bakerloo|Hammersmith & City': 15,
+    'Circle|District': 4,
+    'Circle|Elizabeth': 4,
+    'Circle|Hammersmith & City': 13,
+    'District|Elizabeth': 4,
+    'District|Hammersmith & City': 13,
+    'Elizabeth|Hammersmith & City': 6,
+  },
+  'Piccadilly Circus': {
+    'Bakerloo|Piccadilly': 3,
+  },
+  "Queen's Park": {
+    'Bakerloo|Overground': 5,
+  },
+  'Rayners Lane': {
+    'Metropolitan|Piccadilly': 4,
+  },
+  'Richmond': {
+    'District|Overground': 4,
+  },
+  'Romford': {
+    'Elizabeth|Overground': 3,
+  },
+  'Royal Oak': {
+    'Circle|Hammersmith & City': 2,
+  },
+  'Ruislip': {
+    'Metropolitan|Piccadilly': 3,
+  },
+  'Ruislip Manor': {
+    'Metropolitan|Piccadilly': 4,
+  },
+  "Shepherd's Bush Market": {
+    'Circle|Hammersmith & City': 4,
+  },
+  'Sloane Square': {
+    'Circle|District': 5,
+  },
+  'South Kensington': {
+    'Circle|District': 2,
+    'Circle|Piccadilly': 4,
+    'District|Piccadilly': 4,
+  },
+  'South Kenton': {
+    'Bakerloo|Overground': 2,
+  },
+  "St. James's Park": {
+    'Circle|District': 4,
+  },
+  'Stepney Green': {
+    'District|Hammersmith & City': 4,
   },
   'Stockwell': {
-    'Northern|Victoria': 2,
+    'Northern|Victoria': 3,
+  },
+  'Stonebridge Park': {
+    'Bakerloo|Overground': 4,
   },
   'Stratford': {
-    'Central|DLR': 4,
-    'Central|Jubilee': 4,
-    'DLR|Jubilee': 4,
+    'Central|DLR': 3,
+    'Central|Elizabeth': 3,
+    'Central|Jubilee': 3,
+    'Central|Overground': 5,
+    'DLR|Elizabeth': 4,
+    'DLR|Jubilee': 3,
+    'DLR|Overground': 6,
+    'Elizabeth|Jubilee': 4,
+    'Elizabeth|Overground': 3,
+    'Jubilee|Overground': 5,
+  },
+  'Temple': {
+    'Circle|District': 4,
+  },
+  'Tottenham Court Road': {
+    'Central|Elizabeth': 5,
+    'Central|Northern': 4,
+    'Elizabeth|Northern': 2,
+  },
+  'Tower Hill': {
+    'Circle|District': 2,
+  },
+  'Uxbridge': {
+    'Metropolitan|Piccadilly': 1,
   },
   'Victoria': {
-    'Circle|District': 1,
-    'Circle|Victoria': 3,
-    'District|Victoria': 3,
+    'Circle|District': 2,
+    'Circle|Victoria': 4,
+    'District|Victoria': 4,
+  },
+  'Warren Street': {
+    'Northern|Victoria': 6,
   },
   'Waterloo': {
     'Bakerloo|Jubilee': 6,
     'Bakerloo|Northern': 4,
     'Bakerloo|Waterloo & City': 6,
     'Jubilee|Northern': 6,
-    'Jubilee|Waterloo & City': 8,
-    'Northern|Waterloo & City': 6,
+    'Jubilee|Waterloo & City': 7,
+    'Northern|Waterloo & City': 5,
+  },
+  'Watford High Street': {
+    'Metropolitan|Overground': 4,
+  },
+  'Wembley Central': {
+    'Bakerloo|Overground': 5,
   },
   'Wembley Park': {
-    'Jubilee|Metropolitan': 3,
+    'Jubilee|Metropolitan': 4,
+  },
+  'West Brompton': {
+    'District|Overground': 5,
+  },
+  'West Ham': {
+    'District|Hammersmith & City': 5,
+    'District|Jubilee': 5,
+    'Hammersmith & City|Jubilee': 5,
+  },
+  'West Hampstead': {
+    'Jubilee|Overground': 4,
+  },
+  'Westbourne Park': {
+    'Circle|Hammersmith & City': 4,
   },
   'Westminster': {
-    'Circle|District': 1,
-    'Circle|Jubilee': 4,
-    'District|Jubilee': 4,
+    'Circle|District': 4,
+    'Circle|Jubilee': 6,
+    'District|Jubilee': 6,
+  },
+  'Whitechapel': {
+    'District|Elizabeth': 4,
+    'District|Hammersmith & City': 2,
+    'District|Overground': 5,
+    'Elizabeth|Hammersmith & City': 4,
+    'Elizabeth|Overground': 3,
+    'Hammersmith & City|Overground': 5,
+  },
+  'Willesden Junction': {
+    'Bakerloo|Overground': 4,
+  },
+  'Wood Lane': {
+    'Circle|Hammersmith & City': 2,
+  },
+  'Woolwich Arsenal': {
+    'DLR|Elizabeth': 5,
   },
 };
 
@@ -1815,13 +2093,18 @@ function buildGraph() {
     }
   }
 
-  // Bank / Monument cross-platform walk (same station complex, ~3 min)
-  const BANK_MONUMENT_WALK = 3;
+  // Bank / Monument cross-complex walk. Per-pair times come from
+  // INTERCHANGE_MINS (TfL FOI publishes these as "Bank, including Monument
+  // interchange values"). Fall back to interchangeTime() default if no
+  // specific entry exists.
   function addCrossWalk(fromStn, toStn) {
     if (!graph[fromStn] || !graph[toStn]) return;
     for (const fromLine of Object.keys(graph[fromStn])) {
       for (const toLine of Object.keys(graph[toStn])) {
-        graph[fromStn][fromLine].push({station:toStn, line:toLine, cost:BANK_MONUMENT_WALK, type:'interchange'});
+        // Cross-complex pairs are duplicated under both Bank and Monument
+        // in INTERCHANGE_MINS, so this lookup works either direction.
+        const cost = interchangeTime(fromStn, fromLine, toLine);
+        graph[fromStn][fromLine].push({station:toStn, line:toLine, cost, type:'interchange'});
       }
     }
   }
@@ -1963,7 +2246,7 @@ function travelTimeOnLine(from, to, displayLineName) {
 // Converts userRoute into legs matching the optimal route format,
 // plus interchange segments, and a total. Returns {legs, interchanges, totalMins}
 const BANK_MONUMENT_PAIR = new Set(['Bank', 'Monument']);
-const BANK_MONUMENT_WALK_MINS = 3;
+const BANK_MONUMENT_WALK_MINS = 3;  // DEPRECATED — kept for legacy reference; cross-walks now use interchangeTime()
 
 function buildUserLegs(start, route) {
   if (!route.length) return {legs:[], interchanges:[], totalMins:0};
@@ -2002,12 +2285,19 @@ function buildUserLegs(start, route) {
         legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
       }
       if (isBankMonumentCross) {
-        interchanges.push({at: `${from}↔${to}`, mins: BANK_MONUMENT_WALK_MINS});
-        totalMins += BANK_MONUMENT_WALK_MINS;
+        // Bank↔Monument as an explicit walk leg: time = interchange between
+        // the line we WERE on and the line we're ABOUT to take, looked up at
+        // the from-station (data is duplicated under both Bank & Monument).
+        const nextLine = lines[i + 1] || curLine;
+        const xwMins = interchangeTime(from, legLine, nextLine);
+        interchanges.push({at: `${from}↔${to}`, mins: xwMins});
+        totalMins += xwMins;
       } else if (needsImplicitCrossWalk) {
-        // Cross-walk to partner station covers the interchange — one entry only
-        interchanges.push({at: `${from}↔${partner}`, mins: BANK_MONUMENT_WALK_MINS});
-        totalMins += BANK_MONUMENT_WALK_MINS;
+        // Cross-walk to partner station covers the interchange — one entry only.
+        // Use interchangeTime for the actual line pair, not a flat constant.
+        const xwMins = interchangeTime(from, legLine, curLine);
+        interchanges.push({at: `${from}↔${partner}`, mins: xwMins});
+        totalMins += xwMins;
       } else {
         const ic = interchangeTime(from, legLine, curLine);
         interchanges.push({at: from, mins: ic});
@@ -2695,7 +2985,7 @@ function submitRoute() {
       stationsForDisplayLine(nextLeg.line).includes(partner);
     return {
       at: isCrossWalk ? `${at}↔${partner}` : at,
-      mins: isCrossWalk ? 3 : interchangeTime(at, l.line, nextLeg.line),
+      mins: interchangeTime(at, l.line, nextLeg.line),
     };
   });
   const optLegsHtml = renderRouteLegsHtml(puzzleData.optimal.legs, optInterchanges);
