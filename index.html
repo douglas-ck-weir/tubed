@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#f0f4f8;--surf:#ffffff;--brd:#dde3ec;--red:#dc2626;--navy:#1e40af;--yellow:#1d4ed8;--txt:#0f172a;--muted:#64748b;}
+:root{--bg:#f0f4f8;--surf:#ffffff;--brd:#dde3ec;--red:#dc2626;--navy:#1e40af;--yellow:#1d4ed8;--txt:#0f172a;--muted:#64748b;--walk:#0f172a;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
 .wrap{max-width:540px;margin:0 auto;padding:16px 16px 40px;}
 .hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -196,6 +196,15 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 .nb-btn-add{background:var(--navy);color:white;width:100%;padding:10px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;letter-spacing:0.3px;touch-action:manipulation;}
 .nb-btn-add:hover{background:#1e3a8a;}
 .nb-step-error{background:#fef2f2;border:0.5px solid #fca5a5;border-radius:8px;padding:9px 12px;font-size:13px;color:#dc2626;margin-top:7px;line-height:1.5;}
+/* OSI walk styling — uncoloured pill, dashed connector, white-with-border dot.
+   Deliberately distinct from any line colour so future TfL line additions
+   can never clash. The --walk colour variable is also used by JS render
+   paths (route map, results display) — change it there too if you ever
+   tweak the colour. See OSI_PAIRS for the data. */
+.nb-stop-tag-walk{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:0 7px;border-radius:20px;font-weight:500;letter-spacing:0.3px;margin-top:2px;background:#fff;color:var(--walk);border:1px solid var(--walk);line-height:14px;}
+.nb-stop-tag-walk svg{width:9px;height:9px;flex-shrink:0;}
+.nb-stop-dot-walk{background:#fff;border:2px solid var(--walk);}
+.nb-conn-line-dashed{width:1px;flex:none;align-self:stretch;background:repeating-linear-gradient(to bottom,var(--walk) 0,var(--walk) 3px,transparent 3px,transparent 6px);}
 </style>
 <script data-goatcounter="https://playtubed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -790,6 +799,79 @@ function interchangeTime(stn, fromLine, toLine) {
     return Math.max(...Object.values(entry));
   }
   return Math.max(...Object.values(entry));
+}
+
+// ── Out-of-Station Interchanges (OSIs) ───────────────────────────────────────
+// Walking transfers between two distinct stations that count as a single
+// journey for fare purposes. In Tubed they're modelled as a "Walk" line,
+// available in the line dropdown only when the previous station and the
+// just-picked station form an OSI pair.
+//
+// Times reflect realistic platform-to-platform transfer (the OSI time IS
+// the total transfer cost — no INTERCHANGE_MINS stacking applies).
+//
+// Bank ↔ Monument is intentionally NOT here: it remains modelled by the
+// existing addCrossWalk() mechanism with per-line-pair INTERCHANGE_MINS.
+// See the comment above addCrossWalk() in buildGraph() for the rationale.
+//
+// Source: TfL official OSI list (filtered to pairs where both stations
+// exist as distinct nodes in NETWORK and the walk is genuinely a player
+// option). All pairs canonicalised so a < b alphabetically.
+//
+// Pair convention: a, b are ordered alphabetically. aToB / bToA are the
+// walk times in minutes. Times are currently symmetric (aToB === bToA);
+// they're stored separately so future asymmetric pairs (e.g. one-way
+// step-free routes) can be added without changing call sites.
+const OSI_PAIRS = [
+  {a:'Aldgate',                   b:'Aldgate East',                aToB: 3, bToA: 3},
+  {a:'Archway',                   b:'Upper Holloway',              aToB: 9, bToA: 9},
+  {a:'Bank',                      b:'Cannon Street',               aToB: 3, bToA: 3},
+  {a:'Bayswater',                 b:'Queensway',                   aToB: 3, bToA: 3},
+  {a:'Bond Street',               b:'Oxford Circus',               aToB: 6, bToA: 6},
+  {a:'Camden Road',               b:'Camden Town',                 aToB: 5, bToA: 5},
+  {a:'Clapham High Street',       b:'Clapham North',               aToB: 3, bToA: 3},
+  {a:'Euston',                    b:'Euston Square',               aToB: 5, bToA: 5},
+  {a:'Euston Square',             b:'Warren Street',               aToB: 5, bToA: 5},
+  {a:'Finchley Road',             b:'Finchley Road & Frognal',     aToB: 4, bToA: 4},
+  {a:'White City',                b:'Wood Lane',                   aToB: 4, bToA: 4},
+  {a:'Canary Wharf',              b:'Heron Quays',                 aToB: 3, bToA: 3},
+  {a:'Canary Wharf',              b:'Poplar',                      aToB: 8, bToA: 8},
+  {a:'Shadwell (Overground)',     b:'Shadwell (Underground)',      aToB: 2, bToA: 2},
+  {a:'Canary Wharf',              b:'West India Quay',             aToB: 5, bToA: 5},
+  {a:'Dalston Junction',          b:'Dalston Kingsland',           aToB: 4, bToA: 4},
+  {a:'New Cross',                 b:'New Cross Gate',              aToB: 9, bToA: 9},
+  {a:'Hackney Central',           b:'Hackney Downs',               aToB: 5, bToA: 5},
+  {a:'Forest Gate',               b:'Wanstead Park',               aToB: 6, bToA: 6},
+  {a:'Manor Park',                b:'Woodgrange Park',             aToB: 7, bToA: 7},
+  {a:'Walthamstow Central',       b:'Walthamstow Queens Road',     aToB: 5, bToA: 5},
+  {a:'Liverpool Street',          b:'Moorgate',                    aToB: 5, bToA: 5},
+  {a:'Embankment',                b:'Waterloo',                    aToB: 8, bToA: 8},
+  {a:'Lancaster Gate',            b:'Paddington',                  aToB: 6, bToA: 6},
+  {a:'Bank',                      b:'Liverpool Street',            aToB:11, bToA:11},
+  {a:'Blackfriars',               b:'Southwark',                   aToB:13, bToA:13},
+];
+
+// "A|B" → mins (directional). Populated bidirectionally so isOsi/osiTime
+// work regardless of which station the caller has on the "from" side.
+const OSI_LOOKUP = (() => {
+  const m = new Map();
+  for (const p of OSI_PAIRS) {
+    m.set(`${p.a}|${p.b}`, p.aToB);
+    m.set(`${p.b}|${p.a}`, p.bToA);
+  }
+  return m;
+})();
+
+function isOsi(fromStn, toStn) { return OSI_LOOKUP.has(`${fromStn}|${toStn}`); }
+function osiTime(fromStn, toStn) { return OSI_LOOKUP.get(`${fromStn}|${toStn}`) ?? null; }
+
+// Single source of truth for the walk colour. Reads the --walk CSS variable
+// at call time so JS-rendered elements (map polylines, route-leg dots, etc.)
+// stay in sync if the variable is ever updated. Falls back to the literal
+// value if the document isn't ready yet (e.g. in tests).
+function walkColor() {
+  if (typeof document === 'undefined' || !document.documentElement) return '#0f172a';
+  return getComputedStyle(document.documentElement).getPropertyValue('--walk').trim() || '#0f172a';
 }
 
 // ── Station coordinates [lat, lng] ────────────────────────────────────────────
@@ -2058,6 +2140,24 @@ const ALL_STATIONS = [...new Set(Object.values(NETWORK).flat())]
   .filter(s => COORDS[s])
   .sort();
 
+// Validate OSI data integrity at startup. Catches typos in OSI_PAIRS that
+// would otherwise silently disable the OSI (lookup would never match a
+// real station). Logs to console.error rather than throwing — the game
+// keeps working, but the developer sees the problem next time they open
+// dev tools. Production users see no failure.
+(function validateOsiData() {
+  const networkStations = new Set(Object.values(NETWORK).flat());
+  const errors = [];
+  for (const p of OSI_PAIRS) {
+    if (!networkStations.has(p.a)) errors.push(`OSI_PAIRS: '${p.a}' not in NETWORK (paired with '${p.b}')`);
+    if (!networkStations.has(p.b)) errors.push(`OSI_PAIRS: '${p.b}' not in NETWORK (paired with '${p.a}')`);
+    if (p.a === p.b)               errors.push(`OSI_PAIRS: self-pair '${p.a}↔${p.b}'`);
+    if (typeof p.aToB !== 'number' || p.aToB <= 0) errors.push(`OSI_PAIRS: invalid aToB for ${p.a}↔${p.b}`);
+    if (typeof p.bToA !== 'number' || p.bToA <= 0) errors.push(`OSI_PAIRS: invalid bToA for ${p.a}↔${p.b}`);
+  }
+  if (errors.length) console.error(`[OSI validation] ${errors.length} issue(s):\n  ` + errors.join('\n  '));
+})();
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // PUZZLE STATIONS
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2162,6 +2262,25 @@ function buildGraph() {
     }
   }
 
+  // ── Cross-station walks: TWO MECHANISMS, ON PURPOSE ──────────────────
+  //
+  // Bank ↔ Monument uses the addCrossWalk path below — NOT the OSI system.
+  // Reasons:
+  //   1. Per-line-pair accuracy: Northern→DLR at Bank is much shorter
+  //      than Central→District at Monument. INTERCHANGE_MINS captures
+  //      that detail; a single OSI value would lose it.
+  //   2. Player perception: the complex is signed as one station inside
+  //      the gateline. Showing it as a "Walk" leg in the route would
+  //      surprise players who treat Bank/Monument as one place.
+  //
+  // All other inter-station walks use OSI_PAIRS + addOsiWalkEdges below,
+  // because per-line-pair timing data isn't available for those and
+  // players genuinely think of them as separate stations.
+  //
+  // If you ever need to touch cross-station walking logic, REMEMBER both
+  // mechanisms exist. They diverge intentionally; the decision is
+  // documented above each.
+  //
   // Bank / Monument cross-complex walk. Per-pair times come from
   // INTERCHANGE_MINS (TfL FOI publishes these as "Bank, including Monument
   // interchange values"). Fall back to interchangeTime() default if no
@@ -2179,6 +2298,49 @@ function buildGraph() {
   }
   addCrossWalk('Bank', 'Monument');
   addCrossWalk('Monument', 'Bank');
+
+  // OSI walk edges. For each OSI pair we add a directional edge from each
+  // line at A → 'Walk' line at B, and vice versa. Modelling Walk as its own
+  // line means the dijkstra pathfinder treats walking like any other line:
+  // taking the walk costs `cost` minutes, and switching from a tube line to
+  // 'Walk' (or vice versa) goes through the normal line-change machinery.
+  //
+  // Important: the OSI cost IS the full transfer time (platform-to-platform).
+  // We must NOT then add an extra interchange penalty when the walker
+  // arrives at B and switches to a tube line — see the addOsiWalkEdges
+  // function below for how we suppress that double-count.
+  function addOsiWalkEdges(fromStn, toStn, cost) {
+    if (!graph[fromStn] || !graph[toStn]) return;
+    function ensure(s, l) {
+      if (!graph[s]) graph[s] = {};
+      if (!graph[s][l]) graph[s][l] = [];
+    }
+    ensure(fromStn, 'Walk');
+    // From each existing line at fromStn, the walker can transition into
+    // the Walk "line" at fromStn for free (this is the same machinery as
+    // any other line change at the station). Then the Walk line travels
+    // to toStn at the OSI cost. We model this as: from each line at
+    // fromStn add a direct edge → Walk@toStn with the OSI cost. This
+    // makes Walk "absorb" both the line-change event and the walking
+    // time into a single edge, which is correct because the OSI time
+    // already includes platform-to-platform faff.
+    for (const fromLine of Object.keys(graph[fromStn])) {
+      if (fromLine === 'Walk') continue;
+      graph[fromStn][fromLine].push({station: toStn, line: 'Walk', cost, type: 'walk'});
+    }
+    // Once on the Walk line at toStn, transitioning to any tube line at
+    // toStn is a free 0-cost edge — the OSI time already covered the
+    // whole transfer. This suppresses INTERCHANGE_MINS double-counting.
+    ensure(toStn, 'Walk');
+    for (const toLine of Object.keys(graph[toStn])) {
+      if (toLine === 'Walk') continue;
+      graph[toStn]['Walk'].push({station: toStn, line: toLine, cost: 0, type: 'interchange'});
+    }
+  }
+  for (const p of OSI_PAIRS) {
+    addOsiWalkEdges(p.a, p.b, p.aToB);
+    addOsiWalkEdges(p.b, p.a, p.bToA);
+  }
 
   return graph;
 }
@@ -2326,6 +2488,13 @@ function buildUserLegs(start, route) {
   const lines    = route.map(s => s.line);
 
   const legs = [];
+  // Interchanges are a parallel array to legs: interchanges[i] (if present)
+  // renders AFTER legs[i] in the output. We push legs as they're flushed and
+  // pad interchanges with `null` until we want to attach one — that way a
+  // Walk leg (which adds a leg but no interchange) can't shift the alignment
+  // of a later interchange. The previous implementation pushed to a separate
+  // interchanges array in tube-transition order, which silently broke when
+  // Walk legs were interleaved.
   const interchanges = [];
   let totalMins = 0;
 
@@ -2333,17 +2502,88 @@ function buildUserLegs(start, route) {
   let legLine = lines[0];
   let legMins = 0;
 
+  // Helper: push a leg AND simultaneously add a placeholder for its
+  // interchange slot. Using this everywhere keeps the two arrays in lock-step.
+  function pushLeg(leg) {
+    legs.push(leg);
+    interchanges.push(null);
+  }
+  // Helper: attach an interchange to the most recently pushed leg.
+  function attachInterchange(entry) {
+    if (legs.length === 0) return; // can't happen in practice
+    interchanges[legs.length - 1] = entry;
+  }
+
+  // Computes the interchange entry to insert at a line-change boundary.
+  // Returns {entry, mins} on a real interchange, or null if no entry should
+  // be added (e.g. transitioning out of a Walk leg, where the OSI time has
+  // already covered the platform-to-platform transfer cost).
+  //
+  // Centralising the skip-rule here means future interchange categories
+  // can't accidentally bypass it. Every line-change goes through this
+  // function. Keep it that way.
+  function computeInterchange(from, prevLine, nextLine, opts) {
+    // Walk → tube transition: OSI time already paid for it. No entry.
+    if (prevLine === 'Walk') return null;
+    // tube → Walk transition: the Walk leg itself carries the cost. No entry.
+    // (Defensive — currently this code path isn't hit because Walk legs are
+    // handled by the early-return branch above the line-change block, but
+    // belt-and-braces if anyone changes that.)
+    if (nextLine === 'Walk') return null;
+
+    if (opts.isBankMonumentCross) {
+      const xwMins = interchangeTime(from, prevLine, opts.nextLineForBmCross);
+      return {entry: {at: `${from}↔${opts.to}`, mins: xwMins}, mins: xwMins};
+    }
+    if (opts.needsImplicitCrossWalk) {
+      const xwMins = interchangeTime(from, prevLine, nextLine);
+      return {entry: {at: `${from}↔${opts.partner}`, mins: xwMins}, mins: xwMins};
+    }
+    const ic = interchangeTime(from, prevLine, nextLine);
+    return {entry: {at: from, mins: ic}, mins: ic};
+  }
+
   for (let i = 0; i < lines.length; i++) {
     const curLine = lines[i];
     const from = stations[i];
     const to   = stations[i + 1];
 
-    // Explicit Bank↔Monument cross-walk step
+    // ── Walk leg (OSI) ────────────────────────────────────────────────
+    // Flush any pending tube leg, push the walk as its own leg. No
+    // interchange row is added — the OSI time already includes platform-
+    // to-platform faff.
+    //
+    // legLine stays as 'Walk' so the next iteration's computeInterchange
+    // call sees prevLine='Walk' and returns null (no double-count).
+    if (curLine === 'Walk') {
+      if (legMins > 0) {
+        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins});
+      }
+      let walkMins = osiTime(from, to);
+      if (walkMins === null) {
+        // Should never happen — validateStep blocks Walk legs that aren't
+        // OSI pairs. If it does, log loudly so the developer notices, and
+        // fall back to a sensible default so the player's route still
+        // completes (no user-facing failure).
+        console.error(`[OSI] osiTime(${from}, ${to}) returned null inside buildUserLegs. ` +
+                      `validateStep should have prevented this. Falling back to 5 min.`);
+        walkMins = 5;
+      }
+      pushLeg({from, to, line: 'Walk', mins: walkMins});
+      totalMins += walkMins;
+      legFrom = to;
+      legLine = 'Walk';
+      legMins = 0;
+      continue;
+    }
+
+    // ── Bank/Monument cross-walk + line-change handling ────────────────
     const isBankMonumentCross = BANK_MONUMENT_PAIR.has(from) && BANK_MONUMENT_PAIR.has(to) && from !== to;
     const isLineChange = i > 0 && curLine !== lines[i - 1];
 
-    // Implicit cross-walk: player is at Bank/Monument but the chosen line only
-    // serves the partner station (e.g. at Bank, taking District which serves Monument)
+    // Implicit cross-walk: player is at Bank/Monument but the chosen line
+    // only serves the partner station (e.g. at Bank, taking District which
+    // serves Monument).
     const partner = BM_PARTNER[from];
     const needsImplicitCrossWalk = partner &&
       !stationsForDisplayLine(curLine).includes(from) &&
@@ -2351,28 +2591,30 @@ function buildUserLegs(start, route) {
 
     if (isLineChange || isBankMonumentCross || needsImplicitCrossWalk) {
       if (legMins > 0) {
-        legs.push({from: legFrom, to: from, line: legLine, mins: legMins});
+        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins});
       }
-      if (isBankMonumentCross) {
-        // Bank↔Monument as an explicit walk leg: time = interchange between
-        // the line we WERE on and the line we're ABOUT to take, looked up at
-        // the from-station (data is duplicated under both Bank & Monument).
-        const nextLine = lines[i + 1] || curLine;
-        const xwMins = interchangeTime(from, legLine, nextLine);
-        interchanges.push({at: `${from}↔${to}`, mins: xwMins});
-        totalMins += xwMins;
-      } else if (needsImplicitCrossWalk) {
-        // Cross-walk to partner station covers the interchange — one entry only.
-        // Use interchangeTime for the actual line pair, not a flat constant.
-        const xwMins = interchangeTime(from, legLine, curLine);
-        interchanges.push({at: `${from}↔${partner}`, mins: xwMins});
-        totalMins += xwMins;
-      } else {
-        const ic = interchangeTime(from, legLine, curLine);
-        interchanges.push({at: from, mins: ic});
-        totalMins += ic;
+      // For B/M cross-walks, the interchange time is computed against the
+      // line we'll *next* travel on, not the current line (because the
+      // current line IS the cross-walk). lines[i+1] could legitimately be
+      // 'Walk' here in a contrived route, in which case interchangeTime
+      // would fall back to "worst case at station". Guard by passing
+      // curLine instead — if there's no real "next tube line", curLine
+      // is at least one of the user's actual line choices.
+      const nextLineForBmCross = (lines[i + 1] && lines[i + 1] !== 'Walk') ? lines[i + 1] : curLine;
+      const ic = computeInterchange(from, legLine, curLine, {
+        isBankMonumentCross,
+        needsImplicitCrossWalk,
+        partner,
+        to,
+        nextLineForBmCross,
+      });
+      if (ic) {
+        // Attach to whichever leg was just flushed above. The interchange
+        // appears AFTER that leg in the rendered output.
+        attachInterchange(ic.entry);
+        totalMins += ic.mins;
       }
-      // Update legFrom: if implicit cross-walk, we're now at the partner station
+      // Update legFrom: if implicit cross-walk, we're now at the partner
       legFrom = (isBankMonumentCross || needsImplicitCrossWalk) ? (partner || to) : from;
       legLine = curLine;
       legMins = 0;
@@ -2387,7 +2629,11 @@ function buildUserLegs(start, route) {
     legMins += t;
     totalMins += t;
   }
-  legs.push({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
+  // Final flush of the in-progress leg. Skip if the last leg was a Walk
+  // (already pushed inside the loop with from=to=walk endpoints).
+  if (legLine !== 'Walk' || legMins > 0) {
+    pushLeg({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
+  }
 
   return {legs, interchanges, totalMins};
 }
@@ -2675,11 +2921,27 @@ function nbPickStation(stn) {
   selectedStation = stn;
   const inp = nbGetInput(); if (inp) inp.value = stn;
   nbCloseAc();
-  nbSetLineSelector(stn);
+  // Previous station = puzzle start if no stops yet, otherwise the last
+  // user-added stop. Used by nbSetLineSelector to decide whether the OSI
+  // Walk option is available for this hop.
+  const prevStn = userRoute.length === 0
+    ? puzzleData.start
+    : userRoute[userRoute.length - 1].station;
+  nbSetLineSelector(stn, prevStn);
   const ls = nbGetLineSel(); if (ls) ls.focus();
 }
 
-function nbSetLineSelector(stn) {
+// Populates the line dropdown for the just-picked station `stn`. When a
+// `prevStn` is supplied (the previous station in the route — i.e. the
+// puzzle start, or the last user-added stop), and (prevStn, stn) is an
+// OSI pair, append a 'Walk' option after the tube lines. Walk is added
+// regardless of whether tube lines also connect prev→stn (e.g. Bond
+// Street → Oxford Circus has both Central line AND Walk available).
+//
+// `stn` empty → reset only.
+// `prevStn` undefined → no Walk option (used by callers that don't
+// have route context, e.g. the start/end-line indicators).
+function nbSetLineSelector(stn, prevStn) {
   const sl = nbGetLineSel(); if (!sl) return;
   sl.innerHTML = '<option value="">Choose line...</option>';
   const lines = stn ? linesAtStation(stn) : Object.keys(LINE_COLOURS);
@@ -2687,7 +2949,18 @@ function nbSetLineSelector(stn) {
     const o = document.createElement('option');
     o.value = l; o.textContent = l + ' line'; sl.appendChild(o);
   });
-  if (stn && lines.length === 1) sl.value = lines[0];
+  // OSI walk option — only when prev→stn is in the OSI list.
+  const walkAvailable = stn && prevStn && isOsi(prevStn, stn);
+  if (walkAvailable) {
+    const o = document.createElement('option');
+    o.value = 'Walk'; o.textContent = 'Walk'; sl.appendChild(o);
+  }
+  // Auto-select if only one option (existing single-option behaviour, now
+  // applied across tube + walk choices combined).
+  const totalOptions = lines.length + (walkAvailable ? 1 : 0);
+  if (stn && totalOptions === 1) {
+    sl.value = walkAvailable && lines.length === 0 ? 'Walk' : lines[0];
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2698,11 +2971,25 @@ function nbConnector(color, minH) {
   return `<div class="nb-connector" style="min-height:${minH||14}px;"><div class="nb-conn-track"><div class="nb-conn-line" style="background:${color||'rgba(15,23,42,0.2)'};"></div></div><div style="flex:1;"></div></div>`;
 }
 
+// Dashed connector for OSI walk legs. Visually distinct from any tube-line
+// colour so future line additions can never clash.
+function nbConnectorWalk(minH) {
+  return `<div class="nb-connector" style="min-height:${minH||14}px;"><div class="nb-conn-track"><div class="nb-conn-line-dashed"></div></div><div style="flex:1;"></div></div>`;
+}
+
+// Inline walking-icon SVG. Sized at the call site via the parent's font-size
+// (the SVG itself has no width/height attributes — driven by CSS).
+const WALK_ICON_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7z"/></svg>';
+
 function renderRoute() {
   const container = document.getElementById('route-builder');
   if (!container) return;
 
-  const lastLineColor = userRoute.length ? lineColour(userRoute[userRoute.length-1].line).bg : null;
+  // Used by the "next" connector — the line below the last stop. For a Walk
+  // leg this would be null (handled by the dashed-connector branch later).
+  const lastStep = userRoute.length ? userRoute[userRoute.length-1] : null;
+  const lastIsWalk = lastStep && lastStep.line === 'Walk';
+  const lastLineColor = lastStep && !lastIsWalk ? lineColour(lastStep.line).bg : null;
   let h = '';
 
   // ── Start node ──
@@ -2713,25 +3000,45 @@ function renderRoute() {
 
   // ── Added stops ──
   userRoute.forEach((stop, i) => {
-    const lc = lineColour(stop.line);
-    h += nbConnector(lc.bg, 10);
-    h += `<div class="nb-stop-row">
-      <div class="nb-col"><div class="nb-stop-dot" style="background:${lc.bg};outline:1.5px solid ${lc.bg};"></div></div>
-      <div class="nb-stop-content">
-        <div class="nb-stop-inner">
-          <div class="nb-stop-texts">
-            <div class="nb-stop-name">${stop.station}</div>
-            <span class="nb-stop-tag" style="background:${lc.bg};color:${lc.txt};">${stop.line}</span>
+    const isWalk = stop.line === 'Walk';
+    if (isWalk) {
+      // Walk leg — dashed dark connector + uncoloured pill with walking icon.
+      h += nbConnectorWalk(10);
+      h += `<div class="nb-stop-row">
+        <div class="nb-col"><div class="nb-stop-dot nb-stop-dot-walk"></div></div>
+        <div class="nb-stop-content">
+          <div class="nb-stop-inner">
+            <div class="nb-stop-texts">
+              <div class="nb-stop-name">${stop.station}</div>
+              <span class="nb-stop-tag-walk">${WALK_ICON_SVG}Walk</span>
+            </div>
+            <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
           </div>
-          <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
         </div>
-      </div>
-    </div>`;
+      </div>`;
+    } else {
+      const lc = lineColour(stop.line);
+      h += nbConnector(lc.bg, 10);
+      h += `<div class="nb-stop-row">
+        <div class="nb-col"><div class="nb-stop-dot" style="background:${lc.bg};outline:1.5px solid ${lc.bg};"></div></div>
+        <div class="nb-stop-content">
+          <div class="nb-stop-inner">
+            <div class="nb-stop-texts">
+              <div class="nb-stop-name">${stop.station}</div>
+              <span class="nb-stop-tag" style="background:${lc.bg};color:${lc.txt};">${stop.line}</span>
+            </div>
+            <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
+          </div>
+        </div>
+      </div>`;
+    }
   });
 
   // ── Add stop row / inline panel (only when destination not locked) ──
   if (!nbDestLocked) {
-    h += nbConnector(lastLineColor, 10);
+    // Connector below the last stop. Dashed if the last step was a Walk,
+    // otherwise coloured with the last line.
+    h += lastIsWalk ? nbConnectorWalk(10) : nbConnector(lastLineColor, 10);
     if (nbAdding) {
       h += `<div class="nb-add-row">
         <div class="nb-col"><div style="width:18px;height:18px;border-radius:50%;background:#f1f5f9;border:1.5px dashed #94a3b8;display:flex;align-items:center;justify-content:center;font-size:14px;color:#94a3b8;flex-shrink:0;">+</div></div>
@@ -2762,14 +3069,18 @@ function renderRoute() {
       h += nbConnector(null, 14);
     }
   } else {
-    // Destination locked — draw final connector in arrival line colour
-    h += nbConnector(lastLineColor, 10);
+    // Destination locked — final connector matches the arrival line, or
+    // dashed if the destination was reached by walking.
+    h += lastIsWalk ? nbConnectorWalk(10) : nbConnector(lastLineColor, 10);
   }
 
   // ── Destination node ──
-  const destDotColor = nbDestLocked ? lastLineColor : '#0f172a';
-  const destGlow     = nbDestLocked ? `box-shadow:0 0 0 3px ${lastLineColor}33;` : '';
-  const destCheck    = nbDestLocked ? ` <span style="font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;color:${lastLineColor};">✓</span>` : '';
+  // If the destination was reached by walking, the dot/glow/checkmark use
+  // the dark walk colour instead of a tube line colour.
+  const destAccent   = nbDestLocked ? (lastIsWalk ? walkColor() : lastLineColor) : '#0f172a';
+  const destDotColor = nbDestLocked ? destAccent : '#0f172a';
+  const destGlow     = nbDestLocked ? `box-shadow:0 0 0 3px ${destAccent}33;` : '';
+  const destCheck    = nbDestLocked ? ` <span style="font-size:13px;font-family:'DM Sans',sans-serif;font-weight:500;color:${destAccent};">✓</span>` : '';
   h += `<div class="nb-endpoint-row">
     <div class="nb-col"><div class="nb-ep-dot" style="background:${destDotColor};${destGlow}transition:background 0.3s,box-shadow 0.3s;"></div></div>
     <div class="nb-ep-content"><div class="nb-ep-role">Destination</div><div class="nb-ep-name">${puzzleData.end}${destCheck}</div></div>
@@ -2812,6 +3123,20 @@ const _BANK_MONUMENT_SET = new Set(['Bank', 'Monument']);
 const _BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
 
 function validateStep(fromStn, toStn, line) {
+  // Walk leg validation. Walk is only valid between OSI pairs; tube-line
+  // checks below don't apply.
+  if (line === 'Walk') {
+    if (toStn === fromStn) {
+      return {ok: false, error: `You're already at ${toStn}.`};
+    }
+    if (toStn === puzzleData.start) {
+      return {ok: false, error: `That's your start station.`};
+    }
+    if (!isOsi(fromStn, toStn)) {
+      return {ok: false, error: `You can't walk from ${fromStn} to ${toStn} — they're not a recognised walking interchange.`};
+    }
+    return {ok: true};
+  }
   if (!stationsForDisplayLine(line).includes(toStn)) {
     return {ok: false, error: `${toStn} is not on the ${line} line.`};
   }
@@ -2926,15 +3251,26 @@ function addPin(coords, letter, color, tooltip) {
 function updateMap() {
   mapLayers.forEach(l => map.removeLayer(l)); mapLayers = [];
   if (!userRoute.length) return;
+  const wc = walkColor();
   userRoute.forEach((step, i) => {
     const coord = COORDS[step.station]; if (!coord) return;
+    const isWalk = step.line === 'Walk';
     const lc = lineColour(step.line);
     const prevCoord = i === 0 ? COORDS[puzzleData.start] : COORDS[userRoute[i-1].station];
     if (prevCoord) {
-      const pl = L.polyline([prevCoord, coord], {color:lc.bg, weight:5, opacity:0.95});
+      // Walk legs render as a dashed dark line; tube legs as a solid line
+      // in the line's colour.
+      const pl = isWalk
+        ? L.polyline([prevCoord, coord], {color:wc, weight:4, opacity:0.9, dashArray:'4,5'})
+        : L.polyline([prevCoord, coord], {color:lc.bg, weight:5, opacity:0.95});
       pl.addTo(map); mapLayers.push(pl);
     }
-    const icon = L.divIcon({className:'', html:`<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.5);"></div>`, iconSize:[13,13], iconAnchor:[6,6]});
+    // Stop marker. Walk uses a white-with-dark-border dot; tube uses the
+    // line colour.
+    const dotHtml = isWalk
+      ? `<div style="width:13px;height:13px;background:#fff;border-radius:50%;border:2px solid ${wc};box-shadow:0 1px 4px rgba(0,0,0,.5);"></div>`
+      : `<div style="width:13px;height:13px;background:${lc.bg};border-radius:50%;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,.5);"></div>`;
+    const icon = L.divIcon({className:'', html:dotHtml, iconSize:[13,13], iconAnchor:[6,6]});
     const mk = L.marker(coord, {icon}).bindTooltip(`${step.station} · ${step.line}`, {direction:'top'});
     mk.addTo(map); mapLayers.push(mk);
   });
@@ -2952,15 +3288,28 @@ function updateMap() {
 function renderRouteLegsHtml(legs, interchanges) {
   let html = '';
   legs.forEach((l, i) => {
-    const lc = lineColour(l.line);
-    html += `<div class="opt-leg">
-      <div class="opt-dot" style="background:${lc.bg};"></div>
-      <div>
-        ${l.from} → ${l.to}
-        &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>
-        &nbsp;<span style="color:var(--muted);">${l.mins} min</span>
-      </div>
-    </div>`;
+    if (l.line === 'Walk') {
+      // Walk leg — uncoloured, white dot with dark border, walking icon.
+      const wc = walkColor();
+      html += `<div class="opt-leg">
+        <div class="opt-dot" style="background:#fff;border:2px solid ${wc};box-sizing:border-box;"></div>
+        <div>
+          ${l.from} → ${l.to}
+          &nbsp;<span style="color:${wc};font-weight:500;display:inline-flex;align-items:center;gap:3px;"><span style="display:inline-flex;width:11px;height:11px;color:${wc};">${WALK_ICON_SVG}</span>Walk</span>
+          &nbsp;<span style="color:var(--muted);">${l.mins} min</span>
+        </div>
+      </div>`;
+    } else {
+      const lc = lineColour(l.line);
+      html += `<div class="opt-leg">
+        <div class="opt-dot" style="background:${lc.bg};"></div>
+        <div>
+          ${l.from} → ${l.to}
+          &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>
+          &nbsp;<span style="color:var(--muted);">${l.mins} min</span>
+        </div>
+      </div>`;
+    }
     if (interchanges[i]) {
       html += `<div class="opt-leg" style="padding-left:4px;">
         <div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--brd);flex-shrink:0;"></div>
@@ -3033,6 +3382,10 @@ function submitRoute() {
   const BM_PARTNER_MAP = {'Bank': 'Monument', 'Monument': 'Bank'};
   const optInterchanges = puzzleData.optimal.legs.slice(0, -1).map((l, i) => {
     const nextLeg = puzzleData.optimal.legs[i + 1];
+    // No interchange row around a Walk leg in either direction — the OSI
+    // walk time already includes platform-to-platform transfer cost.
+    // Mirrors the same rule applied to user routes in buildUserLegs.
+    if (l.line === 'Walk' || nextLeg.line === 'Walk') return null;
     const at = l.to;
     const partner = BM_PARTNER_MAP[at];
     // If this leg ends at Bank/Monument and next leg is on a line that only
