@@ -1299,7 +1299,14 @@ const NETWORK = {
   'DLR_Heron_Quays': [
     'Heron Quays','West India Quay','Westferry',
   ],
-  'Elizabeth': [
+  // Two real Elizabeth-line through-service patterns. Trains run end-to-end
+  // from the western section (Reading / Heathrow / Paddington) all the way
+  // to either Abbey Wood (via Canary Wharf) or Shenfield (via Stratford),
+  // diverging at Whitechapel. Modelled the same way as the Northern line:
+  // every sub-line array represents a single physical through-service so
+  // shareSubLine() correctly recognises e.g. Tottenham Court Road → Stratford
+  // and Paddington → Shenfield as direct journeys with no change required.
+  'Elizabeth_west_to_Abbey_Wood': [
     'Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver',
     'West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing',
     'Ealing Broadway','Acton Main Line','Paddington',
@@ -1307,8 +1314,12 @@ const NETWORK = {
     'Whitechapel','Canary Wharf','Custom House','Woolwich Arsenal',
     'Abbey Wood',
   ],
-  'Elizabeth_east': [
-    'Liverpool Street','Whitechapel','Stratford','Maryland','Forest Gate','Manor Park',
+  'Elizabeth_west_to_Shenfield': [
+    'Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver',
+    'West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing',
+    'Ealing Broadway','Acton Main Line','Paddington',
+    'Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
+    'Whitechapel','Stratford','Maryland','Forest Gate','Manor Park',
     'Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford',
     'Gidea Park','Harold Wood','Brentwood','Shenfield',
   ],
@@ -2097,14 +2108,56 @@ function buildGraph() {
       graph[b][lineKey].push({station:a, line:lineKey, cost:t, type:'travel'});
     }
   }
+  // Helper: for a station+sub-line, return the set of adjacent stations
+  // (i.e. which stations appear immediately before/after this station in the
+  // sub-line's array). Used to detect whether two same-display-line sub-lines
+  // physically diverge at a station.
+  function adjacentOnSubLine(stn, lineKey) {
+    const arr = NETWORK[lineKey];
+    const adj = new Set();
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] !== stn) continue;
+      if (i > 0) adj.add(arr[i-1]);
+      if (i < arr.length - 1) adj.add(arr[i+1]);
+    }
+    return adj;
+  }
+  // Two same-display-line sub-lines are "merged" at a station if every
+  // adjacent station on one is also adjacent on the other (and vice versa).
+  // That's the case for stations like Farringdon, Tottenham Court Road,
+  // Liverpool Street, Oval — every train carrying either sub-line designation
+  // calls at the same neighbouring stops, so there's no decision/change for
+  // the rider. Only at true junctions (Whitechapel for Elizabeth, Camden
+  // Town/Kennington/Euston for Northern) do the adjacent-station sets differ,
+  // and only there does the rider potentially need to change trains.
+  function sameLineMergedAt(stn, la, lb) {
+    const adjA = adjacentOnSubLine(stn, la);
+    const adjB = adjacentOnSubLine(stn, lb);
+    if (adjA.size !== adjB.size) return false;
+    for (const s of adjA) if (!adjB.has(s)) return false;
+    return true;
+  }
+
   for (const stn of Object.keys(graph)) {
     const lineList = Object.keys(graph[stn]);
     if (lineList.length < 2) continue;
     for (const la of lineList) {
       for (const lb of lineList) {
         if (la === lb) continue;
-        const w = interchangeTime(stn, la, lb);
-        graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
+        const sameLine = displayLine(la) === displayLine(lb);
+        if (sameLine) {
+          // At a non-junction (every sub-line passes through identically),
+          // skip the interchange edge — the same physical train carries every
+          // sub-line designation, so no change is required. At a real junction
+          // (the adjacent stations differ between sub-lines), use a small
+          // branch-change cost reflecting platform-change / wait for the
+          // correct branch.
+          if (sameLineMergedAt(stn, la, lb)) continue;
+          graph[stn][la].push({station:stn, line:lb, cost:3, type:'interchange'});
+        } else {
+          const w = interchangeTime(stn, la, lb);
+          graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
+        }
       }
     }
   }
@@ -2221,7 +2274,7 @@ function dijkstra(graph, start, end) {
   for (const a of allArrivals) {
     if (routes.length >= 5) break;
     const legs = pathToLegs(a.path);
-    if (legs.length < 2) continue;
+    if (legs.length < 1) continue;
     const sig = legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
     if (seen.has(sig)) continue;
     seen.add(sig);
@@ -2366,27 +2419,15 @@ function todayPuzzle() {
   const GRAPH = buildGraph();
   let start, end, routes;
 
-  // ─── DATE OVERRIDE ──────────────────────────────────────────────────────────
-  // Hard-codes today's live puzzle (2026-05-06: Oval → Shadwell) so that data
-  // changes (PUZZLE_STATIONS dedupe, NETWORK fixes) don't shift the daily seed
-  // for players mid-day. Safe to remove on any deploy after 2026-05-06.
-  const todayKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  if (todayKey === '2026-05-06') {
-    start = 'Oval';
-    end   = 'Shadwell (Underground)';
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const si = Math.floor(rng() * pool.length);
+    let   ei = Math.floor(rng() * pool.length);
+    if (ei === si) ei = (ei + 1) % pool.length;
+    start = pool[si]; end = pool[ei];
+    if (!requiresChange(start, end)) continue;
     routes = dijkstra(GRAPH, start, end);
-  } else {
-    for (let attempt = 0; attempt < 100; attempt++) {
-      const si = Math.floor(rng() * pool.length);
-      let   ei = Math.floor(rng() * pool.length);
-      if (ei === si) ei = (ei + 1) % pool.length;
-      start = pool[si]; end = pool[ei];
-      if (!requiresChange(start, end)) continue;
-      routes = dijkstra(GRAPH, start, end);
-      if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
-    }
+    if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
   }
-  // ────────────────────────────────────────────────────────────────────────────
 
   if (!routes || routes.length === 0) {
     start = 'Bethnal Green (Underground)'; end = 'Oval';
