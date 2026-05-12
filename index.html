@@ -2409,6 +2409,17 @@ function dijkstra(graph, start, end) {
           legMins = getTime(prev, node.station) || 0;
           prev = node.station;
         }
+      } else if (node.type === 'walk') {
+        // OSI walk leg: emit as its own 'Walk' leg with the OSI time.
+        // Flush any in-progress tube leg first, then push the walk, then
+        // reset state so the next tube leg starts at the walk's destination.
+        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
+        const walkMins = osiTime(prev, node.station);
+        if (walkMins != null) {
+          legs.push({from: prev, to: node.station, line: 'Walk', mins: walkMins});
+        }
+        legFrom = node.station; legLine = 'Walk'; legMins = 0;
+        prev = node.station;
       } else if (node.type === 'interchange') {
         if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
         // For same-station interchanges, node.station === prev. For cross-station
@@ -2423,24 +2434,38 @@ function dijkstra(graph, start, end) {
     return legs;
   }
 
-  // Collect all stored paths across all arrival lines, sort by cost
+  // Collect all stored paths across all arrival lines.
   const allArrivals = [];
   for (const [l, entries] of Object.entries(dist[end])) {
     for (const e of entries) {
       if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
     }
   }
-  allArrivals.sort((a,b) => a.cost - b.cost);
+
+  // Materialise legs for each candidate so we can apply a tiebreaker on
+  // route shape, not just cost. Among equal-cost routes, prefer fewer
+  // legs (fewer changes) and then fewer Walk legs (less out-of-station
+  // transferring). This stops a Tube→Walk→Tube→Walk route from being
+  // shown as "the optimal" when a simpler 2-leg route ties on time.
+  const candidates = allArrivals.map(a => {
+    const legs = pathToLegs(a.path);
+    const walkCount = legs.filter(l => l.line === 'Walk').length;
+    return {cost: a.cost, legs, walkCount};
+  });
+  candidates.sort((a, b) =>
+    a.cost - b.cost ||
+    a.legs.length - b.legs.length ||
+    a.walkCount - b.walkCount
+  );
 
   const routes = [], seen = new Set();
-  for (const a of allArrivals) {
+  for (const c of candidates) {
     if (routes.length >= 5) break;
-    const legs = pathToLegs(a.path);
-    if (legs.length < 1) continue;
-    const sig = legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
+    if (c.legs.length < 1) continue;
+    const sig = c.legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
     if (seen.has(sig)) continue;
     seen.add(sig);
-    routes.push({rank:routes.length+1, mins:a.cost, legs});
+    routes.push({rank:routes.length+1, mins:c.cost, legs:c.legs});
   }
   return routes;
 }
@@ -2672,7 +2697,14 @@ function todayPuzzle() {
     start = pool[si]; end = pool[ei];
     if (!requiresChange(start, end)) continue;
     routes = dijkstra(GRAPH, start, end);
-    if (routes.length > 0 && routes[0].legs.length === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
+    // Gate on TUBE-leg count, not total legs. OSI walk legs are transfers,
+    // not journeys, so a route like Tube→Walk→Tube still has 2 tube legs
+    // and matches the original "one interchange between two tube journeys"
+    // intent. Counting total legs here would silently exclude any puzzle
+    // whose optimal involves an OSI transfer (e.g. Liverpool St ↔ Moorgate),
+    // shifting the daily puzzle selection when OSI display was fixed.
+    const tubeLegCount = routes.length > 0 ? routes[0].legs.filter(l => l.line !== 'Walk').length : 0;
+    if (routes.length > 0 && tubeLegCount === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
   }
 
   if (!routes || routes.length === 0) {
