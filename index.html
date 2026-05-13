@@ -327,7 +327,13 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <div id="hist-list"><div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div></div>
     </div>
   </div>
-  <div style="text-align:center;padding:24px 0 8px;font-size:11px;color:#94a3b8;line-height:1.8;">
+  <div style="text-align:center;padding:16px 0 4px;">
+    <a href="https://x.com/daily_tubed" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#64748b;text-decoration:none;">
+      <svg width="14" height="14" viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M714.163 519.284 1160.89 0h-105.86L667.137 450.887 357.328 0H0l468.492 681.821L0 1226.37h105.866l409.625-476.152 327.181 476.152H1200L714.137 519.284h.026ZM569.165 687.828l-47.468-67.894-377.686-540.24h162.604l304.797 435.991 47.468 67.894 396.2 566.721H892.476L569.165 687.854v-.026Z"/></svg>
+      Follow @daily_tubed for puzzles &amp; updates
+    </a>
+  </div>
+  <div style="text-align:center;padding:8px 0 8px;font-size:11px;color:#94a3b8;line-height:1.8;">
     Powered by TfL Open Data · Not affiliated with Transport for London<br>© Tubed <span id="yr"></span>
   </div>
 </div>
@@ -849,6 +855,7 @@ const OSI_PAIRS = [
   {a:'Lancaster Gate',            b:'Paddington',                  aToB: 6, bToA: 6},
   {a:'Bank',                      b:'Liverpool Street',            aToB:11, bToA:11},
   {a:'Blackfriars',               b:'Southwark',                   aToB:13, bToA:13},
+  {a:'Shepherd\'s Bush (Overground)', b:'Shepherd\'s Bush (Underground)', aToB: 4, bToA: 4},
 ];
 
 // "A|B" → mins (directional). Populated bidirectionally so isOsi/osiTime
@@ -1277,7 +1284,6 @@ const COORDS = {
   'Brondesbury Park':      [51.5367,-0.2191],
   'Kensal Rise':           [51.5340,-0.2279],
   'Shepherd\'s Bush (Overground)':[51.5053,-0.2187],
-  'Kensington Olympia':    [51.4985,-0.2103],
   'Imperial Wharf':        [51.4771,-0.1785],
   'Gants Hill':            [51.5743, 0.0681],
   'West Kensington':       [51.4904,-0.2067],
@@ -1351,16 +1357,14 @@ const NETWORK = {
     'Stamford Brook','Ravenscourt Park','Hammersmith',
   ],
   'District_Kensington': [
-    'Earl\'s Court','High Street Kensington','Notting Hill Gate',
+    'Earl\'s Court','Kensington (Olympia)',
   ],
   'District_Edgware_Road': [
     'Earl\'s Court','West Brompton','Fulham Broadway','Parsons Green','Putney Bridge',
     'East Putney','Southfields','Wimbledon Park','Wimbledon',
   ],
   'District_Paddington': [
-    'Tower Hill','Monument','Cannon Street','Mansion House','Blackfriars','Temple',
-    'Embankment','Westminster','St. James\'s Park','Victoria','Sloane Square',
-    'South Kensington','Gloucester Road','Earl\'s Court','Paddington',
+    'Earl\'s Court','High Street Kensington','Notting Hill Gate','Bayswater','Paddington','Edgware Road',
   ],
   'DLR_Bank_Lewisham': [
     'Bank','Shadwell (Underground)','Limehouse','Westferry','Poplar','West India Quay','Canary Wharf',
@@ -1526,7 +1530,7 @@ const NETWORK = {
     'Caledonian Road & Barnsbury','Camden Road','Kentish Town West',
     'Gospel Oak','Hampstead Heath','Finchley Road & Frognal',
     'West Hampstead','Brondesbury Park','Brondesbury','Kensal Rise',
-    'Willesden Junction','Shepherd\'s Bush (Overground)','Kensington Olympia',
+    'Willesden Junction','Shepherd\'s Bush (Overground)','Kensington (Olympia)',
     'Imperial Wharf','West Brompton','Clapham Junction',
   ],
   'Overground_Windrush_Clapham': [
@@ -1768,7 +1772,7 @@ const TIMES = {
   'Kennington|Elephant & Castle':2,
   'Kensal Green|Queen\'s Park':2,
   'Kensal Rise|Shepherd\'s Bush (Overground)':5,
-  'Kensington Olympia|Imperial Wharf':4,
+  'Kensington (Olympia)|Imperial Wharf':4,
   'Kentish Town West|Gospel Oak':3,
   'Kenton|Preston Road':2,
   'Kenton|South Kenton':2,
@@ -1873,7 +1877,7 @@ const TIMES = {
   'Seven Sisters (Underground)|Tottenham Hale':2,
   'Shadwell (Overground)|Wapping':2,
   'Shadwell (Underground)|Limehouse':3,
-  'Shepherd\'s Bush (Overground)|Kensington Olympia':3,
+  'Shepherd\'s Bush (Overground)|Kensington (Olympia)':3,
   'Shepherd\'s Bush Market|Hammersmith':1,
   'Shepherd\'s Bush Market|Wood Lane':1,
   'Shepherd\'s Bush (Underground)|Holland Park':2,
@@ -2013,7 +2017,7 @@ const TIMES = {
   'Fulham Broadway|West Brompton':2,
   "West Brompton|Earl's Court":2,
   "Earl's Court|High Street Kensington":3,
-  "Earl's Court|Paddington":7,
+  "Earl's Court|Kensington (Olympia)":4,
   'Richmond|Kew Gardens':3,
   'Kew Gardens|Gunnersbury':3,
   'Gunnersbury|Turnham Green':2,
@@ -3402,7 +3406,13 @@ function submitRoute() {
     store.streak = (store.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? store.streak+1 : 1;
     store.lastPlayed = today;
   }
-  store.history.push({start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today});
+  const todayIdx = store.history.findIndex(e => e.date === today);
+  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today};
+  if (todayIdx === -1) {
+    store.history.push(entry);
+  } else if (userMins < store.history[todayIdx].userMins) {
+    store.history[todayIdx] = entry;
+  }
   setStore(store);
   document.getElementById('streak-disp').textContent = store.streak;
 
@@ -3568,7 +3578,12 @@ function renderHistory() {
   document.getElementById('streak-disp').textContent = d.streak;
   const h = document.getElementById('hist-list');
   if (!d.history.length) { h.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>'; return; }
-  h.innerHTML = d.history.slice().reverse().slice(0,5).map(e =>
+  const seen = new Map();
+  for (const e of d.history) {
+    if (!seen.has(e.date) || e.userMins < seen.get(e.date).userMins) seen.set(e.date, e);
+  }
+  const deduped = [...seen.values()].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5);
+  h.innerHTML = deduped.map(e =>
     `<div class="hist-row">
       <div><div>${e.start} → ${e.end}</div><div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
       <div style="font-size:20px;">${e.medal}</div>
