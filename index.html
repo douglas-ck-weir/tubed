@@ -458,6 +458,7 @@ const INTERCHANGE_MINS = {
   },
   "Earl's Court": {
     'District|Piccadilly': 3,
+    'District|District': 1,
   },
   'Eastcote': {
     'Metropolitan|Piccadilly': 4,
@@ -796,6 +797,16 @@ const INTERCHANGE_MINS = {
 
 function interchangeTime(stn, fromLine, toLine) {
   const entry = INTERCHANGE_MINS[stn];
+  // Same-line branch change (e.g. one District service → another at Earl's
+  // Court). These are typically same-platform or cross-platform changes
+  // and shorter than cross-line interchanges. Look up an explicit override
+  // ('District|District': 1 at Earl's Court) or fall back to 3 min.
+  if (fromLine && toLine && displayLine(fromLine) === displayLine(toLine)) {
+    const dl = displayLine(fromLine);
+    const sameLineKey = `${dl}|${dl}`;
+    if (entry && typeof entry === 'object' && sameLineKey in entry) return entry[sameLineKey];
+    return 3;
+  }
   if (!entry) return 2;
   if (typeof entry === 'number') return entry;
   if (fromLine && toLine) {
@@ -984,6 +995,13 @@ const COORDS = {
   'Upton Park':            [51.5352, 0.0351],
   'East Ham':              [51.5398, 0.0530],
   'Barking':               [51.5398, 0.0810],
+  'Upney':                 [51.5385, 0.1014],
+  'Becontree':             [51.5403, 0.1271],
+  'Dagenham Heathway':     [51.5414, 0.1471],
+  'Dagenham East':         [51.5443, 0.1655],
+  'Elm Park':              [51.5497, 0.1976],
+  'Hornchurch':            [51.5539, 0.2184],
+  'Upminster Bridge':      [51.5582, 0.2343],
   'Great Portland Street': [51.5240,-0.1440],
   'Euston Square':         [51.5261,-0.1350],
   'Kings Cross St. Pancras':[51.5308,-0.1238],
@@ -1340,31 +1358,44 @@ const NETWORK = {
     'Westminster','St. James\'s Park','Victoria','Sloane Square','South Kensington',
     'Gloucester Road','High Street Kensington','Notting Hill Gate','Bayswater','Paddington',
   ],
-  'District_main': [
+  // District line modelled as the actual TfL service patterns. K(O) is
+  // a shuttle to Earl's Court — players must change there to continue.
+  'District_Ealing_Broadway_Upminster': [
+    'Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green',
+    'Stamford Brook','Ravenscourt Park','Hammersmith','Barons Court','West Kensington',
+    'Earl\'s Court','Gloucester Road','South Kensington','Sloane Square','Victoria',
+    'St. James\'s Park','Westminster','Embankment','Temple','Blackfriars','Mansion House',
+    'Cannon Street','Monument','Tower Hill','Aldgate East','Whitechapel','Stepney Green',
+    'Mile End','Bow Road','Bromley-by-Bow','West Ham','Plaistow','Upton Park','East Ham',
+    'Barking','Upney','Becontree','Dagenham Heathway','Dagenham East','Elm Park',
+    'Hornchurch','Upminster Bridge','Upminster',
+  ],
+  'District_Kensington_Olympia_Earls_Court': [
+    'Kensington (Olympia)','Earl\'s Court',
+  ],
+  'District_Richmond_Upminster': [
+    'Richmond','Kew Gardens','Gunnersbury','Turnham Green','Stamford Brook',
+    'Ravenscourt Park','Hammersmith','Barons Court','West Kensington','Earl\'s Court',
+    'Gloucester Road','South Kensington','Sloane Square','Victoria','St. James\'s Park',
+    'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street',
+    'Monument','Tower Hill','Aldgate East','Whitechapel','Stepney Green','Mile End',
+    'Bow Road','Bromley-by-Bow','West Ham','Plaistow','Upton Park','East Ham','Barking',
+    'Upney','Becontree','Dagenham Heathway','Dagenham East','Elm Park','Hornchurch',
+    'Upminster Bridge','Upminster',
+  ],
+  'District_Wimbledon_Upminster': [
     'Wimbledon','Wimbledon Park','Southfields','East Putney','Putney Bridge','Parsons Green',
     'Fulham Broadway','West Brompton','Earl\'s Court','Gloucester Road','South Kensington',
     'Sloane Square','Victoria','St. James\'s Park','Westminster','Embankment','Temple',
     'Blackfriars','Mansion House','Cannon Street','Monument','Tower Hill','Aldgate East',
     'Whitechapel','Stepney Green','Mile End','Bow Road','Bromley-by-Bow','West Ham','Plaistow',
-    'Upton Park','East Ham','Barking',
+    'Upton Park','East Ham','Barking','Upney','Becontree','Dagenham Heathway','Dagenham East',
+    'Elm Park','Hornchurch','Upminster Bridge','Upminster',
   ],
-  'District_Richmond': [
-    'Richmond','Kew Gardens','Gunnersbury','Turnham Green','Stamford Brook',
-    'Ravenscourt Park','Hammersmith','Barons Court','West Kensington','Earl\'s Court',
-  ],
-  'District_Ealing': [
-    'Ealing Broadway','Ealing Common','Acton Town','Chiswick Park','Turnham Green',
-    'Stamford Brook','Ravenscourt Park','Hammersmith',
-  ],
-  'District_Kensington': [
-    'Earl\'s Court','Kensington (Olympia)',
-  ],
-  'District_Edgware_Road': [
-    'Earl\'s Court','West Brompton','Fulham Broadway','Parsons Green','Putney Bridge',
-    'East Putney','Southfields','Wimbledon Park','Wimbledon',
-  ],
-  'District_Paddington': [
-    'Earl\'s Court','High Street Kensington','Notting Hill Gate','Bayswater','Paddington','Edgware Road',
+  'District_Wimbledon_Edgware_Road': [
+    'Wimbledon','Wimbledon Park','Southfields','East Putney','Putney Bridge','Parsons Green',
+    'Fulham Broadway','West Brompton','Earl\'s Court','High Street Kensington','Notting Hill Gate',
+    'Bayswater','Paddington','Edgware Road',
   ],
   'DLR_Bank_Lewisham': [
     'Bank','Shadwell (Underground)','Limehouse','Westferry','Poplar','West India Quay','Canary Wharf',
@@ -1689,6 +1720,14 @@ const TIMES = {
   'Earl\'s Court|Gloucester Road':2,
   'East Acton|White City':4,
   'East Ham|Barking':4,
+  'Barking|Upney':2,
+  'Upney|Becontree':2,
+  'Becontree|Dagenham Heathway':2,
+  'Dagenham Heathway|Dagenham East':2,
+  'Dagenham East|Elm Park':2,
+  'Elm Park|Hornchurch':2,
+  'Hornchurch|Upminster Bridge':2,
+  'Upminster Bridge|Upminster':2,
   'East India|Canning Town':2,
   'Eastcote|Ruislip Manor':2,
   'Edgware Road|Baker Street':4,
@@ -2132,6 +2171,17 @@ function shareSubLine(stnA, stnB, dline) {
   return false;
 }
 
+// True iff some sub-line of `dline` contains all three of legFrom, junction,
+// and nextTo. If so, the same physical train can carry the player across the
+// junction; otherwise a branch change is needed there.
+function subLineSpansJunction(legFrom, junction, nextTo, dline) {
+  for (const [key, arr] of Object.entries(NETWORK)) {
+    if (displayLine(key) !== dline) continue;
+    if (arr.includes(legFrom) && arr.includes(junction) && arr.includes(nextTo)) return true;
+  }
+  return false;
+}
+
 function linesAtStation(stn) {
   const lines = new Set();
   for (const [key, arr] of Object.entries(NETWORK)) {
@@ -2253,11 +2303,11 @@ function buildGraph() {
           // At a non-junction (every sub-line passes through identically),
           // skip the interchange edge — the same physical train carries every
           // sub-line designation, so no change is required. At a real junction
-          // (the adjacent stations differ between sub-lines), use a small
-          // branch-change cost reflecting platform-change / wait for the
-          // correct branch.
+          // (the adjacent stations differ between sub-lines), use
+          // interchangeTime which falls back to 3 min unless the station has
+          // an explicit same-line override (e.g. Earl's Court District|District: 1).
           if (sameLineMergedAt(stn, la, lb)) continue;
-          graph[stn][la].push({station:stn, line:lb, cost:3, type:'interchange'});
+          graph[stn][la].push({station:stn, line:lb, cost: interchangeTime(stn, la, lb), type:'interchange'});
         } else {
           const w = interchangeTime(stn, la, lb);
           graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
@@ -2608,7 +2658,15 @@ function buildUserLegs(start, route) {
 
     // ── Bank/Monument cross-walk + line-change handling ────────────────
     const isBankMonumentCross = BANK_MONUMENT_PAIR.has(from) && BANK_MONUMENT_PAIR.has(to) && from !== to;
-    const isLineChange = i > 0 && curLine !== lines[i - 1];
+    let isLineChange = i > 0 && curLine !== lines[i - 1];
+    // Same display line but different sub-line (e.g. one District service →
+    // another at Earl's Court): if no sub-line spans the contiguous leg from
+    // legFrom through `from` to `to`, a train change is required at `from`.
+    if (i > 0 && !isLineChange && curLine !== 'Walk' && lines[i - 1] !== 'Walk') {
+      if (!subLineSpansJunction(legFrom, from, to, curLine)) {
+        isLineChange = true;
+      }
+    }
 
     // Implicit cross-walk: player is at Bank/Monument but the chosen line
     // only serves the partner station (e.g. at Bank, taking District which
