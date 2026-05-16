@@ -371,6 +371,7 @@ const LINE_COLOURS = {
 const INTERCHANGE_MINS = {
   'Acton Town': {
     'District|Piccadilly': 2,
+    'Piccadilly|Piccadilly': 2,
   },
   'Aldgate': {
     'Circle|Metropolitan': 4,
@@ -444,6 +445,9 @@ const INTERCHANGE_MINS = {
   },
   'Cannon Street': {
     'Circle|District': 3,
+  },
+  'Chalfont & Latimer': {
+    'Metropolitan|Metropolitan': 1,
   },
   'Charing Cross': {
     'Bakerloo|Northern': 7,
@@ -528,6 +532,15 @@ const INTERCHANGE_MINS = {
   'Harrow & Wealdstone': {
     'Bakerloo|Overground': 5,
   },
+  'Harrow on the Hill': {
+    'Metropolitan|Metropolitan': 2,
+  },
+  'Hatton Cross': {
+    'Piccadilly|Piccadilly': 1,
+  },
+  'Heathrow Terminals 2&3': {
+    'Piccadilly|Piccadilly': 1,
+  },
   'High Street Kensington': {
     'Circle|District': 4,
   },
@@ -605,6 +618,9 @@ const INTERCHANGE_MINS = {
     'Central|District': 3,
     'Central|Hammersmith & City': 3,
     'District|Hammersmith & City': 3,
+  },
+  'Moor Park': {
+    'Metropolitan|Metropolitan': 1,
   },
   'Monument': {
     'Central|Circle': 7,
@@ -790,6 +806,9 @@ const INTERCHANGE_MINS = {
   'Wood Lane': {
     'Circle|Hammersmith & City': 2,
   },
+  'Woodford': {
+    'Central|Central': 1,
+  },
   'Woolwich Arsenal': {
     'DLR|Elizabeth': 5,
   },
@@ -921,6 +940,13 @@ const COORDS = {
   'Kenton':                [51.5817,-0.3175],
   'Harrow & Wealdstone':   [51.5925,-0.3351],
   // === CENTRAL ===
+  'West Ruislip':          [51.5696,-0.4376],
+  'Ruislip Gardens':       [51.5606,-0.4103],
+  'South Ruislip':         [51.5569,-0.3988],
+  'Northolt':              [51.5483,-0.3687],
+  'Greenford':             [51.5423,-0.3456],
+  'Perivale':              [51.5366,-0.3232],
+  'Hanger Lane':           [51.5302,-0.2933],
   'Ealing Broadway':       [51.5150,-0.3018],
   'West Acton':            [51.5197,-0.2795],
   'North Acton':           [51.5236,-0.2627],
@@ -1090,6 +1116,7 @@ const COORDS = {
   'Harrow on the Hill':    [51.5792,-0.3365],
   'North Harrow':          [51.5920,-0.3610],
   'Rayners Lane':          [51.5753,-0.3713],
+  'West Harrow':           [51.5797,-0.3526],
   'Eastcote':              [51.5764,-0.3957],
   'Ruislip Manor':         [51.5680,-0.4127],
   'Ruislip':               [51.5713,-0.4194],
@@ -1097,7 +1124,7 @@ const COORDS = {
   'Hillingdon':            [51.5529,-0.4495],
   'Uxbridge':              [51.5463,-0.4783],
   'Chorleywood':           [51.6552,-0.5204],
-  'Croxley Green':         [51.6452,-0.4512],
+  'Croxley':               [51.6470,-0.4413],
   'Watford':               [51.6571,-0.3943],
   'Watford High Street':   [51.6558,-0.3972],
   'Bushey':                [51.6471,-0.3830],
@@ -1333,21 +1360,54 @@ const NETWORK = {
     'Queen\'s Park','Kensal Green','Willesden Junction','Harlesden','Stonebridge Park',
     'Wembley Central','North Wembley','South Kenton','Kenton','Harrow & Wealdstone',
   ],
-  'Central': [
+  // ── Central line: modelled as 5 actual TfL service patterns ─────────────
+  // 1. Ealing Broadway ↔ Epping (via main line, no Hainault loop)
+  // 2. Ealing Broadway ↔ Hainault (via Newbury Park branch)
+  // 3. West Ruislip ↔ Epping
+  // 4. West Ruislip ↔ Hainault via Woodford (Roding Valley side of the loop)
+  // 5. West Ruislip ↔ Hainault via Newbury Park
+  // To reach Roding Valley/Chigwell/Grange Hill from Leytonstone you must
+  // change at Woodford (cross-platform, 1 min via 'Central|Central').
+  'Central_Ealing_Broadway_Epping': [
     'Ealing Broadway','West Acton','North Acton','East Acton','White City',
     'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
     'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
     'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
-  ],
-  'Central_Hainault_loop_via_Woodford': [
-    'Woodford','Roding Valley','Chigwell','Grange Hill','Hainault',
-  ],
-  'Central_Hainault_loop_via_Newbury': [
-    'Hainault','Fairlop','Barkingside','Newbury Park','Gants Hill','Redbridge','Wanstead','Leytonstone',
-  ],
-  'Central_Epping': [
-    'Stratford','Leyton','Leytonstone','Snaresbrook','South Woodford','Woodford',
+    'Leyton','Leytonstone','Snaresbrook','South Woodford','Woodford',
     'Buckhurst Hill','Loughton','Debden','Theydon Bois','Epping',
+  ],
+  'Central_Ealing_Broadway_Hainault': [
+    'Ealing Broadway','West Acton','North Acton','East Acton','White City',
+    'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
+    'Leyton','Leytonstone','Wanstead','Redbridge','Gants Hill','Newbury Park','Barkingside','Fairlop','Hainault',
+  ],
+  'Central_West_Ruislip_Epping': [
+    'West Ruislip','Ruislip Gardens','South Ruislip','Northolt','Greenford','Perivale','Hanger Lane',
+    'North Acton','East Acton','White City',
+    'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
+    'Leyton','Leytonstone','Snaresbrook','South Woodford','Woodford',
+    'Buckhurst Hill','Loughton','Debden','Theydon Bois','Epping',
+  ],
+  'Central_West_Ruislip_Hainault_via_Woodford': [
+    'West Ruislip','Ruislip Gardens','South Ruislip','Northolt','Greenford','Perivale','Hanger Lane',
+    'North Acton','East Acton','White City',
+    'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
+    'Leyton','Leytonstone','Snaresbrook','South Woodford','Woodford',
+    'Roding Valley','Chigwell','Grange Hill','Hainault',
+  ],
+  'Central_West_Ruislip_Hainault_via_Newbury': [
+    'West Ruislip','Ruislip Gardens','South Ruislip','Northolt','Greenford','Perivale','Hanger Lane',
+    'North Acton','East Acton','White City',
+    'Shepherd\'s Bush (Underground)','Holland Park','Notting Hill Gate','Queensway','Lancaster Gate',
+    'Marble Arch','Bond Street','Oxford Circus','Tottenham Court Road','Holborn',
+    'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
+    'Leyton','Leytonstone','Wanstead','Redbridge','Gants Hill','Newbury Park','Barkingside','Fairlop','Hainault',
   ],
   'Circle': [
     'Hammersmith','Goldhawk Road','Shepherd\'s Bush Market','Wood Lane','Latimer Road',
@@ -1454,24 +1514,40 @@ const NETWORK = {
     'Westminster','Waterloo','Southwark','London Bridge','Bermondsey','Canada Water',
     'Canary Wharf','North Greenwich','Canning Town','West Ham','Stratford',
   ],
-  'Metropolitan_main': [
-    'Aldgate','Liverpool Street','Moorgate','Barbican','Farringdon','Kings Cross St. Pancras',
-    'Euston Square','Great Portland Street','Baker Street','Finchley Road',
-    'Wembley Park','Preston Road','Northwick Park','Harrow on the Hill',
+  // ── Metropolitan line: 4 actual TfL service patterns, all to Aldgate ──
+  // 1. Amersham ↔ Aldgate (via Chalfont & Latimer, Pinner, Harrow on the Hill)
+  // 2. Chesham ↔ Aldgate (via Chalfont & Latimer)
+  // 3. Uxbridge ↔ Aldgate (via Rayners Lane, West Harrow, Harrow on the Hill)
+  // 4. Watford ↔ Aldgate (via Croxley, Moor Park, Harrow on the Hill)
+  // Branch-change interchange times at junctions: Harrow on the Hill 2 min,
+  // Moor Park 1 min, Chalfont & Latimer 1 min — see INTERCHANGE_MINS overrides.
+  'Metropolitan_Amersham_Aldgate': [
+    'Amersham','Chalfont & Latimer','Chorleywood','Rickmansworth','Moor Park',
+    'Northwood','Northwood Hills','Pinner','North Harrow','Harrow on the Hill',
+    'Northwick Park','Preston Road','Wembley Park','Finchley Road','Baker Street',
+    'Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon',
+    'Barbican','Moorgate','Liverpool Street','Aldgate',
   ],
-  'Metropolitan_Uxbridge': [
-    'Harrow on the Hill','North Harrow','Pinner','Northwood Hills','Northwood',
-    'Moor Park','Rickmansworth','Chorleywood','Chalfont & Latimer','Amersham',
+  'Metropolitan_Chesham_Aldgate': [
+    'Chesham','Chalfont & Latimer','Chorleywood','Rickmansworth','Moor Park',
+    'Northwood','Northwood Hills','Pinner','North Harrow','Harrow on the Hill',
+    'Northwick Park','Preston Road','Wembley Park','Finchley Road','Baker Street',
+    'Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon',
+    'Barbican','Moorgate','Liverpool Street','Aldgate',
   ],
-  'Metropolitan_Chesham': [
-    'Chalfont & Latimer','Chesham',
+  'Metropolitan_Uxbridge_Aldgate': [
+    'Uxbridge','Hillingdon','Ickenham','Ruislip','Ruislip Manor','Eastcote',
+    'Rayners Lane','West Harrow','Harrow on the Hill',
+    'Northwick Park','Preston Road','Wembley Park','Finchley Road','Baker Street',
+    'Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon',
+    'Barbican','Moorgate','Liverpool Street','Aldgate',
   ],
-  'Metropolitan_Watford': [
-    'Croxley Green','Watford High Street','Watford',
-  ],
-  'Metropolitan_Uxbridge_direct': [
-    'Harrow on the Hill','Rayners Lane','Eastcote','Ruislip Manor','Ruislip',
-    'Ickenham','Hillingdon','Uxbridge',
+  'Metropolitan_Watford_Aldgate': [
+    'Watford','Croxley','Moor Park',
+    'Northwood','Northwood Hills','Pinner','North Harrow','Harrow on the Hill',
+    'Northwick Park','Preston Road','Wembley Park','Finchley Road','Baker Street',
+    'Great Portland Street','Euston Square','Kings Cross St. Pancras','Farringdon',
+    'Barbican','Moorgate','Liverpool Street','Aldgate',
   ],
   'Northern_Bank_to_Edgware': [
     'Morden','South Wimbledon','Colliers Wood','Tooting Broadway','Tooting Bec',
@@ -1510,26 +1586,42 @@ const NETWORK = {
   'Northern_Mill_Hill_East': [
     'Finchley Central','Mill Hill East',
   ],
-  'Piccadilly_main': [
-    'Cockfosters','Oakwood','Southgate','Arnos Grove','Bounds Green','Wood Green',
-    'Turnpike Lane','Manor House','Finsbury Park','Arsenal','Holloway Road',
-    'Caledonian Road','Kings Cross St. Pancras','Russell Square','Holborn','Covent Garden',
-    'Leicester Square','Piccadilly Circus','Green Park','Hyde Park Corner','Knightsbridge',
-    'South Kensington','Gloucester Road','Earl\'s Court','Barons Court','Hammersmith',
+  // ── Piccadilly line: 3 actual TfL service patterns, all to Cockfosters ──
+  // 1. Heathrow Terminal 4 ↔ Cockfosters (via T2&3 south loop, then Hatton Cross)
+  // 2. Heathrow Terminal 5 ↔ Cockfosters (via T2&3 western stub, then Hatton Cross)
+  // 3. Uxbridge ↔ Cockfosters (via Rayners Lane, Park Royal, Acton Town)
+  // All three share the main trunk Acton Town → Turnham Green → Hammersmith →
+  // Barons Court → Earl's Court → ... → Cockfosters. Same-line branch-change
+  // overrides: Acton Town 2 min, Hatton Cross 1 min, Heathrow T2&3 1 min.
+  'Piccadilly_T4_Cockfosters': [
+    'Heathrow Terminal 4','Heathrow Terminals 2&3','Hatton Cross',
+    'Hounslow West','Hounslow Central','Hounslow East','Osterley','Boston Manor','Northfields','South Ealing',
+    'Acton Town','Turnham Green','Hammersmith','Barons Court','Earl\'s Court',
+    'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park',
+    'Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square',
+    'Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park',
+    'Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate',
+    'Oakwood','Cockfosters',
   ],
-  'Piccadilly_Heathrow': [
-    'Earl\'s Court','Acton Town','South Ealing','Northfields','Boston Manor','Osterley',
-    'Hounslow East','Hounslow Central','Hounslow West','Hatton Cross','Heathrow Terminals 2&3',
+  'Piccadilly_T5_Cockfosters': [
+    'Heathrow Terminal 5','Heathrow Terminals 2&3','Hatton Cross',
+    'Hounslow West','Hounslow Central','Hounslow East','Osterley','Boston Manor','Northfields','South Ealing',
+    'Acton Town','Turnham Green','Hammersmith','Barons Court','Earl\'s Court',
+    'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park',
+    'Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square',
+    'Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park',
+    'Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate',
+    'Oakwood','Cockfosters',
   ],
-  'Piccadilly_Heathrow_T4': [
-    'Hatton Cross','Heathrow Terminal 4',
-  ],
-  'Piccadilly_Heathrow_T5': [
-    'Heathrow Terminals 2&3','Heathrow Terminal 5',
-  ],
-  'Piccadilly_Uxbridge': [
-    'Acton Town','Park Royal','Alperton','Sudbury Town','Sudbury Hill','South Harrow',
-    'Rayners Lane','Eastcote','Ruislip Manor','Ruislip','Ickenham','Hillingdon','Uxbridge',
+  'Piccadilly_Uxbridge_Cockfosters': [
+    'Uxbridge','Hillingdon','Ickenham','Ruislip','Ruislip Manor','Eastcote',
+    'Rayners Lane','South Harrow','Sudbury Hill','Sudbury Town','Alperton','Park Royal',
+    'North Ealing','Ealing Common','Acton Town','Turnham Green','Hammersmith','Barons Court','Earl\'s Court',
+    'Gloucester Road','South Kensington','Knightsbridge','Hyde Park Corner','Green Park',
+    'Piccadilly Circus','Leicester Square','Covent Garden','Holborn','Russell Square',
+    'Kings Cross St. Pancras','Caledonian Road','Holloway Road','Arsenal','Finsbury Park',
+    'Manor House','Turnpike Lane','Wood Green','Bounds Green','Arnos Grove','Southgate',
+    'Oakwood','Cockfosters',
   ],
   'Victoria': [
     'Brixton','Stockwell','Vauxhall','Pimlico','Victoria','Green Park',
@@ -1616,6 +1708,7 @@ const NETWORK = {
 const TIMES = {
   'Acton Main Line|West Ealing':3,
   'Acton Town|Chiswick Park':2,
+  'Acton Town|Turnham Green':4,
   'Aldgate East|Whitechapel':2,
   'Aldgate|Tower Hill':3,
   'All Saints|Poplar':1,
@@ -1625,7 +1718,7 @@ const TIMES = {
   'Angel|Kings Cross St. Pancras':2,
   'Arsenal|Finsbury Park':2,
   'Baker Street|Bond Street':2,
-  'Baker Street|Great Portland Street':1,
+  'Baker Street|Great Portland Street':2,
   'Baker Street|Marylebone':1,
   'Balham|Clapham South':2,
   'Balham|Wandsworth Road':4,
@@ -1682,7 +1775,7 @@ const TIMES = {
   'Canons Park|Queensbury':2,
   'Carpenders Park|Hatch End':3,
   'Chadwell Heath|Romford':4,
-  'Chalfont & Latimer|Chesham':8,
+  'Chalfont & Latimer|Chesham':9,
   'Chalfont & Latimer|Chorleywood':4,
   'Chalk Farm|Belsize Park':2,
   'Chancery Lane|St. Paul\'s':1,
@@ -1700,7 +1793,8 @@ const TIMES = {
   'Covent Garden|Holborn':2,
   'Crossharbour|Mudchute':2,
   'Crouch Hill|Harringay Green Lanes':2,
-  'Croxley Green|Watford High Street':2,
+  'Croxley|Moor Park':5,
+  'Croxley|Watford':2,
   'Crystal Palace|Gipsy Hill':3,
   'Crystal Palace|Norwood Junction':3,
   'Custom House|Prince Regent':2,
@@ -1716,7 +1810,8 @@ const TIMES = {
   'Dollis Hill|Willesden Green':2,
   'Ealing Broadway|Ealing Common':3,
   'Ealing Broadway|West Acton':2,
-  'Ealing Common|Acton Town':3,
+  'Ealing Common|Acton Town':2,
+  'Ealing Common|North Ealing':2,
   'Earl\'s Court|Gloucester Road':2,
   'East Acton|White City':4,
   'East Ham|Barking':4,
@@ -1767,6 +1862,8 @@ const TIMES = {
   'Green Park|Oxford Circus':2,
   'Green Park|Piccadilly Circus':1,
   'Green Park|Westminster':3,
+  'Greenford|Northolt':2,
+  'Greenford|Perivale':2,
   'Greenwich|Deptford Bridge':2,
   'Hackney Central|Dalston Kingsland':4,
   'Hackney Central|London Fields':2,
@@ -1779,13 +1876,14 @@ const TIMES = {
   'Hammersmith|Goldhawk Road':1,
   'Hampstead Heath|Finchley Road & Frognal':3,
   'Hampstead|Golders Green':5,
+  'Hanger Lane|North Acton':2,
   'Hanwell|Southall':4,
   'Harlesden|Willesden Junction':2,
   'Harold Wood|Brentwood':4,
   'Harringay Green Lanes|South Tottenham':2,
   'Harrow & Wealdstone|Kenton':3,
   'Harrow on the Hill|Northwick Park':2,
-  'Harrow on the Hill|Rayners Lane':2,
+  'Harrow on the Hill|West Harrow':3,
   'Hatch End|Headstone Lane':3,
   'Headstone Lane|Harrow & Wealdstone':3,
   'Hendon Central|Colindale':3,
@@ -1861,9 +1959,11 @@ const TIMES = {
   'New Cross Gate|Brockley':3,
   'Newbury Park|Redbridge':2,
   'North Acton|East Acton':2,
+  'North Ealing|Park Royal':2,
   'North Greenwich|Woolwich Arsenal':5,
   'North Harrow|Harrow on the Hill':3,
   'North Wembley|Wembley Central':2,
+  'Northolt|South Ruislip':2,
   'Northwick Park|Preston Road':3,
   'Northwood Hills|Pinner':3,
   'Northwood|Northwood Hills':2,
@@ -1880,6 +1980,7 @@ const TIMES = {
   'Paddington|Euston':8,
   'Paddington|Royal Oak':2,
   'Penge West|Sydenham':2,
+  'Perivale|Hanger Lane':2,
   'Piccadilly Circus|Leicester Square':2,
   'Piccadilly Circus|Oxford Circus':2,
   'Pimlico|Victoria':2,
@@ -1897,6 +1998,7 @@ const TIMES = {
   'Ravenscourt Park|Hammersmith':2,
   'Rayners Lane|Eastcote':4,
   'Rayners Lane|South Harrow':4,
+  'Rayners Lane|West Harrow':2,
   'Redbridge|Wanstead':2,
   'Regent\'s Park|Baker Street':2,
   'Rickmansworth|Moor Park':4,
@@ -1907,6 +2009,7 @@ const TIMES = {
   'Royal Albert|Beckton Park':2,
   'Royal Oak|Westbourne Park':2,
   'Royal Victoria|Custom House':2,
+  'Ruislip Gardens|South Ruislip':2,
   'Ruislip Manor|Ruislip':1,
   'Ruislip|Ickenham':3,
   'Russell Square|Kings Cross St. Pancras':2,
@@ -1968,6 +2071,7 @@ const TIMES = {
   'Tower Hill|Aldgate East':2,
   'Tulse Hill|Streatham Hill':3,
   'Turkey Street|Theobald\'s Grove':3,
+  'Turnham Green|Hammersmith':5,
   'Turnham Green|Stamford Brook':1,
   'Turnpike Lane|Wood Green':2,
   'Upper Holloway|Crouch Hill':3,
@@ -1999,6 +2103,7 @@ const TIMES = {
   'West Ham|Stratford':4,
   'West India Quay|Canary Wharf':2,
   'West Norwood|Tulse Hill':2,
+  'West Ruislip|Ruislip Gardens':2,
   'Westbourne Park|Ladbroke Grove':1,
   'Westferry|Poplar':2,
   'Westminster|Waterloo':1,
@@ -2114,6 +2219,7 @@ const TIMES = {
   'Hounslow West|Hatton Cross':4,
   'Hatton Cross|Heathrow Terminals 2&3':4,
   'Hatton Cross|Heathrow Terminal 4':3,
+  'Heathrow Terminal 4|Heathrow Terminals 2&3':4,
   'Heathrow Terminals 2&3|Heathrow Terminal 5':4,
   // Piccadilly — Uxbridge branch
   'Acton Town|Park Royal':3,
