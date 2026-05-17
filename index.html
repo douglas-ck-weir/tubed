@@ -3584,7 +3584,10 @@ function submitRoute() {
     store.lastPlayed = today;
   }
   const todayIdx = store.history.findIndex(e => e.date === today);
-  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today};
+  const route = puzzleData.optimal.legs
+    .filter(l => l.line !== 'Walk')
+    .map(l => ({line: l.line, to: l.to}));
+  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today, route};
   if (todayIdx === -1) {
     store.history.push(entry);
   } else if (userMins < store.history[todayIdx].userMins) {
@@ -3760,12 +3763,21 @@ function renderHistory() {
     if (!seen.has(e.date) || e.userMins < seen.get(e.date).userMins) seen.set(e.date, e);
   }
   const deduped = [...seen.values()].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,5);
-  h.innerHTML = deduped.map(e =>
-    `<div class="hist-row">
-      <div><div>${e.start} → ${e.end}</div><div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
+  h.innerHTML = deduped.map(e => {
+    let routeHtml = '';
+    if (e.route && e.route.length) {
+      const pills = e.route.map((seg, i) => {
+        const lc = LINE_COLOURS[seg.line] || {bg:'var(--muted)', txt:'#fff'};
+        const arrow = i < e.route.length - 1 ? `<span style="color:var(--muted);margin:0 2px;">→</span>` : '';
+        return `<span style="background:${lc.bg};color:${lc.txt};border-radius:3px;padding:1px 5px;font-size:10px;font-weight:600;white-space:nowrap;">${seg.line}</span>${arrow}`;
+      }).join('');
+      routeHtml = `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin-top:3px;">${pills}</div>`;
+    }
+    return `<div class="hist-row">
+      <div><div>${e.start} → ${e.end}</div>${routeHtml}<div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
       <div style="font-size:20px;">${e.medal}</div>
-    </div>`
-  ).join('');
+    </div>`;
+  }).join('');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
