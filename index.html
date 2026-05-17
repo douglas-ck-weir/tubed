@@ -539,6 +539,8 @@ const INTERCHANGE_MINS = {
     'Piccadilly|Piccadilly': 1,
   },
   'Heathrow Terminals 2&3': {
+    'Elizabeth|Elizabeth': 1,
+    'Elizabeth|Piccadilly': 3,
     'Piccadilly|Piccadilly': 1,
   },
   'High Street Kensington': {
@@ -796,6 +798,7 @@ const INTERCHANGE_MINS = {
     'District|Elizabeth': 4,
     'District|Hammersmith & City': 2,
     'District|Overground': 5,
+    'Elizabeth|Elizabeth': 1,
     'Elizabeth|Hammersmith & City': 4,
     'Elizabeth|Overground': 3,
     'Hammersmith & City|Overground': 5,
@@ -1476,25 +1479,41 @@ const NETWORK = {
   'DLR_Heron_Quays': [
     'Heron Quays','West India Quay','Westferry',
   ],
-  // Two real Elizabeth-line through-service patterns. Trains run end-to-end
-  // from the western section (Reading / Heathrow / Paddington) all the way
-  // to either Abbey Wood (via Canary Wharf) or Shenfield (via Stratford),
-  // diverging at Whitechapel. Modelled the same way as the Northern line:
-  // every sub-line array represents a single physical through-service so
-  // shareSubLine() correctly recognises e.g. Tottenham Court Road → Stratford
-  // and Paddington → Shenfield as direct journeys with no change required.
-  'Elizabeth_west_to_Abbey_Wood': [
-    'Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver',
-    'West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing',
-    'Ealing Broadway','Acton Main Line','Paddington',
+  // Elizabeth line: 4 actual TfL service patterns. Reading branch is omitted
+  // entirely (no puzzle stations and no interchanges out there). The 4 modelled
+  // services capture all 7 relevant TfL patterns (Paddington-originating
+  // services are subsets of the longer Shenfield/Abbey Wood ones).
+  //
+  // 1. Abbey Wood ↔ Heathrow T4 (via Whitechapel, Paddington, Hayes & Harlington, T2&3)
+  // 2. Abbey Wood ↔ Heathrow T5 (same trunk, diverges at T2&3 to T5 spur)
+  // 3. Shenfield ↔ Heathrow T4 (via Whitechapel branch to Shenfield)
+  // 4. Shenfield ↔ Heathrow T5
+  //
+  // Same-line junction interchanges: Whitechapel 1 min (Shenfield/Abbey Wood
+  // split), Heathrow T2&3 1 min (T4/T5 split).
+  'Elizabeth_Abbey_Wood_T4': [
+    'Heathrow Terminal 4','Heathrow Terminals 2&3','Hayes & Harlington',
+    'Southall','Hanwell','West Ealing','Ealing Broadway','Acton Main Line','Paddington',
     'Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
-    'Whitechapel','Canary Wharf','Custom House','Woolwich Arsenal',
-    'Abbey Wood',
+    'Whitechapel','Canary Wharf','Custom House','Woolwich Arsenal','Abbey Wood',
   ],
-  'Elizabeth_west_to_Shenfield': [
-    'Reading','Twyford','Maidenhead','Taplow','Burnham','Slough','Langley','Iver',
-    'West Drayton','Hayes & Harlington','Southall','Hanwell','West Ealing',
-    'Ealing Broadway','Acton Main Line','Paddington',
+  'Elizabeth_Abbey_Wood_T5': [
+    'Heathrow Terminal 5','Heathrow Terminals 2&3','Hayes & Harlington',
+    'Southall','Hanwell','West Ealing','Ealing Broadway','Acton Main Line','Paddington',
+    'Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
+    'Whitechapel','Canary Wharf','Custom House','Woolwich Arsenal','Abbey Wood',
+  ],
+  'Elizabeth_Shenfield_T4': [
+    'Heathrow Terminal 4','Heathrow Terminals 2&3','Hayes & Harlington',
+    'Southall','Hanwell','West Ealing','Ealing Broadway','Acton Main Line','Paddington',
+    'Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
+    'Whitechapel','Stratford','Maryland','Forest Gate','Manor Park',
+    'Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford',
+    'Gidea Park','Harold Wood','Brentwood','Shenfield',
+  ],
+  'Elizabeth_Shenfield_T5': [
+    'Heathrow Terminal 5','Heathrow Terminals 2&3','Hayes & Harlington',
+    'Southall','Hanwell','West Ealing','Ealing Broadway','Acton Main Line','Paddington',
     'Bond Street','Tottenham Court Road','Farringdon','Liverpool Street',
     'Whitechapel','Stratford','Maryland','Forest Gate','Manor Park',
     'Ilford','Seven Kings','Goodmayes','Chadwell Heath','Romford',
@@ -1506,6 +1525,7 @@ const NETWORK = {
     'Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras',
     'Farringdon','Barbican','Moorgate','Liverpool Street','Aldgate East','Whitechapel',
     'Stepney Green','Mile End','Bow Road','Bromley-by-Bow','West Ham',
+    'Plaistow','Upton Park','East Ham','Barking',
   ],
   'Jubilee': [
     'Stanmore','Canons Park','Queensbury','Kingsbury','Wembley Park','Neasden',
@@ -2170,15 +2190,6 @@ const TIMES = {
   'Heron Quays|West India Quay':2,
   'West India Quay|Westferry':2,
   // Elizabeth line — western extension
-  'Reading|Twyford':8,
-  'Twyford|Maidenhead':5,
-  'Maidenhead|Taplow':4,
-  'Taplow|Burnham':3,
-  'Burnham|Slough':3,
-  'Slough|Langley':4,
-  'Langley|Iver':3,
-  'Iver|West Drayton':3,
-  'West Drayton|Hayes & Harlington':4,
   'West Ealing|Ealing Broadway':2,
   'Ealing Broadway|Acton Main Line':4,
   // Northern — Bank/Edgware branch
@@ -2221,6 +2232,8 @@ const TIMES = {
   'Hatton Cross|Heathrow Terminal 4':3,
   'Heathrow Terminal 4|Heathrow Terminals 2&3':4,
   'Heathrow Terminals 2&3|Heathrow Terminal 5':4,
+  // Elizabeth line — Heathrow spur (Hayes & Harlington → T2&3 fast tunnel)
+  'Hayes & Harlington|Heathrow Terminals 2&3':6,
   // Piccadilly — Uxbridge branch
   'Acton Town|Park Royal':3,
   // Overground — Mildmay gaps
