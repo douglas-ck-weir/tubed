@@ -3803,17 +3803,21 @@ async function submitFeedback() {
   const btn = document.getElementById('feedback-send-btn');
   btn.disabled = true; btn.textContent = 'Sending...';
 
-  const formData = new FormData();
-  formData.append('access_key', '24bf0458-2dcb-492b-840c-a8e37b6a8b7d');
-  formData.append('subject', `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`);
-  formData.append('message', msg);
-  formData.append('email', email || 'Not provided');
-  formData.append('puzzle', puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown');
+  const payload = {
+    access_key: '24bf0458-2dcb-492b-840c-a8e37b6a8b7d',
+    subject: `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`,
+    from_name: 'Tubed Player',
+    message: msg,
+    email: email || 'noreply@playtubed.co.uk',
+    puzzle: puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown',
+    botcheck: ''
+  };
 
   try {
     const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      body: formData
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(payload)
     });
     const data = await response.json();
     if (response.ok) {
