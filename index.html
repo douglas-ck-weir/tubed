@@ -2848,6 +2848,11 @@ function buildUserLegs(start, route) {
 // DAILY PUZZLE GENERATOR
 // ═══════════════════════════════════════════════════════════════════════════════
 function seededRng(seed) {
+  // Pre-mix the seed so consecutive day numbers (e.g. 20260517, 20260518)
+  // produce unrelated internal states rather than states differing by 1.
+  seed = Math.imul(seed ^ seed >>> 16, 0x45d9f3b) | 0;
+  seed = Math.imul(seed ^ seed >>> 16, 0x45d9f3b) | 0;
+  seed = (seed ^ seed >>> 16) | 0;
   return function() {
     seed |= 0; seed = seed + 0x6D2B79F5 | 0;
     let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
@@ -2869,7 +2874,17 @@ function todayPuzzle() {
   const rng  = seededRng(seed);
   const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
   const GRAPH = buildGraph();
+  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
+  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   let start, end, routes;
+
+  // 2026-05-18: hardcoded to preserve the puzzle already live when the seededRng
+  // pre-mix fix was deployed (old RNG: Shepherd's Bush (Underground) → Mornington Crescent).
+  if (date === '2026-05-18') {
+    start = "Shepherd's Bush (Underground)"; end = 'Mornington Crescent';
+    routes = dijkstra(GRAPH, start, end);
+    return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
+  }
 
   for (let attempt = 0; attempt < 100; attempt++) {
     const si = Math.floor(rng() * pool.length);
@@ -2892,8 +2907,6 @@ function todayPuzzle() {
     start = 'Bethnal Green (Underground)'; end = 'Oval';
     routes = dijkstra(GRAPH, start, end);
   }
-  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
-  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
 }
 
