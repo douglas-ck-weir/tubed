@@ -467,6 +467,12 @@ const INTERCHANGE_MINS = {
   'Eastcote': {
     'Metropolitan|Piccadilly': 4,
   },
+  'Edgware Road': {
+    'Bakerloo|Circle': 7,
+    'Bakerloo|District': 5,
+    'Bakerloo|Hammersmith & City': 5,
+    'Circle|Circle': 2,
+  },
   'Elephant & Castle': {
     'Bakerloo|Northern': 2,
   },
@@ -663,8 +669,8 @@ const INTERCHANGE_MINS = {
     'Central|Victoria': 4,
   },
   'Paddington': {
-    'Bakerloo|Circle': 7,
-    'Bakerloo|District': 7,
+    'Bakerloo|Circle': 3,
+    'Bakerloo|District': 3,
     'Bakerloo|Elizabeth': 4,
     'Bakerloo|Hammersmith & City': 15,
     'Circle|District': 4,
@@ -1413,7 +1419,7 @@ const NETWORK = {
     'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green (Underground)','Mile End','Stratford',
     'Leyton','Leytonstone','Wanstead','Redbridge','Gants Hill','Newbury Park','Barkingside','Fairlop','Hainault',
   ],
-  'Circle': [
+  'Circle_Clockwise': [
     'Hammersmith','Goldhawk Road','Shepherd\'s Bush Market','Wood Lane','Latimer Road',
     'Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road',
     'Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras',
@@ -1421,6 +1427,17 @@ const NETWORK = {
     'Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment',
     'Westminster','St. James\'s Park','Victoria','Sloane Square','South Kensington',
     'Gloucester Road','High Street Kensington','Notting Hill Gate','Bayswater','Paddington',
+    'Edgware Road',
+  ],
+  'Circle_Anticlockwise': [
+    'Edgware Road','Paddington','Bayswater','Notting Hill Gate','High Street Kensington',
+    'Gloucester Road','South Kensington','Sloane Square','Victoria','St. James\'s Park',
+    'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street',
+    'Monument','Tower Hill','Aldgate','Liverpool Street','Moorgate','Barbican',
+    'Farringdon','Kings Cross St. Pancras','Euston Square','Great Portland Street',
+    'Baker Street','Edgware Road','Paddington','Royal Oak','Westbourne Park',
+    'Ladbroke Grove','Latimer Road','Wood Lane','Shepherd\'s Bush Market',
+    'Goldhawk Road','Hammersmith',
   ],
   // District line modelled as the actual TfL service patterns. K(O) is
   // a shuttle to Earl's Court — players must change there to continue.
@@ -2260,6 +2277,7 @@ function displayLine(line) {
   if (line.startsWith('Northern')) return 'Northern';
   if (line.startsWith('District')) return 'District';
   if (line.startsWith('Central')) return 'Central';
+  if (line.startsWith('Circle')) return 'Circle';
   if (line.startsWith('Metropolitan')) return 'Metropolitan';
   if (line.startsWith('Piccadilly')) return 'Piccadilly';
   if (line.startsWith('Overground')) return 'Overground';
@@ -2405,6 +2423,11 @@ function buildGraph() {
   // Town/Kennington/Euston for Northern) do the adjacent-station sets differ,
   // and only there does the rider potentially need to change trains.
   function sameLineMergedAt(stn, la, lb) {
+    // A station that appears more than once in a sub-line is a loop junction
+    // (e.g. Edgware Road on Circle) — never treat it as a simple merged stop.
+    const arrA = NETWORK[la], arrB = NETWORK[lb];
+    if (arrA.filter(s => s === stn).length > 1) return false;
+    if (arrB.filter(s => s === stn).length > 1) return false;
     const adjA = adjacentOnSubLine(stn, la);
     const adjB = adjacentOnSubLine(stn, lb);
     if (adjA.size !== adjB.size) return false;
