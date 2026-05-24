@@ -21,7 +21,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{--bg:#f0f4f8;--surf:#ffffff;--brd:#dde3ec;--red:#dc2626;--navy:#1e40af;--yellow:#1d4ed8;--txt:#0f172a;--muted:#64748b;--walk:#0f172a;}
+:root{--bg:#f0f4f8;--surf:#ffffff;--brd:#dde3ec;--red:#dc2626;--navy:#1e40af;--yellow:#1d4ed8;--txt:#0f172a;--muted:#64748b;--walk:#0f172a;--coral:#e85d4f;}
+/* Mode toggle (Easy / Hard) */
+.mode-toggle{display:flex;background:var(--surf);border:0.5px solid var(--brd);border-radius:10px;padding:3px;margin-bottom:14px;gap:3px;}
+.mode-tab{flex:1;padding:8px 12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.5px;color:var(--muted);background:none;border:none;border-radius:7px;cursor:pointer;transition:background-color 0.15s, color 0.15s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.mode-tab:hover{color:var(--txt);}
+.mode-tab.active{background:var(--navy);color:#fff;}
+.mode-tab.hard.active{background:var(--coral);color:#fff;}
+.mode-tab .mode-check{font-size:11px;opacity:0.9;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
 .wrap{max-width:540px;margin:0 auto;padding:16px 16px 40px;}
 .hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -37,7 +44,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-
 .timer-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
 .timer-box.done .timer-n{color:var(--muted);}
 .card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:14px;margin-bottom:12px;}
-.challenge{display:flex;align-items:center;}
+.challenge-row{display:flex;align-items:center;}
+.challenge-sub{text-align:center;font-size:12px;color:var(--txt);font-weight:500;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--brd);}
+/* Hard-mode visual accent on the challenge card */
+.challenge.hard-mode{border-color:var(--coral);border-width:1.5px;}
 .st-box{flex:1;text-align:center;}
 .st-role{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:2px;}
 .st-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1.1;color:var(--txt);}
@@ -271,11 +281,21 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
     </div>
   </div>
 
+  <!-- Mode toggle lives outside both #main-panel and #result-panel so it
+       stays visible whether the player is on the puzzle or their result. -->
+  <div class="mode-toggle" id="mode-toggle">
+    <button class="mode-tab easy active" data-mode="easy" onclick="switchMode('easy')">🟢 Easy<span class="mode-check" id="check-easy" style="display:none;">&#10003;</span></button>
+    <button class="mode-tab hard" data-mode="hard" onclick="switchMode('hard')">🔥 Hard<span class="mode-check" id="check-hard" style="display:none;">&#10003;</span></button>
+  </div>
+
   <div id="main-panel">
     <div class="card challenge">
-      <div class="st-box"><div class="st-role">Start</div><div class="st-name" id="start-stn">—</div></div>
-      <div class="arr">→</div>
-      <div class="st-box"><div class="st-role">Destination</div><div class="st-name" id="end-stn">—</div></div>
+      <div class="challenge-row">
+        <div class="st-box"><div class="st-role">Start</div><div class="st-name" id="start-stn">—</div></div>
+        <div class="arr">→</div>
+        <div class="st-box"><div class="st-role">Destination</div><div class="st-name" id="end-stn">—</div></div>
+      </div>
+      <div id="mode-subtitle" class="challenge-sub">Requires 1+ line change for optimal</div>
     </div>
 
     <button class="btn-how" onclick="openModal()">How to play ?</button>
@@ -339,6 +359,42 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 </div>
 
 <script>
+// ─────────────────────────────────────────────────────────────────────────────
+// TEST: DATE OVERRIDE VIA URL PARAM
+// Visit ?date=YYYY-MM-DD to see what the daily puzzle (both modes) looks
+// like on that date. A small banner at the top makes the override obvious.
+// Remove this block before merging to production.
+// ─────────────────────────────────────────────────────────────────────────────
+(function(){
+  try {
+    const m = (location.search || '').match(/[?&]date=(\d{4}-\d{2}-\d{2})/);
+    if (!m) return;
+    const iso = m[1];
+    const target = new Date(iso + 'T12:00:00');
+    if (isNaN(target.getTime())) return;
+    const RealDate = Date;
+    const offsetMs = target.getTime() - RealDate.now();
+    // Override Date.now() and zero-arg `new Date()` to return the simulated
+    // moment. All other Date calls (parsing, math, formatting) pass through.
+    const SimDate = function(...args) {
+      if (args.length === 0) return new RealDate(RealDate.now() + offsetMs);
+      return new RealDate(...args);
+    };
+    SimDate.now   = () => RealDate.now() + offsetMs;
+    SimDate.parse = RealDate.parse;
+    SimDate.UTC   = RealDate.UTC;
+    SimDate.prototype = RealDate.prototype;
+    Date = SimDate;
+    // Visible banner so it's obvious you're in test mode
+    window.addEventListener('DOMContentLoaded', () => {
+      const b = document.createElement('div');
+      b.textContent = `⚠ TEST MODE — Simulating ${iso}`;
+      b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e85d4f;color:#fff;text-align:center;padding:6px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;z-index:99999;letter-spacing:0.5px;';
+      document.body.appendChild(b);
+    });
+  } catch(e) {}
+})();
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // NETWORK DATA
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -466,12 +522,6 @@ const INTERCHANGE_MINS = {
   },
   'Eastcote': {
     'Metropolitan|Piccadilly': 4,
-  },
-  'Edgware Road': {
-    'Bakerloo|Circle': 7,
-    'Bakerloo|District': 5,
-    'Bakerloo|Hammersmith & City': 5,
-    'Circle|Circle': 2,
   },
   'Elephant & Castle': {
     'Bakerloo|Northern': 2,
@@ -669,8 +719,8 @@ const INTERCHANGE_MINS = {
     'Central|Victoria': 4,
   },
   'Paddington': {
-    'Bakerloo|Circle': 3,
-    'Bakerloo|District': 3,
+    'Bakerloo|Circle': 7,
+    'Bakerloo|District': 7,
     'Bakerloo|Elizabeth': 4,
     'Bakerloo|Hammersmith & City': 15,
     'Circle|District': 4,
@@ -870,7 +920,7 @@ function interchangeTime(stn, fromLine, toLine) {
 const OSI_PAIRS = [
   {a:'Aldgate',                   b:'Aldgate East',                aToB: 3, bToA: 3},
   {a:'Archway',                   b:'Upper Holloway',              aToB: 9, bToA: 9},
-  {a:'Bank',                      b:'Cannon Street',               aToB: 7, bToA: 7},
+  {a:'Bank',                      b:'Cannon Street',               aToB: 3, bToA: 3},
   {a:'Bayswater',                 b:'Queensway',                   aToB: 3, bToA: 3},
   {a:'Bond Street',               b:'Oxford Circus',               aToB: 6, bToA: 6},
   {a:'Camden Road',               b:'Camden Town',                 aToB: 5, bToA: 5},
@@ -896,7 +946,6 @@ const OSI_PAIRS = [
   {a:'Lancaster Gate',            b:'Paddington',                  aToB: 6, bToA: 6},
   {a:'Bank',                      b:'Liverpool Street',            aToB:11, bToA:11},
   {a:'Blackfriars',               b:'Southwark',                   aToB:13, bToA:13},
-  {a:'Seven Sisters (Overground)',  b:'Seven Sisters',  aToB: 3, bToA: 3},
   {a:'Shepherd\'s Bush (Overground)', b:'Shepherd\'s Bush', aToB: 4, bToA: 4},
 ];
 
@@ -1429,7 +1478,7 @@ const NETWORK = {
     'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green','Mile End','Stratford',
     'Leyton','Leytonstone','Wanstead','Redbridge','Gants Hill','Newbury Park','Barkingside','Fairlop','Hainault',
   ],
-  'Circle_Clockwise': [
+  'Circle': [
     'Hammersmith','Goldhawk Road','Shepherd\'s Bush Market','Wood Lane','Latimer Road',
     'Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road',
     'Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras',
@@ -1437,17 +1486,6 @@ const NETWORK = {
     'Monument','Cannon Street','Mansion House','Blackfriars','Temple','Embankment',
     'Westminster','St. James\'s Park','Victoria','Sloane Square','South Kensington',
     'Gloucester Road','High Street Kensington','Notting Hill Gate','Bayswater','Paddington',
-    'Edgware Road',
-  ],
-  'Circle_Anticlockwise': [
-    'Edgware Road','Paddington','Bayswater','Notting Hill Gate','High Street Kensington',
-    'Gloucester Road','South Kensington','Sloane Square','Victoria','St. James\'s Park',
-    'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street',
-    'Monument','Tower Hill','Aldgate','Liverpool Street','Moorgate','Barbican',
-    'Farringdon','Kings Cross St. Pancras','Euston Square','Great Portland Street',
-    'Baker Street','Edgware Road','Paddington','Royal Oak','Westbourne Park',
-    'Ladbroke Grove','Latimer Road','Wood Lane','Shepherd\'s Bush Market',
-    'Goldhawk Road','Hammersmith',
   ],
   // District line modelled as the actual TfL service patterns. K(O) is
   // a shuttle to Earl's Court — players must change there to continue.
@@ -2161,9 +2199,9 @@ const TIMES = {
   'West Ham|Plaistow':1,
   'West Ham|Star Lane':2,
   'West Ham|Stratford':4,
-  'West India Quay|Canary Wharf':2,
   'West Silvertown|Canning Town':2,
   'West Silvertown|Pontoon Dock':2,
+  'West India Quay|Canary Wharf':2,
   'West Norwood|Tulse Hill':2,
   'West Ruislip|Ruislip Gardens':2,
   'Westbourne Park|Ladbroke Grove':1,
@@ -2227,7 +2265,7 @@ const TIMES = {
   'Richmond|Kew Gardens':3,
   'Kew Gardens|Gunnersbury':3,
   'Gunnersbury|Turnham Green':2,
-  // DLR — additional adjacencies
+  // DLR — Woolwich Arsenal spur + Heron Quays loop
   'King George V|Woolwich Arsenal':3,
   'Heron Quays|West India Quay':2,
   'West India Quay|Westferry':2,
@@ -2301,7 +2339,6 @@ function displayLine(line) {
   if (line.startsWith('Northern')) return 'Northern';
   if (line.startsWith('District')) return 'District';
   if (line.startsWith('Central')) return 'Central';
-  if (line.startsWith('Circle')) return 'Circle';
   if (line.startsWith('Metropolitan')) return 'Metropolitan';
   if (line.startsWith('Piccadilly')) return 'Piccadilly';
   if (line.startsWith('Overground')) return 'Overground';
@@ -2447,11 +2484,6 @@ function buildGraph() {
   // Town/Kennington/Euston for Northern) do the adjacent-station sets differ,
   // and only there does the rider potentially need to change trains.
   function sameLineMergedAt(stn, la, lb) {
-    // A station that appears more than once in a sub-line is a loop junction
-    // (e.g. Edgware Road on Circle) — never treat it as a simple merged stop.
-    const arrA = NETWORK[la], arrB = NETWORK[lb];
-    if (arrA.filter(s => s === stn).length > 1) return false;
-    if (arrB.filter(s => s === stn).length > 1) return false;
     const adjA = adjacentOnSubLine(stn, la);
     const adjB = adjacentOnSubLine(stn, lb);
     if (adjA.size !== adjB.size) return false;
@@ -2916,46 +2948,84 @@ function requiresChange(a, b) {
   return true;
 }
 
-function todayPuzzle() {
-  const now  = new Date();
-  const seed = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
-  const rng  = seededRng(seed);
-  const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
-  const GRAPH = buildGraph();
-  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
-  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  let start, end, routes;
+// ─────────────────────────────────────────────────────────────────────────────
+// HARD MODE TEST OVERRIDE
+// Flip TEST_MODE_HARDCODE to true to skip the seeded generator and serve
+// the hardcoded pairs below — useful for testing UI changes without waiting
+// for a "good" random pair to come up. Off in production.
+// ─────────────────────────────────────────────────────────────────────────────
+const TEST_MODE_HARDCODE = false;
+const TEST_PUZZLES = {
+  easy: { start: 'Kings Cross St. Pancras', end: 'Oval' },
+  hard: { start: 'Notting Hill Gate',       end: 'Clapham North' },
+};
 
-  // 2026-05-18: hardcoded to preserve the puzzle already live when the seededRng
-  // pre-mix fix was deployed (old RNG: Shepherd's Bush → Mornington Crescent).
-  if (date === '2026-05-18') {
-    start = "Shepherd's Bush"; end = 'Mornington Crescent';
-    routes = dijkstra(GRAPH, start, end);
-    return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
+// Count distinct line changes along a route. Consecutive legs on the same
+// line collapse into one segment; walks count as their own segment. The
+// number of changes equals (segments - 1).
+function countDistinctChanges(route) {
+  const lines = route.legs.map(l => l.line);
+  const collapsed = [];
+  for (const l of lines) {
+    if (collapsed.length === 0 || collapsed[collapsed.length - 1] !== l) collapsed.push(l);
+  }
+  return Math.max(0, collapsed.length - 1);
+}
+
+function todayPuzzle(mode) {
+  const m = mode === 'hard' ? 'hard' : 'easy';
+  const now = new Date();
+  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
+  const GRAPH = buildGraph();
+
+  if (TEST_MODE_HARDCODE) {
+    const tp = TEST_PUZZLES[m];
+    const routes = dijkstra(GRAPH, tp.start, tp.end);
+    return { start: tp.start, end: tp.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
-  for (let attempt = 0; attempt < 100; attempt++) {
+  // Daily seed shared with Easy mode. Hard uses an offset so its draw is
+  // an independent (but still deterministic) RNG path.
+  const baseSeed = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
+  const seed = m === 'hard' ? baseSeed + 1 : baseSeed;
+  const rng  = seededRng(seed);
+  const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
+  let start, end, routes;
+
+  // Per-mode gate. Easy keeps the original "exactly 2 tube legs, 10–60 min"
+  // criterion (so daily Easy puzzles don't shift). Hard requires 2+ distinct
+  // line changes (walks count as changes), 15–60 min.
+  const HARD_MIN = 15, HARD_MAX = 60;
+  const EASY_MIN = 10, EASY_MAX = 60;
+
+  for (let attempt = 0; attempt < 200; attempt++) {
     const si = Math.floor(rng() * pool.length);
     let   ei = Math.floor(rng() * pool.length);
     if (ei === si) ei = (ei + 1) % pool.length;
     start = pool[si]; end = pool[ei];
     if (!requiresChange(start, end)) continue;
     routes = dijkstra(GRAPH, start, end);
-    // Gate on TUBE-leg count, not total legs. OSI walk legs are transfers,
-    // not journeys, so a route like Tube→Walk→Tube still has 2 tube legs
-    // and matches the original "one interchange between two tube journeys"
-    // intent. Counting total legs here would silently exclude any puzzle
-    // whose optimal involves an OSI transfer (e.g. Liverpool St ↔ Moorgate),
-    // shifting the daily puzzle selection when OSI display was fixed.
-    const tubeLegCount = routes.length > 0 ? routes[0].legs.filter(l => l.line !== 'Walk').length : 0;
-    if (routes.length > 0 && tubeLegCount === 2 && routes[0].mins >= 10 && routes[0].mins <= 60) break;
+    if (!routes || routes.length === 0) continue;
+    const opt = routes[0];
+
+    if (m === 'easy') {
+      const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
+      if (tubeLegCount === 2 && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
+    } else {
+      const changes = countDistinctChanges(opt);
+      if (changes >= 2 && opt.mins >= HARD_MIN && opt.mins <= HARD_MAX) break;
+    }
   }
 
   if (!routes || routes.length === 0) {
-    start = 'Bethnal Green'; end = 'Oval';
+    // Fallback if nothing matched in 200 attempts — should be vanishingly
+    // rare for Easy and uncommon for Hard. Falls back to a known-good pair.
+    if (m === 'hard') { start = 'Notting Hill Gate'; end = 'Clapham North'; }
+    else              { start = 'Bethnal Green'; end = 'Oval'; }
     routes = dijkstra(GRAPH, start, end);
   }
-  return {start, end, optimal:routes[0], routes, date, puzzleNum, graph:GRAPH};
+  return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -2974,15 +3044,37 @@ let nbDestLocked = false;
 let timerInterval = null;
 let timerSeconds  = 0;
 let timerStopped  = false;
+// True after the active mode's puzzle has been submitted today. Renders the
+// route builder as read-only and the submit button as "See full results →".
+let lockedSubmission = false;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // LOCAL STORAGE
 // ═══════════════════════════════════════════════════════════════════════════════
+// Storage now splits stats per mode: { easy: {streak,lastPlayed,history}, hard: {...} }.
+// One-time migration: existing v5 single-bucket data moves into `easy`.
+function emptyModeStore() { return { streak: 0, lastPlayed: null, history: [] }; }
+
 function getStore() {
-  try { return JSON.parse(localStorage.getItem('tubepzl_v5') || 'null') || {streak:0,lastPlayed:null,history:[]}; }
-  catch(e) { return {streak:0,lastPlayed:null,history:[]}; }
+  try {
+    const v6 = JSON.parse(localStorage.getItem('tubepzl_v6') || 'null');
+    if (v6 && v6.easy && v6.hard) return v6;
+    const v5 = JSON.parse(localStorage.getItem('tubepzl_v5') || 'null');
+    const migrated = { easy: v5 || emptyModeStore(), hard: emptyModeStore() };
+    // Persist the migration so we don't redo it next load
+    try { localStorage.setItem('tubepzl_v6', JSON.stringify(migrated)); } catch(e){}
+    return migrated;
+  } catch(e) {
+    return { easy: emptyModeStore(), hard: emptyModeStore() };
+  }
 }
-function setStore(d) { try { localStorage.setItem('tubepzl_v5', JSON.stringify(d)); } catch(e){} }
+function setStore(d) { try { localStorage.setItem('tubepzl_v6', JSON.stringify(d)); } catch(e){} }
+function getModeStore(mode) { return getStore()[mode] || emptyModeStore(); }
+function setModeStore(mode, modeData) {
+  const all = getStore();
+  all[mode] = modeData;
+  setStore(all);
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TIMER
@@ -3024,10 +3116,135 @@ function resetTimer() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════════
+// Current mode + per-mode state snapshots. When switchMode() runs we snapshot
+// the live globals into modeState[oldMode], then restore from modeState[newMode]
+// so that each tab keeps its in-progress route, hints, and timer.
+let currentMode = 'easy';
+
+// Toggle the .hard-mode CSS class on the challenge card so it shows the
+// coral border accent when the player is on the Hard tab. Also updates the
+// mode subtitle below the card (1+ change for Easy, 2+ for Hard).
+function applyHardModeStyling() {
+  const isHard = currentMode === 'hard';
+  const card = document.querySelector('.card.challenge');
+  if (card) card.classList.toggle('hard-mode', isHard);
+  const sub = document.getElementById('mode-subtitle');
+  if (sub) {
+    sub.textContent = isHard
+      ? 'Requires 2+ line changes for optimal'
+      : 'Requires 1+ line change for optimal';
+  }
+}
+
+// Show a ✓ on whichever tab has been solved today. Called on init and after
+// every successful submit.
+function refreshTabChecks() {
+  const today = new Date().toDateString();
+  for (const m of ['easy', 'hard']) {
+    const el = document.getElementById(`check-${m}`);
+    if (!el) continue;
+    el.style.display = getModeStore(m).lastPlayed === today ? 'inline' : 'none';
+  }
+}
+
+// Default-mode rule on load:
+//   easy not done today        → easy
+//   easy done, hard not done   → hard
+//   both done today            → hard (returning player lands on their results)
+function pickDefaultMode() {
+  const today = new Date().toDateString();
+  const easyDone = getModeStore('easy').lastPlayed === today;
+  const hardDone = getModeStore('hard').lastPlayed === today;
+  if (!easyDone) return 'easy';
+  return 'hard';
+}
+
+// Populate the #try-other-slot inside the result card. Evaluated at view
+// time (not bake time) so the CTA correctly disappears if the player has
+// since completed the other mode.
+function refreshTryOtherButton() {
+  const slot = document.getElementById('try-other-slot');
+  if (slot) slot.innerHTML = buildTryOtherModeButton();
+}
+
+// CTA to try the other mode, shown on the result card — but only when the
+// other mode is still unsolved today. If both are solved, the player uses
+// the Easy/Hard tab at the top to cross-navigate, so this button is hidden.
+function buildTryOtherModeButton() {
+  const other = currentMode === 'easy' ? 'hard' : 'easy';
+  const today = new Date().toDateString();
+  if (getModeStore(other).lastPlayed === today) return '';
+  const otherName = other === 'hard' ? 'Hard' : 'Easy';
+  const bg = other === 'hard' ? 'var(--coral)' : 'var(--navy)';
+  return `<button class="btn-share" style="background:${bg};margin-top:2px;" onclick="switchMode('${other}')">Try today's ${otherName} puzzle &nbsp;→</button>`;
+}
+const modeState = { easy: null, hard: null };
+
+function snapshotMode() {
+  return {
+    puzzleData,
+    userRoute: userRoute.slice(),
+    hintsUsed,
+    hintsRevealed: hintsRevealed.slice(),
+    activeHintN,
+    nbAdding,
+    nbDestLocked,
+    selectedStation,
+    timerSeconds,
+    timerStopped,
+    lockedSubmission,
+    resultShown: document.getElementById('result-panel')?.style.display === 'block',
+    resultHtml:  document.getElementById('result-panel')?.innerHTML || '',
+  };
+}
+
+function restoreMode(snap) {
+  puzzleData       = snap.puzzleData;
+  userRoute        = snap.userRoute.slice();
+  hintsUsed        = snap.hintsUsed;
+  hintsRevealed    = snap.hintsRevealed.slice();
+  activeHintN      = snap.activeHintN;
+  nbAdding         = snap.nbAdding;
+  nbDestLocked     = snap.nbDestLocked;
+  selectedStation  = snap.selectedStation;
+  timerSeconds     = snap.timerSeconds;
+  timerStopped     = snap.timerStopped;
+  lockedSubmission = !!snap.lockedSubmission;
+}
+
+// Build a clean snapshot for `mode` using a freshly-generated puzzle and
+// blank in-progress state. Used at init() time to pre-populate the inactive
+// mode's modeState so switching tabs doesn't pay the seeded-generator cost
+// in the click path (which was causing a visible flicker on the tab toggle).
+function freshSnapshotFor(mode) {
+  return {
+    puzzleData:      todayPuzzle(mode),
+    userRoute:       [],
+    hintsUsed:       0,
+    hintsRevealed:   [false, false, false],
+    activeHintN:     null,
+    nbAdding:        false,
+    nbDestLocked:    false,
+    selectedStation: '',
+    timerSeconds:    0,
+    timerStopped:    false,
+    lockedSubmission: false,
+    resultShown:     false,
+    resultHtml:      '',
+  };
+}
+
 function init() {
   document.getElementById('yr').textContent = new Date().getFullYear();
+  currentMode = pickDefaultMode();
+  // Make the correct tab look active before anything renders
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === currentMode);
+  });
+  refreshTabChecks();
+  applyHardModeStyling();
   renderHistory();
-  puzzleData = todayPuzzle();
+  puzzleData = todayPuzzle(currentMode);
   document.getElementById('start-stn').textContent = puzzleData.start;
   document.getElementById('end-stn').textContent   = puzzleData.end;
   document.getElementById('puzzle-sub').textContent = `Daily London Puzzle #${puzzleData.puzzleNum}`;
@@ -3042,6 +3259,49 @@ function init() {
     // Timer will be started by closeModal() once the player dismisses the how-to
   } else {
     startTimer();
+  }
+  // If the active mode is already solved today and we have its rendered card
+  // saved, drop it back into the result panel so the user lands on their
+  // result rather than a fresh puzzle.
+  maybeShowSolvedResult();
+  // Pre-generate the inactive mode's puzzle in the background so the first
+  // tab switch is instant. Deferred via setTimeout so the active mode's
+  // puzzle is painted first — the user can start playing immediately and
+  // the second generation finishes silently.
+  setTimeout(() => {
+    const other = currentMode === 'easy' ? 'hard' : 'easy';
+    if (!modeState[other]) {
+      try { modeState[other] = freshSnapshotFor(other); } catch(e){}
+    }
+  }, 0);
+}
+
+// On load, if the current mode is solved today and we've persisted the result
+// card HTML for it, show that card instead of the puzzle view. The route map
+// + builder are still initialised in the background so resetGame works.
+function maybeShowSolvedResult() {
+  const today = new Date().toDateString();
+  const s = getModeStore(currentMode);
+  if (s.lastPlayed !== today || !s.resultHtml) return;
+  const mp = document.getElementById('main-panel');
+  const rp = document.getElementById('result-panel');
+  if (!mp || !rp) return;
+  mp.style.display = 'none';
+  rp.style.display = 'block';
+  rp.innerHTML = s.resultHtml;
+  refreshTryOtherButton();
+  lockedSubmission = true;
+  // Pause the timer since the puzzle is already done
+  timerStopped = true;
+  clearInterval(timerInterval);
+  // Re-run the share/copy button visibility check that the submit flow does
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const useShare = isMobile && !!navigator.share;
+  const sb = document.getElementById('share-btn');
+  const cb = document.getElementById('copy-btn');
+  if (!useShare) {
+    if (sb) sb.style.display = 'none';
+    if (cb) cb.style.display = 'flex';
   }
 }
 
@@ -3286,7 +3546,7 @@ function renderRoute() {
               <div class="nb-stop-name">${stop.station}</div>
               <span class="nb-stop-tag-walk">${WALK_ICON_SVG}Walk</span>
             </div>
-            <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
+            ${lockedSubmission ? '' : `<button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>`}
           </div>
         </div>
       </div>`;
@@ -3301,7 +3561,7 @@ function renderRoute() {
               <div class="nb-stop-name">${stop.station}</div>
               <span class="nb-stop-tag" style="background:${lc.bg};color:${lc.txt};">${stop.line}</span>
             </div>
-            <button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>
+            ${lockedSubmission ? '' : `<button class="nb-stop-rm" onclick="removeStep(${i})">&#x2715;</button>`}
           </div>
         </div>
       </div>`;
@@ -3638,24 +3898,30 @@ function submitRoute() {
 
   const pct = Math.max(0, Math.min(100, Math.round(optimalMins / Math.max(userMins, 1) * 100)));
 
-  const store = getStore();
+  // Streak + history are kept per mode so easy and hard track independently.
+  const store = getModeStore(currentMode);
   const today = new Date().toDateString();
   if (store.lastPlayed !== today) {
     store.streak = (store.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? store.streak+1 : 1;
     store.lastPlayed = today;
   }
   const todayIdx = store.history.findIndex(e => e.date === today);
-  const route = puzzleData.optimal.legs
+  // History should reflect the route the player actually submitted, not the
+  // optimal one. Walk legs are skipped to match the pill rendering.
+  const route = userLegsData.legs
     .filter(l => l.line !== 'Walk')
     .map(l => ({line: l.line, to: l.to}));
-  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today, route};
+  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today, route, mode: currentMode};
   if (todayIdx === -1) {
     store.history.push(entry);
   } else if (userMins < store.history[todayIdx].userMins) {
     store.history[todayIdx] = entry;
   }
-  setStore(store);
+  setModeStore(currentMode, store);
   document.getElementById('streak-disp').textContent = store.streak;
+  refreshTabChecks();
+  // Defer persisting the rendered result-card HTML until after it's built
+  // below (search for "PERSIST RESULT HTML" comment).
 
   // Build optimal route interchanges from leg boundaries.
   // Special case: if the interchange is at Bank→Monument or Monument→Bank
@@ -3716,12 +3982,26 @@ function submitRoute() {
         ${optLegsHtml}
       </div>
       <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
-      <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date}</div>
+      <div class="puzzle-num">Tubed #${puzzleData.puzzleNum} · ${puzzleData.date} · ${currentMode === 'hard' ? 'Hard' : 'Easy'}</div>
       <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hintsUsed},${numChanges},${completionSecs})">&#128172; Share my result</button>
       <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hintsUsed},${numChanges},${completionSecs})" style="display:none;">&#128203; Copy to clipboard</button>
+      <div id="try-other-slot"></div>
       <button class="btn-feedback" onclick="openFeedback()">&#x270F;&#xFE0F; Give feedback</button>
       <button class="btn-reset" onclick="resetGame()">Back to the puzzle</button>
     </div>`;
+
+  // PERSIST RESULT HTML — store the rendered card so we can show it again
+  // on reload if the user comes back later today. Also store the submitted
+  // user route + final time so we can rebuild the read-only puzzle view
+  // (Phase 6b) when the user clicks "Back to puzzle" from results.
+  const cardSnap = getModeStore(currentMode);
+  cardSnap.resultHtml         = rp.innerHTML;
+  cardSnap.submittedRoute     = userRoute.slice();
+  cardSnap.completionSecs     = completionSecs;
+  cardSnap.submittedHintsUsed = hintsUsed;
+  setModeStore(currentMode, cardSnap);
+  lockedSubmission = true;
+  refreshTryOtherButton();
 
   setTimeout(() => {
     const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%';
@@ -3759,7 +4039,7 @@ function buildShareText(diff, hints, changes, secs) {
     ? `✨ No hints used`
     : `💡 ${hints} hint${hints > 1 ? 's' : ''} used`;
   return [
-    `🚇 Tubed #${puzzleData.puzzleNum} · solved in ${timerFmt(secs)}`,
+    `🚇 Tubed #${puzzleData.puzzleNum} · ${currentMode === 'hard' ? '🔥 Hard' : '🟢 Easy'} · solved in ${timerFmt(secs)}`,
     scoreLine,
     hintsLine,
     challengeLine,
@@ -3787,7 +4067,88 @@ async function copyResult(diff, hints, changes, secs) {
   }
 }
 
+// Read-only view of the user's already-submitted route. Triggered when the
+// user clicks "Back to puzzle" from the results card for a solved mode.
+// Puzzle is locked: route can't be edited, hints are hidden, submit is
+// replaced with a button that goes back to results.
+function enterLockedView() {
+  const s = getModeStore(currentMode);
+  // Restore the user's actual submitted route + state into the globals so
+  // renderRoute/updateMap draw it.
+  lockedSubmission = true;
+  userRoute        = (s.submittedRoute || []).slice();
+  nbDestLocked     = userRoute.length > 0 && userRoute[userRoute.length - 1].station === puzzleData.end;
+  nbAdding         = false;
+  selectedStation  = '';
+  hintsUsed        = s.submittedHintsUsed || 0;
+  hintsRevealed    = [false, false, false];
+  activeHintN      = null;
+
+  // Hide hints, hide the trailing "Add stops above..." helper line,
+  // and turn the submit button into a "See full results" CTA.
+  const hints = document.getElementById('hints-area');
+  if (hints) hints.style.display = 'none';
+  const routeHint = document.getElementById('route-hint');
+  if (routeHint) routeHint.style.display = 'none';
+  const btn = document.getElementById('sub-btn');
+  if (btn) {
+    btn.disabled = false;
+    btn.innerHTML = 'See Results &nbsp;→';
+    btn.setAttribute('onclick', 'showSavedResults()');
+  }
+
+  // Switch panels and (re)build the map so it picks up the route
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('result-panel').innerHTML = '';
+  document.getElementById('main-panel').style.display = 'block';
+
+  // Freeze timer at the submitted time
+  timerStopped = true;
+  clearInterval(timerInterval);
+  timerSeconds = s.completionSecs || 0;
+  const disp = document.getElementById('timer-disp'); if (disp) disp.textContent = timerFmt(timerSeconds);
+  const box  = document.getElementById('timer-box');  if (box)  box.classList.add('done');
+
+  if (map) { mapLayers = []; map.remove(); map = null; }
+  initMap();
+  renderRoute();
+  setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+}
+
+// Re-display the saved result card for the current mode. Used as the
+// onclick handler for the "See full results" button in the locked view.
+function showSavedResults() {
+  const s = getModeStore(currentMode);
+  if (!s.resultHtml) return;
+  // Reset the submit button so a future resetGame call works as normal
+  const btn = document.getElementById('sub-btn');
+  if (btn) btn.setAttribute('onclick', 'submitRoute()');
+  document.getElementById('main-panel').style.display = 'none';
+  const rp = document.getElementById('result-panel');
+  rp.style.display = 'block';
+  rp.innerHTML = s.resultHtml;
+  refreshTryOtherButton();
+  // Same share/copy button visibility logic as the original submit flow
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const useShare = isMobile && !!navigator.share;
+  const sb = document.getElementById('share-btn');
+  const cb = document.getElementById('copy-btn');
+  if (!useShare) {
+    if (sb) sb.style.display = 'none';
+    if (cb) cb.style.display = 'flex';
+  }
+}
+
 function resetGame() {
+  // If this mode has already been submitted today, "Back to puzzle" should
+  // go to the locked, read-only view of the submitted route — not reset
+  // to a fresh puzzle.
+  const today = new Date().toDateString();
+  const s = getModeStore(currentMode);
+  if (s.lastPlayed === today && s.submittedRoute) {
+    enterLockedView();
+    return;
+  }
   document.getElementById('result-panel').style.display = 'none';
   document.getElementById('result-panel').innerHTML = '';
   document.getElementById('main-panel').style.display = 'block';
@@ -3810,13 +4171,154 @@ function resetGame() {
   document.getElementById('hints-count').textContent = '';
   resetTimer();
   startTimer();
-  renderRoute(); renderHistory();
-  setTimeout(() => map.invalidateSize(), 100);
+  // Tear down + re-init the map. Necessary when resetGame is called after a
+  // restored-result render (e.g. landing on a saved result card on load) —
+  // in that flow the map was initialised while its container was hidden, so
+  // Leaflet couldn't measure bounds and the pins never showed correctly.
+  if (map) { mapLayers = []; map.remove(); map = null; }
+  initMap();
+  renderRoute();
+  renderHistory();
+  setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+}
+
+// Switch between Easy and Hard tabs. Snapshots the current mode's state
+// (route, hints, timer, results panel) before swapping in the other mode's
+// snapshot. First switch into an unseen mode lazily generates that puzzle.
+function switchMode(mode) {
+  if (mode !== 'easy' && mode !== 'hard') return;
+  if (mode === currentMode) return;
+
+  // 1. Save the live state into the outgoing mode's slot
+  // Pause timer so its seconds don't keep ticking on the wrong mode
+  const wasRunning = !timerStopped;
+  timerStopped = true;
+  clearInterval(timerInterval);
+  modeState[currentMode] = snapshotMode();
+  modeState[currentMode].timerStopped = !wasRunning;  // preserve original intent
+
+  // 2. Close any open popovers; clear map layers from the old route
+  closeHintPopover && closeHintPopover();
+  if (map) { mapLayers = []; map.remove(); map = null; }
+
+  // 3. Switch
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.mode === mode);
+  });
+
+  // 4. Either restore the saved snapshot, or boot a fresh puzzle for this mode
+  if (modeState[currentMode]) {
+    restoreMode(modeState[currentMode]);
+    // Always paint the restored time so the display matches the new mode,
+    // not the previous mode we just left. Also update the timer-box's
+    // "done" styling (greyed when the puzzle is over).
+    const disp = document.getElementById('timer-disp');
+    if (disp) disp.textContent = timerFmt(timerSeconds);
+    const box = document.getElementById('timer-box');
+    if (box) box.classList.toggle('done', timerStopped);
+    // Resume the live ticker if the timer was running when we left this mode
+    if (!timerStopped) {
+      timerInterval = setInterval(() => {
+        if (timerStopped) return;
+        timerSeconds++;
+        if (disp) disp.textContent = timerFmt(timerSeconds);
+      }, 1000);
+    }
+  } else {
+    // First time entering this mode this session — generate a fresh puzzle
+    puzzleData = todayPuzzle(currentMode);
+    userRoute = [];
+    hintsUsed = 0;
+    hintsRevealed = [false, false, false];
+    activeHintN = null;
+    nbAdding = false;
+    nbDestLocked = false;
+    selectedStation = '';
+    lockedSubmission = false;
+    resetTimer();
+    startTimer();
+  }
+
+  // 5. Re-render everything for the now-active mode
+  document.getElementById('start-stn').textContent = puzzleData.start;
+  document.getElementById('end-stn').textContent   = puzzleData.end;
+  document.getElementById('puzzle-sub').textContent = `Daily London Puzzle #${puzzleData.puzzleNum}`;
+  applyHardModeStyling();
+
+  // Restore hint button visual state
+  for (let n = 1; n <= 3; n++) {
+    const hb = document.getElementById(`hint-btn-${n}`);
+    if (!hb) continue;
+    hb.classList.toggle('used',   !!hintsRevealed[n - 1]);
+    hb.classList.toggle('active', activeHintN === n);
+  }
+  const hc = document.getElementById('hints-count');
+  if (hc) hc.textContent = hintsUsed > 0 ? `${hintsUsed}/3 used` : '';
+
+  // Restore submit button: "See full results" when locked, otherwise the
+  // normal "Submit my route" gated by the route-builder rule.
+  const sb = document.getElementById('sub-btn');
+  if (sb) {
+    if (lockedSubmission) {
+      sb.disabled = false;
+      sb.innerHTML = 'See Results &nbsp;→';
+      sb.setAttribute('onclick', 'showSavedResults()');
+    } else {
+      sb.disabled = !nbDestLocked;
+      sb.innerHTML = 'Submit my route &nbsp;→';
+      sb.setAttribute('onclick', 'submitRoute()');
+    }
+  }
+  // Hints + route-hint visibility tracks lockedSubmission
+  const hintsArea = document.getElementById('hints-area');
+  if (hintsArea) hintsArea.style.display = lockedSubmission ? 'none' : '';
+  const routeHintEl = document.getElementById('route-hint');
+  if (routeHintEl) routeHintEl.style.display = lockedSubmission ? 'none' : '';
+
+  // If this mode had a result panel showing (in-memory snapshot OR persisted
+  // store from a prior session today), restore it; otherwise show the puzzle.
+  const rp = document.getElementById('result-panel');
+  const mp = document.getElementById('main-panel');
+  const snap = modeState[currentMode];
+  const today = new Date().toDateString();
+  const persisted = getModeStore(currentMode);
+  const persistedSolved = persisted.lastPlayed === today && persisted.resultHtml;
+  if (snap && snap.resultShown && snap.resultHtml) {
+    if (mp) mp.style.display = 'none';
+    if (rp) { rp.style.display = 'block'; rp.innerHTML = snap.resultHtml; }
+    refreshTryOtherButton();
+  } else if (persistedSolved) {
+    if (mp) mp.style.display = 'none';
+    if (rp) { rp.style.display = 'block'; rp.innerHTML = persisted.resultHtml; }
+    refreshTryOtherButton();
+    lockedSubmission = true;
+    // Pause the timer since this puzzle is already done
+    timerStopped = true;
+    clearInterval(timerInterval);
+  } else {
+    if (rp) { rp.style.display = 'none'; rp.innerHTML = ''; }
+    if (mp) mp.style.display = 'block';
+  }
+
+  // Order matters: initMap() must run before renderRoute(), because
+  // renderRoute() calls updateMap() which adds layers to the live `map`.
+  initMap();
+  renderRoute();
+  renderHistory();
+  // Leaflet needs invalidateSize() after a remount or its tile layer can
+  // render blank (same fix resetGame uses).
+  setTimeout(() => { if (map) map.invalidateSize(); }, 100);
 }
 
 function renderHistory() {
-  const d = getStore();
-  document.getElementById('streak-disp').textContent = d.streak;
+  const d = getModeStore(currentMode);
+  const sd = document.getElementById('streak-disp');
+  if (sd) {
+    sd.textContent = d.streak;
+    // Coral on Hard so it's visually obvious which mode's streak is shown
+    sd.style.color = currentMode === 'hard' ? 'var(--coral)' : 'var(--yellow)';
+  }
   const h = document.getElementById('hist-list');
   if (!d.history.length) { h.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:10px 0;">No games played yet</div>'; return; }
   const seen = new Map();
@@ -3834,8 +4336,14 @@ function renderHistory() {
       }).join('');
       routeHtml = `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin-top:3px;">${pills}</div>`;
     }
+    // Per-row mode badge — entries pre-dating the mode split won't have
+    // `mode` set; assume those were easy.
+    const mode = e.mode === 'hard' ? 'hard' : 'easy';
+    const badgeBg = mode === 'hard' ? 'var(--coral)' : 'var(--navy)';
+    const badgeLbl = mode === 'hard' ? 'HARD' : 'EASY';
+    const badge = `<span style="background:${badgeBg};color:#fff;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;letter-spacing:0.5px;margin-left:6px;vertical-align:middle;">${badgeLbl}</span>`;
     return `<div class="hist-row">
-      <div><div>${e.start} → ${e.end}</div>${routeHtml}<div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
+      <div><div>${e.start} → ${e.end}${badge}</div>${routeHtml}<div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
       <div style="font-size:20px;">${e.medal}</div>
     </div>`;
   }).join('');
