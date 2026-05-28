@@ -1,0 +1,12 @@
+{
+  "date": "2026-05-28",
+  "puzzleNum": 56,
+  "easy": {
+    "start": "North Greenwich",
+    "end": "Hammersmith"
+  },
+  "hard": {
+    "start": "Kilburn",
+    "end": "Liverpool Street"
+  }
+}
