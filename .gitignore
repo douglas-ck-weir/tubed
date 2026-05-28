@@ -1,0 +1,13 @@
+# Local build tools
+build_interchanges.py
+build_times.py
+interchange_new.js
+times_new.js
+times_new.json
+
+# VS Code local settings
+.vscode/settings.local.json
+settings.local.json
+
+# Claude memory
+.claude/
