@@ -1,3 +1,6 @@
+# macOS
+.DS_Store
+
 # Local build tools
 build_interchanges.py
 build_times.py
