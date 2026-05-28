@@ -3354,10 +3354,10 @@ function getStore() {
     const migrated = { easy: v5 || emptyModeStore(), hard: emptyModeStore() };
     try {
       localStorage.setItem('tubepzl_v6', JSON.stringify(migrated));
-      // Migration succeeded — drop the legacy key so it doesn't accumulate
-      // forever. Only removed AFTER the v6 write to avoid data loss on a
-      // setItem quota failure.
-      localStorage.removeItem('tubepzl_v5');
+      // NOTE: we deliberately do NOT delete tubepzl_v5 here. Keeping the
+      // legacy key around as a dormant backup means rolling back to the
+      // pre-hardmode code (which only reads v5) preserves player streaks.
+      // The cost is a few hundred bytes of stale data per browser.
       if (v5) _tel('storage_migrated', { from: 'v5', to: 'v6' });
     } catch(e){}
     return migrated;
