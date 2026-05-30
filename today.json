@@ -1,12 +1,12 @@
 {
-  "date": "2026-05-29",
-  "puzzleNum": 57,
+  "date": "2026-05-30",
+  "puzzleNum": 58,
   "easy": {
-    "start": "Kilburn",
-    "end": "Liverpool Street"
-  },
-  "hard": {
     "start": "Tufnell Park",
     "end": "Balham"
+  },
+  "hard": {
+    "start": "Wembley Central",
+    "end": "Shadwell"
   }
 }
