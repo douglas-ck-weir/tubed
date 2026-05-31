@@ -1,12 +1,12 @@
 {
-  "date": "2026-05-30",
-  "puzzleNum": 58,
+  "date": "2026-05-31",
+  "puzzleNum": 59,
   "easy": {
-    "start": "Tufnell Park",
-    "end": "Balham"
-  },
-  "hard": {
     "start": "Wembley Central",
     "end": "Shadwell"
+  },
+  "hard": {
+    "start": "White City",
+    "end": "Westminster"
   }
 }
