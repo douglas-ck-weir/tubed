@@ -426,9 +426,31 @@ const LINE_COLOURS = {
   'Metropolitan':       {bg:'#9B0056', txt:'#fff'},
   'Northern':           {bg:'#000000', txt:'#fff'},
   'Overground':         {bg:'#EE7C0E', txt:'#fff'},
+  'Lioness':            {bg:'#FAA61A', txt:'#000'},
+  'Mildmay':            {bg:'#0077AD', txt:'#fff'},
+  'Windrush':           {bg:'#ED1B00', txt:'#fff'},
+  'Weaver':             {bg:'#823A62', txt:'#fff'},
+  'Suffragette':        {bg:'#5BB972', txt:'#000'},
+  'Liberty':            {bg:'#5D6061', txt:'#fff'},
   'Piccadilly':         {bg:'#003688', txt:'#fff'},
   'Victoria':           {bg:'#0098D4', txt:'#fff'},
   'Waterloo & City':    {bg:'#95CDBA', txt:'#000'},
+};
+
+// ── Shared-platform groups ────────────────────────────────────────────────────
+// At some stations, multiple display lines share the same physical platforms,
+// so a walking-time entry written for one line applies to all of them.
+// e.g. at Liverpool Street the three Weaver branches all use the same
+// Overground platforms, so a `Central|Weaver` entry covers any future
+// Overground service that uses those platforms too.
+// Format: station → group label → [display lines sharing those platforms]
+const PLATFORM_GROUPS = {
+  'Liverpool Street': { 'Overground': ['Weaver'] },
+  'Stratford':        { 'Overground': ['Mildmay'] },
+  'Canada Water':     { 'Overground': ['Windrush'] },
+  'Whitechapel':      { 'Overground': ['Windrush'] },
+  'Highbury & Islington': { 'Overground': ['Mildmay', 'Windrush'] },
+  'Willesden Junction':   { 'Overground': ['Lioness', 'Mildmay'] },
 };
 
 // ── Interchange times (minutes, walking-only) ────────────────────────────────
@@ -438,6 +460,8 @@ const LINE_COLOURS = {
 // + Bank/Monument cross-complex pairs duplicated under both stations
 //   so interchangeTime() works regardless of which station is queried.
 // All values are in MINUTES. Walking-only — matches TIMES{} convention.
+// When platforms are shared (see PLATFORM_GROUPS), a single entry under one
+// display line implicitly covers all lines in that group.
 const INTERCHANGE_MINS = {
   'Acton Town': {
     'District|Piccadilly': 2,
@@ -483,7 +507,7 @@ const INTERCHANGE_MINS = {
     'Hammersmith & City|Metropolitan': 2,
   },
   'Barking': {
-    'District|Overground': 4,
+    'District|Suffragette': 4,
   },
   'Barons Court': {
     'District|Piccadilly': 4,
@@ -503,7 +527,7 @@ const INTERCHANGE_MINS = {
     'District|Hammersmith & City': 4,
   },
   'Canada Water': {
-    'Jubilee|Overground': 3,
+    'Jubilee|Windrush': 3,
   },
   'Canary Wharf': {
     'DLR|Elizabeth': 5,
@@ -555,9 +579,9 @@ const INTERCHANGE_MINS = {
     'District|Northern': 5,
   },
   'Euston': {
-    'Northern|Overground': 10,
+    'Lioness|Northern': 10,
     'Northern|Victoria': 5,
-    'Overground|Victoria': 9,
+    'Lioness|Victoria': 9,
   },
   'Euston Square': {
     'Circle|Hammersmith & City': 2,
@@ -597,16 +621,16 @@ const INTERCHANGE_MINS = {
     'Piccadilly|Victoria': 4,
   },
   'Gunnersbury': {
-    'District|Overground': 4,
+    'District|Mildmay': 4,
   },
   'Hammersmith': {
     'District|Piccadilly': 4,
   },
   'Harlesden': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Harrow & Wealdstone': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Harrow on the Hill': {
     'Metropolitan|Metropolitan': 2,
@@ -623,7 +647,8 @@ const INTERCHANGE_MINS = {
     'Circle|District': 4,
   },
   'Highbury & Islington': {
-    'Overground|Victoria': 4,
+    'Mildmay|Victoria': 4,
+    'Victoria|Windrush': 4,
   },
   'Hillingdon': {
     'Metropolitan|Piccadilly': 4,
@@ -635,13 +660,13 @@ const INTERCHANGE_MINS = {
     'Metropolitan|Piccadilly': 4,
   },
   'Kensal Green': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Kenton': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Kew Gardens': {
-    'District|Overground': 5,
+    'District|Mildmay': 5,
   },
   'Kings Cross St. Pancras': {
     'Circle|Hammersmith & City': 2,
@@ -674,17 +699,17 @@ const INTERCHANGE_MINS = {
     'Central|Elizabeth': 3,
     'Central|Hammersmith & City': 6,
     'Central|Metropolitan': 6,
-    'Central|Overground': 5,
+    'Central|Weaver': 5,
     'Circle|Elizabeth': 4,
     'Circle|Hammersmith & City': 4,
     'Circle|Metropolitan': 4,
-    'Circle|Overground': 4,
+    'Circle|Weaver': 4,
     'Elizabeth|Hammersmith & City': 4,
     'Elizabeth|Metropolitan': 4,
-    'Elizabeth|Overground': 5,
+    'Elizabeth|Weaver': 5,
     'Hammersmith & City|Metropolitan': 4,
-    'Hammersmith & City|Overground': 4,
-    'Metropolitan|Overground': 4,
+    'Hammersmith & City|Weaver': 4,
+    'Metropolitan|Weaver': 4,
   },
   'London Bridge': {
     'Jubilee|Northern': 6,
@@ -726,7 +751,7 @@ const INTERCHANGE_MINS = {
     'Metropolitan|Northern': 7,
   },
   'North Wembley': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Notting Hill Gate': {
     'Central|Circle': 4,
@@ -754,16 +779,16 @@ const INTERCHANGE_MINS = {
     'Bakerloo|Piccadilly': 3,
   },
   "Queen's Park": {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Rayners Lane': {
     'Metropolitan|Piccadilly': 4,
   },
   'Richmond': {
-    'District|Overground': 4,
+    'District|Mildmay': 4,
   },
   'Romford': {
-    'Elizabeth|Overground': 3,
+    'Elizabeth|Liberty': 3,
   },
   'Royal Oak': {
     'Circle|Hammersmith & City': 2,
@@ -786,7 +811,7 @@ const INTERCHANGE_MINS = {
     'District|Piccadilly': 4,
   },
   'South Kenton': {
-    'Bakerloo|Overground': 2,
+    'Bakerloo|Lioness': 2,
   },
   "St. James's Park": {
     'Circle|District': 4,
@@ -798,19 +823,19 @@ const INTERCHANGE_MINS = {
     'Northern|Victoria': 3,
   },
   'Stonebridge Park': {
-    'Bakerloo|Overground': 4,
+    'Bakerloo|Lioness': 4,
   },
   'Stratford': {
     'Central|DLR': 3,
     'Central|Elizabeth': 3,
     'Central|Jubilee': 3,
-    'Central|Overground': 5,
+    'Central|Mildmay': 5,
     'DLR|Elizabeth': 4,
     'DLR|Jubilee': 3,
-    'DLR|Overground': 6,
+    'DLR|Mildmay': 6,
     'Elizabeth|Jubilee': 4,
-    'Elizabeth|Overground': 3,
-    'Jubilee|Overground': 5,
+    'Elizabeth|Mildmay': 3,
+    'Jubilee|Mildmay': 5,
   },
   'Temple': {
     'Circle|District': 4,
@@ -843,16 +868,16 @@ const INTERCHANGE_MINS = {
     'Northern|Waterloo & City': 5,
   },
   'Watford High Street': {
-    'Metropolitan|Overground': 4,
+    'Lioness|Metropolitan': 4,
   },
   'Wembley Central': {
-    'Bakerloo|Overground': 5,
+    'Bakerloo|Lioness': 5,
   },
   'Wembley Park': {
     'Jubilee|Metropolitan': 4,
   },
   'West Brompton': {
-    'District|Overground': 5,
+    'District|Mildmay': 5,
   },
   'West Ham': {
     'District|Hammersmith & City': 5,
@@ -860,7 +885,7 @@ const INTERCHANGE_MINS = {
     'Hammersmith & City|Jubilee': 5,
   },
   'West Hampstead': {
-    'Jubilee|Overground': 4,
+    'Jubilee|Mildmay': 4,
   },
   'Westbourne Park': {
     'Circle|Hammersmith & City': 4,
@@ -873,14 +898,18 @@ const INTERCHANGE_MINS = {
   'Whitechapel': {
     'District|Elizabeth': 4,
     'District|Hammersmith & City': 2,
-    'District|Overground': 5,
+    'District|Windrush': 5,
     'Elizabeth|Elizabeth': 1,
     'Elizabeth|Hammersmith & City': 4,
-    'Elizabeth|Overground': 3,
-    'Hammersmith & City|Overground': 5,
+    'Elizabeth|Windrush': 3,
+    'Hammersmith & City|Windrush': 5,
   },
   'Willesden Junction': {
-    'Bakerloo|Overground': 4,
+    'Bakerloo|Lioness': 4,
+    'Bakerloo|Mildmay': 4,
+    // Lioness↔Mildmay platforms are on separate sides of the station;
+    // walk time sourced from TfL station data.
+    'Lioness|Mildmay': 3,
   },
   'Wood Lane': {
     'Circle|Hammersmith & City': 2,
@@ -892,6 +921,18 @@ const INTERCHANGE_MINS = {
     'DLR|Elizabeth': 5,
   },
 };
+
+// Returns all display lines that share physical platforms with `dl` at `stn`
+// (including `dl` itself). Used so a single walking-time entry covers every
+// line that uses those platforms.
+function platformPeers(stn, dl) {
+  const groups = PLATFORM_GROUPS[stn];
+  if (!groups) return [dl];
+  for (const members of Object.values(groups)) {
+    if (members.includes(dl)) return members;
+  }
+  return [dl];
+}
 
 function interchangeTime(stn, fromLine, toLine) {
   const entry = INTERCHANGE_MINS[stn];
@@ -908,8 +949,21 @@ function interchangeTime(stn, fromLine, toLine) {
   if (!entry) return 2;
   if (typeof entry === 'number') return entry;
   if (fromLine && toLine) {
-    const key = [displayLine(fromLine), displayLine(toLine)].sort().join('|');
+    const dlFrom = displayLine(fromLine);
+    const dlTo   = displayLine(toLine);
+    const key = [dlFrom, dlTo].sort().join('|');
     if (key in entry) return entry[key];
+    // Try platform-group peers: if dlTo shares platforms with another line
+    // that has a walking-time entry from dlFrom, use that.
+    const fromPeers = platformPeers(stn, dlFrom);
+    const toPeers   = platformPeers(stn, dlTo);
+    for (const f of fromPeers) {
+      for (const t of toPeers) {
+        if (f === t) continue;
+        const peerKey = [f, t].sort().join('|');
+        if (peerKey in entry) return entry[peerKey];
+      }
+    }
     // Fall back to worst case at this station so we never under-penalise
     return Math.max(...Object.values(entry));
   }
@@ -1103,6 +1157,7 @@ const COORDS = {
   'Upton Park':            [51.5352, 0.0351],
   'East Ham':              [51.5398, 0.0530],
   'Barking':               [51.5398, 0.0810],
+  'Barking Riverside':     [51.5191, 0.1148],
   'Upney':                 [51.5385, 0.1014],
   'Becontree':             [51.5403, 0.1271],
   'Dagenham Heathway':     [51.5414, 0.1471],
@@ -1429,6 +1484,7 @@ const COORDS = {
   'White Hart Lane':       [51.6025,-0.0702],
   'Silver Street':         [51.6107,-0.0649],
   'Edmonton Green':        [51.6237,-0.0589],
+  'Bush Hill Park':        [51.6415,-0.0693],
   'Lower Edmonton':        [51.6282,-0.0605],
   'Angel Road':            [51.6318,-0.0471],
   'Meridian Water':        [51.6249,-0.0295],
@@ -1761,7 +1817,7 @@ const NETWORK = {
     'Canonbury','Highbury & Islington',
     'Caledonian Road & Barnsbury','Camden Road','Kentish Town West',
     'Gospel Oak','Hampstead Heath','Finchley Road & Frognal',
-    'West Hampstead','Brondesbury Park','Brondesbury','Kensal Rise',
+    'West Hampstead','Brondesbury','Brondesbury Park','Kensal Rise',
     'Willesden Junction','Acton Central','South Acton','Gunnersbury',
     'Kew Gardens','Richmond',
   ],
@@ -1770,9 +1826,9 @@ const NETWORK = {
     'Canonbury','Highbury & Islington',
     'Caledonian Road & Barnsbury','Camden Road','Kentish Town West',
     'Gospel Oak','Hampstead Heath','Finchley Road & Frognal',
-    'West Hampstead','Brondesbury Park','Brondesbury','Kensal Rise',
+    'West Hampstead','Brondesbury','Brondesbury Park','Kensal Rise',
     'Willesden Junction','Shepherd\'s Bush (Overground)','Kensington (Olympia)',
-    'Imperial Wharf','West Brompton','Clapham Junction',
+    'West Brompton','Imperial Wharf','Clapham Junction',
   ],
   'Overground_Windrush_Clapham': [
     'Highbury & Islington','Canonbury','Dalston Junction',
@@ -1786,35 +1842,40 @@ const NETWORK = {
     'Haggerston','Hoxton','Shoreditch High Street','Whitechapel',
     'Shadwell (Overground)','Wapping','Rotherhithe','Canada Water','Surrey Quays',
     'New Cross Gate','Brockley','Honor Oak Park','Forest Hill','Sydenham',
-    'Anerley','Norwood Junction','West Croydon',
+    'Penge West','Anerley','Norwood Junction','West Croydon',
   ],
   'Overground_Windrush_NewCross': [
-    'Surrey Quays','New Cross',
+    'Highbury & Islington','Canonbury','Dalston Junction',
+    'Haggerston','Hoxton','Shoreditch High Street','Whitechapel',
+    'Shadwell (Overground)','Wapping','Rotherhithe','Canada Water','Surrey Quays',
+    'New Cross',
   ],
   'Overground_Windrush_CrystalPalace': [
-    'Sydenham','Crystal Palace',
+    'Highbury & Islington','Canonbury','Dalston Junction',
+    'Haggerston','Hoxton','Shoreditch High Street','Whitechapel',
+    'Shadwell (Overground)','Wapping','Rotherhithe','Canada Water','Surrey Quays',
+    'New Cross Gate','Brockley','Honor Oak Park','Forest Hill','Sydenham',
+    'Crystal Palace',
   ],
   'Overground_Weaver_Cheshunt': [
     'Liverpool Street','Bethnal Green (Overground)','Cambridge Heath','London Fields',
     'Hackney Downs','Rectory Road','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
     'Bruce Grove','White Hart Lane','Silver Street','Edmonton Green',
-    'Lower Edmonton','Angel Road','Meridian Water','Ponders End',
-    'Brimsdown','Enfield Lock','Waltham Cross','Turkey Street',
-    'Theobald\'s Grove','Cheshunt',
+    'Southbury','Turkey Street','Theobald\'s Grove','Cheshunt',
   ],
   'Overground_Weaver_Enfield_Town': [
     'Liverpool Street','Bethnal Green (Overground)','Cambridge Heath','London Fields',
     'Hackney Downs','Rectory Road','Stoke Newington','Stamford Hill','Seven Sisters (Overground)',
-    'Bruce Grove','White Hart Lane','Silver Street','Edmonton Green','Enfield Town',
+    'Bruce Grove','White Hart Lane','Silver Street','Edmonton Green','Bush Hill Park','Enfield Town',
   ],
   'Overground_Weaver_Chingford': [
-    'Liverpool Street','Bethnal Green (Overground)','Cambridge Heath','London Fields',
-    'Hackney Downs','St. James Street','Walthamstow Queens Road','Wood Street','Highams Park','Chingford',
+    'Liverpool Street','Bethnal Green (Overground)',
+    'Hackney Downs','Clapton','St. James Street','Walthamstow Central','Wood Street','Highams Park','Chingford',
   ],
   'Overground_Suffragette': [
     'Gospel Oak','Upper Holloway','Crouch Hill','Harringay Green Lanes',
     'South Tottenham','Blackhorse Road (Overground)','Walthamstow Queens Road',
-    'Leyton Midland Road','Leytonstone High Road','Wanstead Park','Woodgrange Park','Barking',
+    'Leyton Midland Road','Leytonstone High Road','Wanstead Park','Woodgrange Park','Barking','Barking Riverside',
   ],
   'Overground_Liberty': [
     'Romford','Emerson Park','Upminster',
@@ -1872,12 +1933,14 @@ const TIMES = {
   'Brockley|Honor Oak Park':3,
   'Bromley-by-Bow|West Ham':3,
   'Brondesbury Park|Brondesbury':2,
-  'Brondesbury|Kensal Rise':2,
+  'Brondesbury Park|Kensal Rise':2,
   'Buckhurst Hill|Loughton':3,
   'Burnt Oak|Edgware':2,
+  'Bush Hill Park|Enfield Town':5,
   'Bushey|Carpenders Park':3,
   'Caledonian Road & Barnsbury|Camden Road':3,
   'Caledonian Road|Holloway Road':2,
+  'Bethnal Green (Overground)|Hackney Downs':4,
   'Cambridge Heath|Bethnal Green (Overground)':2,
   'Cambridge Heath|London Fields':2,
   'Camden Road|Kentish Town West':2,
@@ -1907,12 +1970,13 @@ const TIMES = {
   'Clapham High Street|Clapham Junction':2,
   'Clapham North|Stockwell':1,
   'Clapham South|Clapham Common':2,
+  'Clapton|St. James Street':3,
   'Clapton|Stoke Newington':2,
   'Colindale|Burnt Oak':3,
   'Colliers Wood|Tooting Broadway':2,
   'Covent Garden|Holborn':2,
   'Crossharbour|Mudchute':2,
-  'Crouch Hill|Harringay Green Lanes':2,
+  'Crouch Hill|Harringay Green Lanes':3,
   'Croxley|Moor Park':5,
   'Croxley|Watford':2,
   'Crystal Palace|Gipsy Hill':3,
@@ -1921,7 +1985,7 @@ const TIMES = {
   'Custom House for ExCel|Woolwich Arsenal':4,
   'Cutty Sark for Maritime Greenwich|Greenwich':3,
   'Cyprus|Gallions Reach':2,
-  'Dalston Junction|Canonbury':3,
+  'Dalston Junction|Canonbury':2,
   'Dalston Junction|Haggerston':2,
   'Dalston Kingsland|Dalston Junction':2,
   'Debden|Theydon Bois':3,
@@ -1966,7 +2030,7 @@ const TIMES = {
   'Finsbury Park|Manor House':2,
   'Finsbury Park|Seven Sisters':4,
   'Forest Gate|Manor Park':2,
-  'Forest Hill|Sydenham':2,
+  'Forest Hill|Sydenham':4,
   'Gallions Reach|Beckton':3,
   'Gidea Park|Harold Wood':3,
   'Gipsy Hill|West Norwood':2,
@@ -1976,7 +2040,7 @@ const TIMES = {
   'Goldhawk Road|Shepherd\'s Bush Market':2,
   'Goodmayes|Chadwell Heath':2,
   'Gospel Oak|Hampstead Heath':3,
-  'Gospel Oak|Upper Holloway':3,
+  'Gospel Oak|Upper Holloway':4,
   'Grange Hill|Hainault':2,
   'Great Portland Street|Euston Square':2,
   'Green Park|Oxford Circus':2,
@@ -2000,16 +2064,16 @@ const TIMES = {
   'Hanwell|Southall':4,
   'Harlesden|Willesden Junction':2,
   'Harold Wood|Brentwood':4,
-  'Harringay Green Lanes|South Tottenham':2,
+  'Harringay Green Lanes|South Tottenham':4,
   'Harrow & Wealdstone|Kenton':3,
   'Harrow on the Hill|Northwick Park':2,
   'Harrow on the Hill|West Harrow':3,
-  'Hatch End|Headstone Lane':3,
+  'Hatch End|Headstone Lane':2,
   'Headstone Lane|Harrow & Wealdstone':3,
   'Hendon Central|Colindale':3,
   'Heron Quays|South Quay':2,
   'High Street Kensington|Notting Hill Gate':2,
-  'Highams Park|Chingford':3,
+  'Highams Park|Chingford':6,
   'Highbury & Islington|Angel':3,
   'Highbury & Islington|Caledonian Road & Barnsbury':3,
   'Highbury & Islington|Finsbury Park':2,
@@ -2024,12 +2088,12 @@ const TIMES = {
   'Hyde Park Corner|Green Park':3,
   'Ickenham|Hillingdon':2,
   'Ilford|Seven Kings':3,
-  'Imperial Wharf|Clapham Junction':4,
+  'Imperial Wharf|Clapham Junction':8,
   'Island Gardens|Cutty Sark for Maritime Greenwich':2,
   'Kennington|Elephant & Castle':2,
   'Kensal Green|Queen\'s Park':2,
   'Kensal Rise|Shepherd\'s Bush (Overground)':5,
-  'Kensington (Olympia)|Imperial Wharf':4,
+  'Kensington (Olympia)|West Brompton':2,
   'Kentish Town West|Gospel Oak':3,
   'Kenton|Preston Road':2,
   'Kenton|South Kenton':2,
@@ -2048,7 +2112,7 @@ const TIMES = {
   'Latimer Road|Goldhawk Road':2,
   'Leicester Square|Covent Garden':1,
   'Leyton Midland Road|Leytonstone High Road':2,
-  'Leytonstone High Road|Wanstead Park':2,
+  'Leytonstone High Road|Wanstead Park':3,
   'Leytonstone|Snaresbrook':2,
   'Leyton|Leytonstone':4,
   'Limehouse|Westferry':1,
@@ -2078,7 +2142,7 @@ const TIMES = {
   'Morden|South Wimbledon':2,
   'Mudchute|Island Gardens':1,
   'Neasden|Dollis Hill':2,
-  'New Cross Gate|Brockley':3,
+  'New Cross Gate|Brockley':2,
   'Newbury Park|Redbridge':2,
   'North Acton|East Acton':2,
   'North Ealing|Park Royal':2,
@@ -2089,7 +2153,7 @@ const TIMES = {
   'Northwick Park|Preston Road':3,
   'Northwood Hills|Pinner':3,
   'Northwood|Northwood Hills':2,
-  'Norwood Junction|Anerley':2,
+  'Norwood Junction|Anerley':3,
   'Notting Hill Gate|Bayswater':2,
   'Notting Hill Gate|Queensway':1,
   'Old Street|Angel':2,
@@ -2125,7 +2189,7 @@ const TIMES = {
   'Regent\'s Park|Baker Street':2,
   'Rickmansworth|Moor Park':4,
   'Roding Valley|Chigwell':3,
-  'Romford|Emerson Park':4,
+  'Romford|Emerson Park':5,
   'Romford|Gidea Park':3,
   'Rotherhithe|Canada Water':2,
   'Royal Albert|Beckton Park':2,
@@ -2141,7 +2205,7 @@ const TIMES = {
   'Seven Sisters|Tottenham Hale':2,
   'Shadwell (Overground)|Wapping':2,
   'Shadwell|Limehouse':3,
-  'Shepherd\'s Bush (Overground)|Kensington (Olympia)':3,
+  'Shepherd\'s Bush (Overground)|Kensington (Olympia)':2,
   'Shepherd\'s Bush Market|Hammersmith':1,
   'Shepherd\'s Bush Market|Wood Lane':1,
   'Shepherd\'s Bush|Holland Park':2,
@@ -2153,19 +2217,20 @@ const TIMES = {
   'South Kensington|Knightsbridge':2,
   'South Kenton|North Wembley':2,
   'South Quay|Crossharbour':1,
-  'South Tottenham|Blackhorse Road (Overground)':2,
+  'South Tottenham|Blackhorse Road (Overground)':3,
   'South Wimbledon|Colliers Wood':2,
   'South Woodford|Woodford':2,
   'Southall|Hayes & Harlington':3,
   'Southbury|Turkey Street':3,
   'Southwark|London Bridge':2,
+  'St. James Street|Walthamstow Central':2,
   'St. James Street|Walthamstow Queens Road':2,
   'St. James\'s Park|Victoria':1,
   'St. James\'s Park|Westminster':2,
   'St. John\'s Wood|Baker Street':3,
   'St. Paul\'s|Bank':2,
   'Stamford Brook|Ravenscourt Park':2,
-  'Stamford Hill|Seven Sisters (Overground)':2,
+  'Stamford Hill|Seven Sisters (Overground)':3,
   'Stanmore|Canons Park':2,
   'Stepney Green|Mile End':2,
   'Stockwell|Oval':2,
@@ -2173,7 +2238,7 @@ const TIMES = {
   'Stoke Newington|Stamford Hill':2,
   'Star Lane|Canning Town':2,
   'Star Lane|West Ham':2,
-  'Stonebridge Park|Harlesden':2,
+  'Stonebridge Park|Harlesden':3,
   'Stratford High Street|Abbey Road':2,
   'Stratford High Street|Stratford':2,
   'Stratford International|Stratford':3,
@@ -2184,11 +2249,11 @@ const TIMES = {
   'Streatham Hill|Balham':3,
   'Sudbury Hill|Sudbury Town':3,
   'Sudbury Town|Alperton':2,
-  'Surrey Quays|New Cross':3,
-  'Surrey Quays|New Cross Gate':3,
+  'Surrey Quays|New Cross':4,
+  'Surrey Quays|New Cross Gate':5,
   'Swiss Cottage|St. John\'s Wood':1,
-  'Sydenham|Crystal Palace':3,
-  'Theobald\'s Grove|Cheshunt':3,
+  'Sydenham|Crystal Palace':4,
+  'Theobald\'s Grove|Cheshunt':5,
   'Theydon Bois|Epping':3,
   'Tooting Bec|Balham':1,
   'Tooting Broadway|Tooting Bec':2,
@@ -2198,34 +2263,35 @@ const TIMES = {
   'Tower Gateway|Shadwell':3,
   'Tower Hill|Aldgate East':2,
   'Tulse Hill|Streatham Hill':3,
-  'Turkey Street|Theobald\'s Grove':3,
+  'Turkey Street|Theobald\'s Grove':2,
   'Turnham Green|Hammersmith':5,
   'Turnham Green|Stamford Brook':1,
   'Turnpike Lane|Wood Green':2,
-  'Upper Holloway|Crouch Hill':3,
+  'Upper Holloway|Crouch Hill':2,
   'Upton Park|East Ham':2,
   'Vauxhall|Pimlico':1,
   'Victoria|Green Park':2,
+  'Walthamstow Central|Wood Street':3,
   'Walthamstow Queens Road|Leyton Midland Road':3,
   'Walthamstow Queens Road|Wood Street':2,
   'Wandsworth Road|Clapham High Street':2,
-  'Wanstead Park|Woodgrange Park':2,
+  'Wanstead Park|Woodgrange Park':3,
   'Wanstead|Leytonstone':2,
-  'Wapping|Rotherhithe':2,
+  'Wapping|Rotherhithe':1,
   'Warren Street|Euston':1,
   'Warwick Avenue|Paddington':2,
   'Waterloo|Bank':4,
   'Waterloo|Embankment':1,
   'Waterloo|Southwark':1,
-  'Watford High Street|Bushey':3,
+  'Watford High Street|Bushey':2,
   'Watford High Street|Watford':2,
-  'Watford Junction|Watford High Street':3,
+  'Watford Junction|Watford High Street':2,
   'Wembley Central|Stonebridge Park':2,
   'Wembley Park|Finchley Road':7,
   'Wembley Park|Neasden':2,
   'West Acton|North Acton':2,
   'West Ealing|Hanwell':3,
-  'West Hampstead|Brondesbury Park':2,
+  'West Hampstead|Brondesbury':2,
   'West Hampstead|Finchley Road':1,
   'West Ham|Abbey Road':2,
   'West Ham|Plaistow':1,
@@ -2241,7 +2307,7 @@ const TIMES = {
   'Westminster|Waterloo':1,
   'White City|Shepherd\'s Bush':2,
   'Whitechapel|Canary Wharf':6,
-  'Whitechapel|Shadwell (Overground)':3,
+  'Whitechapel|Shadwell (Overground)':2,
   'Whitechapel|Stepney Green':2,
   'Whitechapel|Stratford':8,
   'Willesden Green|Kilburn':2,
@@ -2251,22 +2317,25 @@ const TIMES = {
   'Wood Street|Highams Park':3,
   'Woodford|Buckhurst Hill':3,
   'Woodford|Roding Valley':3,
-  'Woodgrange Park|Barking':3,
+  'Woodgrange Park|Barking':4,
+  'Barking|Barking Riverside':7,
   // New stations added in network corrections
   'Gants Hill|Newbury Park':2,
   'Gants Hill|Redbridge':2,
   'West Kensington|Barons Court':1,
   'West Kensington|Earl\'s Court':2,
   'Kilburn High Road|Queen\'s Park':2,
-  'Kilburn High Road|South Hampstead':3,
-  'South Hampstead|Euston':3,
-  'Rectory Road|Stoke Newington':2,
-  'Rectory Road|Hackney Downs':2,
-  'Bruce Grove|Seven Sisters (Overground)':3,
+  'Kilburn High Road|South Hampstead':2,
+  'South Hampstead|Euston':5,
+  'Rectory Road|Stoke Newington':1,
+  'Rectory Road|Hackney Downs':3,
+  'Bruce Grove|Seven Sisters (Overground)':2,
   'Bruce Grove|White Hart Lane':2,
   'White Hart Lane|Silver Street':2,
   'Silver Street|Edmonton Green':2,
+  'Edmonton Green|Bush Hill Park':2,
   'Edmonton Green|Lower Edmonton':2,
+  'Edmonton Green|Southbury':3,
   'Lower Edmonton|Angel Road':2,
   'Angel Road|Meridian Water':3,
   'Meridian Water|Ponders End':3,
@@ -2276,12 +2345,11 @@ const TIMES = {
   'Peckham Rye|Denmark Hill':2,
   'Denmark Hill|Clapham High Street':3,
   'Abbey Wood|Woolwich Arsenal':3,
-  'Willesden Junction|Acton Central':5,
-  'Acton Central|South Acton':2,
+  'Willesden Junction|Acton Central':6,
+  'Acton Central|South Acton':3,
   'South Acton|Gunnersbury':3,
   'Willesden Junction|Shepherd\'s Bush (Overground)':8,
   'West Brompton|Imperial Wharf':3,
-  'Dalston Junction|Canonbury':3,
   // ── Segments added from TfL timetable data (73 entries) ─────────────
   // District — Wimbledon branch + other branches
   'Wimbledon|Wimbledon Park':2,
@@ -2294,7 +2362,7 @@ const TIMES = {
   "West Brompton|Earl's Court":2,
   "Earl's Court|High Street Kensington":3,
   "Earl's Court|Kensington (Olympia)":4,
-  'Richmond|Kew Gardens':3,
+  'Richmond|Kew Gardens':6,
   'Kew Gardens|Gunnersbury':3,
   'Gunnersbury|Turnham Green':2,
   // DLR — additional adjacencies
@@ -2351,11 +2419,10 @@ const TIMES = {
   // Overground — Mildmay gaps
   'Dalston Kingsland|Canonbury':3,
   'Kensal Rise|Willesden Junction':3,
-  'West Brompton|Clapham Junction':7,
   // Overground — Windrush gaps
   'Wandsworth Road|Clapham Junction':3,
   'Sydenham|Anerley':2,
-  'Norwood Junction|West Croydon':4,
+  'Norwood Junction|West Croydon':6,
   // Overground — Weaver gaps
   'Liverpool Street|Bethnal Green (Overground)':3,
   'Enfield Lock|Waltham Cross':4,
@@ -2363,22 +2430,87 @@ const TIMES = {
 };
 
 
-function getTime(a, b) {
+// Optional per-line overrides for station pairs where two services share the
+// same `A|B` edge in name but run on different physical tracks with different
+// timings (e.g. Canonbury↔Highbury & Islington is 4 min on Mildmay's North
+// London Line track but 2 min on Windrush's East London Line track).
+// Keyed by displayLine name; falls back to TIMES{} when no override is set.
+const TIMES_BY_LINE = {
+  'Mildmay': {
+    'Stratford|Hackney Wick': 3,
+    'Hackney Central|Dalston Kingsland': 2,
+    'Dalston Kingsland|Canonbury': 2,
+    'Canonbury|Highbury & Islington': 4,
+    'Highbury & Islington|Caledonian Road & Barnsbury': 1,
+    'Caledonian Road & Barnsbury|Camden Road': 4,
+    'Gospel Oak|Hampstead Heath': 2,
+    'Hampstead Heath|Finchley Road & Frognal': 2,
+    'Kensal Rise|Willesden Junction': 4,
+  },
+  'Windrush': {
+    'Canonbury|Highbury & Islington': 2,
+  },
+};
+
+function lineOverrideTime(a, b, line) {
+  if (!line) return null;
+  const dl = displayLine(line);
+  const tbl = TIMES_BY_LINE[dl];
+  if (!tbl) return null;
+  if (`${a}|${b}` in tbl) return tbl[`${a}|${b}`];
+  if (`${b}|${a}` in tbl) return tbl[`${b}|${a}`];
+  return null;
+}
+
+function getTime(a, b, line) {
+  const override = lineOverrideTime(a, b, line);
+  if (override !== null) return override;
   return TIMES[`${a}|${b}`] || TIMES[`${b}|${a}`] || null;
 }
 
+const DISPLAY_LINE_PREFIXES = [
+  ['Overground_Lioness',     'Lioness'],
+  ['Overground_Mildmay',     'Mildmay'],
+  ['Overground_Windrush',    'Windrush'],
+  ['Overground_Weaver',      'Weaver'],
+  ['Overground_Suffragette', 'Suffragette'],
+  ['Overground_Liberty',     'Liberty'],
+  ['Overground',             'Overground'],
+  ['Northern',               'Northern'],
+  ['District',               'District'],
+  ['Central',                'Central'],
+  ['Circle',                 'Circle'],
+  ['Metropolitan',           'Metropolitan'],
+  ['Piccadilly',             'Piccadilly'],
+  ['DLR',                    'DLR'],
+  ['Elizabeth',              'Elizabeth'],
+];
+
 function displayLine(line) {
-  if (line.startsWith('Northern')) return 'Northern';
-  if (line.startsWith('District')) return 'District';
-  if (line.startsWith('Central')) return 'Central';
-  if (line.startsWith('Circle')) return 'Circle';
-  if (line.startsWith('Metropolitan')) return 'Metropolitan';
-  if (line.startsWith('Piccadilly')) return 'Piccadilly';
-  if (line.startsWith('Overground')) return 'Overground';
-  if (line.startsWith('DLR')) return 'DLR';
-  if (line.startsWith('Elizabeth')) return 'Elizabeth';
+  for (const [prefix, name] of DISPLAY_LINE_PREFIXES) {
+    if (line.startsWith(prefix)) return name;
+  }
   return line;
 }
+
+(function validateLineDisplayCoverage() {
+  const unmapped = [];
+  const missingColour = new Set();
+  for (const lineId of Object.keys(NETWORK)) {
+    const display = displayLine(lineId);
+    if (display === lineId && !LINE_COLOURS[lineId]) {
+      unmapped.push(lineId);
+    } else if (!LINE_COLOURS[display]) {
+      missingColour.add(display);
+    }
+  }
+  if (unmapped.length) {
+    console.error('[NETWORK] Line IDs with no displayLine() rule:', unmapped);
+  }
+  if (missingColour.size) {
+    console.error('[NETWORK] Display lines with no LINE_COLOURS entry:', [...missingColour]);
+  }
+})();
 
 function lineColour(line) {
   return LINE_COLOURS[displayLine(line)] || {bg:'#666', txt:'#fff'};
@@ -2497,7 +2629,7 @@ function buildGraph() {
   for (const [lineKey, stns] of Object.entries(NETWORK)) {
     for (let i = 0; i < stns.length - 1; i++) {
       const a = stns[i], b = stns[i+1];
-      const t = getTime(a, b);
+      const t = getTime(a, b, lineKey);
       if (t === null) continue;
       ensure(a, lineKey); ensure(b, lineKey);
       graph[a][lineKey].push({station:b, line:lineKey, cost:t, type:'travel'});
@@ -2683,7 +2815,7 @@ function _singleLineDistances(origin, line) {
     // Walk left
     let acc = 0;
     for (let j = i - 1; j >= 0; j--) {
-      const t = getTime(stns[j], stns[j+1]);
+      const t = getTime(stns[j], stns[j+1], line);
       if (t === null) break;
       acc += t;
       if (dist[stns[j]] === undefined || acc < dist[stns[j]]) dist[stns[j]] = acc;
@@ -2691,7 +2823,7 @@ function _singleLineDistances(origin, line) {
     // Walk right
     acc = 0;
     for (let j = i + 1; j < stns.length; j++) {
-      const t = getTime(stns[j-1], stns[j]);
+      const t = getTime(stns[j-1], stns[j], line);
       if (t === null) break;
       acc += t;
       if (dist[stns[j]] === undefined || acc < dist[stns[j]]) dist[stns[j]] = acc;
@@ -2823,12 +2955,12 @@ function dijkstra(graph, start, end) {
       if (node.type === 'start') { legFrom = node.station; legLine = node.line; prev = node.station; continue; }
       if (node.type === 'travel') {
         if (node.line === legLine) {
-          legMins += getTime(prev, node.station) || 0;
+          legMins += getTime(prev, node.station, legLine) || 0;
           prev = node.station;
         } else {
           if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
           legFrom = prev; legLine = node.line;
-          legMins = getTime(prev, node.station) || 0;
+          legMins = getTime(prev, node.station, legLine) || 0;
           prev = node.station;
         }
       } else if (node.type === 'walk') {
@@ -2912,7 +3044,7 @@ function travelTimeOnLine(from, to, displayLineName) {
     const start = Math.min(ai, bi), end = Math.max(ai, bi);
     let t = 0, valid = true;
     for (let i = start; i < end; i++) {
-      const seg = getTime(stops[i], stops[i + 1]);
+      const seg = getTime(stops[i], stops[i + 1], key);
       if (seg === null) { valid = false; break; }
       t += seg;
     }
