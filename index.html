@@ -3787,10 +3787,12 @@ function switchMode(mode) {
   const persistedSolved = persisted.lastPlayed === today && persisted.submittedRoute;
   if (snap && snap.resultShown && snap.resultHtml) {
     showResultPanel(snap.resultHtml);
+    _applyShareButtonVisibility();
   } else if (persistedSolved && showResultPanel(renderStoredResultFor(currentMode, puzzleData))) {
     lockedSubmission = true;
     timerStopped = true;
     clearInterval(timerInterval);
+    _applyShareButtonVisibility();
   } else {
     if (rp) { rp.style.display = 'none'; rp.innerHTML = ''; }
     if (mp) mp.style.display = 'block';
