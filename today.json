@@ -1,12 +1,12 @@
 {
-  "date": "2026-05-31",
-  "puzzleNum": 59,
+  "date": "2026-06-01",
+  "puzzleNum": 60,
   "easy": {
-    "start": "Wembley Central",
-    "end": "Shadwell"
+    "start": "St. John's Wood",
+    "end": "Mansion House"
   },
   "hard": {
-    "start": "White City",
-    "end": "Westminster"
+    "start": "Shepherd's Bush",
+    "end": "Brent Cross"
   }
 }
