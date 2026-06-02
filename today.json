@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-01",
-  "puzzleNum": 60,
+  "date": "2026-06-02",
+  "puzzleNum": 61,
   "easy": {
-    "start": "St. John's Wood",
-    "end": "Mansion House"
-  },
-  "hard": {
     "start": "Shepherd's Bush",
     "end": "Brent Cross"
+  },
+  "hard": {
+    "start": "Dalston Kingsland",
+    "end": "Clapham Common"
   }
 }
