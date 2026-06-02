@@ -1,0 +1,34 @@
+<itdRequest version="10.6.30.10" language="de" lengthUnit="METER" sessionID="0" client="python-requests/2.32.5" clientIP="" serverID="" virtDir="api10" calcTime="29.638" now="2026-06-02T18:56:33" nowWD="3" logRequestId="8e5c5240e4821a0e">
+  <clientHeaderLines />
+  <itdVersionInfo>
+    <ptKernel>
+      <appVersion>10.6.30.15 build 16.04.2026 00:23:45</appVersion>
+      <dataFormat>EFA10_06_01</dataFormat>
+      <dataBuild>2026-06-02T05:35:46</dataBuild>
+    </ptKernel>
+  </itdVersionInfo>
+  <itdStopStructureRequest requestID="0">
+    <stopStructure>
+      <stopAreaLinesSeq>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Uxbridge Station" areaName="Met &amp;">
+            <itdPoint stopID="1000246" area="2" platform="" gid="940GZZLUUXB" pointGid="" areaGid="9400ZZLUUXB1" x="505616.00" y="815845.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+            <itdServingLine symbol="PIC">
+              </itdServingLine>
+            <itdServingLine symbol="PIC">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        </stopAreaLinesSeq>
+      <stopPoints />
+      <footpathInfos>
+        </footpathInfos>
+    </stopStructure>
+  </itdStopStructureRequest>
+</itdRequest>

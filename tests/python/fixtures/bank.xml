@@ -1,0 +1,1863 @@
+<itdRequest version="10.6.30.10" language="de" lengthUnit="METER" sessionID="0" client="python-requests/2.32.5" clientIP="" serverID="" virtDir="api10" calcTime="1755.182" now="2026-06-02T18:56:01" nowWD="3" logRequestId="ac86910421fa1306">
+  <clientHeaderLines />
+  <itdVersionInfo>
+    <ptKernel>
+      <appVersion>10.6.30.15 build 16.04.2026 00:23:45</appVersion>
+      <dataFormat>EFA10_06_01</dataFormat>
+      <dataBuild>2026-06-02T05:35:46</dataBuild>
+    </ptKernel>
+  </itdVersionInfo>
+  <itdStopStructureRequest requestID="0">
+    <stopStructure>
+      <stopAreaLinesSeq>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Tower Hill" areaName="DisEB">
+            <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" areaGid="9400ZZLUTWH1" x="533549.00" y="819253.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="1" duration="0" areaType="81" stopName="Tower Gateway Station DLR" areaName="DLR 2">
+            <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" areaGid="940GZZDLTWG1" x="533729.00" y="819167.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="DLR">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="0" duration="5" areaType="65" stopName="Tower Pier" areaName="Pier">
+            <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" areaGid="9300TMP" x="533408.00" y="819487.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="RB1">
+              </itdServingLine>
+            <itdServingLine symbol="RB1">
+              </itdServingLine>
+            <itdServingLine symbol="RB2">
+              </itdServingLine>
+            <itdServingLine symbol="RB2">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Aldgate" areaName="MetEB">
+            <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" areaGid="9400ZZLUALD1" x="533629.00" y="818772.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Aldgate East" areaName="DisEB">
+            <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" areaGid="9400ZZLUADE1" x="533951.00" y="818603.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Cannon Street Station" areaName="DisWB">
+            <itdPoint stopID="1000040" area="2" platform="" gid="940GZZLUCST" pointGid="" areaGid="9400ZZLUCST2" x="532611.00" y="819113.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="CenEB">
+            <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" areaGid="9400ZZLULVT1" x="533133.00" y="818348.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="0" areaType="81" stopName="Mansion House" areaName="DisEB">
+            <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" areaGid="9400ZZLUMSH1" x="532289.00" y="819054.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Monument" areaName="DisEB">
+            <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" areaGid="9400ZZLUMMT1" x="532908.00" y="819173.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Moorgate Station" areaName="HamEB">
+            <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" areaGid="9400ZZLUMGT1" x="532665.00" y="818335.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Tower Hill" areaName="DisWB">
+            <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" areaGid="9400ZZLUTWH2" x="533546.00" y="819265.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="2" duration="2" areaType="81" stopName="Fenchurch Street Station" areaName="RPL">
+            <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" areaGid="9100FENCHRS0" x="533519.00" y="819075.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="001">
+              </itdServingLine>
+            <itdServingLine symbol="001">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Aldgate" areaName="CirSB">
+            <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" areaGid="9400ZZLUALD2" x="533638.00" y="818776.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Aldgate East" areaName="DisWB">
+            <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" areaGid="9400ZZLUADE2" x="533956.00" y="818614.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Cannon Street Station" areaName="DisEB">
+            <itdPoint stopID="1000040" area="3" platform="" gid="940GZZLUCST" pointGid="" areaGid="9400ZZLUCST1" x="532612.00" y="819107.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="CenWB">
+            <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" areaGid="9400ZZLULVT2" x="533141.00" y="818351.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Mansion House" areaName="DisWB">
+            <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" areaGid="9400ZZLUMSH2" x="532286.00" y="819066.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Monument" areaName="DisWB">
+            <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" areaGid="9400ZZLUMMT2" x="532916.00" y="819181.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Moorgate Station" areaName="HamWB">
+            <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" areaGid="9400ZZLUMGT2" x="532659.00" y="818338.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Aldgate" areaName="CirNB">
+            <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" areaGid="9400ZZLUALD3" x="533621.00" y="818776.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Bank" areaName="CenWB">
+            <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK2" x="532728.00" y="818884.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="HamEB">
+            <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" areaGid="9400ZZLULVT3" x="533143.00" y="818446.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Moorgate Station" areaName="RPL-N">
+            <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" areaGid="9100MRGT1" x="532751.00" y="818310.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="024">
+              </itdServingLine>
+            <itdServingLine symbol="25">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-5" duration="2" areaType="81" stopName="St. Paul's Station" areaName="CenEB">
+            <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" areaGid="9400ZZLUSPU1" x="532017.00" y="818668.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-1" duration="2" areaType="81" stopName="Aldgate" areaName="MetWB">
+            <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" areaGid="9400ZZLUALD4" x="533626.00" y="818773.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="81" stopName="Bank" areaName="CenEB">
+            <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK1" x="532723.00" y="818874.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="HamWB">
+            <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" areaGid="9400ZZLULVT4" x="533139.00" y="818451.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+            <itdServingLine symbol="MET">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Moorgate Station" areaName="RPL-S">
+            <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" areaGid="9100MRGT2" x="532751.00" y="818309.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="024">
+              </itdServingLine>
+            <itdServingLine symbol="25">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-4" duration="2" areaType="81" stopName="St. Paul's Station" areaName="CenWB">
+            <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" areaGid="9400ZZLUSPU2" x="532013.00" y="818674.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="0" areaType="81" stopName="Tower Hill" areaName="DisET">
+            <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" areaGid="9400ZZLUTWH3" x="533554.00" y="819260.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-4" duration="2" areaType="81" stopName="Moorgate Station" areaName="NorNB">
+            <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" areaGid="9400ZZLUMGT3" x="532768.00" y="818271.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="NTN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="1" duration="10" areaType="81" stopName="Cannon Street, Cannon Street Rail Station" areaName="RPL">
+            <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" areaGid="9100CANONST0" x="532567.00" y="819267.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="194">
+              </itdServingLine>
+            <itdServingLine symbol="194">
+              </itdServingLine>
+            <itdServingLine symbol="196">
+              </itdServingLine>
+            <itdServingLine symbol="196">
+              </itdServingLine>
+            <itdServingLine symbol="200">
+              </itdServingLine>
+            <itdServingLine symbol="200">
+              </itdServingLine>
+            <itdServingLine symbol="200">
+              </itdServingLine>
+            <itdServingLine symbol="200">
+              </itdServingLine>
+            <itdServingLine symbol="200 C">
+              </itdServingLine>
+            <itdServingLine symbol="200 C">
+              </itdServingLine>
+            <itdServingLine symbol="203">
+              </itdServingLine>
+            <itdServingLine symbol="203">
+              </itdServingLine>
+            <itdServingLine symbol="204">
+              </itdServingLine>
+            <itdServingLine symbol="204">
+              </itdServingLine>
+            <itdServingLine symbol="207">
+              </itdServingLine>
+            <itdServingLine symbol="207">
+              </itdServingLine>
+            <itdServingLine symbol="209">
+              </itdServingLine>
+            <itdServingLine symbol="209">
+              </itdServingLine>
+            <itdServingLine symbol="212">
+              </itdServingLine>
+            <itdServingLine symbol="212">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="65" stopName="Bank" areaName="Water">
+            <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK3" x="532541.00" y="818950.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="WAC">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-4" duration="2" areaType="81" stopName="Moorgate Station" areaName="NorSB">
+            <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" areaGid="9400ZZLUMGT4" x="532780.00" y="818269.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="NTN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="0" duration="15" areaType="81" stopName="Liverpool Street Station" areaName="RPL">
+            <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" areaGid="9100LIVST0" x="533238.00" y="818315.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="001">
+              </itdServingLine>
+            <itdServingLine symbol="001">
+              </itdServingLine>
+            <itdServingLine symbol="005">
+              </itdServingLine>
+            <itdServingLine symbol="005">
+              </itdServingLine>
+            <itdServingLine symbol="011">
+              </itdServingLine>
+            <itdServingLine symbol="011">
+              </itdServingLine>
+            <itdServingLine symbol="011">
+              </itdServingLine>
+            <itdServingLine symbol="011">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="WEA">
+              </itdServingLine>
+            <itdServingLine symbol="WEA">
+              </itdServingLine>
+            <itdServingLine symbol="021">
+              </itdServingLine>
+            <itdServingLine symbol="021">
+              </itdServingLine>
+            <itdServingLine symbol="022">
+              </itdServingLine>
+            <itdServingLine symbol="022">
+              </itdServingLine>
+            <itdServingLine symbol="022">
+              </itdServingLine>
+            <itdServingLine symbol="022">
+              </itdServingLine>
+            <itdServingLine symbol="22 X">
+              </itdServingLine>
+            <itdServingLine symbol="22 X">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="">
+              </itdServingLine>
+            <itdServingLine symbol="116">
+              </itdServingLine>
+            <itdServingLine symbol="116">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-5" duration="2" areaType="81" stopName="Bank" areaName="NorNB">
+            <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK4" x="532781.00" y="819000.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="NTN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-5" duration="2" areaType="81" stopName="Bank" areaName="NorSB">
+            <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK5" x="532755.00" y="819013.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="NTN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-6" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="EL EB">
+            <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" areaGid="9100LIVSTLL0" x="533238.00" y="818315.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="116">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-3" duration="2" areaType="65" stopName="Bank" areaName="Wat8">
+            <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" areaGid="9400ZZLUBNK8" x="532541.00" y="818950.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="WAC">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-6" duration="2" areaType="81" stopName="Liverpool Street Station" areaName="EL WB">
+            <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" areaGid="9100LIVSTLL1" x="533174.00" y="818390.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="116">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-6" duration="2" areaType="81" stopName="Bank" areaName="DLR10">
+            <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" areaGid="940GZZDLBNK2" x="532764.00" y="819037.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="DLR">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-6" duration="2" areaType="81" stopName="Bank" areaName="DLR 9">
+            <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" areaGid="940GZZDLBNK1" x="532782.00" y="819028.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="DLR">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        </stopAreaLinesSeq>
+      <stopPoints />
+      <footpathInfos>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="43" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="43" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="45" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="45" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="20" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="20" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="9" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="52">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="52">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="45">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="45">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="13" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="22" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="0">
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="39">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="43" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="43" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="45" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="45" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="20" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="20" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="9" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="52">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="52">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="45">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="45">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="29" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="13" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="22" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="0">
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="39" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="19" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="19" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="12" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="10" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="45">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="12" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="0">
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="46" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="46" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="52">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="52">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="51" distance="26">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="51" distance="26">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="45">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="13" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="23" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="39">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="41" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="46" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="46" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="52">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="52">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="50" distance="26">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="51" distance="26">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="51" distance="26">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="45">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="13" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="23" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="35" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="5" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="8" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="11" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000040" area="2" platform="" gid="940GZZLUCST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="12" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000040" area="3" platform="" gid="940GZZLUCST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="39" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="19" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="19" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="12" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="10" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="30" distance="45">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="12" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="0">
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="13" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000040" area="2" platform="" gid="940GZZLUCST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="14" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000040" area="3" platform="" gid="940GZZLUCST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="39" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="7" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="45">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="14" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="0">
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="2" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="3" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="4" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="39">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000003" area="5" platform="" gid="940GZZLUALD" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="2" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000004" area="3" platform="" gid="940GZZLUADE" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="4" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="5" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="9" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="12" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="13" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="6" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="21" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="2" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000013" area="90" platform="" gid="940GZZDLBNK" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="2" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="40" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="3" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="39" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="4" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="5" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="42" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="11" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="19" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="44" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000138" area="23" platform="" gid="940GZZLULVT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="2" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000143" area="3" platform="" gid="940GZZLUMSH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="7" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="2" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="4" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000148" area="3" platform="" gid="940GZZLUMMT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="2" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="47" distance="52">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="3" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="4" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="48" distance="26">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="5" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="8" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="49" distance="26">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000149" area="9" platform="" gid="910GMRGT" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="34" distance="45">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="4" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="32" distance="45">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000225" area="6" platform="" gid="940GZZLUSPU" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="1" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="2" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="28" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000238" area="6" platform="" gid="940GZZLUTWH" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="14" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1000337" area="8" platform="" gid="910GCANONST" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="21" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1001108" area="2" platform="" gid="910GFENCHRS" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="33" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002076" area="1" platform="" gid="940GZZDLTWG" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="31" distance="0">
+          <itdPoint stopID="1000013" area="98" platform="" gid="940GZZDLBNK" pointGid="" />
+          <itdPoint stopID="1002077" area="1" platform="" gid="930GTMP" pointGid="" />
+          </footpathInfo>
+        </footpathInfos>
+    </stopStructure>
+  </itdStopStructureRequest>
+</itdRequest>

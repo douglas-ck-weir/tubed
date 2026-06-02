@@ -1,0 +1,97 @@
+<itdRequest version="10.6.30.10" language="de" lengthUnit="METER" sessionID="0" client="python-requests/2.32.5" clientIP="" serverID="" virtDir="api10" calcTime="30.930" now="2026-06-02T18:56:23" nowWD="3" logRequestId="ac86910421fa1382">
+  <clientHeaderLines />
+  <itdVersionInfo>
+    <ptKernel>
+      <appVersion>10.6.30.15 build 16.04.2026 00:23:45</appVersion>
+      <dataFormat>EFA10_06_01</dataFormat>
+      <dataBuild>2026-06-02T05:35:46</dataBuild>
+    </ptKernel>
+  </itdVersionInfo>
+  <itdStopStructureRequest requestID="0">
+    <stopStructure>
+      <stopAreaLinesSeq>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Mile End" areaName="CenWB">
+            <itdPoint stopID="1000146" area="2" platform="" gid="940GZZLUMED" pointGid="" areaGid="9400ZZLUMED1" x="536533.00" y="817461.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Mile End" areaName="CenEB">
+            <itdPoint stopID="1000146" area="3" platform="" gid="940GZZLUMED" pointGid="" areaGid="9400ZZLUMED2" x="536521.00" y="817439.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CEN">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Mile End" areaName="DisWB">
+            <itdPoint stopID="1000146" area="4" platform="" gid="940GZZLUMED" pointGid="" areaGid="9400ZZLUMED3" x="536530.00" y="817453.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        <stopAreaLines>
+          <stopArea level="-2" duration="2" areaType="81" stopName="Mile End" areaName="DisEB">
+            <itdPoint stopID="1000146" area="5" platform="" gid="940GZZLUMED" pointGid="" areaGid="9400ZZLUMED4" x="536535.00" y="817446.00" mapName="TFLV" />
+          </stopArea>
+          <itdServingLines>
+            <itdServingLine symbol="CIR">
+              </itdServingLine>
+            <itdServingLine symbol="DIS">
+              </itdServingLine>
+            <itdServingLine symbol="HAM">
+              </itdServingLine>
+          </itdServingLines>
+        </stopAreaLines>
+        </stopAreaLinesSeq>
+      <stopPoints />
+      <footpathInfos>
+        <footpathInfo duration="1" distance="0">
+          <itdPoint stopID="1000146" area="2" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="4" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000146" area="2" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="5" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000146" area="3" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="4" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="1" distance="0">
+          <itdPoint stopID="1000146" area="3" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="5" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="1" distance="0">
+          <itdPoint stopID="1000146" area="4" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="2" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000146" area="4" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="3" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="3" distance="0">
+          <itdPoint stopID="1000146" area="5" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="2" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        <footpathInfo duration="1" distance="0">
+          <itdPoint stopID="1000146" area="5" platform="" gid="940GZZLUMED" pointGid="" />
+          <itdPoint stopID="1000146" area="3" platform="" gid="940GZZLUMED" pointGid="" />
+          </footpathInfo>
+        </footpathInfos>
+    </stopStructure>
+  </itdStopStructureRequest>
+</itdRequest>
