@@ -52,10 +52,11 @@ function seededRng(seed) {
 }
 
 function pickStations(mode, now) {
-  // Hardcoded freeze for 2026-05-28 easy (matches index.html)
+  // Hardcoded freeze for 2026-06-02 easy (matches index.html — kept in
+  // sync because the cron writes today.json which the Devvit bot reads).
   const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  if (mode === 'easy' && dateStr === '2026-05-28') {
-    return { start: 'North Greenwich', end: 'Hammersmith' };
+  if (mode === 'easy' && dateStr === '2026-06-02') {
+    return { start: "Shepherd's Bush", end: 'Brent Cross' };
   }
 
   const baseSeed = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
