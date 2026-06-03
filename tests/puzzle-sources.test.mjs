@@ -6,14 +6,16 @@
 //   1. today.json content matches puzzle-lookup.json[today.json.date].
 //   2. Both easy.{start,end} and hard.{start,end} in today.json exist in
 //      the PUZZLE_STATIONS list embedded in index.html.
-//   3. build-lookup.mjs is deterministic: running it twice produces byte-
-//      identical output (catches accidental non-determinism in the picker).
+//
+// A build-lookup.mjs determinism check used to live here (compares a
+// fresh rebuild against the committed lookup) but cost ~7 min per PR.
+// Removed for speed. When the nightly cron starts rebuilding the lookup
+// (Stage 1), wire the check in there instead — it's free at that point.
 //
 // Catches the class of bug where the site, the published JSON, and the
 // Reddit bot's bundled lookup disagree on what today's puzzle is.
 
-import { readFileSync, writeFileSync, copyFileSync, unlinkSync } from 'fs';
-import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -88,42 +90,6 @@ test('today.json easy stations exist in PUZZLE_STATIONS', () => {
 test('today.json hard stations exist in PUZZLE_STATIONS', () => {
   assert(PUZZLE_STATIONS.has(today.hard.start), `hard.start "${today.hard.start}" not in PUZZLE_STATIONS`);
   assert(PUZZLE_STATIONS.has(today.hard.end),   `hard.end "${today.hard.end}" not in PUZZLE_STATIONS`);
-});
-
-// ── Invariant 3: build-lookup.mjs is deterministic ─────────────────────────
-// We rebuild into a temp file, compare to the committed file. This also
-// implicitly tests that the picker's output for "today" still matches what's
-// in the committed lookup (drift catcher).
-
-test('build-lookup.mjs is deterministic and matches committed lookup', () => {
-  const backup = path.join(ROOT, 'puzzle-lookup.json.test-backup');
-  copyFileSync(LOOKUP_JSON, backup);
-  try {
-    execSync('node build-lookup.mjs', { cwd: ROOT, stdio: 'pipe' });
-    const rebuilt = readFileSync(LOOKUP_JSON, 'utf8');
-    const original = readFileSync(backup, 'utf8');
-    if (rebuilt !== original) {
-      // Find first differing day so the failure message is useful.
-      const a = JSON.parse(original), b = JSON.parse(rebuilt);
-      const days = Object.keys(b).sort();
-      let firstDiff = null;
-      for (const d of days) {
-        if (JSON.stringify(a[d]) !== JSON.stringify(b[d])) { firstDiff = d; break; }
-      }
-      throw new Error(
-        `build-lookup.mjs output drifted from committed puzzle-lookup.json.\n` +
-        `  First differing date: ${firstDiff}\n` +
-        `  Committed: ${JSON.stringify(a[firstDiff])}\n` +
-        `  Rebuilt:   ${JSON.stringify(b[firstDiff])}\n` +
-        `  If the picker logic changed intentionally, commit the regenerated lookup.`
-      );
-    }
-  } finally {
-    // Always restore the committed version, even on failure, so the file on
-    // disk is exactly what's in git after the test runs.
-    copyFileSync(backup, LOOKUP_JSON);
-    unlinkSync(backup);
-  }
 });
 
 // ── Report ─────────────────────────────────────────────────────────────────
