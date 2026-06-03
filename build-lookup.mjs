@@ -73,9 +73,12 @@ vm.createContext(sandbox);
 vm.runInContext(code, sandbox);
 
 // Generate the lookup for the next N days.
+// Use 12:00 (midday) local time so puzzleNum's UTC-anchored epoch comparison
+// stays on the right calendar day regardless of timezone — midnight-anchored
+// dates can slip across the day boundary when compared to a UTC epoch.
 const DAYS = 90;
 const today = new Date();
-today.setHours(0, 0, 0, 0);
+today.setHours(12, 0, 0, 0);
 
 const lookup = {};
 for (let i = 0; i < DAYS; i++) {
