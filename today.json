@@ -2,11 +2,11 @@
   "date": "2026-06-03",
   "puzzleNum": 62,
   "easy": {
-    "start": "Dalston Kingsland",
-    "end": "Clapham Common"
+    "start": "Stratford",
+    "end": "Temple"
   },
   "hard": {
-    "start": "Sloane Square",
-    "end": "London Bridge"
+    "start": "Putney Bridge",
+    "end": "Wembley Central"
   }
 }
