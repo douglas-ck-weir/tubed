@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-02",
-  "puzzleNum": 61,
+  "date": "2026-06-03",
+  "puzzleNum": 62,
   "easy": {
-    "start": "Shepherd's Bush",
-    "end": "Brent Cross"
-  },
-  "hard": {
     "start": "Dalston Kingsland",
     "end": "Clapham Common"
+  },
+  "hard": {
+    "start": "Sloane Square",
+    "end": "London Bridge"
   }
 }
