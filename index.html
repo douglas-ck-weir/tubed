@@ -930,7 +930,7 @@ const INTERCHANGE_MINS = {
   "Willesden Junction": {
     "Bakerloo|Lioness": 4,
     "Bakerloo|Mildmay": 4,
-    "Lioness|Mildmay": 5,
+    "Lioness|Mildmay": 4,
   },
   "Wood Lane": {
     "Circle|Hammersmith & City": 1,
@@ -1953,13 +1953,13 @@ const TIMES = {
   'Blackwall|East India':2,
   'Bond Street|Green Park':2,
   'Bond Street|Oxford Circus':2,
-  'Bond Street|Tottenham Court Road':3,
+  'Bond Street|Tottenham Court Road':2,
   'Borough|London Bridge':1,
   'Bounds Green|Arnos Grove':3,
   'Bow Church|Devons Road':2,
   'Bow Road|Bromley-by-Bow':2,
   'Brent Cross|Hendon Central':2,
-  'Brentwood|Shenfield':5,
+  'Brentwood|Shenfield':4,
   'Brimsdown|Ponders End':2,
   'Brixton|Stockwell':2,
   'Brockley|Honor Oak Park':3,
@@ -1989,7 +1989,7 @@ const TIMES = {
   'Canonbury|Highbury & Islington':3,
   'Canons Park|Queensbury':2,
   'Carpenders Park|Hatch End':3,
-  'Chadwell Heath|Romford':4,
+  'Chadwell Heath|Romford':3,
   'Chalfont & Latimer|Chesham':9,
   'Chalfont & Latimer|Chorleywood':4,
   'Chalk Farm|Belsize Park':2,
@@ -2055,13 +2055,13 @@ const TIMES = {
   'Euston|Kings Cross St. Pancras':2,
   'Fairlop|Barkingside':2,
   'Farringdon|Barbican':1,
-  'Farringdon|Liverpool Street':3,
+  'Farringdon|Liverpool Street':2,
   'Finchley Road & Frognal|West Hampstead':2,
   'Finchley Road|Baker Street':7,
   'Finchley Road|Swiss Cottage':2,
   'Finsbury Park|Manor House':2,
   'Finsbury Park|Seven Sisters':4,
-  'Forest Gate|Manor Park':2,
+  'Forest Gate|Manor Park':3,
   'Forest Hill|Sydenham':4,
   'Gallions Reach|Beckton':3,
   'Gidea Park|Harold Wood':3,
@@ -2093,7 +2093,7 @@ const TIMES = {
   'Hampstead Heath|Finchley Road & Frognal':3,
   'Hampstead|Golders Green':5,
   'Hanger Lane|North Acton':4,
-  'Hanwell|Southall':4,
+  'Hanwell|Southall':3,
   'Harlesden|Willesden Junction':2,
   'Harold Wood|Brentwood':4,
   'Harringay Green Lanes|South Tottenham':4,
@@ -2119,7 +2119,7 @@ const TIMES = {
   'Hoxton|Shoreditch High Street':2,
   'Hyde Park Corner|Green Park':3,
   'Ickenham|Hillingdon':2,
-  'Ilford|Seven Kings':3,
+  'Ilford|Seven Kings':4,
   'Imperial Wharf|Clapham Junction':8,
   'Island Gardens|Cutty Sark for Maritime Greenwich':2,
   'Kennington|Elephant & Castle':2,
@@ -2193,7 +2193,7 @@ const TIMES = {
   'Oxford Circus|Regent\'s Park':2,
   'Oxford Circus|Tottenham Court Road':1,
   'Oxford Circus|Warren Street':2,
-  'Paddington|Acton Main Line':5,
+  'Paddington|Acton Main Line':7,
   'Paddington|Bond Street':4,
   'Paddington|Euston':8,
   'Paddington|Royal Oak':2,
@@ -2252,7 +2252,7 @@ const TIMES = {
   'South Tottenham|Blackhorse Road (Overground)':3,
   'South Wimbledon|Colliers Wood':2,
   'South Woodford|Woodford':2,
-  'Southall|Hayes & Harlington':3,
+  'Southall|Hayes & Harlington':4,
   'Southbury|Turkey Street':3,
   'Southwark|London Bridge':2,
   'St. James Street|Walthamstow Central':2,
@@ -2322,7 +2322,7 @@ const TIMES = {
   'Wembley Park|Finchley Road':7,
   'Wembley Park|Neasden':2,
   'West Acton|North Acton':2,
-  'West Ealing|Hanwell':3,
+  'West Ealing|Hanwell':2,
   'West Hampstead|Brondesbury':2,
   'West Hampstead|Finchley Road':1,
   'West Ham|Abbey Road':2,
@@ -2338,10 +2338,10 @@ const TIMES = {
   'Westferry|Poplar':2,
   'Westminster|Waterloo':1,
   'White City|Shepherd\'s Bush':2,
-  'Whitechapel|Canary Wharf':6,
+  'Whitechapel|Canary Wharf':4,
   'Whitechapel|Shadwell (Overground)':2,
   'Whitechapel|Stepney Green':2,
-  'Whitechapel|Stratford':8,
+  'Whitechapel|Stratford':5,
   'Willesden Green|Kilburn':2,
   'Willesden Junction|Kensal Green':3,
   'Wood Green|Bounds Green':3,
@@ -2403,7 +2403,7 @@ const TIMES = {
   'West India Quay|Westferry':2,
   // Elizabeth line — western extension
   'West Ealing|Ealing Broadway':2,
-  'Ealing Broadway|Acton Main Line':4,
+  'Ealing Broadway|Acton Main Line':3,
   // Northern — Bank/Edgware branch
   'Euston|Mornington Crescent':2,
   'Mornington Crescent|Camden Town':2,
@@ -2445,7 +2445,7 @@ const TIMES = {
   'Heathrow Terminal 4|Heathrow Terminals 2&3':4,
   'Heathrow Terminals 2&3|Heathrow Terminal 5':4,
   // Elizabeth line — Heathrow spur (Hayes & Harlington → T2&3 fast tunnel)
-  'Hayes & Harlington|Heathrow Terminals 2&3':6,
+  'Hayes & Harlington|Heathrow Terminals 2&3':7,
   // Piccadilly — Uxbridge branch
   'Acton Town|Park Royal':3,
   // Overground — Mildmay gaps
@@ -2481,6 +2481,10 @@ const TIMES_BY_LINE = {
   },
   'Windrush': {
     'Canonbury|Highbury & Islington': 2,
+  },
+  'Elizabeth': {
+    'Heathrow Terminal 4|Heathrow Terminals 2&3': 6,
+    'Heathrow Terminals 2&3|Heathrow Terminal 5': 6,
   },
 };
 
@@ -3112,6 +3116,11 @@ function buildUserLegs(start, route) {
   let legFrom = start;
   let legLine = lines[0];
   let legMins = 0;
+  // Intermediate stations added by the user inside the current leg. When
+  // multiple consecutive same-line stops are merged into one leg, these are
+  // surfaced in the result card so the user sees why a leg's time matches a
+  // detour rather than a direct journey.
+  let legVia  = [];
 
   // Helper: push a leg AND simultaneously add a placeholder for its
   // interchange slot. Using this everywhere keeps the two arrays in lock-step.
@@ -3168,8 +3177,9 @@ function buildUserLegs(start, route) {
     // call sees prevLine='Walk' and returns null (no double-count).
     if (curLine === 'Walk') {
       if (legMins > 0) {
-        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins});
+        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins, via: legVia});
       }
+      legVia = [];
       let walkMins = osiTime(from, to);
       if (walkMins === null) {
         // Should never happen — validateStep blocks Walk legs that aren't
@@ -3210,8 +3220,9 @@ function buildUserLegs(start, route) {
 
     if (isLineChange || isBankMonumentCross || needsImplicitCrossWalk) {
       if (legMins > 0) {
-        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins});
+        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins, via: legVia});
       }
+      legVia = [];
       // For B/M cross-walks, the interchange time is computed against the
       // line we'll *next* travel on, not the current line (because the
       // current line IS the cross-walk). lines[i+1] could legitimately be
@@ -3244,6 +3255,15 @@ function buildUserLegs(start, route) {
     const effectiveFrom = (partner && !stationsForDisplayLine(curLine).includes(from) &&
       stationsForDisplayLine(curLine).includes(partner)) ? partner : from;
 
+    // If this iteration extends an existing leg (same line as the previous
+    // tube hop, no flush this iteration), then `from` is an intermediate stop
+    // the user explicitly added — record it so the result card can show the
+    // detour. Skip when `from` is the leg start (no detour yet) or the
+    // Bank/Monument partner (already represented by the cross-walk entry).
+    if (from !== legFrom && from !== partner) {
+      legVia.push(from);
+    }
+
     const t = travelTimeOnLine(effectiveFrom, to, curLine) ?? 8;
     legMins += t;
     totalMins += t;
@@ -3251,7 +3271,7 @@ function buildUserLegs(start, route) {
   // Final flush of the in-progress leg. Skip if the last leg was a Walk
   // (already pushed inside the loop with from=to=walk endpoints).
   if (legLine !== 'Walk' || legMins > 0) {
-    pushLeg({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins});
+    pushLeg({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins, via: legVia});
   }
 
   return {legs, interchanges, totalMins};
@@ -4508,10 +4528,16 @@ function renderRouteLegsHtml(legs, interchanges) {
       </div>`;
     } else {
       const lc = lineColour(l.line);
+      // When the user added intermediate same-line stops, show them between
+      // the leg endpoints so the user can see why a leg's time reflects a
+      // detour rather than a direct journey.
+      const via = (l.via && l.via.length)
+        ? l.via.map(s => `${s} → `).join('')
+        : '';
       html += `<div class="opt-leg">
         <div class="opt-dot" style="background:${lc.bg};"></div>
         <div>
-          ${l.from} → ${l.to}
+          ${l.from} → ${via}${l.to}
           &nbsp;<span style="color:${lc.bg};font-weight:500;">${l.line}</span>
           &nbsp;<span style="color:var(--muted);">${l.mins} min</span>
         </div>

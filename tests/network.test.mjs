@@ -303,29 +303,33 @@ test('all Overground edge times match TfL CSV', () => {
 test('Canada Water Jubilee↔Windrush = 3 min', () => {
   eq(interchangeTime('Canada Water', 'Jubilee', 'Overground_Windrush_NewCross'), 3);
 });
-test('Highbury & Islington Victoria↔Mildmay = 4 min', () => {
-  eq(interchangeTime('Highbury & Islington', 'Victoria', 'Overground_Mildmay_Richmond'), 4);
+// Interchange-time expectations below were updated 2026-06-03 to match the
+// values from the TfL Stop Structure API rebuild (commit 6ae5c41). Earlier
+// values in this file were hand-curated and lower than the authoritative
+// TfL data.
+test('Highbury & Islington Victoria↔Mildmay = 6 min', () => {
+  eq(interchangeTime('Highbury & Islington', 'Victoria', 'Overground_Mildmay_Richmond'), 6);
 });
-test('Highbury & Islington Victoria↔Windrush = 4 min', () => {
-  eq(interchangeTime('Highbury & Islington', 'Victoria', 'Overground_Windrush_Clapham'), 4);
+test('Highbury & Islington Victoria↔Windrush = 6 min', () => {
+  eq(interchangeTime('Highbury & Islington', 'Victoria', 'Overground_Windrush_Clapham'), 6);
 });
 test('Willesden Junction Bakerloo↔Mildmay = 4 min', () => {
   eq(interchangeTime('Willesden Junction', 'Bakerloo', 'Overground_Mildmay_Richmond'), 4);
 });
-test('Willesden Junction Lioness↔Mildmay = 3 min', () => {
-  eq(interchangeTime('Willesden Junction', 'Overground_Lioness', 'Overground_Mildmay_Richmond'), 3);
+test('Willesden Junction Lioness↔Mildmay = 4 min', () => {
+  eq(interchangeTime('Willesden Junction', 'Overground_Lioness', 'Overground_Mildmay_Richmond'), 4);
 });
-test('Liverpool Street Central↔Weaver = 5 min', () => {
-  eq(interchangeTime('Liverpool Street', 'Central', 'Overground_Weaver_Cheshunt'), 5);
+test('Liverpool Street Central↔Weaver = 6 min', () => {
+  eq(interchangeTime('Liverpool Street', 'Central', 'Overground_Weaver_Cheshunt'), 6);
 });
-test('Stratford Elizabeth↔Mildmay = 3 min', () => {
-  eq(interchangeTime('Stratford', 'Elizabeth', 'Overground_Mildmay_Clapham'), 3);
+test('Stratford Elizabeth↔Mildmay = 7 min', () => {
+  eq(interchangeTime('Stratford', 'Elizabeth', 'Overground_Mildmay_Clapham'), 7);
 });
-test('Romford Elizabeth↔Liberty = 3 min', () => {
-  eq(interchangeTime('Romford', 'Elizabeth', 'Overground_Liberty'), 3);
+test('Romford Elizabeth↔Liberty = 5 min', () => {
+  eq(interchangeTime('Romford', 'Elizabeth', 'Overground_Liberty'), 5);
 });
-test('Barking District↔Suffragette = 4 min', () => {
-  eq(interchangeTime('Barking', 'District', 'Overground_Suffragette'), 4);
+test('Barking District↔Suffragette = 5 min', () => {
+  eq(interchangeTime('Barking', 'District', 'Overground_Suffragette'), 5);
 });
 
 // ── Platform-group fallback ────────────────────────────────────────────────
@@ -339,9 +343,10 @@ test('platform-group fallback: a hypothetical new Liverpool Street Overground se
   // platform group there either, so it should NOT find Weaver's value.
   // (This guards against the fallback being too eager.)
   // Liverpool Street group: { Overground: [Weaver] }
-  // So Weaver↔Central = 5, but a peer-only fallback would need Mildmay in the group.
+  // So Weaver↔Central = 6 (per TfL Stop Structure API), but a peer-only
+  // fallback would need Mildmay in the group.
   const central_weaver = interchangeTime('Liverpool Street', 'Central', 'Overground_Weaver_Cheshunt');
-  eq(central_weaver, 5);
+  eq(central_weaver, 6);
 });
 
 // ── Per-line edge time overrides ───────────────────────────────────────────
