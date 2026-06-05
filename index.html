@@ -3067,26 +3067,42 @@ function scoreUserRoute(start, route) {
   return buildUserLegs(start, route).totalMins;
 }
 
-// Returns the travel time between any two stations on a named line by walking
-// every intermediate stop in NETWORK. Takes the shortest path found across
-// all sub-lines that share the same display name (e.g. all 'Circle' variants).
+// Returns the travel time between any two stations on a named line by finding
+// the shortest path through NETWORK adjacencies that share the given display
+// name. Walks neighbour-by-neighbour (in both directions) so loop lines like
+// the Circle correctly choose the shorter way round rather than summing
+// segments in stored-array order. Must agree with how dijkstra() scores
+// same-line travel — keep these two in lockstep.
 function travelTimeOnLine(from, to, displayLineName) {
-  let best = Infinity;
+  if (from === to) return 0;
+  const adj = {};
   for (const [key, stops] of Object.entries(NETWORK)) {
     if (displayLine(key) !== displayLineName) continue;
-    const ai = stops.indexOf(from);
-    const bi = stops.indexOf(to);
-    if (ai === -1 || bi === -1) continue;
-    const start = Math.min(ai, bi), end = Math.max(ai, bi);
-    let t = 0, valid = true;
-    for (let i = start; i < end; i++) {
-      const seg = getTime(stops[i], stops[i + 1], key);
-      if (seg === null) { valid = false; break; }
-      t += seg;
+    for (let i = 0; i < stops.length - 1; i++) {
+      const a = stops[i], b = stops[i + 1];
+      const t = getTime(a, b, key);
+      if (t === null) continue;
+      (adj[a] ||= []).push({to: b, cost: t});
+      (adj[b] ||= []).push({to: a, cost: t});
     }
-    if (valid) best = Math.min(best, t);
   }
-  return best === Infinity ? null : best;
+  if (!adj[from] || !adj[to]) return null;
+  const dist = {[from]: 0};
+  const pq = [{station: from, cost: 0}];
+  while (pq.length) {
+    pq.sort((a, b) => a.cost - b.cost);
+    const {station, cost} = pq.shift();
+    if (cost > dist[station]) continue;
+    if (station === to) return cost;
+    for (const edge of adj[station]) {
+      const nc = cost + edge.cost;
+      if (dist[edge.to] === undefined || nc < dist[edge.to]) {
+        dist[edge.to] = nc;
+        pq.push({station: edge.to, cost: nc});
+      }
+    }
+  }
+  return null;
 }
 
 // Converts userRoute into legs matching the optimal route format,
@@ -3334,11 +3350,31 @@ function countDistinctChanges(route) {
   return Math.max(0, collapsed.length - 1);
 }
 
+// All date/seed inputs must derive from London time so every player worldwide
+// gets the same puzzle on a given calendar day. Europe/London handles BST/GMT.
+// puzzleNum is anchored to a fixed UTC reference for stability.
+function londonDateParts(d) {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(d || new Date());
+  const get = t => Number(parts.find(p => p.type === t).value);
+  const y = get('year'), mo = get('month'), da = get('day');
+  return {
+    y, mo, da,
+    dateStr: `${y}-${String(mo).padStart(2,'0')}-${String(da).padStart(2,'0')}`,
+    baseSeed: y * 10000 + mo * 100 + da,
+    puzzleNum: Math.floor((Date.UTC(y, mo - 1, da) - Date.UTC(2026, 3, 3)) / 86400000) + 1,
+  };
+}
+
 // Cache key for today's pre-generated puzzles. Each entry stores just the
 // {start, end} pair — the routes/graph are rebuilt cheaply on demand
 // (one targeted dijkstra ~130ms vs up to 200 attempts at ~95ms each).
-// Auto-invalidates when the date rolls over.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v1';
+// Auto-invalidates when the date rolls over. Bumped to v2 when the date
+// source switched from local time to London time — old entries are keyed by
+// a date string that may not match the new London date.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v2';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -3378,9 +3414,7 @@ function _tel(event, data) {
 function todayPuzzle(mode) {
   const m = mode === 'hard' ? 'hard' : 'easy';
   const _t0 = Date.now();
-  const now = new Date();
-  const date = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const puzzleNum = Math.floor((Date.now() - new Date('2026-04-03').getTime()) / 86400000) + 1;
+  const { dateStr: date, baseSeed: londonBaseSeed, puzzleNum } = londonDateParts();
   const GRAPH = buildGraph();
 
   // Cache hit: rebuild routes for the stored {start, end} without re-running
@@ -3440,8 +3474,7 @@ function todayPuzzle(mode) {
 
   // Daily seed shared with Easy mode. Hard uses an offset so its draw is
   // an independent (but still deterministic) RNG path.
-  const baseSeed = now.getFullYear() * 10000 + (now.getMonth()+1) * 100 + now.getDate();
-  const seed = m === 'hard' ? baseSeed + 1 : baseSeed;
+  const seed = m === 'hard' ? londonBaseSeed + 1 : londonBaseSeed;
   const rng  = seededRng(seed);
   const pool = PUZZLE_STATIONS.filter(s => COORDS[s] && linesAtStation(s).length > 0);
   let start, end, routes;
