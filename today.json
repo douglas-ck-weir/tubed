@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-04",
-  "puzzleNum": 63,
+  "date": "2026-06-05",
+  "puzzleNum": 64,
   "easy": {
-    "start": "Sloane Square",
-    "end": "London Bridge"
-  },
-  "hard": {
     "start": "Shepherd's Bush",
     "end": "Ealing Broadway"
+  },
+  "hard": {
+    "start": "Limehouse",
+    "end": "Goodge Street"
   }
 }
