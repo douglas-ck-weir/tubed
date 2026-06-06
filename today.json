@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-05",
-  "puzzleNum": 64,
+  "date": "2026-06-06",
+  "puzzleNum": 65,
   "easy": {
-    "start": "Shepherd's Bush",
-    "end": "Ealing Broadway"
-  },
-  "hard": {
     "start": "Limehouse",
     "end": "Goodge Street"
+  },
+  "hard": {
+    "start": "Bayswater",
+    "end": "Borough"
   }
 }
