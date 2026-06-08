@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-07",
-  "puzzleNum": 66,
+  "date": "2026-06-08",
+  "puzzleNum": 67,
   "easy": {
-    "start": "Bayswater",
-    "end": "Borough"
-  },
-  "hard": {
     "start": "Chancery Lane",
     "end": "Mile End"
+  },
+  "hard": {
+    "start": "Arsenal",
+    "end": "Liverpool Street"
   }
 }
