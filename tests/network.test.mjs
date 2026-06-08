@@ -34,7 +34,9 @@ const exportSuffix = `
 ;globalThis.__TUBED__ = {
   NETWORK, TIMES, TIMES_BY_LINE, COORDS, LINE_COLOURS,
   INTERCHANGE_MINS, PLATFORM_GROUPS, OSI_PAIRS,
-  displayLine, getTime, interchangeTime
+  displayLine, getTime, interchangeTime,
+  buildGraph, dijkstra, travelTimeOnLine, buildUserLegs,
+  _singleLineDistances, bestOneChangeMins
 };`;
 const fullScript = scripts.join('\n;\n') + exportSuffix;
 
@@ -131,7 +133,9 @@ function defined(v, msg) {
 }
 
 const { NETWORK, COORDS, LINE_COLOURS, PLATFORM_GROUPS,
-        displayLine, getTime, interchangeTime } = ctx.__TUBED__;
+        displayLine, getTime, interchangeTime,
+        buildGraph, dijkstra, travelTimeOnLine, buildUserLegs,
+        _singleLineDistances, bestOneChangeMins } = ctx.__TUBED__;
 
 // ── Structural integrity ───────────────────────────────────────────────────
 
@@ -440,6 +444,279 @@ test('Gospel Oak → Barking Riverside (Suffragette) total = 40 min', () => {
 test('Liverpool Street → Chingford (Weaver Chingford) total = 27 min', () => {
   // 3+4+3+3+2+3+3+6 = 27
   eq(totalTimeOnLine(NETWORK['Overground_Weaver_Chingford'], 'Overground_Weaver_Chingford'), 27);
+});
+
+// ── Circle line teardrop pivots ────────────────────────────────────────────
+// Circle has two stations (Paddington, Edgware Road) that appear twice in the
+// service array — these are the "teardrop pivots" where the line spirals back
+// on itself and a rider physically has to change platforms to traverse them.
+// buildGraph() splits each duplicate occurrence into a synthetic graph node
+// linked by a same-line interchange edge; travelTimeOnLine() and
+// buildUserLegs() honour the split so a single Circle leg across the pivot
+// is forced to the long-way continuous ride (no change), while explicitly
+// adding the pivot station as a waypoint splits the leg with a change.
+//
+// These tests lock in the model. If any of them start failing, something in
+// the Circle representation has regressed — fix the regression, don't update
+// the expected values without thinking carefully about the player-facing
+// implication.
+
+// Helper: optimal route summary from dijkstra, for assertions.
+function optimal(start, end) {
+  const g = buildGraph();
+  const routes = dijkstra(g, start, end);
+  return routes && routes[0] ? routes[0] : null;
+}
+
+test('Circle has duplicate occurrences of Paddington and Edgware Road', () => {
+  const arr = NETWORK['Circle'];
+  truthy(arr, 'NETWORK.Circle defined');
+  const padCount = arr.filter(s => s === 'Paddington').length;
+  const edgCount = arr.filter(s => s === 'Edgware Road').length;
+  eq(padCount, 2, 'Paddington should appear twice on Circle');
+  eq(edgCount, 2, 'Edgware Road should appear twice on Circle');
+});
+
+test('buildGraph synthesises pivot nodes for Paddington and Edgware Road on Circle', () => {
+  const g = buildGraph();
+  const synth = Object.keys(g).filter(k => k.includes('#'));
+  const padSynth = synth.filter(k => k.startsWith('Paddington#'));
+  const edgSynth = synth.filter(k => k.startsWith('Edgware Road#'));
+  eq(padSynth.length, 2, 'expected 2 synthetic Paddington nodes');
+  eq(edgSynth.length, 2, 'expected 2 synthetic Edgware Road nodes');
+});
+
+test('travelTimeOnLine forces the long anticlockwise way for Victoria → Ladbroke Grove on Circle', () => {
+  // Short way Victoria → Bayswater → Paddington → Royal Oak → Ladbroke Grove
+  // requires the Paddington pivot change. A single Circle leg with no change
+  // must therefore go the long way around the loop.
+  eq(travelTimeOnLine('Victoria', 'Ladbroke Grove', 'Circle'), 39);
+});
+
+test('travelTimeOnLine returns the no-pivot short way for Victoria → Paddington on Circle', () => {
+  // Victoria → Sloane Sq → … → Bayswater → Paddington: 16 min, no pivot.
+  eq(travelTimeOnLine('Victoria', 'Paddington', 'Circle'), 16);
+});
+
+test('travelTimeOnLine returns the no-pivot short way for Paddington → Ladbroke Grove on Circle', () => {
+  // Paddington → Royal Oak → Westbourne Park → Ladbroke Grove: 5 min, no pivot.
+  eq(travelTimeOnLine('Paddington', 'Ladbroke Grove', 'Circle'), 5);
+});
+
+test('travelTimeOnLine returns the continuous Hammersmith → Victoria Circle ride at 46 min', () => {
+  // Single Circle service runs Hammersmith → … → Paddington(N) → Edgware Road
+  // (mid-route, passes through) → Baker St → … → Victoria. Total: 46 min.
+  eq(travelTimeOnLine('Hammersmith', 'Victoria', 'Circle'), 46);
+});
+
+test('Linear lines (Victoria, Northern) unaffected by synthetic-node logic', () => {
+  eq(travelTimeOnLine('Stockwell', 'Victoria', 'Victoria'), 5);
+  eq(travelTimeOnLine('Clapham South', 'Stockwell', 'Northern'), 5);
+});
+
+test('buildUserLegs: Victoria → Ladbroke Grove on Circle (no waypoint) scores 39 min long way', () => {
+  const r = buildUserLegs('Victoria', [{station:'Ladbroke Grove', line:'Circle'}]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].mins, 39);
+  eq(r.totalMins, 39);
+});
+
+test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces a change at Paddington', () => {
+  // Player adds Paddington as a pivot waypoint → leg splits with a
+  // Circle|Circle interchange at Paddington. Short way both halves:
+  // 16 + 3 + 5 = 24.
+  const r = buildUserLegs('Victoria', [
+    {station:'Paddington', line:'Circle'},
+    {station:'Ladbroke Grove', line:'Circle'},
+  ]);
+  eq(r.legs.length, 2);
+  eq(r.legs[0].mins, 16);
+  eq(r.legs[1].mins, 5);
+  eq(r.interchanges[0]?.at, 'Paddington');
+  eq(r.interchanges[0]?.mins, 3);
+  eq(r.totalMins, 24);
+});
+
+test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a change at Edgware Road', () => {
+  const r = buildUserLegs('Victoria', [
+    {station:'Edgware Road', line:'Circle'},
+    {station:'Ladbroke Grove', line:'Circle'},
+  ]);
+  eq(r.legs.length, 2);
+  eq(r.interchanges[0]?.at, 'Edgware Road');
+  // 18 + 2 + 7 = 27
+  eq(r.totalMins, 27);
+});
+
+test('buildUserLegs: non-pivot waypoint on Circle stays as a single via leg', () => {
+  // Bayswater is a single-occurrence Circle station; using it as a waypoint
+  // must NOT force a change. Notting Hill Gate → Bayswater → Paddington = 4.
+  const r = buildUserLegs('Notting Hill Gate', [
+    {station:'Bayswater', line:'Circle'},
+    {station:'Paddington', line:'Circle'},
+  ]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].mins, 4);
+  eq(r.totalMins, 4);
+});
+
+test('buildUserLegs: Hammersmith → Victoria direct on Circle = 46 min continuous', () => {
+  const r = buildUserLegs('Hammersmith', [{station:'Victoria', line:'Circle'}]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].mins, 46);
+});
+
+test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington uses 1-min interchange', () => {
+  // Circle and H&C share platforms at Paddington-N — 1-min interchange.
+  const r = buildUserLegs('Victoria', [
+    {station:'Paddington', line:'Circle'},
+    {station:'Ladbroke Grove', line:'Hammersmith & City'},
+  ]);
+  eq(r.legs.length, 2);
+  eq(r.legs[0].line, 'Circle');
+  eq(r.legs[1].line, 'Hammersmith & City');
+  eq(r.interchanges[0]?.mins, 1);
+  // 16 + 1 + 5 = 22
+  eq(r.totalMins, 22);
+});
+
+test('Optimal Victoria → Ladbroke Grove uses Paddington change (not the long anticlockwise way)', () => {
+  const opt = optimal('Victoria', 'Ladbroke Grove');
+  defined(opt, 'optimal route should exist');
+  // Should be a 2-leg route via Paddington, not a 1-leg 39-min long way.
+  eq(opt.legs.length, 2);
+  eq(opt.legs[0].to, 'Paddington');
+  eq(opt.legs[1].from, 'Paddington');
+  truthy(opt.mins < 39, `optimal should beat the long way; got ${opt.mins}`);
+});
+
+test('Optimal Bayswater → Westbourne Park uses a same-station change at Paddington', () => {
+  const opt = optimal('Bayswater', 'Westbourne Park');
+  defined(opt, 'optimal route should exist');
+  eq(opt.legs.length, 2);
+  eq(opt.legs[0].to, 'Paddington');
+});
+
+// ── _singleLineDistances pivot-awareness ───────────────────────────────────
+// Used by bestOneChangeMins (the hard-puzzle filter). On Circle the function
+// must not allow free teleport between Paddington's two platform sides.
+
+test('_singleLineDistances from Paddington on Circle does not free-teleport across the pivot', () => {
+  const d = _singleLineDistances('Paddington', 'Circle');
+  // Royal Oak is one hop from Paddington-N; Bayswater is one hop from
+  // Paddington-S. Both should be 2 — but only because we measured from the
+  // *correct* platform for each. The bug we are guarding against is the old
+  // behaviour where Ladbroke Grove (5 min from Paddington-N) and Victoria
+  // (16 min from Paddington-S) both showed up at their short-platform
+  // distances by hopping between platforms freely. With the pivot guard,
+  // each station appears at the distance from its corresponding platform.
+  eq(d['Royal Oak'], 2, 'Royal Oak reachable from Paddington-N in 2 min');
+  eq(d['Bayswater'], 2, 'Bayswater reachable from Paddington-S in 2 min');
+  eq(d['Ladbroke Grove'], 5, 'Ladbroke Grove reachable from Paddington-N in 5 min');
+  eq(d['Victoria'], 16, 'Victoria reachable from Paddington-S in 16 min');
+});
+
+test('_singleLineDistances on a linear line (Northern) is unchanged', () => {
+  const d = _singleLineDistances('Stockwell', 'Northern_Bank_to_High_Barnet');
+  // Stockwell is on the Bank branch — adjacent stations should be reachable
+  // at the underlying TIMES values.
+  defined(d['Oval'], 'Oval reachable from Stockwell on Northern Bank branch');
+});
+
+test('bestOneChangeMins for Victoria → Ladbroke Grove gives the via-Paddington short route (~22 min)', () => {
+  // Before the _singleLineDistances pivot guard, this returned 21 (the
+  // free-teleport short way), which then made the hard-puzzle generator's
+  // "1-change-gap" filter accept puzzles whose optimal route only just beat
+  // a fictitious one-change tube route. With the fix, the value reflects
+  // the real two-leg route Victoria → Paddington (Circle) → Ladbroke Grove
+  // (H&C) including the 1-min cross-line interchange at Paddington.
+  const m = bestOneChangeMins('Victoria', 'Ladbroke Grove');
+  truthy(m >= 20 && m <= 25, `bestOneChangeMins should be ~22, got ${m}`);
+});
+
+// ── Multi-occurrence stations are an explicit, documented set ─────────────
+// The synthetic-node logic in buildGraph activates for any station that
+// appears more than once in any sub-line array. Today only Circle's
+// Paddington and Edgware Road qualify. If a future network change
+// introduces another duplicate, this test fails — we want to look at it
+// carefully before letting it through, because every new pivot also needs
+// the same care around scoring/validation/optimal routing.
+
+// ── via tracking and leg shape on the result card ─────────────────────────
+// The result card renders each leg as "from → to LINE mins" with an optional
+// "via X, Y, Z" annotation listing intermediate stops the player chose to
+// add. The screenshot complaint that started this whole investigation
+// (Paddington appearing inline rather than as a change row) is fixed by
+// the pivot-waypoint detection in buildUserLegs — these tests pin the
+// rendered shape so a future refactor can't drop the distinction.
+
+test('player route with no intermediate stops has empty via on every leg', () => {
+  const r = buildUserLegs('Victoria', [{station:'Ladbroke Grove', line:'Circle'}]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].via.length, 0, 'single-stop input has empty via');
+});
+
+test('non-pivot intermediate stop on Circle is recorded as via, NOT a change', () => {
+  // Bayswater is single-occurrence on Circle. Notting Hill Gate → Bayswater
+  // → Paddington should be one leg with Bayswater in via and no change row.
+  const r = buildUserLegs('Notting Hill Gate', [
+    {station:'Bayswater', line:'Circle'},
+    {station:'Paddington', line:'Circle'},
+  ]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].via.length, 1);
+  eq(r.legs[0].via[0], 'Bayswater');
+  eq(r.interchanges[0], null, 'no interchange row');
+});
+
+test('pivot intermediate stop on Circle splits the leg and emits a change row, NOT a via', () => {
+  // Victoria → Paddington (pivot) → Ladbroke Grove. The leg splits at
+  // Paddington; neither resulting leg should list Paddington in via — it
+  // belongs to the change row between them.
+  const r = buildUserLegs('Victoria', [
+    {station:'Paddington', line:'Circle'},
+    {station:'Ladbroke Grove', line:'Circle'},
+  ]);
+  eq(r.legs.length, 2);
+  eq(r.legs[0].via.length, 0, 'first leg has no via');
+  eq(r.legs[1].via.length, 0, 'second leg has no via');
+  eq(r.interchanges[0]?.at, 'Paddington', 'change row at Paddington');
+});
+
+test('non-pivot intermediate stop on a linear line (Northern) is recorded as via', () => {
+  const r = buildUserLegs('Clapham South', [
+    {station:'Stockwell', line:'Northern'},
+    {station:'Kennington', line:'Northern'},
+  ]);
+  eq(r.legs.length, 1);
+  eq(r.legs[0].via.length, 1);
+  eq(r.legs[0].via[0], 'Stockwell');
+});
+
+test('the only multi-occurrence (station, sub-line) pairs are the documented Circle pivots', () => {
+  const allowed = new Set([
+    'Paddington|Circle',
+    'Edgware Road|Circle',
+  ]);
+  const found = [];
+  for (const [lineKey, stops] of Object.entries(NETWORK)) {
+    const counts = {};
+    for (const s of stops) counts[s] = (counts[s] || 0) + 1;
+    for (const [stn, n] of Object.entries(counts)) {
+      if (n > 1) found.push(`${stn}|${lineKey}`);
+    }
+  }
+  const unexpected = found.filter(k => !allowed.has(k));
+  const missing = [...allowed].filter(k => !found.includes(k));
+  if (unexpected.length || missing.length) {
+    throw new Error(
+      `Multi-occurrence set has drifted from the documented Circle pivots.\n` +
+      `  Unexpected: ${unexpected.join(', ') || '(none)'}\n` +
+      `  Missing: ${missing.join(', ') || '(none)'}\n` +
+      `If the new occurrence is intentional, update this test and the\n` +
+      `comments around _nodeKey/_stationName; if not, fix the data.`
+    );
+  }
 });
 
 // ── Report ─────────────────────────────────────────────────────────────────

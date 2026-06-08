@@ -1587,7 +1587,15 @@ const NETWORK = {
     'Chancery Lane','St. Paul\'s','Bank','Liverpool Street','Bethnal Green','Mile End','Stratford',
     'Leyton','Leytonstone','Wanstead','Redbridge','Gants Hill','Newbury Park','Barkingside','Fairlop','Hainault',
   ],
-  'Circle_Clockwise': [
+  // Circle line modelled as a single ordered service path. Paddington and
+  // Edgware Road appear twice each — these are the "teardrop pivots" where
+  // the line spirals back on itself and a rider has to physically change
+  // platforms. buildGraph() splits each duplicate occurrence into its own
+  // synthetic graph node so a Dijkstra path can't teleport between them.
+  // Graph adjacencies are bidirectional, so a separate Anticlockwise array
+  // would be redundant (it was previously listed for documentation only and
+  // caused phantom platform duplication).
+  'Circle': [
     'Hammersmith','Goldhawk Road','Shepherd\'s Bush Market','Wood Lane','Latimer Road',
     'Ladbroke Grove','Westbourne Park','Royal Oak','Paddington','Edgware Road',
     'Baker Street','Great Portland Street','Euston Square','Kings Cross St. Pancras',
@@ -1596,16 +1604,6 @@ const NETWORK = {
     'Westminster','St. James\'s Park','Victoria','Sloane Square','South Kensington',
     'Gloucester Road','High Street Kensington','Notting Hill Gate','Bayswater','Paddington',
     'Edgware Road',
-  ],
-  'Circle_Anticlockwise': [
-    'Edgware Road','Paddington','Bayswater','Notting Hill Gate','High Street Kensington',
-    'Gloucester Road','South Kensington','Sloane Square','Victoria','St. James\'s Park',
-    'Westminster','Embankment','Temple','Blackfriars','Mansion House','Cannon Street',
-    'Monument','Tower Hill','Aldgate','Liverpool Street','Moorgate','Barbican',
-    'Farringdon','Kings Cross St. Pancras','Euston Square','Great Portland Street',
-    'Baker Street','Edgware Road','Paddington','Royal Oak','Westbourne Park',
-    'Ladbroke Grove','Latimer Road','Wood Lane','Shepherd\'s Bush Market',
-    'Goldhawk Road','Hammersmith',
   ],
   // District line modelled as the actual TfL service patterns. K(O) is
   // a shuttle to Earl's Court — players must change there to continue.
@@ -2656,20 +2654,95 @@ const PUZZLE_STATIONS = [
 // DIJKSTRA PATHFINDING
 // ═══════════════════════════════════════════════════════════════════════════════
 
+// Returns true iff `stn` appears more than once in the sub-line array `stns`.
+// This is the "teardrop pivot" condition: a station like Paddington or Edgware
+// Road that the Circle line physically calls at twice on a single service
+// (different platforms, different points on the spiral). We split such
+// occurrences into distinct graph nodes so a Dijkstra path cannot teleport
+// between them — riders must change platforms via a real interchange edge.
+function _isMultiOccurrence(stn, stns) {
+  let n = 0;
+  for (const s of stns) { if (s === stn) { n++; if (n > 1) return true; } }
+  return false;
+}
+// Synthetic node key for a station occurrence inside a sub-line array. For
+// single-occurrence stations (every line except Circle's Paddington/Edgware
+// Road), returns the bare station name so the graph stays backwards-
+// compatible. For multi-occurrence stations, returns a position-qualified
+// key the graph treats as a distinct node.
+//
+// ── Invariant: synthetic keys MUST NOT leak past pathToLegs ───────────────
+// The synthetic suffix is graph-routing identity, not a real station name.
+// Anything user-visible (leg.from, leg.to, interchange.at, route history
+// entries) MUST be a bare station name. The places that bridge the boundary
+// are pathToLegs (Dijkstra path → legs) and dijkstra's start-node seeding
+// (path's `station` field uses the user-named bare start, not the synthetic
+// node key). If you add a new consumer of Dijkstra paths or graph keys,
+// run them through _stationName before emitting anything user-visible.
+function _nodeKey(stn, lineKey, pos, stns) {
+  return _isMultiOccurrence(stn, stns) ? `${stn}#${lineKey}@${pos}` : stn;
+}
+// Display layer: strip the synthetic suffix so user-facing strings (leg
+// from/to, "change at ..." labels) show the real station name. See the
+// invariant comment above _nodeKey before using this.
+function _stationName(s) {
+  const i = s.indexOf('#');
+  return i < 0 ? s : s.slice(0, i);
+}
+
 function buildGraph() {
   const graph = {};
   function ensure(s, l) {
     if (!graph[s]) graph[s] = {};
     if (!graph[s][l]) graph[s][l] = [];
   }
+  // Track which synthetic occurrences exist for each (real-station, sub-line)
+  // pair so the bare-name aggregation and pivot-interchange passes below
+  // can find them without re-scanning NETWORK.
+  // syntheticOccurrences[realStn][lineKey] = [syntheticKey, ...]
+  const syntheticOccurrences = {};
+  function recordOccurrence(realStn, lineKey, key) {
+    if (key === realStn) return;
+    if (!syntheticOccurrences[realStn]) syntheticOccurrences[realStn] = {};
+    if (!syntheticOccurrences[realStn][lineKey]) syntheticOccurrences[realStn][lineKey] = [];
+    const arr = syntheticOccurrences[realStn][lineKey];
+    if (!arr.includes(key)) arr.push(key);
+  }
   for (const [lineKey, stns] of Object.entries(NETWORK)) {
     for (let i = 0; i < stns.length - 1; i++) {
       const a = stns[i], b = stns[i+1];
       const t = getTime(a, b, lineKey);
       if (t === null) continue;
-      ensure(a, lineKey); ensure(b, lineKey);
-      graph[a][lineKey].push({station:b, line:lineKey, cost:t, type:'travel'});
-      graph[b][lineKey].push({station:a, line:lineKey, cost:t, type:'travel'});
+      const aKey = _nodeKey(a, lineKey, i,   stns);
+      const bKey = _nodeKey(b, lineKey, i+1, stns);
+      recordOccurrence(a, lineKey, aKey);
+      recordOccurrence(b, lineKey, bKey);
+      ensure(aKey, lineKey); ensure(bKey, lineKey);
+      graph[aKey][lineKey].push({station:bKey, line:lineKey, cost:t, type:'travel'});
+      graph[bKey][lineKey].push({station:aKey, line:lineKey, cost:t, type:'travel'});
+    }
+  }
+  // NOTE: we deliberately do NOT add a bare-name aggregation node on
+  // synthetic-bearing sub-lines (Circle at Paddington/Edgware Road). A free
+  // bare→synth edge would let a Dijkstra path cross between two synthetic
+  // occurrences via the bare node at zero cost, bypassing the pivot
+  // interchange. Instead, dijkstra() and travelTimeOnLine() enumerate
+  // synthetic occurrences explicitly when the user-named start/end is a
+  // multi-occurrence station.
+  // Pivot interchange: between two synthetic occurrences of the same station
+  // on the same sub-line (e.g. Paddington@Circle_Clockwise@8 vs @35), add a
+  // real interchange edge with the line's same-line interchange cost. This is
+  // the change-at-Paddington edge a rider must traverse to cross the teardrop.
+  for (const realStn of Object.keys(syntheticOccurrences)) {
+    for (const [lineKey, syntheticKeys] of Object.entries(syntheticOccurrences[realStn])) {
+      if (syntheticKeys.length < 2) continue;
+      const cost = interchangeTime(realStn, lineKey, lineKey);
+      for (const ka of syntheticKeys) {
+        for (const kb of syntheticKeys) {
+          if (ka === kb) continue;
+          graph[ka][lineKey].push({station:kb, line:lineKey, cost, type:'interchange'});
+        }
+      }
     }
   }
   // Helper: for a station+sub-line, return the set of adjacent stations
@@ -2707,25 +2780,45 @@ function buildGraph() {
     return true;
   }
 
-  for (const stn of Object.keys(graph)) {
-    const lineList = Object.keys(graph[stn]);
-    if (lineList.length < 2) continue;
-    for (const la of lineList) {
-      for (const lb of lineList) {
-        if (la === lb) continue;
-        const sameLine = displayLine(la) === displayLine(lb);
-        if (sameLine) {
-          // At a non-junction (every sub-line passes through identically),
-          // skip the interchange edge — the same physical train carries every
-          // sub-line designation, so no change is required. At a real junction
-          // (the adjacent stations differ between sub-lines), use
-          // interchangeTime which falls back to 3 min unless the station has
-          // an explicit same-line override (e.g. Earl's Court District|District: 1).
-          if (sameLineMergedAt(stn, la, lb)) continue;
-          graph[stn][la].push({station:stn, line:lb, cost: interchangeTime(stn, la, lb), type:'interchange'});
+  // Inter-line interchange edges. For each real station, build edges between
+  // every pair of lines that call there. With synthetic nodes, "a line calls
+  // here" can be via the bare-name graph entry (the common case) OR via
+  // synthetic occurrences (the Circle teardrop case). We collect all
+  // (lineKey, nodeKey) pairs for the station, then add interchange edges
+  // between every cross-line pair.
+  const realStnsForInterchange = new Set([
+    ...Object.keys(graph).filter(k => k.indexOf('#') < 0),
+    ...Object.keys(syntheticOccurrences),
+  ]);
+  for (const realStn of realStnsForInterchange) {
+    // Gather every line that calls at this real station, then expand into
+    // (line, nodeKey) presences. Synthetic-bearing lines emit one presence
+    // per occurrence; bare lines emit a single bare-name presence.
+    const linesHere = new Set();
+    if (graph[realStn]) for (const line of Object.keys(graph[realStn])) linesHere.add(line);
+    if (syntheticOccurrences[realStn]) {
+      for (const line of Object.keys(syntheticOccurrences[realStn])) linesHere.add(line);
+    }
+    const presences = [];  // {line, nodeKey}
+    for (const line of linesHere) {
+      const synths = syntheticOccurrences[realStn]?.[line];
+      if (synths && synths.length > 0) {
+        for (const k of synths) presences.push({line, nodeKey: k});
+      } else {
+        presences.push({line, nodeKey: realStn});
+      }
+    }
+    if (presences.length < 2) continue;
+    for (const pa of presences) {
+      for (const pb of presences) {
+        if (pa.line === pb.line) continue;
+        const sameDispLine = displayLine(pa.line) === displayLine(pb.line);
+        if (sameDispLine) {
+          if (sameLineMergedAt(realStn, pa.line, pb.line)) continue;
+          graph[pa.nodeKey][pa.line].push({station:pb.nodeKey, line:pb.line, cost: interchangeTime(realStn, pa.line, pb.line), type:'interchange'});
         } else {
-          const w = interchangeTime(stn, la, lb);
-          graph[stn][la].push({station:stn, line:lb, cost:w, type:'interchange'});
+          const w = interchangeTime(realStn, pa.line, pb.line);
+          graph[pa.nodeKey][pa.line].push({station:pb.nodeKey, line:pb.line, cost:w, type:'interchange'});
         }
       }
     }
@@ -2835,22 +2928,34 @@ const _SUBLINES_BY_DISPLAY = (function(){
   return m;
 })();
 const _SINGLE_LINE_DIST_CACHE = new Map();
+// Returns shortest-distance map from `origin` to every station reachable
+// on `line` WITHOUT crossing a teardrop pivot (i.e. on a single continuous
+// no-change ride). On linear lines this is just BFS along the ordered
+// array. On loop lines like Circle where `origin` may appear at multiple
+// positions, each occurrence is treated as a separate boarding platform
+// and we take the min across them — but walks from a given occurrence
+// STOP when they reach another occurrence of `origin` (the pivot), so
+// the two halves of the loop never merge into a free-teleport answer.
+// This must agree with travelTimeOnLine() for any single (from, to) pair.
 function _singleLineDistances(origin, line) {
   const key = origin + '|' + line;
   const cached = _SINGLE_LINE_DIST_CACHE.get(key);
   if (cached) return cached;
-  // BFS along an ordered station array — neighbours are the two adjacent
-  // entries. Distances are monotonic along the line, so a single pass
-  // left-and-right from origin is sufficient.
   const dist = { [origin]: 0 };
   const stns = NETWORK[line] || [];
-  // Find all positions of origin (some loop sub-lines repeat the same
-  // station). Walking outward from each handles loops correctly.
+  // Identify pivot positions for `origin` so each walk can be bounded by
+  // them. The walk from occurrence A stops when it would reach occurrence
+  // B; otherwise the array's linear ordering would imply a phantom
+  // "stay on the train through the pivot" connection that doesn't exist.
+  // For multi-occurrence stations other than `origin` we let the walk
+  // pass through normally — those are just intermediate stops on the
+  // continuous ride from this boarding platform.
   for (let i = 0; i < stns.length; i++) {
     if (stns[i] !== origin) continue;
     // Walk left
     let acc = 0;
     for (let j = i - 1; j >= 0; j--) {
+      if (stns[j] === origin) break;  // another platform of `origin` — stop
       const t = getTime(stns[j], stns[j+1], line);
       if (t === null) break;
       acc += t;
@@ -2859,6 +2964,7 @@ function _singleLineDistances(origin, line) {
     // Walk right
     acc = 0;
     for (let j = i + 1; j < stns.length; j++) {
+      if (stns[j] === origin) break;
       const t = getTime(stns[j-1], stns[j], line);
       if (t === null) break;
       acc += t;
@@ -2936,7 +3042,25 @@ function buildGraphNoWalks() {
 }
 
 function dijkstra(graph, start, end) {
-  if (!graph[start] || !graph[end]) return [];
+  // Resolve a user-named station (e.g. "Paddington") into the set of graph
+  // node keys that represent it — usually just the bare name, but for
+  // multi-occurrence stations on Circle the real platforms live under
+  // synthetic keys. Both start and end must be expanded this way so the
+  // search can seed/terminate on any platform.
+  function resolveNodes(stn) {
+    const out = new Set();
+    if (graph[stn]) out.add(stn);
+    for (const k of Object.keys(graph)) {
+      const hash = k.indexOf('#');
+      if (hash < 0) continue;
+      if (k.slice(0, hash) === stn) out.add(k);
+    }
+    return [...out];
+  }
+  const startNodes = resolveNodes(start);
+  const endNodes   = resolveNodes(end);
+  if (startNodes.length === 0 || endNodes.length === 0) return [];
+  const endSet = new Set(endNodes);
 
   // Store up to MAX_PATHS paths per (station, line) so that routes of equal
   // cost via different interchange stations all survive to the results stage.
@@ -2951,10 +3075,18 @@ function dijkstra(graph, start, end) {
     return dist[stn][line];
   }
 
-  for (const line of Object.keys(graph[start])) {
-    const entry = {cost:0, path:[{station:start, line, type:'start'}]};
-    getEntries(start, line).push(entry);
-    push({cost:0, station:start, line, path:entry.path});
+  // Seed every (startNode, line) tuple at cost 0. The path's `station` field
+  // uses the user-named start (`start`) for display purposes; downstream code
+  // (pathToLegs) only sees real station names this way. The internal node
+  // key (`startNode`) is what we feed back into the priority queue so the
+  // adjacency lookup hits the right graph entry.
+  for (const startNode of startNodes) {
+    if (!graph[startNode]) continue;
+    for (const line of Object.keys(graph[startNode])) {
+      const entry = {cost:0, path:[{station:start, line, type:'start'}]};
+      getEntries(startNode, line).push(entry);
+      push({cost:0, station:startNode, line, path:entry.path});
+    }
   }
 
   // Cap how many times we process each (station, line) to avoid explosion
@@ -2982,53 +3114,62 @@ function dijkstra(graph, start, end) {
     }
   }
 
-  if (!dist[end]) return [];
+  if (!endNodes.some(n => dist[n])) return [];
 
   function pathToLegs(path) {
     const legs = [];
     let legFrom = null, legLine = null, legMins = 0, prev = null;
+    // node.station may be a synthetic key (Paddington#Circle_Clockwise@8) for
+    // multi-occurrence stations on Circle. Display fields and getTime lookups
+    // must use the bare real-station name; the synthetic suffix only matters
+    // for graph-routing identity.
     for (const node of path) {
-      if (node.type === 'start') { legFrom = node.station; legLine = node.line; prev = node.station; continue; }
+      const stnDisplay = _stationName(node.station);
+      if (node.type === 'start') { legFrom = stnDisplay; legLine = node.line; prev = stnDisplay; continue; }
       if (node.type === 'travel') {
         if (node.line === legLine) {
-          legMins += getTime(prev, node.station, legLine) || 0;
-          prev = node.station;
+          legMins += getTime(prev, stnDisplay, legLine) || 0;
+          prev = stnDisplay;
         } else {
           if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
           legFrom = prev; legLine = node.line;
-          legMins = getTime(prev, node.station, legLine) || 0;
-          prev = node.station;
+          legMins = getTime(prev, stnDisplay, legLine) || 0;
+          prev = stnDisplay;
         }
       } else if (node.type === 'walk') {
         // OSI walk leg: emit as its own 'Walk' leg with the OSI time.
         // Flush any in-progress tube leg first, then push the walk, then
         // reset state so the next tube leg starts at the walk's destination.
         if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
-        const walkMins = osiTime(prev, node.station);
+        const walkMins = osiTime(prev, stnDisplay);
         if (walkMins != null) {
-          legs.push({from: prev, to: node.station, line: 'Walk', mins: walkMins});
+          legs.push({from: prev, to: stnDisplay, line: 'Walk', mins: walkMins});
         }
-        legFrom = node.station; legLine = 'Walk'; legMins = 0;
-        prev = node.station;
+        legFrom = stnDisplay; legLine = 'Walk'; legMins = 0;
+        prev = stnDisplay;
       } else if (node.type === 'interchange') {
         if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
         // For same-station interchanges, node.station === prev. For cross-station
         // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
         // and we need to update both legFrom AND prev so the next travel leg's
         // getTime() lookup uses our actual current location.
-        legFrom = node.station; legLine = node.line; legMins = 0;
-        prev = node.station;
+        legFrom = stnDisplay; legLine = node.line; legMins = 0;
+        prev = stnDisplay;
       }
     }
     if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
     return legs;
   }
 
-  // Collect all stored paths across all arrival lines.
+  // Collect all stored paths across all arrival lines AND every synthetic
+  // node key that represents the user-named end station.
   const allArrivals = [];
-  for (const [l, entries] of Object.entries(dist[end])) {
-    for (const e of entries) {
-      if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
+  for (const endNode of endNodes) {
+    if (!dist[endNode]) continue;
+    for (const [l, entries] of Object.entries(dist[endNode])) {
+      for (const e of entries) {
+        if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
+      }
     }
   }
 
@@ -3067,34 +3208,66 @@ function scoreUserRoute(start, route) {
   return buildUserLegs(start, route).totalMins;
 }
 
-// Returns the travel time between any two stations on a named line by finding
-// the shortest path through NETWORK adjacencies that share the given display
-// name. Walks neighbour-by-neighbour (in both directions) so loop lines like
-// the Circle correctly choose the shorter way round rather than summing
-// segments in stored-array order. Must agree with how dijkstra() scores
-// same-line travel — keep these two in lockstep.
+// Returns the travel time between two stations on a named line, scoring a
+// single user-input leg (no interchange added).
+//
+// On lines where every station appears exactly once per sub-line array
+// (every line except Circle), this is just the shortest-path through
+// adjacencies. On loop lines like the Circle, stations that appear at two
+// different positions in a sub-line array (Paddington and Edgware Road) are
+// the teardrop pivots: each position is a physically distinct platform set
+// and a rider cannot traverse from one position to the other without
+// changing trains. We therefore qualify each occurrence with its array
+// position when building adjacencies, and DO NOT add an interchange edge
+// between qualified occurrences — that's the "single leg, no change" rule.
+// The result: a continuous Circle ride from Victoria to Ladbroke Grove
+// (where the short way passes through the Paddington pivot) is forced to
+// the long anticlockwise way round, because that's the only path that
+// stays on a single train.
+//
+// Must agree with how dijkstra() scores same-line travel for the optimal
+// route — keep these two in lockstep when the Circle model changes.
 function travelTimeOnLine(from, to, displayLineName) {
   if (from === to) return 0;
+  function key(stn, lineKey, pos, stops) {
+    return _isMultiOccurrence(stn, stops) ? `${stn}#${lineKey}@${pos}` : stn;
+  }
   const adj = {};
-  for (const [key, stops] of Object.entries(NETWORK)) {
-    if (displayLine(key) !== displayLineName) continue;
+  // fromKeys/toKeys: every graph-node key that represents `from`/`to` on
+  // this display line, expanded across each occurrence in each sub-line.
+  const fromKeys = [], toKeys = [];
+  for (const [lineKey, stops] of Object.entries(NETWORK)) {
+    if (displayLine(lineKey) !== displayLineName) continue;
     for (let i = 0; i < stops.length - 1; i++) {
       const a = stops[i], b = stops[i + 1];
-      const t = getTime(a, b, key);
+      const t = getTime(a, b, lineKey);
       if (t === null) continue;
-      (adj[a] ||= []).push({to: b, cost: t});
-      (adj[b] ||= []).push({to: a, cost: t});
+      const aKey = key(a, lineKey, i,   stops);
+      const bKey = key(b, lineKey, i+1, stops);
+      (adj[aKey] ||= []).push({to: bKey, cost: t});
+      (adj[bKey] ||= []).push({to: aKey, cost: t});
+    }
+    for (let i = 0; i < stops.length; i++) {
+      const k = key(stops[i], lineKey, i, stops);
+      if (stops[i] === from && !fromKeys.includes(k)) fromKeys.push(k);
+      if (stops[i] === to   && !toKeys.includes(k))   toKeys.push(k);
     }
   }
-  if (!adj[from] || !adj[to]) return null;
-  const dist = {[from]: 0};
-  const pq = [{station: from, cost: 0}];
+  if (fromKeys.length === 0 || toKeys.length === 0) return null;
+  const toSet = new Set(toKeys);
+  // Multi-source Dijkstra: every fromKey is a valid boarding point. Returns
+  // the minimum cost across all (fromKey, toKey) pairs that share a single
+  // continuous adjacency chain.
+  const dist = {};
+  const pq = [];
+  for (const k of fromKeys) { dist[k] = 0; pq.push({station: k, cost: 0}); }
+  let best = Infinity;
   while (pq.length) {
     pq.sort((a, b) => a.cost - b.cost);
     const {station, cost} = pq.shift();
     if (cost > dist[station]) continue;
-    if (station === to) return cost;
-    for (const edge of adj[station]) {
+    if (toSet.has(station)) { if (cost < best) best = cost; continue; }
+    for (const edge of (adj[station] || [])) {
       const nc = cost + edge.cost;
       if (dist[edge.to] === undefined || nc < dist[edge.to]) {
         dist[edge.to] = nc;
@@ -3102,7 +3275,7 @@ function travelTimeOnLine(from, to, displayLineName) {
       }
     }
   }
-  return null;
+  return best === Infinity ? null : best;
 }
 
 // Converts userRoute into legs matching the optimal route format,
@@ -3225,6 +3398,22 @@ function buildUserLegs(start, route) {
         isLineChange = true;
       }
     }
+    // Teardrop pivot waypoint: the player added `from` as an intermediate
+    // stop on the same line as the surrounding hops, AND `from` is a pivot
+    // station (it appears multiple times in some sub-line of this display
+    // line — e.g. Paddington or Edgware Road on Circle). On Circle that's
+    // an unambiguous signal of intent: the player wants to change direction
+    // at the pivot (otherwise a stop here is meaningless — you'd just stay
+    // on the train). Treat it as a same-line interchange so the leg is
+    // split here and the pivot-change cost is added.
+    if (i > 0 && !isLineChange && curLine !== 'Walk' && lines[i - 1] !== 'Walk' && from !== legFrom) {
+      let isPivotWaypoint = false;
+      for (const k of Object.keys(NETWORK)) {
+        if (displayLine(k) !== curLine) continue;
+        if (_isMultiOccurrence(from, NETWORK[k])) { isPivotWaypoint = true; break; }
+      }
+      if (isPivotWaypoint) isLineChange = true;
+    }
 
     // Implicit cross-walk: player is at Bank/Monument but the chosen line
     // only serves the partner station (e.g. at Bank, taking District which
@@ -3280,8 +3469,24 @@ function buildUserLegs(start, route) {
       legVia.push(from);
     }
 
-    const t = travelTimeOnLine(effectiveFrom, to, curLine) ?? 8;
-    legMins += t;
+    // Compute the leg's running total from legFrom (origin of the merged
+    // leg) all the way to `to`, then increment totalMins by the delta from
+    // the previous running total. We do whole-leg recomputation rather than
+    // per-hop summation because on the Circle line the per-hop "no-pivot
+    // shortest path" can sum to less than the whole-leg "no-pivot
+    // continuous ride": a hop Victoria → Paddington finds the short way
+    // (16 min via Bayswater) and Paddington → Ladbroke Grove finds the
+    // short way (5 min via Royal Oak), but the union "Victoria → Paddington
+    // → Ladbroke Grove on one train without changing" forces the long
+    // anticlockwise way (~39 min). Whole-leg recomputation captures that
+    // because the merged path can't cross the teardrop pivot for free.
+    // For linear lines this is identical to per-hop summation.
+    const effLegFrom = (BM_PARTNER[legFrom] && !stationsForDisplayLine(curLine).includes(legFrom) &&
+                        stationsForDisplayLine(curLine).includes(BM_PARTNER[legFrom]))
+      ? BM_PARTNER[legFrom] : legFrom;
+    const wholeLegMins = travelTimeOnLine(effLegFrom, to, curLine) ?? 8;
+    const t = wholeLegMins - legMins;
+    legMins = wholeLegMins;
     totalMins += t;
   }
   // Final flush of the in-progress leg. Skip if the last leg was a Walk
