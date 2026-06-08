@@ -786,7 +786,14 @@ const INTERCHANGE_MINS = {
     "Bakerloo|Circle": 10,
     "Bakerloo|District": 10,
     "Bakerloo|Elizabeth": 8,
-    "Bakerloo|Hammersmith & City": 22,
+    "Bakerloo|Hammersmith & City": 10,
+    // Circle|Circle here is NOT the same-platform default (3). The Bayswater-
+    // side Circle platforms and the Royal-Oak-side (H&C-shared) Circle
+    // platforms are on opposite faces of the mainline station and the walk
+    // between them goes through the subway. TfL preferring Edgware Road as
+    // the natural pivot for the teardrop is precisely because Paddington's
+    // cross-platform walk is longer than Edgware Road's adjacent platforms.
+    "Circle|Circle": 7,
     "Circle|District": 1,
     "Circle|Elizabeth": 16,
     "Circle|Hammersmith & City": 1,

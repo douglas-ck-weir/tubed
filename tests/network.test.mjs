@@ -132,7 +132,7 @@ function defined(v, msg) {
   if (v === undefined || v === null) throw new Error(msg || 'expected defined');
 }
 
-const { NETWORK, COORDS, LINE_COLOURS, PLATFORM_GROUPS,
+const { NETWORK, COORDS, LINE_COLOURS, PLATFORM_GROUPS, INTERCHANGE_MINS,
         displayLine, getTime, interchangeTime,
         buildGraph, dijkstra, travelTimeOnLine, buildUserLegs,
         _singleLineDistances, bestOneChangeMins } = ctx.__TUBED__;
@@ -523,8 +523,9 @@ test('buildUserLegs: Victoria → Ladbroke Grove on Circle (no waypoint) scores 
 
 test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces a change at Paddington', () => {
   // Player adds Paddington as a pivot waypoint → leg splits with a
-  // Circle|Circle interchange at Paddington. Short way both halves:
-  // 16 + 3 + 5 = 24.
+  // Circle|Circle interchange at Paddington (7 min — the cross-station
+  // walk between the Bayswater-side and Royal-Oak-side Circle platforms).
+  // Short way both halves: 16 + 7 + 5 = 28.
   const r = buildUserLegs('Victoria', [
     {station:'Paddington', line:'Circle'},
     {station:'Ladbroke Grove', line:'Circle'},
@@ -533,8 +534,8 @@ test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces
   eq(r.legs[0].mins, 16);
   eq(r.legs[1].mins, 5);
   eq(r.interchanges[0]?.at, 'Paddington');
-  eq(r.interchanges[0]?.mins, 3);
-  eq(r.totalMins, 24);
+  eq(r.interchanges[0]?.mins, 7);
+  eq(r.totalMins, 28);
 });
 
 test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a change at Edgware Road', () => {
@@ -595,6 +596,13 @@ test('Optimal Bayswater → Westbourne Park uses a same-station change at Paddin
   defined(opt, 'optimal route should exist');
   eq(opt.legs.length, 2);
   eq(opt.legs[0].to, 'Paddington');
+});
+
+test('Paddington Bakerloo|H&C interchange is 10 (not the previously-wrong 22)', () => {
+  // 22 was wildly out of line with TfL Journey Planner and prompted several
+  // player complaints. Pinning the value here so we notice if a future
+  // INTERCHANGE_MINS rebuild reverts it.
+  eq(INTERCHANGE_MINS['Paddington']['Bakerloo|Hammersmith & City'], 10);
 });
 
 // ── _singleLineDistances pivot-awareness ───────────────────────────────────
