@@ -5057,13 +5057,16 @@ function buildShareText(diff, hints, changes, secs) {
   const hintsLine = hints === 0
     ? `✨ No hints used`
     : `💡 ${hints} hint${hints > 1 ? 's' : ''} used`;
-  return [
+  const streak = getModeStore(currentMode).streak;
+  const streakLine = (streak % 5 === 0) ? `🔥 ${streak} day streak` : null;
+  const lines = [
     `🚇 Tubed #${puzzleData.puzzleNum} · ${currentMode === 'hard' ? '🔥 Hard' : '🟢 Easy'} · solved in ${timerFmt(secs)}`,
     scoreLine,
     hintsLine,
-    challengeLine,
-    `➡️ playtubed.co.uk`,
-  ].join('\n');
+  ];
+  if (streakLine) lines.push(streakLine);
+  lines.push(challengeLine, `➡️ playtubed.co.uk`);
+  return lines.join('\n');
 }
 
 async function shareResult(diff, hints, changes, secs) {
