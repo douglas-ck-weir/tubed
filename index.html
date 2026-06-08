@@ -565,8 +565,15 @@ const INTERCHANGE_MINS = {
     "District|Piccadilly": 3,
   },
   "Earl's Court": {
-    "District|District": 2,
-    "District|Piccadilly": 1,
+    // Earl's Court is one station but the District platforms and Piccadilly
+    // platforms are on different levels — Piccadilly is deep tube, reached
+    // via escalators from the District island platform. District|District is
+    // the famous cross-platform interchange between the Wimbledon and the
+    // Edgware Road branches. Player feedback flagged the previous values
+    // (D|D: 2, D|P: 1) as wrong in both directions: D|D is one of the
+    // easiest changes on the network and D|P is a real level change.
+    "District|District": 1,
+    "District|Piccadilly": 4,
   },
   "Eastcote": {
     "Metropolitan|Piccadilly": 1,
@@ -637,9 +644,18 @@ const INTERCHANGE_MINS = {
     "District|Mildmay": 4,
   },
   "Hammersmith": {
-    "Circle|District": 4,
-    "Circle|Hammersmith & City": 7,
-    "Circle|Piccadilly": 1,
+    // Hammersmith is two physically separate stations across a road. The
+    // H&C/Circle terminus is on the north side; the Hammersmith DP (District/
+    // Piccadilly) station is on the south side. Same-side interchanges are
+    // ~1 min (H&C|Circle, District|Piccadilly); cross-road interchanges are
+    // ~7 min and must be applied symmetrically regardless of which line
+    // you're crossing from. Player complaints flagged that the previous
+    // Circle|District (4) and Circle|Piccadilly (1) values created a
+    // fictitious "Earl's Court → Piccadilly → Hammersmith → Circle to H&C"
+    // shortcut that doesn't exist in real life.
+    "Circle|District": 7,
+    "Circle|Hammersmith & City": 1,
+    "Circle|Piccadilly": 7,
     "District|Hammersmith & City": 7,
     "District|Piccadilly": 1,
     "Hammersmith & City|Piccadilly": 7,

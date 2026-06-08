@@ -605,6 +605,29 @@ test('Paddington Bakerloo|H&C interchange is 10 (not the previously-wrong 22)', 
   eq(INTERCHANGE_MINS['Paddington']['Bakerloo|Hammersmith & City'], 10);
 });
 
+test('Hammersmith cross-road interchanges are symmetric (Circle/H&C ↔ District/Piccadilly = 7)', () => {
+  // Hammersmith is two physically separate stations across a road. Any
+  // cross-road change must cost the same 7 min regardless of which line
+  // you arrive on. Previous values 4 (Circle|District) and 1 (Circle|Piccadilly)
+  // created a fictitious shortcut that real riders can't replicate.
+  eq(INTERCHANGE_MINS['Hammersmith']['Circle|District'], 7);
+  eq(INTERCHANGE_MINS['Hammersmith']['Circle|Piccadilly'], 7);
+  eq(INTERCHANGE_MINS['Hammersmith']['District|Hammersmith & City'], 7);
+  eq(INTERCHANGE_MINS['Hammersmith']['Hammersmith & City|Piccadilly'], 7);
+  // And same-side same-station interchanges remain cheap:
+  eq(INTERCHANGE_MINS['Hammersmith']['Circle|Hammersmith & City'], 1);
+  eq(INTERCHANGE_MINS['Hammersmith']['District|Piccadilly'], 1);
+});
+
+test("Earl's Court District|District is 1 (cross-platform) and District|Piccadilly is 4 (level change)", () => {
+  // Player feedback: previous D|D=2 was wrong (Earl's Court is the textbook
+  // cross-platform interchange between the Wimbledon and Edgware Road
+  // branches). Previous D|P=1 was wrong (Piccadilly is deep tube; getting
+  // there takes ~4 min via escalator).
+  eq(INTERCHANGE_MINS["Earl's Court"]['District|District'], 1);
+  eq(INTERCHANGE_MINS["Earl's Court"]['District|Piccadilly'], 4);
+});
+
 // ── _singleLineDistances pivot-awareness ───────────────────────────────────
 // Used by bestOneChangeMins (the hard-puzzle filter). On Circle the function
 // must not allow free teleport between Paddington's two platform sides.
