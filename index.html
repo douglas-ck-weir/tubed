@@ -3700,6 +3700,22 @@ function todayPuzzle(mode) {
     return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
+  // 2026-06-08 Easy & Hard: Hammersmith and Earl's Court interchange times
+  // were corrected mid-day (the Circle/District/Piccadilly cross-road and
+  // deep-tube changes that were previously too low). The generator now picks
+  // different pairs than the cron published this morning. Pin to the live
+  // pairs so returning players see the same puzzle they started on.
+  if (m === 'easy' && date === '2026-06-08') {
+    const start = 'Kennington', end = 'Holborn';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+  if (m === 'hard' && date === '2026-06-08') {
+    const start = 'Colliers Wood', end = 'Goldhawk Road';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+
   // Daily seed shared with Easy mode. Hard uses an offset so its draw is
   // an independent (but still deterministic) RNG path.
   const seed = m === 'hard' ? londonBaseSeed + 1 : londonBaseSeed;

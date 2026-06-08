@@ -2,11 +2,11 @@
   "date": "2026-06-08",
   "puzzleNum": 67,
   "easy": {
-    "start": "Chancery Lane",
-    "end": "Mile End"
+    "start": "Kennington",
+    "end": "Holborn"
   },
   "hard": {
-    "start": "Arsenal",
-    "end": "Liverpool Street"
+    "start": "Colliers Wood",
+    "end": "Goldhawk Road"
   }
 }
