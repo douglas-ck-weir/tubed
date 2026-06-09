@@ -1,15 +1,4 @@
 {
-  "2026-06-08": {
-    "puzzleNum": 67,
-    "easy": {
-      "start": "Kennington",
-      "end": "Holborn"
-    },
-    "hard": {
-      "start": "Colliers Wood",
-      "end": "Goldhawk Road"
-    }
-  },
   "2026-06-09": {
     "puzzleNum": 68,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Shepherd's Bush Market",
       "end": "St. Paul's"
+    }
+  },
+  "2026-09-06": {
+    "puzzleNum": 157,
+    "easy": {
+      "start": "Mornington Crescent",
+      "end": "Lambeth North"
+    },
+    "hard": {
+      "start": "Mile End",
+      "end": "Harrow & Wealdstone"
     }
   }
 }

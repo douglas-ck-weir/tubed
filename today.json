@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-08",
-  "puzzleNum": 67,
+  "date": "2026-06-09",
+  "puzzleNum": 68,
   "easy": {
-    "start": "Kennington",
-    "end": "Holborn"
+    "start": "Arsenal",
+    "end": "Liverpool Street"
   },
   "hard": {
-    "start": "Colliers Wood",
-    "end": "Goldhawk Road"
+    "start": "Preston Road",
+    "end": "Vauxhall"
   }
 }
