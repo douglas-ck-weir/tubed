@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-09",
-  "puzzleNum": 68,
+  "date": "2026-06-10",
+  "puzzleNum": 69,
   "easy": {
-    "start": "Arsenal",
-    "end": "Liverpool Street"
+    "start": "Marylebone",
+    "end": "Borough"
   },
   "hard": {
-    "start": "Preston Road",
-    "end": "Vauxhall"
+    "start": "Harrow & Wealdstone",
+    "end": "Stepney Green"
   }
 }

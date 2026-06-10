@@ -1,15 +1,4 @@
 {
-  "2026-06-09": {
-    "puzzleNum": 68,
-    "easy": {
-      "start": "Arsenal",
-      "end": "Liverpool Street"
-    },
-    "hard": {
-      "start": "Preston Road",
-      "end": "Vauxhall"
-    }
-  },
   "2026-06-10": {
     "puzzleNum": 69,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Mile End",
       "end": "Harrow & Wealdstone"
+    }
+  },
+  "2026-09-07": {
+    "puzzleNum": 158,
+    "easy": {
+      "start": "Arsenal",
+      "end": "Liverpool Street"
+    },
+    "hard": {
+      "start": "South Kensington",
+      "end": "Clapham North"
     }
   }
 }
