@@ -1076,7 +1076,7 @@ const OSI_PAIRS = [
   {a:'Kentish Town',              b:'Kentish Town West',           aToB: 6, bToA: 6},
   {a:'Leytonstone',               b:'Leytonstone High Road',       aToB: 8, bToA: 8},
   {a:'Seven Sisters',             b:'South Tottenham',             aToB: 7, bToA: 7},
-  {a:'Southwark',                 b:'Waterloo',                    aToB: 4, bToA: 4},
+  {a:'Southwark',                 b:'Waterloo',                    aToB: 10, bToA: 10},
 ];
 
 // "A|B" → mins (directional). Populated bidirectionally so isOsi/osiTime
@@ -3694,8 +3694,8 @@ function todayPuzzle(mode) {
   // shifted enough to push Shepherd's Bush → Brent Cross outside the easy
   // bounds filter, so the in-browser generator would otherwise pick a
   // different pair than the cron published this morning.
-  if (m === 'easy' && date === '2026-06-02') {
-    const start = "Shepherd's Bush", end = 'Brent Cross';
+  if (m === 'easy' && date === '2026-06-11') {
+    const start = "North Greenwich", end = 'Waterloo';
     const routes = dijkstra(GRAPH, start, end);
     return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
