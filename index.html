@@ -3038,6 +3038,58 @@ function bestOneChangeMins(start, end) {
   return best;
 }
 
+// Best 2-change route (3 tube legs, no walks). Used by the Hard generator to
+// gate 3+ change optima — if the marginal change beyond 2 only saves a few
+// minutes vs. this baseline, the puzzle feels unfair (a player who took the
+// obvious 2-change route gets dinged for a micro-shortcut). Walks excluded
+// for the same reason as bestOneChangeMins: we want the "intuitive tube"
+// alternative.
+function bestTwoChangeMins(start, end) {
+  if (start === end) return 0;
+  const startLines = linesAtStation(start).filter(l => l !== 'Walk');
+  const endLines   = linesAtStation(end).filter(l => l !== 'Walk');
+  let best = Infinity;
+
+  for (const startDisp of startLines) {
+    const subL1List = _SUBLINES_BY_DISPLAY[startDisp] || [];
+    for (const subL1 of subL1List) {
+      const distFromStart = _singleLineDistances(start, subL1);
+      const ic1Candidates = Object.keys(distFromStart);
+      for (const endDisp of endLines) {
+        const subL3List = _SUBLINES_BY_DISPLAY[endDisp] || [];
+        for (const subL3 of subL3List) {
+          const distFromEnd = _singleLineDistances(end, subL3);
+          // Pick subL2 ≠ subL1 and ≠ subL3. (subL2 === subL1 or subL3 would
+          // collapse one of the changes — that's a 1-change route, already
+          // covered by bestOneChangeMins.)
+          for (const subL2 of Object.keys(NETWORK)) {
+            if (subL2 === subL1 || subL2 === subL3) continue;
+            if (subL2 === 'Walk') continue;
+            // Find ic1: station on both subL1 (reachable from start) and subL2.
+            // We don't enumerate subL2's stations as a list — just probe each
+            // ic1 candidate against _singleLineDistances(ic1, subL2) and look
+            // for ic2 ∈ subL2 ∩ subL3.
+            for (const ic1 of ic1Candidates) {
+              if (!linesAtStation(ic1).includes(displayLine(subL2))) continue;
+              const distOnSubL2 = _singleLineDistances(ic1, subL2);
+              for (const ic2 in distOnSubL2) {
+                if (distFromEnd[ic2] === undefined) continue;
+                const t = distFromStart[ic1]
+                        + interchangeTime(ic1, subL1, subL2)
+                        + distOnSubL2[ic2]
+                        + interchangeTime(ic2, subL2, subL3)
+                        + distFromEnd[ic2];
+                if (t < best) best = t;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return best;
+}
+
 function dijkstra(graph, start, end) {
   // Resolve a user-named station (e.g. "Paddington") into the set of graph
   // node keys that represent it — usually just the bare name, but for
@@ -3548,6 +3600,11 @@ const PUZZLE_CONFIG = {
   // Hard-only: best 1-change alternative must be at least this many minutes
   // slower than the multi-change optimal.
   hardOneChangeGapMin: 7,
+  // Hard-only: when the optimal needs 3+ changes, each change beyond 2 must
+  // pay for itself vs. the best 2-change alternative. Interim cap while OSI
+  // and on-platform wait time aren't yet modelled — without it, the optimiser
+  // takes micro-shortcuts (e.g. 1-stop Bakerloo hop) that no player would.
+  hardExtraChangeGapMinPer: 6,
 };
 
 // Count distinct line changes along a route. Consecutive legs on the same
@@ -3589,7 +3646,7 @@ function londonDateParts(d) {
 // the easy/hard filters were tightened (easy rejects walks, hard requires
 // ≥3 tube legs) — players who pre-cached 06-12+ under the old rules would
 // otherwise see stale pairs that no longer satisfy the current filter.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v4';
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v6';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -3728,6 +3785,7 @@ function todayPuzzle(mode, opts) {
   const { minMins: EASY_MIN, maxMins: EASY_MAX } = PUZZLE_CONFIG.easy;
   const { minMins: HARD_MIN, maxMins: HARD_MAX } = PUZZLE_CONFIG.hard;
   const ONE_CHANGE_GAP_MIN = PUZZLE_CONFIG.hardOneChangeGapMin;
+  const EXTRA_CHANGE_GAP_PER = PUZZLE_CONFIG.hardExtraChangeGapMinPer;
 
   // Main generator loop. Wrapped in try/catch so a corrupt graph entry or
   // unexpected exception during a single candidate doesn't brick the whole
@@ -3758,17 +3816,30 @@ function todayPuzzle(mode, opts) {
       } else {
         const changes = countDistinctChanges(opt);
         if (!(changes >= 2 && opt.mins >= HARD_MIN && opt.mins <= HARD_MAX)) continue;
-        // Hard puzzles must have ≥3 tube legs in the optimal. Walks are allowed
-        // (and count for scoring) but don't satisfy the tube-leg requirement on
-        // their own — e.g. Jubilee→Walk→DLR is only 2 tube legs and would feel
-        // like an easy puzzle dressed up with a walk. Jubilee→Walk→DLR→Northern
-        // is fine. This replaces the older "wide gap vs tube-only" walk gate,
-        // which let through controversial walk-route optima like the NG→Greenwich
-        // CW↔HQ shortcut.
+        // Hard optima must also be pure tube. OSI walk costs only model the
+        // walk itself, not the wait for the next train on the destination
+        // line, so the optimiser arbitrages walks vs. on-platform changes
+        // (e.g. Hackney Central → Dalston Kingsland → walk → Dalston Junction
+        // beats the intuitive Mildmay → Victoria change at H&I, but TfL JP
+        // disagrees). Until the OSI cost model includes wait time, reject any
+        // walk legs from Hard optima as well as Easy.
+        const usesWalk = opt.legs.some(l => l.line === 'Walk');
+        if (usesWalk) continue;
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
         if (tubeLegCount < 3) continue;
         const oneChangeMins = bestOneChangeMins(start, end);
         if (oneChangeMins - opt.mins < ONE_CHANGE_GAP_MIN) continue;
+        // Each change beyond 2 must save ≥ EXTRA_CHANGE_GAP_PER min vs. the
+        // best 2-change tube route. Without this, the optimiser takes
+        // 1-stop micro-shortcuts (e.g. 2026-06-13 Harrow on the Hill → Pimlico
+        // routed Met → Jubilee at Finchley Rd → Bakerloo for one stop at Baker
+        // Street → Victoria at Oxford Circus, beating the intuitive Met →
+        // Jubilee → Victoria at Green Park by ~4 min). Skips when changes ≤ 2.
+        if (changes > 2) {
+          const twoChangeMins = bestTwoChangeMins(start, end);
+          const required = (changes - 2) * EXTRA_CHANGE_GAP_PER;
+          if (twoChangeMins - opt.mins < required) continue;
+        }
         // Reject puzzles whose optimal contains a "change" between two legs
         // on the same display line (e.g. District → District at Earl's Court).
         let sameLineChange = false;

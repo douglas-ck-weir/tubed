@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-11",
-  "puzzleNum": 70,
+  "date": "2026-06-12",
+  "puzzleNum": 71,
   "easy": {
-    "start": "North Greenwich",
-    "end": "Tottenham Court Road"
+    "start": "Charing Cross",
+    "end": "Liverpool Street"
   },
   "hard": {
     "start": "Hackney Central",
-    "end": "Wimbledon"
+    "end": "Shepherd's Bush"
   }
 }
