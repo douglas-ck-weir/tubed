@@ -1,15 +1,4 @@
 {
-  "2026-06-10": {
-    "puzzleNum": 69,
-    "easy": {
-      "start": "Marylebone",
-      "end": "Borough"
-    },
-    "hard": {
-      "start": "Harrow & Wealdstone",
-      "end": "Stepney Green"
-    }
-  },
   "2026-06-11": {
     "puzzleNum": 70,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "South Kensington",
       "end": "Clapham North"
+    }
+  },
+  "2026-09-08": {
+    "puzzleNum": 159,
+    "easy": {
+      "start": "Hammersmith",
+      "end": "Harrow on the Hill"
+    },
+    "hard": {
+      "start": "Arsenal",
+      "end": "Dalston Kingsland"
     }
   }
 }

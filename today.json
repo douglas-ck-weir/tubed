@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-10",
-  "puzzleNum": 69,
+  "date": "2026-06-11",
+  "puzzleNum": 70,
   "easy": {
-    "start": "Marylebone",
-    "end": "Borough"
+    "start": "North Greenwich",
+    "end": "Tottenham Court Road"
   },
   "hard": {
-    "start": "Harrow & Wealdstone",
-    "end": "Stepney Green"
+    "start": "Hackney Central",
+    "end": "Wimbledon"
   }
 }
