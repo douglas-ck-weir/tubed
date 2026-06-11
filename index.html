@@ -1076,7 +1076,6 @@ const OSI_PAIRS = [
   {a:'Kentish Town',              b:'Kentish Town West',           aToB: 6, bToA: 6},
   {a:'Leytonstone',               b:'Leytonstone High Road',       aToB: 8, bToA: 8},
   {a:'Seven Sisters',             b:'South Tottenham',             aToB: 7, bToA: 7},
-  {a:'Southwark',                 b:'Waterloo',                    aToB: 10, bToA: 10},
 ];
 
 // "A|B" → mins (directional). Populated bidirectionally so isOsi/osiTime
@@ -3590,7 +3589,7 @@ function londonDateParts(d) {
 // the easy/hard filters were tightened (easy rejects walks, hard requires
 // ≥3 tube legs) — players who pre-cached 06-12+ under the old rules would
 // otherwise see stale pairs that no longer satisfy the current filter.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v3';
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v4';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
