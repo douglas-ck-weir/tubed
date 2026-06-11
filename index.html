@@ -3695,7 +3695,7 @@ function todayPuzzle(mode) {
   // bounds filter, so the in-browser generator would otherwise pick a
   // different pair than the cron published this morning.
   if (m === 'easy' && date === '2026-06-11') {
-    const start = "North Greenwich", end = 'Waterloo';
+    const start = "North Greenwich", end = 'Tottenham Court Road';
     const routes = dijkstra(GRAPH, start, end);
     return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
