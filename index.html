@@ -3586,8 +3586,11 @@ function londonDateParts(d) {
 // (one targeted dijkstra ~130ms vs up to 200 attempts at ~95ms each).
 // Auto-invalidates when the date rolls over. Bumped to v2 when the date
 // source switched from local time to London time — old entries are keyed by
-// a date string that may not match the new London date.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v2';
+// a date string that may not match the new London date. Bumped to v3 when
+// the easy/hard filters were tightened (easy rejects walks, hard requires
+// ≥3 tube legs) — players who pre-cached 06-12+ under the old rules would
+// otherwise see stale pairs that no longer satisfy the current filter.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v3';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
