@@ -80,6 +80,16 @@ const DAYS = 90;
 const today = new Date();
 today.setHours(12, 0, 0, 0);
 
+// No-repeat window: a pair drawn in either mode is rejected from any later
+// day's draw within the lookup horizon. We pass a Set of `start|end` strings
+// into todayPuzzle() so its inner attempt loop skips collisions. Both
+// directions are inserted because the generator may draw the reverse.
+const recentPairs = new Set();
+function record(pair) {
+  recentPairs.add(`${pair.start}|${pair.end}`);
+  recentPairs.add(`${pair.end}|${pair.start}`);
+}
+
 const lookup = {};
 for (let i = 0; i < DAYS; i++) {
   const d = new Date(today);
@@ -87,8 +97,16 @@ for (let i = 0; i < DAYS; i++) {
   FIXED_DATE = d;
   const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-  const easy = sandbox.todayPuzzle('easy');
-  const hard = sandbox.todayPuzzle('hard');
+  const easy = sandbox.todayPuzzle('easy', { recentPairs });
+  // Only record real generator output. If the day fell through to the hardcoded
+  // fallback pair (e.g. filters exhausted maxAttempts), recording it would
+  // poison recentPairs and force later fallback days to publish duplicates.
+  // Warn loudly so we don't silently ship fallback puzzles.
+  if (easy.usedFallback) console.warn(`[build-lookup] WARN ${dateStr} easy used fallback ${easy.start} → ${easy.end}`);
+  else record(easy);
+  const hard = sandbox.todayPuzzle('hard', { recentPairs });
+  if (hard.usedFallback) console.warn(`[build-lookup] WARN ${dateStr} hard used fallback ${hard.start} → ${hard.end}`);
+  else record(hard);
   lookup[dateStr] = {
     puzzleNum: easy.puzzleNum,
     easy: { start: easy.start, end: easy.end },

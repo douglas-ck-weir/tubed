@@ -876,7 +876,7 @@ const INTERCHANGE_MINS = {
     "DLR|Elizabeth": 4,
     "DLR|Jubilee": 4,
     "DLR|Mildmay": 6,
-    "Elizabeth|Jubilee": 6,
+    "Elizabeth|Jubilee": 3,
     "Elizabeth|Mildmay": 7,
     "Jubilee|Mildmay": 6,
   },
@@ -3039,31 +3039,6 @@ function bestOneChangeMins(start, end) {
   return best;
 }
 
-// Build a copy of the graph with all Walk edges and the Walk line removed.
-// Used by the Hard-mode generator to find the best tube-only alternative
-// to a walk-using optimal route, so puzzles where a walk only narrowly
-// beats the obvious tube route can be filtered out.
-//
-// Memoized: the NETWORK is static for the lifetime of the page, so the
-// no-walk view is too. Re-computing it on every Hard candidate was wasted
-// work — even before the optimisation it was only ~10ms but called dozens
-// of times per generation.
-let _NO_WALK_GRAPH_CACHE = null;
-function buildGraphNoWalks() {
-  if (_NO_WALK_GRAPH_CACHE) return _NO_WALK_GRAPH_CACHE;
-  const g = buildGraph();
-  const out = {};
-  for (const stn of Object.keys(g)) {
-    out[stn] = {};
-    for (const line of Object.keys(g[stn])) {
-      if (line === 'Walk') continue;
-      out[stn][line] = g[stn][line].filter(e => e.line !== 'Walk' && e.type !== 'walk');
-    }
-  }
-  _NO_WALK_GRAPH_CACHE = out;
-  return out;
-}
-
 function dijkstra(graph, start, end) {
   // Resolve a user-named station (e.g. "Paddington") into the set of graph
   // node keys that represent it — usually just the bare name, but for
@@ -3123,6 +3098,19 @@ function dijkstra(graph, start, end) {
     if (!graph[station]?.[line]) continue;
 
     for (const edge of graph[station][line]) {
+      // Block OSI walk arbitrage: forbid walking to a station the path has
+      // already visited. Otherwise a route can launder a high in-station
+      // interchange by walking out to an OSI-paired station and back
+      // (e.g. CW→HQ→CW to bypass CW's 9-min Jubilee↔Elizabeth interchange).
+      // Productive walks (walk to a new station and continue) are unaffected.
+      if (edge.type === 'walk') {
+        const destName = _stationName(edge.station);
+        let visited = false;
+        for (const n of path) {
+          if (_stationName(n.station) === destName) { visited = true; break; }
+        }
+        if (visited) continue;
+      }
       const nc = cost + edge.cost;
       const entries = getEntries(edge.station, edge.line);
       // Accept if cost is not worse than our worst stored path (or we have room)
@@ -3558,9 +3546,6 @@ const PUZZLE_CONFIG = {
   hard: { minMins: 15, maxMins: 60 },
   // Max candidates to try before falling back to a hardcoded pair.
   maxAttempts: 200,
-  // Hard-only: if the time-optimal uses a walk, the best walk-free
-  // alternative must be at least this many minutes slower.
-  hardNoWalkGapMin: 7,
   // Hard-only: best 1-change alternative must be at least this many minutes
   // slower than the multi-change optimal.
   hardOneChangeGapMin: 7,
@@ -3639,8 +3624,17 @@ function _tel(event, data) {
   try { console.log(`[tubed] ${event}`, data || ''); } catch(e){}
 }
 
-function todayPuzzle(mode) {
+function todayPuzzle(mode, opts) {
   const m = mode === 'hard' ? 'hard' : 'easy';
+  // Optional rejection predicate. build-lookup.mjs passes a `recentPairs` set
+  // so the generator skips pairs that already appeared in the lookup window
+  // (currently 90 days). In-browser callers don't pass anything — the lookup
+  // is the source of truth and freeze blocks above pin already-published days.
+  // Duck-type: any object with a working .has() method is fine. Avoids a silent
+  // fail-open if the sandbox in build-lookup.mjs ever binds Set differently
+  // (vm contexts can have separate realm constructors).
+  const recentPairs = opts && opts.recentPairs && typeof opts.recentPairs.has === 'function'
+    ? opts.recentPairs : null;
   const _t0 = Date.now();
   const { dateStr: date, baseSeed: londonBaseSeed, puzzleNum } = londonDateParts();
   const GRAPH = buildGraph();
@@ -3689,11 +3683,12 @@ function todayPuzzle(mode) {
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
 
-  // 2026-06-02 Easy: INTERCHANGE_MINS was rebuilt from the TfL Stop Structure
-  // API (see build_interchanges/). Paddington/Edgware Road/sub-surface times
-  // shifted enough to push Shepherd's Bush → Brent Cross outside the easy
-  // bounds filter, so the in-browser generator would otherwise pick a
-  // different pair than the cron published this morning.
+  // 2026-06-11 Easy: Canary Wharf Elizabeth↔Jubilee interchange was corrected
+  // mid-day (9 → 6) to kill an OSI walk-arbitrage optimal (CW→HQ→CW loop), and
+  // the easy filter was tightened to reject any walk in the optimal. Together
+  // these would shift the in-browser generator's first acceptable pair away
+  // from what the cron published this morning — pin the published pair so
+  // returning players see the same puzzle they started on.
   if (m === 'easy' && date === '2026-06-11') {
     const start = "North Greenwich", end = 'Tottenham Court Road';
     const routes = dijkstra(GRAPH, start, end);
@@ -3730,9 +3725,7 @@ function todayPuzzle(mode) {
   //         optimal would feel unfair/arbitrary to a real player.
   const { minMins: EASY_MIN, maxMins: EASY_MAX } = PUZZLE_CONFIG.easy;
   const { minMins: HARD_MIN, maxMins: HARD_MAX } = PUZZLE_CONFIG.hard;
-  const NO_WALK_GAP_MIN    = PUZZLE_CONFIG.hardNoWalkGapMin;
   const ONE_CHANGE_GAP_MIN = PUZZLE_CONFIG.hardOneChangeGapMin;
-  let NO_WALK_GRAPH = null;  // lazy-built only when needed
 
   // Main generator loop. Wrapped in try/catch so a corrupt graph entry or
   // unexpected exception during a single candidate doesn't brick the whole
@@ -3744,25 +3737,34 @@ function todayPuzzle(mode) {
       if (ei === si) ei = (ei + 1) % pool.length;
       start = pool[si]; end = pool[ei];
       if (!requiresChange(start, end)) continue;
+      // No-repeat window: skip pairs the build-lookup pass has already drawn
+      // in either direction within its window (default 90 days).
+      if (recentPairs && (recentPairs.has(`${start}|${end}`) || recentPairs.has(`${end}|${start}`))) continue;
       routes = dijkstra(GRAPH, start, end);
       if (!routes || routes.length === 0) continue;
       const opt = routes[0];
 
       if (m === 'easy') {
+        // Easy optima must be pure tube — players reject walk legs as
+        // unintuitive, and even legitimate OSI walks (CW↔HQ, Bank↔Monument)
+        // generate feedback. Walks remain available for scoring player-chosen
+        // routes and for hard puzzles where the gap-to-tube filter applies.
+        const usesWalk = opt.legs.some(l => l.line === 'Walk');
+        if (usesWalk) continue;
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
         if (tubeLegCount === 2 && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
       } else {
         const changes = countDistinctChanges(opt);
         if (!(changes >= 2 && opt.mins >= HARD_MIN && opt.mins <= HARD_MAX)) continue;
-        const usesWalk = opt.legs.some(l => l.line === 'Walk');
-        if (usesWalk) {
-          if (!NO_WALK_GRAPH) NO_WALK_GRAPH = buildGraphNoWalks();
-          const tubeRoutes = dijkstra(NO_WALK_GRAPH, start, end);
-          if (tubeRoutes && tubeRoutes.length > 0) {
-            const gap = tubeRoutes[0].mins - opt.mins;
-            if (gap < NO_WALK_GAP_MIN) continue;
-          }
-        }
+        // Hard puzzles must have ≥3 tube legs in the optimal. Walks are allowed
+        // (and count for scoring) but don't satisfy the tube-leg requirement on
+        // their own — e.g. Jubilee→Walk→DLR is only 2 tube legs and would feel
+        // like an easy puzzle dressed up with a walk. Jubilee→Walk→DLR→Northern
+        // is fine. This replaces the older "wide gap vs tube-only" walk gate,
+        // which let through controversial walk-route optima like the NG→Greenwich
+        // CW↔HQ shortcut.
+        const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
+        if (tubeLegCount < 3) continue;
         const oneChangeMins = bestOneChangeMins(start, end);
         if (oneChangeMins - opt.mins < ONE_CHANGE_GAP_MIN) continue;
         // Reject puzzles whose optimal contains a "change" between two legs
@@ -3782,9 +3784,11 @@ function todayPuzzle(mode) {
     routes = null;  // force fallback below
   }
 
+  let usedFallback = false;
   if (!routes || routes.length === 0) {
     // Fallback if nothing matched in 200 attempts, or the loop threw.
     // These pairs are known-good and present in PUZZLE_STATIONS.
+    usedFallback = true;
     if (m === 'hard') { start = 'Notting Hill Gate'; end = 'Clapham North'; }
     else              { start = 'Bethnal Green'; end = 'Oval'; }
     try {
@@ -3793,14 +3797,14 @@ function todayPuzzle(mode) {
       console.error('[todayPuzzle] fallback also threw:', e);
       // Last-ditch: return a "puzzle" with no route. Calling code will need
       // to handle this. Better than throwing out of the function entirely.
-      return { start, end, optimal: { mins: 0, legs: [] }, routes: [], date, puzzleNum, graph: GRAPH, mode: m };
+      return { start, end, optimal: { mins: 0, legs: [] }, routes: [], date, puzzleNum, graph: GRAPH, mode: m, usedFallback };
     }
   }
   // Cache the freshly-generated pair so subsequent loads today skip the
   // expensive seeded-generator loop.
   _setCachedPuzzle(date, m, { start, end });
   _tel('puzzle_generated', { mode: m, ms: Date.now() - _t0 });
-  return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m, usedFallback };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
