@@ -1,15 +1,4 @@
 {
-  "2026-06-12": {
-    "puzzleNum": 71,
-    "easy": {
-      "start": "Charing Cross",
-      "end": "Liverpool Street"
-    },
-    "hard": {
-      "start": "Hackney Central",
-      "end": "Shepherd's Bush"
-    }
-  },
   "2026-06-13": {
     "puzzleNum": 72,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Colliers Wood",
       "end": "Putney Bridge"
+    }
+  },
+  "2026-09-10": {
+    "puzzleNum": 161,
+    "easy": {
+      "start": "Victoria",
+      "end": "Bermondsey"
+    },
+    "hard": {
+      "start": "Parsons Green",
+      "end": "Clapham North"
     }
   }
 }

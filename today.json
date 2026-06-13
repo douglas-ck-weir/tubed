@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-12",
-  "puzzleNum": 71,
+  "date": "2026-06-13",
+  "puzzleNum": 72,
   "easy": {
-    "start": "Charing Cross",
-    "end": "Liverpool Street"
+    "start": "Arsenal",
+    "end": "Chiswick Park"
   },
   "hard": {
-    "start": "Hackney Central",
-    "end": "Shepherd's Bush"
+    "start": "Borough",
+    "end": "Crystal Palace"
   }
 }
