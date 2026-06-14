@@ -1,15 +1,4 @@
 {
-  "2026-06-13": {
-    "puzzleNum": 72,
-    "easy": {
-      "start": "Arsenal",
-      "end": "Chiswick Park"
-    },
-    "hard": {
-      "start": "Borough",
-      "end": "Crystal Palace"
-    }
-  },
   "2026-06-14": {
     "puzzleNum": 73,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Parsons Green",
       "end": "Clapham North"
+    }
+  },
+  "2026-09-11": {
+    "puzzleNum": 162,
+    "easy": {
+      "start": "Stepney Green",
+      "end": "Arsenal"
+    },
+    "hard": {
+      "start": "Parsons Green",
+      "end": "Colliers Wood"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-13",
-  "puzzleNum": 72,
+  "date": "2026-06-14",
+  "puzzleNum": 73,
   "easy": {
-    "start": "Arsenal",
-    "end": "Chiswick Park"
+    "start": "Turnham Green",
+    "end": "Stratford"
   },
   "hard": {
-    "start": "Borough",
-    "end": "Crystal Palace"
+    "start": "Holloway Road",
+    "end": "Dalston Kingsland"
   }
 }
