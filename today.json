@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-14",
-  "puzzleNum": 73,
+  "date": "2026-06-15",
+  "puzzleNum": 74,
   "easy": {
-    "start": "Turnham Green",
-    "end": "Stratford"
+    "start": "Ealing Broadway",
+    "end": "Knightsbridge"
   },
   "hard": {
-    "start": "Holloway Road",
-    "end": "Dalston Kingsland"
+    "start": "Surrey Quays",
+    "end": "Piccadilly Circus"
   }
 }

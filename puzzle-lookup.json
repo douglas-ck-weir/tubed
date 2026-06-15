@@ -1,15 +1,4 @@
 {
-  "2026-06-14": {
-    "puzzleNum": 73,
-    "easy": {
-      "start": "Turnham Green",
-      "end": "Stratford"
-    },
-    "hard": {
-      "start": "Holloway Road",
-      "end": "Dalston Kingsland"
-    }
-  },
   "2026-06-15": {
     "puzzleNum": 74,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Parsons Green",
       "end": "Colliers Wood"
+    }
+  },
+  "2026-09-12": {
+    "puzzleNum": 163,
+    "easy": {
+      "start": "Moorgate",
+      "end": "Kilburn"
+    },
+    "hard": {
+      "start": "Limehouse",
+      "end": "Knightsbridge"
     }
   }
 }
