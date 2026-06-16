@@ -1,15 +1,4 @@
 {
-  "2026-06-15": {
-    "puzzleNum": 74,
-    "easy": {
-      "start": "Ealing Broadway",
-      "end": "Knightsbridge"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Piccadilly Circus"
-    }
-  },
   "2026-06-16": {
     "puzzleNum": 75,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Limehouse",
       "end": "Knightsbridge"
+    }
+  },
+  "2026-09-13": {
+    "puzzleNum": 164,
+    "easy": {
+      "start": "Borough",
+      "end": "Swiss Cottage"
+    },
+    "hard": {
+      "start": "Dalston Kingsland",
+      "end": "Goldhawk Road"
     }
   }
 }
