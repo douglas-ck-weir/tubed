@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-16",
-  "puzzleNum": 75,
+  "date": "2026-06-17",
+  "puzzleNum": 76,
   "easy": {
-    "start": "Aldgate",
-    "end": "Green Park"
+    "start": "St. John's Wood",
+    "end": "Aldgate"
   },
   "hard": {
-    "start": "Southfields",
-    "end": "Dalston Kingsland"
+    "start": "Angel",
+    "end": "Putney Bridge"
   }
 }

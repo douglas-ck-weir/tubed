@@ -1,15 +1,4 @@
 {
-  "2026-06-16": {
-    "puzzleNum": 75,
-    "easy": {
-      "start": "Aldgate",
-      "end": "Green Park"
-    },
-    "hard": {
-      "start": "Southfields",
-      "end": "Dalston Kingsland"
-    }
-  },
   "2026-06-17": {
     "puzzleNum": 76,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Dalston Kingsland",
       "end": "Goldhawk Road"
+    }
+  },
+  "2026-09-14": {
+    "puzzleNum": 165,
+    "easy": {
+      "start": "Canada Water",
+      "end": "Cannon Street"
+    },
+    "hard": {
+      "start": "Fulham Broadway",
+      "end": "Clapham Common"
     }
   }
 }
