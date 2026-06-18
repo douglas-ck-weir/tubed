@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-17",
-  "puzzleNum": 76,
+  "date": "2026-06-18",
+  "puzzleNum": 77,
   "easy": {
-    "start": "St. John's Wood",
-    "end": "Aldgate"
+    "start": "Regent's Park",
+    "end": "Barons Court"
   },
   "hard": {
-    "start": "Angel",
-    "end": "Putney Bridge"
+    "start": "High Street Kensington",
+    "end": "Clapham Common"
   }
 }

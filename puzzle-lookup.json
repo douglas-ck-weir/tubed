@@ -1,15 +1,4 @@
 {
-  "2026-06-17": {
-    "puzzleNum": 76,
-    "easy": {
-      "start": "St. John's Wood",
-      "end": "Aldgate"
-    },
-    "hard": {
-      "start": "Angel",
-      "end": "Putney Bridge"
-    }
-  },
   "2026-06-18": {
     "puzzleNum": 77,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Fulham Broadway",
       "end": "Clapham Common"
+    }
+  },
+  "2026-09-15": {
+    "puzzleNum": 166,
+    "easy": {
+      "start": "Acton Town",
+      "end": "Goldhawk Road"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "High Street Kensington"
     }
   }
 }
