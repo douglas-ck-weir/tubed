@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-18",
-  "puzzleNum": 77,
+  "date": "2026-06-19",
+  "puzzleNum": 78,
   "easy": {
-    "start": "Regent's Park",
-    "end": "Barons Court"
+    "start": "Tufnell Park",
+    "end": "Queen's Park"
   },
   "hard": {
-    "start": "High Street Kensington",
-    "end": "Clapham Common"
+    "start": "Surrey Quays",
+    "end": "Notting Hill Gate"
   }
 }

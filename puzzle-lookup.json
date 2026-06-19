@@ -1,15 +1,4 @@
 {
-  "2026-06-18": {
-    "puzzleNum": 77,
-    "easy": {
-      "start": "Regent's Park",
-      "end": "Barons Court"
-    },
-    "hard": {
-      "start": "High Street Kensington",
-      "end": "Clapham Common"
-    }
-  },
   "2026-06-19": {
     "puzzleNum": 78,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "High Street Kensington"
+    }
+  },
+  "2026-09-16": {
+    "puzzleNum": 167,
+    "easy": {
+      "start": "West Kensington",
+      "end": "Covent Garden"
+    },
+    "hard": {
+      "start": "Shepherd's Bush Market",
+      "end": "Stockwell"
     }
   }
 }
