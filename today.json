@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-19",
-  "puzzleNum": 78,
+  "date": "2026-06-20",
+  "puzzleNum": 79,
   "easy": {
-    "start": "Tufnell Park",
-    "end": "Queen's Park"
+    "start": "Caledonian Road",
+    "end": "Belsize Park"
   },
   "hard": {
-    "start": "Surrey Quays",
-    "end": "Notting Hill Gate"
+    "start": "Westbourne Park",
+    "end": "Dalston Kingsland"
   }
 }

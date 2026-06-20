@@ -1,15 +1,4 @@
 {
-  "2026-06-19": {
-    "puzzleNum": 78,
-    "easy": {
-      "start": "Tufnell Park",
-      "end": "Queen's Park"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Notting Hill Gate"
-    }
-  },
   "2026-06-20": {
     "puzzleNum": 79,
     "easy": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Shepherd's Bush Market",
       "end": "Stockwell"
+    }
+  },
+  "2026-09-17": {
+    "puzzleNum": 168,
+    "easy": {
+      "start": "Putney Bridge",
+      "end": "North Greenwich"
+    },
+    "hard": {
+      "start": "Clapham North",
+      "end": "Ravenscourt Park"
     }
   }
 }
