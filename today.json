@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-20",
-  "puzzleNum": 79,
+  "date": "2026-06-21",
+  "puzzleNum": 80,
   "easy": {
-    "start": "Caledonian Road",
-    "end": "Belsize Park"
+    "start": "Oxford Circus",
+    "end": "Ravenscourt Park"
   },
   "hard": {
-    "start": "Westbourne Park",
-    "end": "Dalston Kingsland"
+    "start": "Gloucester Road",
+    "end": "Clapham South"
   }
 }

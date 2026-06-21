@@ -1,15 +1,4 @@
 {
-  "2026-06-20": {
-    "puzzleNum": 79,
-    "easy": {
-      "start": "Caledonian Road",
-      "end": "Belsize Park"
-    },
-    "hard": {
-      "start": "Westbourne Park",
-      "end": "Dalston Kingsland"
-    }
-  },
   "2026-06-21": {
     "puzzleNum": 80,
     "easy": {
@@ -655,8 +644,8 @@
       "end": "Covent Garden"
     },
     "hard": {
-      "start": "Stamford Brook",
-      "end": "Wembley Central"
+      "start": "Westbourne Park",
+      "end": "Dalston Kingsland"
     }
   },
   "2026-08-19": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Clapham North",
       "end": "Ravenscourt Park"
+    }
+  },
+  "2026-09-18": {
+    "puzzleNum": 169,
+    "easy": {
+      "start": "St. Paul's",
+      "end": "Old Street"
+    },
+    "hard": {
+      "start": "Goldhawk Road",
+      "end": "Colliers Wood"
     }
   }
 }
