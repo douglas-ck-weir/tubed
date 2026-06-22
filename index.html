@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Tubed - Daily London Underground Challenge</title>
-<meta property="og:title" content="Tubed - Daily London Underground Puzzle"/>
+<title>Tubed — Daily London Underground Challenge</title>
+<meta property="og:title" content="Tubed — Daily London Underground Puzzle"/>
 <meta property="og:description" content="Find the fastest route on the Tube. A new puzzle every day."/>
 <meta property="og:url" content="https://playtubed.co.uk"/>
 <meta property="og:image" content="https://playtubed.co.uk/og-image.png"/>
@@ -12,7 +12,7 @@
 <meta property="og:image:height" content="630"/>
 <meta property="og:type" content="website"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Tubed - Daily London Underground Puzzle"/>
+<meta name="twitter:title" content="Tubed — Daily London Underground Puzzle"/>
 <meta name="twitter:description" content="Find the fastest route on the Tube. A new puzzle every day."/>
 <meta name="twitter:image" content="https://playtubed.co.uk/og-image.png"/>
 <link rel="icon" type="image/png" href="ChatGPT_Image_Jun_1__2026__08_06_12_PM-removebg-preview.png" sizes="192x192"/>
@@ -221,24 +221,11 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 .nb-stop-tag-walk svg{width:9px;height:9px;flex-shrink:0;}
 .nb-stop-dot-walk{background:#fff;border:2px solid var(--walk);}
 .nb-conn-line-dashed{width:1px;flex:none;align-self:stretch;background:repeating-linear-gradient(to bottom,var(--walk) 0,var(--walk) 3px,transparent 3px,transparent 6px);}
-
-/* Announcement banner — top-of-page, dismissible per announcement ID.
-   See ANNOUNCEMENTS array in JS; one banner shows at a time (most recent
-   undismissed, unexpired). */
-.announcement-banner{display:flex;align-items:center;gap:12px;background:var(--coral);color:#fff;padding:10px 14px;font-size:13px;line-height:1.4;border-radius:10px;margin-bottom:14px;}
-.announcement-banner-icon{flex-shrink:0;font-weight:700;font-size:11px;background:rgba(255,255,255,0.22);padding:2px 7px;border-radius:4px;letter-spacing:0.5px;}
-.announcement-banner-body{flex:1;}
-.announcement-banner-body strong{font-weight:700;}
-.announcement-banner-link{color:#fff;text-decoration:underline;cursor:pointer;font-weight:600;margin-left:4px;}
-.announcement-banner-link:hover{opacity:0.85;}
-.announcement-banner-close{background:transparent;border:none;color:#fff;opacity:0.75;cursor:pointer;font-size:18px;line-height:1;padding:0 4px;flex-shrink:0;}
-.announcement-banner-close:hover{opacity:1;}
 </style>
 <script data-goatcounter="https://playtubed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <div class="wrap">
-  <div id="announcement-bar"><!-- populated by renderAnnouncements() --></div>
   <div class="hdr">
     <a href="https://playtubed.co.uk" style="flex-shrink:0;text-decoration:none;"><img src="Untitled design.png" alt="Tubed" style="width:48px;height:48px;border-radius:50%;display:block;"/></a>
     <div>
@@ -281,24 +268,16 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
         Two daily puzzles now: <strong style="color:var(--navy);">🟢 Easy</strong> and <strong style="color:var(--coral);">🔥 Hard</strong>. Switch between them using the tabs above the puzzle.
       </div>
       <div style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:10px;">
-        Hard puzzles require <strong>2+ line changes</strong> for the optimal route - the obvious single-change route won't be enough.
+        Hard puzzles require <strong>2+ line changes</strong> for the optimal route — the obvious single-change route won't be enough.
       </div>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        Hard mode is in beta. If a puzzle feels unfair or its optimal route looks weird, please <strong style="color:var(--txt);">send feedback</strong> - it really helps us tune the difficulty.
-      </div>
-      <hr class="how-divider"/>
-      <!-- What's new — permanent home for recent launches. Banner entries
-           expire after a few weeks, but the explanation should remain
-           findable here for late-arriving players. Keep to last 2–3 items. -->
-      <div style="font-size:11px;color:var(--coral);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:700;">What's new</div>
-      <div id="whats-new-wait-times" style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:14px;">
-        <strong>Wait times added (June 2026):</strong> the optimal route now factors in the <strong>average wait for each line change</strong>, on top of walking time. Wait values come from <strong>TfL off-peak frequencies</strong> (Mon-Fri 10:00-15:00 timetable). This means the "optimal" is closer to what a real Londoner would take, sometimes one more change saves time, sometimes it doesn't.
+        Hard mode is in beta. If a puzzle feels unfair or its optimal route looks weird, please <strong style="color:var(--txt);">send feedback</strong> — it really helps us tune the difficulty.
       </div>
       <hr class="how-divider"/>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        Puzzles refresh at midnight. Each change includes <strong style="color:var(--txt);">walking time + average wait</strong> for the next train (based on TfL off-peak frequencies). Same puzzles for everyone worldwide.
+        Puzzles refresh at midnight. Times are <strong style="color:var(--txt);">travel time only</strong> — no waiting. Same puzzles for everyone worldwide.
       </div>
-      <button class="btn-got-it" onclick="closeModal()">Got it - let's play! 🚇</button>
+      <button class="btn-got-it" onclick="closeModal()">Got it — let's play! 🚇</button>
     </div>
   </div>
 
@@ -311,7 +290,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <div id="feedback-form-wrap">
         <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">Found a bug, got a suggestion, or just want to say hi? We'd love to hear from you.</p>
         <textarea id="feedback-msg" class="feedback-input" placeholder="Your feedback..."></textarea>
-        <input type="email" id="feedback-email" class="feedback-input" placeholder="Your email (optional - only if you'd like a reply)"/>
+        <input type="email" id="feedback-email" class="feedback-input" placeholder="Your email (optional — only if you'd like a reply)"/>
         <button class="btn-feedback-send" id="feedback-send-btn" onclick="submitFeedback()">Send feedback</button>
       </div>
       <div id="feedback-success" class="feedback-success" style="display:none;">
@@ -429,7 +408,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
     Date = SimDate;
     window.addEventListener('DOMContentLoaded', () => {
       const b = document.createElement('div');
-      b.textContent = `⚠ TEST MODE - Simulating ${iso}`;
+      b.textContent = `⚠ TEST MODE — Simulating ${iso}`;
       b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e85d4f;color:#fff;text-align:center;padding:6px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;z-index:99999;letter-spacing:0.5px;';
       document.body.appendChild(b);
     });
@@ -986,1074 +965,6 @@ const INTERCHANGE_MINS = {
     "DLR|Elizabeth": 6,
   },
 };
-
-// ── Per-edge wait times (half-headway, minutes) ─────────────────────────
-//
-// Auto-generated by build_headways. Do not edit manually.
-// Source: TfL Unified API (Line Timetable + JourneyResults).
-// Half-headway for each (from|to|line_branch) edge, from off-peak
-// weekday schedules. Add this to the route cost ONLY when boarding a
-// new line (i.e. immediately after an interchange or OSI walk).
-const WAIT_MINS = {
-  'Acton Town|Chiswick Park|District_Ealing_Broadway_Upminster': 4,
-  'Acton Town|Ealing Common|District_Ealing_Broadway_Upminster': 4,
-  'Acton Town|Ealing Common|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Acton Town|South Ealing|Piccadilly_T4_Cockfosters': 1,
-  'Acton Town|South Ealing|Piccadilly_T5_Cockfosters': 1,
-  'Acton Town|Turnham Green|Piccadilly_T4_Cockfosters': 1,
-  'Acton Town|Turnham Green|Piccadilly_T5_Cockfosters': 1,
-  'Acton Town|Turnham Green|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Aldgate|Liverpool Street|Circle': 5,
-  'Aldgate|Liverpool Street|Metropolitan_Amersham_Aldgate': 2,
-  'Aldgate|Liverpool Street|Metropolitan_Chesham_Aldgate': 2,
-  'Aldgate|Liverpool Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Aldgate|Liverpool Street|Metropolitan_Watford_Aldgate': 2,
-  'Aldgate|Tower Hill|Circle': 5,
-  'Aldgate East|Liverpool Street|Hammersmith & City': 5,
-  'Aldgate East|Tower Hill|District_Ealing_Broadway_Upminster': 2,
-  'Aldgate East|Tower Hill|District_Richmond_Upminster': 2,
-  'Aldgate East|Tower Hill|District_Wimbledon_Upminster': 2,
-  'Aldgate East|Whitechapel|District_Ealing_Broadway_Upminster': 2,
-  'Aldgate East|Whitechapel|District_Richmond_Upminster': 2,
-  'Aldgate East|Whitechapel|District_Wimbledon_Upminster': 2,
-  'Aldgate East|Whitechapel|Hammersmith & City': 5,
-  'Baker Street|Bond Street|Jubilee': 1,
-  'Baker Street|Edgware Road|Circle': 5,
-  'Baker Street|Edgware Road|Hammersmith & City': 5,
-  'Baker Street|Finchley Road|Metropolitan_Amersham_Aldgate': 2,
-  'Baker Street|Finchley Road|Metropolitan_Chesham_Aldgate': 2,
-  'Baker Street|Finchley Road|Metropolitan_Uxbridge_Aldgate': 2,
-  'Baker Street|Finchley Road|Metropolitan_Watford_Aldgate': 2,
-  'Baker Street|Great Portland Street|Circle': 5,
-  'Baker Street|Great Portland Street|Hammersmith & City': 5,
-  'Baker Street|Great Portland Street|Metropolitan_Amersham_Aldgate': 2,
-  'Baker Street|Great Portland Street|Metropolitan_Chesham_Aldgate': 2,
-  'Baker Street|Great Portland Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Baker Street|Great Portland Street|Metropolitan_Watford_Aldgate': 2,
-  'Baker Street|Marylebone|Bakerloo': 2,
-  'Baker Street|Regent\'s Park|Bakerloo': 2,
-  'Baker Street|St. John\'s Wood|Jubilee': 1,
-  'Bank|Liverpool Street|Central_Ealing_Broadway_Epping': 1,
-  'Bank|Liverpool Street|Central_Ealing_Broadway_Hainault': 1,
-  'Bank|Liverpool Street|Central_West_Ruislip_Epping': 1,
-  'Bank|Liverpool Street|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Bank|Liverpool Street|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Bank|London Bridge|Northern_Bank_to_Edgware': 2,
-  'Bank|London Bridge|Northern_Bank_to_High_Barnet': 2,
-  'Bank|Moorgate|Northern_Bank_to_Edgware': 2,
-  'Bank|Moorgate|Northern_Bank_to_High_Barnet': 2,
-  'Bank|Shadwell|DLR_Bank_Lewisham': 2,
-  'Bank|Shadwell|DLR_Bank_Woolwich_Arsenal': 2,
-  'Bank|St. Paul\'s|Central_Ealing_Broadway_Epping': 1,
-  'Bank|St. Paul\'s|Central_Ealing_Broadway_Hainault': 1,
-  'Bank|St. Paul\'s|Central_West_Ruislip_Epping': 1,
-  'Bank|St. Paul\'s|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Bank|St. Paul\'s|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Bank|Waterloo|Waterloo & City': 2,
-  'Barbican|Farringdon|Circle': 5,
-  'Barbican|Farringdon|Hammersmith & City': 5,
-  'Barbican|Farringdon|Metropolitan_Amersham_Aldgate': 2,
-  'Barbican|Farringdon|Metropolitan_Chesham_Aldgate': 2,
-  'Barbican|Farringdon|Metropolitan_Uxbridge_Aldgate': 2,
-  'Barbican|Farringdon|Metropolitan_Watford_Aldgate': 2,
-  'Barbican|Moorgate|Circle': 5,
-  'Barbican|Moorgate|Hammersmith & City': 5,
-  'Barbican|Moorgate|Metropolitan_Amersham_Aldgate': 2,
-  'Barbican|Moorgate|Metropolitan_Chesham_Aldgate': 2,
-  'Barbican|Moorgate|Metropolitan_Uxbridge_Aldgate': 2,
-  'Barbican|Moorgate|Metropolitan_Watford_Aldgate': 2,
-  'Barking|Barking Riverside|Overground_Suffragette': 8,
-  'Barking|East Ham|District_Ealing_Broadway_Upminster': 2,
-  'Barking|East Ham|District_Richmond_Upminster': 2,
-  'Barking|East Ham|District_Wimbledon_Upminster': 2,
-  'Barking|East Ham|Hammersmith & City': 5,
-  'Barking|Upney|District_Ealing_Broadway_Upminster': 2,
-  'Barking|Upney|District_Richmond_Upminster': 2,
-  'Barking|Upney|District_Wimbledon_Upminster': 2,
-  'Barking|Woodgrange Park|Overground_Suffragette': 8,
-  'Barons Court|Earl\'s Court|Piccadilly_T4_Cockfosters': 1,
-  'Barons Court|Earl\'s Court|Piccadilly_T5_Cockfosters': 1,
-  'Barons Court|Earl\'s Court|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Barons Court|Hammersmith|District_Ealing_Broadway_Upminster': 2,
-  'Barons Court|Hammersmith|District_Richmond_Upminster': 2,
-  'Barons Court|Hammersmith|Piccadilly_T4_Cockfosters': 1,
-  'Barons Court|Hammersmith|Piccadilly_T5_Cockfosters': 1,
-  'Barons Court|Hammersmith|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Barons Court|West Kensington|District_Ealing_Broadway_Upminster': 2,
-  'Barons Court|West Kensington|District_Richmond_Upminster': 2,
-  'Bayswater|Notting Hill Gate|Circle': 5,
-  'Bayswater|Notting Hill Gate|District_Wimbledon_Edgware_Road': 5,
-  'Bayswater|Paddington|Circle': 5,
-  'Bayswater|Paddington|District_Wimbledon_Edgware_Road': 5,
-  'Blackfriars|Mansion House|Circle': 5,
-  'Blackfriars|Mansion House|District_Ealing_Broadway_Upminster': 2,
-  'Blackfriars|Mansion House|District_Richmond_Upminster': 2,
-  'Blackfriars|Mansion House|District_Wimbledon_Upminster': 2,
-  'Blackfriars|Temple|Circle': 5,
-  'Blackfriars|Temple|District_Ealing_Broadway_Upminster': 2,
-  'Blackfriars|Temple|District_Richmond_Upminster': 2,
-  'Blackfriars|Temple|District_Wimbledon_Upminster': 2,
-  'Bond Street|Baker Street|Jubilee': 1,
-  'Bond Street|Green Park|Jubilee': 1,
-  'Bond Street|Marble Arch|Central_Ealing_Broadway_Epping': 1,
-  'Bond Street|Marble Arch|Central_Ealing_Broadway_Hainault': 1,
-  'Bond Street|Marble Arch|Central_West_Ruislip_Epping': 1,
-  'Bond Street|Marble Arch|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Bond Street|Marble Arch|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Bond Street|Oxford Circus|Central_Ealing_Broadway_Epping': 1,
-  'Bond Street|Oxford Circus|Central_Ealing_Broadway_Hainault': 1,
-  'Bond Street|Oxford Circus|Central_West_Ruislip_Epping': 1,
-  'Bond Street|Oxford Circus|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Bond Street|Oxford Circus|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Bond Street|Paddington|Elizabeth_Abbey_Wood_T4': 2,
-  'Bond Street|Paddington|Elizabeth_Abbey_Wood_T5': 2,
-  'Bond Street|Paddington|Elizabeth_Shenfield_T4': 2,
-  'Bond Street|Paddington|Elizabeth_Shenfield_T5': 2,
-  'Bond Street|Tottenham Court Road|Elizabeth_Abbey_Wood_T4': 2,
-  'Bond Street|Tottenham Court Road|Elizabeth_Abbey_Wood_T5': 2,
-  'Bond Street|Tottenham Court Road|Elizabeth_Shenfield_T4': 2,
-  'Bond Street|Tottenham Court Road|Elizabeth_Shenfield_T5': 2,
-  'Bow Road|Bromley-by-Bow|District_Ealing_Broadway_Upminster': 2,
-  'Bow Road|Bromley-by-Bow|District_Richmond_Upminster': 2,
-  'Bow Road|Bromley-by-Bow|District_Wimbledon_Upminster': 2,
-  'Bow Road|Bromley-by-Bow|Hammersmith & City': 5,
-  'Bow Road|Mile End|District_Ealing_Broadway_Upminster': 2,
-  'Bow Road|Mile End|District_Richmond_Upminster': 2,
-  'Bow Road|Mile End|District_Wimbledon_Upminster': 2,
-  'Bow Road|Mile End|Hammersmith & City': 5,
-  'Bromley-by-Bow|Bow Road|District_Ealing_Broadway_Upminster': 2,
-  'Bromley-by-Bow|Bow Road|District_Richmond_Upminster': 2,
-  'Bromley-by-Bow|Bow Road|District_Wimbledon_Upminster': 2,
-  'Bromley-by-Bow|Bow Road|Hammersmith & City': 5,
-  'Bromley-by-Bow|West Ham|District_Ealing_Broadway_Upminster': 2,
-  'Bromley-by-Bow|West Ham|District_Richmond_Upminster': 2,
-  'Bromley-by-Bow|West Ham|District_Wimbledon_Upminster': 2,
-  'Bromley-by-Bow|West Ham|Hammersmith & City': 5,
-  'Canada Water|Bermondsey|Jubilee': 1,
-  'Canada Water|Canary Wharf|Jubilee': 1,
-  'Canada Water|Rotherhithe|Overground_Windrush_Clapham': 2,
-  'Canada Water|Rotherhithe|Overground_Windrush_CrystalPalace': 2,
-  'Canada Water|Rotherhithe|Overground_Windrush_NewCross': 2,
-  'Canada Water|Rotherhithe|Overground_Windrush_WCroydon': 2,
-  'Canada Water|Surrey Quays|Overground_Windrush_Clapham': 2,
-  'Canada Water|Surrey Quays|Overground_Windrush_CrystalPalace': 2,
-  'Canada Water|Surrey Quays|Overground_Windrush_NewCross': 2,
-  'Canada Water|Surrey Quays|Overground_Windrush_WCroydon': 2,
-  'Canary Wharf|Canada Water|Jubilee': 1,
-  'Canary Wharf|Custom House for ExCel|Elizabeth_Abbey_Wood_T4': 4,
-  'Canary Wharf|Custom House for ExCel|Elizabeth_Abbey_Wood_T5': 4,
-  'Canary Wharf|Heron Quays|DLR_Bank_Lewisham': 2,
-  'Canary Wharf|North Greenwich|Jubilee': 1,
-  'Canary Wharf|West India Quay|DLR_Bank_Lewisham': 1,
-  'Canary Wharf|Whitechapel|Elizabeth_Abbey_Wood_T4': 4,
-  'Canary Wharf|Whitechapel|Elizabeth_Abbey_Wood_T5': 4,
-  'Canning Town|East India|DLR_Bank_Woolwich_Arsenal': 3,
-  'Canning Town|East India|DLR_Tower_Gateway_Beckton': 3,
-  'Canning Town|North Greenwich|Jubilee': 1,
-  'Canning Town|Royal Victoria|DLR_Tower_Gateway_Beckton': 5,
-  'Canning Town|Star Lane|DLR_Stratford_International_Woolwich_Arsenal': 5,
-  'Canning Town|West Ham|Jubilee': 1,
-  'Canning Town|West Silvertown|DLR_Bank_Woolwich_Arsenal': 2,
-  'Canning Town|West Silvertown|DLR_Stratford_International_Woolwich_Arsenal': 2,
-  'Cannon Street|Mansion House|Circle': 5,
-  'Cannon Street|Mansion House|District_Ealing_Broadway_Upminster': 2,
-  'Cannon Street|Mansion House|District_Richmond_Upminster': 2,
-  'Cannon Street|Mansion House|District_Wimbledon_Upminster': 2,
-  'Cannon Street|Monument|Circle': 5,
-  'Cannon Street|Monument|District_Ealing_Broadway_Upminster': 2,
-  'Cannon Street|Monument|District_Richmond_Upminster': 2,
-  'Cannon Street|Monument|District_Wimbledon_Upminster': 2,
-  'Canonbury|Dalston Junction|Overground_Windrush_Clapham': 4,
-  'Canonbury|Dalston Junction|Overground_Windrush_CrystalPalace': 4,
-  'Canonbury|Dalston Junction|Overground_Windrush_NewCross': 4,
-  'Canonbury|Dalston Junction|Overground_Windrush_WCroydon': 4,
-  'Canonbury|Dalston Kingsland|Overground_Mildmay_Clapham': 4,
-  'Canonbury|Dalston Kingsland|Overground_Mildmay_Richmond': 4,
-  'Canonbury|Highbury & Islington|Overground_Mildmay_Clapham': 4,
-  'Canonbury|Highbury & Islington|Overground_Mildmay_Richmond': 4,
-  'Canonbury|Highbury & Islington|Overground_Windrush_Clapham': 5,
-  'Canonbury|Highbury & Islington|Overground_Windrush_CrystalPalace': 5,
-  'Canonbury|Highbury & Islington|Overground_Windrush_NewCross': 5,
-  'Canonbury|Highbury & Islington|Overground_Windrush_WCroydon': 5,
-  'Charing Cross|Embankment|Bakerloo': 2,
-  'Charing Cross|Embankment|Northern_Charing_Cross_to_Edgware': 1,
-  'Charing Cross|Embankment|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Charing Cross|Leicester Square|Northern_Charing_Cross_to_Edgware': 1,
-  'Charing Cross|Leicester Square|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Charing Cross|Piccadilly Circus|Bakerloo': 2,
-  'Clapham Junction|Imperial Wharf|Overground_Mildmay_Clapham': 8,
-  'Clapham Junction|Wandsworth Road|Overground_Windrush_Clapham': 8,
-  'Custom House for ExCel|Canary Wharf|Elizabeth_Abbey_Wood_T4': 4,
-  'Custom House for ExCel|Canary Wharf|Elizabeth_Abbey_Wood_T5': 4,
-  'Custom House for ExCel|Prince Regent|DLR_Tower_Gateway_Beckton': 5,
-  'Custom House for ExCel|Royal Victoria|DLR_Tower_Gateway_Beckton': 5,
-  'Custom House for ExCel|Woolwich Arsenal|Elizabeth_Abbey_Wood_T4': 4,
-  'Custom House for ExCel|Woolwich Arsenal|Elizabeth_Abbey_Wood_T5': 4,
-  'Ealing Broadway|Acton Main Line|Elizabeth_Abbey_Wood_T4': 8,
-  'Ealing Broadway|Acton Main Line|Elizabeth_Abbey_Wood_T5': 8,
-  'Ealing Broadway|Acton Main Line|Elizabeth_Shenfield_T4': 8,
-  'Ealing Broadway|Acton Main Line|Elizabeth_Shenfield_T5': 8,
-  'Ealing Broadway|Ealing Common|District_Ealing_Broadway_Upminster': 5,
-  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Epping': 4,
-  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Hainault': 4,
-  'Ealing Broadway|West Ealing|Elizabeth_Abbey_Wood_T4': 4,
-  'Ealing Broadway|West Ealing|Elizabeth_Abbey_Wood_T5': 4,
-  'Ealing Broadway|West Ealing|Elizabeth_Shenfield_T4': 4,
-  'Ealing Broadway|West Ealing|Elizabeth_Shenfield_T5': 4,
-  'Ealing Common|Acton Town|District_Ealing_Broadway_Upminster': 4,
-  'Ealing Common|Acton Town|Piccadilly_Uxbridge_Cockfosters': 5,
-  'Ealing Common|Ealing Broadway|District_Ealing_Broadway_Upminster': 4,
-  'Ealing Common|North Ealing|Piccadilly_Uxbridge_Cockfosters': 5,
-  'Earl\'s Court|Barons Court|Piccadilly_T4_Cockfosters': 1,
-  'Earl\'s Court|Barons Court|Piccadilly_T5_Cockfosters': 1,
-  'Earl\'s Court|Barons Court|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Earl\'s Court|Gloucester Road|District_Ealing_Broadway_Upminster': 1,
-  'Earl\'s Court|Gloucester Road|District_Richmond_Upminster': 1,
-  'Earl\'s Court|Gloucester Road|District_Wimbledon_Upminster': 1,
-  'Earl\'s Court|Gloucester Road|Piccadilly_T4_Cockfosters': 1,
-  'Earl\'s Court|Gloucester Road|Piccadilly_T5_Cockfosters': 1,
-  'Earl\'s Court|Gloucester Road|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Earl\'s Court|High Street Kensington|District_Wimbledon_Edgware_Road': 1,
-  'Earl\'s Court|Kensington (Olympia)|District_Kensington_Olympia_Earls_Court': 1,
-  'Earl\'s Court|West Brompton|District_Wimbledon_Edgware_Road': 1,
-  'Earl\'s Court|West Brompton|District_Wimbledon_Upminster': 1,
-  'Earl\'s Court|West Kensington|District_Ealing_Broadway_Upminster': 1,
-  'Earl\'s Court|West Kensington|District_Richmond_Upminster': 1,
-  'East Ham|Barking|District_Ealing_Broadway_Upminster': 2,
-  'East Ham|Barking|District_Richmond_Upminster': 2,
-  'East Ham|Barking|District_Wimbledon_Upminster': 2,
-  'East Ham|Barking|Hammersmith & City': 5,
-  'East Ham|Upton Park|District_Ealing_Broadway_Upminster': 2,
-  'East Ham|Upton Park|District_Richmond_Upminster': 2,
-  'East Ham|Upton Park|District_Wimbledon_Upminster': 2,
-  'East Ham|Upton Park|Hammersmith & City': 5,
-  'Eastcote|Rayners Lane|Metropolitan_Uxbridge_Aldgate': 4,
-  'Eastcote|Rayners Lane|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Eastcote|Ruislip Manor|Metropolitan_Uxbridge_Aldgate': 4,
-  'Eastcote|Ruislip Manor|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Edgware Road|Baker Street|Circle': 2,
-  'Edgware Road|Baker Street|Hammersmith & City': 5,
-  'Edgware Road|Marylebone|Bakerloo': 2,
-  'Edgware Road|Paddington|Bakerloo': 2,
-  'Edgware Road|Paddington|Circle': 2,
-  'Edgware Road|Paddington|District_Wimbledon_Edgware_Road': 5,
-  'Edgware Road|Paddington|Hammersmith & City': 5,
-  'Elephant & Castle|Borough|Northern_Bank_to_Edgware': 1,
-  'Elephant & Castle|Borough|Northern_Bank_to_High_Barnet': 1,
-  'Elephant & Castle|Kennington|Northern_Bank_to_Edgware': 1,
-  'Elephant & Castle|Kennington|Northern_Bank_to_High_Barnet': 1,
-  'Elephant & Castle|Lambeth North|Bakerloo': 2,
-  'Embankment|Charing Cross|Bakerloo': 2,
-  'Embankment|Charing Cross|Northern_Charing_Cross_to_Edgware': 1,
-  'Embankment|Charing Cross|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Embankment|Temple|Circle': 5,
-  'Embankment|Temple|District_Ealing_Broadway_Upminster': 2,
-  'Embankment|Temple|District_Richmond_Upminster': 2,
-  'Embankment|Temple|District_Wimbledon_Upminster': 2,
-  'Embankment|Waterloo|Bakerloo': 2,
-  'Embankment|Waterloo|Northern_Charing_Cross_to_Edgware': 1,
-  'Embankment|Waterloo|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Embankment|Westminster|Circle': 5,
-  'Embankment|Westminster|District_Ealing_Broadway_Upminster': 2,
-  'Embankment|Westminster|District_Richmond_Upminster': 2,
-  'Embankment|Westminster|District_Wimbledon_Upminster': 2,
-  'Euston|Kings Cross St. Pancras|Northern_Bank_to_Edgware': 2,
-  'Euston|Kings Cross St. Pancras|Northern_Bank_to_High_Barnet': 2,
-  'Euston|Kings Cross St. Pancras|Victoria': 1,
-  'Euston|Mornington Crescent|Northern_Bank_to_Edgware': 2,
-  'Euston|Mornington Crescent|Northern_Bank_to_High_Barnet': 2,
-  'Euston|Mornington Crescent|Northern_Charing_Cross_to_Edgware': 2,
-  'Euston|Mornington Crescent|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Euston|South Hampstead|Overground_Lioness': 8,
-  'Euston|Warren Street|Northern_Charing_Cross_to_Edgware': 2,
-  'Euston|Warren Street|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Euston|Warren Street|Victoria': 1,
-  'Euston Square|Great Portland Street|Circle': 5,
-  'Euston Square|Great Portland Street|Hammersmith & City': 5,
-  'Euston Square|Great Portland Street|Metropolitan_Amersham_Aldgate': 2,
-  'Euston Square|Great Portland Street|Metropolitan_Chesham_Aldgate': 2,
-  'Euston Square|Great Portland Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Euston Square|Great Portland Street|Metropolitan_Watford_Aldgate': 2,
-  'Euston Square|Kings Cross St. Pancras|Circle': 5,
-  'Euston Square|Kings Cross St. Pancras|Hammersmith & City': 5,
-  'Euston Square|Kings Cross St. Pancras|Metropolitan_Amersham_Aldgate': 2,
-  'Euston Square|Kings Cross St. Pancras|Metropolitan_Chesham_Aldgate': 2,
-  'Euston Square|Kings Cross St. Pancras|Metropolitan_Uxbridge_Aldgate': 2,
-  'Euston Square|Kings Cross St. Pancras|Metropolitan_Watford_Aldgate': 2,
-  'Farringdon|Barbican|Circle': 5,
-  'Farringdon|Barbican|Hammersmith & City': 5,
-  'Farringdon|Barbican|Metropolitan_Amersham_Aldgate': 2,
-  'Farringdon|Barbican|Metropolitan_Chesham_Aldgate': 2,
-  'Farringdon|Barbican|Metropolitan_Uxbridge_Aldgate': 2,
-  'Farringdon|Barbican|Metropolitan_Watford_Aldgate': 2,
-  'Farringdon|Kings Cross St. Pancras|Circle': 5,
-  'Farringdon|Kings Cross St. Pancras|Hammersmith & City': 5,
-  'Farringdon|Kings Cross St. Pancras|Metropolitan_Amersham_Aldgate': 2,
-  'Farringdon|Kings Cross St. Pancras|Metropolitan_Chesham_Aldgate': 2,
-  'Farringdon|Kings Cross St. Pancras|Metropolitan_Uxbridge_Aldgate': 2,
-  'Farringdon|Kings Cross St. Pancras|Metropolitan_Watford_Aldgate': 2,
-  'Farringdon|Liverpool Street|Elizabeth_Abbey_Wood_T4': 2,
-  'Farringdon|Liverpool Street|Elizabeth_Abbey_Wood_T5': 2,
-  'Farringdon|Liverpool Street|Elizabeth_Shenfield_T4': 2,
-  'Farringdon|Liverpool Street|Elizabeth_Shenfield_T5': 2,
-  'Farringdon|Tottenham Court Road|Elizabeth_Abbey_Wood_T4': 2,
-  'Farringdon|Tottenham Court Road|Elizabeth_Abbey_Wood_T5': 2,
-  'Farringdon|Tottenham Court Road|Elizabeth_Shenfield_T4': 2,
-  'Farringdon|Tottenham Court Road|Elizabeth_Shenfield_T5': 2,
-  'Finchley Road|Baker Street|Metropolitan_Amersham_Aldgate': 2,
-  'Finchley Road|Baker Street|Metropolitan_Chesham_Aldgate': 2,
-  'Finchley Road|Baker Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Finchley Road|Baker Street|Metropolitan_Watford_Aldgate': 2,
-  'Finchley Road|Swiss Cottage|Jubilee': 1,
-  'Finchley Road|Wembley Park|Metropolitan_Amersham_Aldgate': 2,
-  'Finchley Road|Wembley Park|Metropolitan_Chesham_Aldgate': 2,
-  'Finchley Road|Wembley Park|Metropolitan_Uxbridge_Aldgate': 2,
-  'Finchley Road|Wembley Park|Metropolitan_Watford_Aldgate': 2,
-  'Finchley Road|West Hampstead|Jubilee': 1,
-  'Finsbury Park|Arsenal|Piccadilly_T4_Cockfosters': 1,
-  'Finsbury Park|Arsenal|Piccadilly_T5_Cockfosters': 1,
-  'Finsbury Park|Arsenal|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Finsbury Park|Highbury & Islington|Victoria': 1,
-  'Finsbury Park|Manor House|Piccadilly_T4_Cockfosters': 1,
-  'Finsbury Park|Manor House|Piccadilly_T5_Cockfosters': 1,
-  'Finsbury Park|Manor House|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Finsbury Park|Seven Sisters|Victoria': 1,
-  'Gloucester Road|Earl\'s Court|District_Ealing_Broadway_Upminster': 2,
-  'Gloucester Road|Earl\'s Court|District_Richmond_Upminster': 2,
-  'Gloucester Road|Earl\'s Court|District_Wimbledon_Upminster': 2,
-  'Gloucester Road|Earl\'s Court|Piccadilly_T4_Cockfosters': 1,
-  'Gloucester Road|Earl\'s Court|Piccadilly_T5_Cockfosters': 1,
-  'Gloucester Road|Earl\'s Court|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Gloucester Road|High Street Kensington|Circle': 5,
-  'Gloucester Road|South Kensington|Circle': 5,
-  'Gloucester Road|South Kensington|District_Ealing_Broadway_Upminster': 2,
-  'Gloucester Road|South Kensington|District_Richmond_Upminster': 2,
-  'Gloucester Road|South Kensington|District_Wimbledon_Upminster': 2,
-  'Gloucester Road|South Kensington|Piccadilly_T4_Cockfosters': 1,
-  'Gloucester Road|South Kensington|Piccadilly_T5_Cockfosters': 1,
-  'Gloucester Road|South Kensington|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Goldhawk Road|Hammersmith|Circle': 5,
-  'Goldhawk Road|Hammersmith|Hammersmith & City': 5,
-  'Goldhawk Road|Shepherd\'s Bush Market|Circle': 5,
-  'Goldhawk Road|Shepherd\'s Bush Market|Hammersmith & City': 5,
-  'Gospel Oak|Hampstead Heath|Overground_Mildmay_Clapham': 4,
-  'Gospel Oak|Hampstead Heath|Overground_Mildmay_Richmond': 4,
-  'Gospel Oak|Kentish Town West|Overground_Mildmay_Clapham': 4,
-  'Gospel Oak|Kentish Town West|Overground_Mildmay_Richmond': 4,
-  'Gospel Oak|Upper Holloway|Overground_Suffragette': 7,
-  'Great Portland Street|Baker Street|Circle': 5,
-  'Great Portland Street|Baker Street|Hammersmith & City': 5,
-  'Great Portland Street|Baker Street|Metropolitan_Amersham_Aldgate': 2,
-  'Great Portland Street|Baker Street|Metropolitan_Chesham_Aldgate': 2,
-  'Great Portland Street|Baker Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Great Portland Street|Baker Street|Metropolitan_Watford_Aldgate': 2,
-  'Great Portland Street|Euston Square|Circle': 5,
-  'Great Portland Street|Euston Square|Hammersmith & City': 5,
-  'Great Portland Street|Euston Square|Metropolitan_Amersham_Aldgate': 2,
-  'Great Portland Street|Euston Square|Metropolitan_Chesham_Aldgate': 2,
-  'Great Portland Street|Euston Square|Metropolitan_Uxbridge_Aldgate': 2,
-  'Great Portland Street|Euston Square|Metropolitan_Watford_Aldgate': 2,
-  'Green Park|Bond Street|Jubilee': 1,
-  'Green Park|Hyde Park Corner|Piccadilly_T4_Cockfosters': 1,
-  'Green Park|Hyde Park Corner|Piccadilly_T5_Cockfosters': 1,
-  'Green Park|Hyde Park Corner|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Green Park|Oxford Circus|Victoria': 1,
-  'Green Park|Piccadilly Circus|Piccadilly_T4_Cockfosters': 1,
-  'Green Park|Piccadilly Circus|Piccadilly_T5_Cockfosters': 1,
-  'Green Park|Piccadilly Circus|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Green Park|Victoria|Victoria': 1,
-  'Green Park|Westminster|Jubilee': 1,
-  'Gunnersbury|Kew Gardens|District_Richmond_Upminster': 5,
-  'Gunnersbury|Kew Gardens|Overground_Mildmay_Richmond': 7,
-  'Gunnersbury|South Acton|Overground_Mildmay_Richmond': 8,
-  'Gunnersbury|Turnham Green|District_Richmond_Upminster': 5,
-  'Hammersmith|Barons Court|District_Ealing_Broadway_Upminster': 2,
-  'Hammersmith|Barons Court|District_Richmond_Upminster': 2,
-  'Hammersmith|Barons Court|Piccadilly_T4_Cockfosters': 1,
-  'Hammersmith|Barons Court|Piccadilly_T5_Cockfosters': 1,
-  'Hammersmith|Barons Court|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Hammersmith|Goldhawk Road|Circle': 5,
-  'Hammersmith|Goldhawk Road|Hammersmith & City': 5,
-  'Hammersmith|Ravenscourt Park|District_Ealing_Broadway_Upminster': 2,
-  'Hammersmith|Ravenscourt Park|District_Richmond_Upminster': 2,
-  'Hammersmith|Turnham Green|Piccadilly_T4_Cockfosters': 1,
-  'Hammersmith|Turnham Green|Piccadilly_T5_Cockfosters': 1,
-  'Hammersmith|Turnham Green|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Harlesden|Stonebridge Park|Bakerloo': 3,
-  'Harlesden|Stonebridge Park|Overground_Lioness': 8,
-  'Harlesden|Willesden Junction|Bakerloo': 3,
-  'Harlesden|Willesden Junction|Overground_Lioness': 8,
-  'Harrow & Wealdstone|Headstone Lane|Overground_Lioness': 8,
-  'Harrow & Wealdstone|Kenton|Bakerloo': 8,
-  'Harrow & Wealdstone|Kenton|Overground_Lioness': 8,
-  'Heathrow Terminal 4|Heathrow Terminals 2&3|Elizabeth_Abbey_Wood_T4': 8,
-  'Heathrow Terminal 4|Heathrow Terminals 2&3|Elizabeth_Shenfield_T4': 8,
-  'Heathrow Terminal 4|Heathrow Terminals 2&3|Piccadilly_T4_Cockfosters': 5,
-  'Heathrow Terminal 5|Heathrow Terminals 2&3|Elizabeth_Abbey_Wood_T5': 15,
-  'Heathrow Terminal 5|Heathrow Terminals 2&3|Elizabeth_Shenfield_T5': 15,
-  'Heathrow Terminal 5|Heathrow Terminals 2&3|Piccadilly_T5_Cockfosters': 5,
-  'Heathrow Terminals 2&3|Hatton Cross|Piccadilly_T4_Cockfosters': 5,
-  'Heathrow Terminals 2&3|Hatton Cross|Piccadilly_T5_Cockfosters': 5,
-  'Heathrow Terminals 2&3|Hayes & Harlington|Elizabeth_Abbey_Wood_T4': 5,
-  'Heathrow Terminals 2&3|Hayes & Harlington|Elizabeth_Abbey_Wood_T5': 5,
-  'Heathrow Terminals 2&3|Hayes & Harlington|Elizabeth_Shenfield_T4': 5,
-  'Heathrow Terminals 2&3|Hayes & Harlington|Elizabeth_Shenfield_T5': 5,
-  'Heathrow Terminals 2&3|Heathrow Terminal 4|Elizabeth_Abbey_Wood_T4': 8,
-  'Heathrow Terminals 2&3|Heathrow Terminal 4|Elizabeth_Shenfield_T4': 8,
-  'Heathrow Terminals 2&3|Heathrow Terminal 4|Piccadilly_T4_Cockfosters': 5,
-  'Heathrow Terminals 2&3|Heathrow Terminal 5|Elizabeth_Abbey_Wood_T5': 15,
-  'Heathrow Terminals 2&3|Heathrow Terminal 5|Elizabeth_Shenfield_T5': 15,
-  'Heathrow Terminals 2&3|Heathrow Terminal 5|Piccadilly_T5_Cockfosters': 5,
-  'High Street Kensington|Earl\'s Court|District_Wimbledon_Edgware_Road': 5,
-  'High Street Kensington|Gloucester Road|Circle': 5,
-  'High Street Kensington|Notting Hill Gate|Circle': 5,
-  'High Street Kensington|Notting Hill Gate|District_Wimbledon_Edgware_Road': 5,
-  'Highbury & Islington|Caledonian Road & Barnsbury|Overground_Mildmay_Clapham': 4,
-  'Highbury & Islington|Caledonian Road & Barnsbury|Overground_Mildmay_Richmond': 4,
-  'Highbury & Islington|Canonbury|Overground_Mildmay_Clapham': 4,
-  'Highbury & Islington|Canonbury|Overground_Mildmay_Richmond': 4,
-  'Highbury & Islington|Canonbury|Overground_Windrush_Clapham': 5,
-  'Highbury & Islington|Canonbury|Overground_Windrush_CrystalPalace': 5,
-  'Highbury & Islington|Canonbury|Overground_Windrush_NewCross': 5,
-  'Highbury & Islington|Canonbury|Overground_Windrush_WCroydon': 5,
-  'Highbury & Islington|Finsbury Park|Victoria': 1,
-  'Highbury & Islington|Kings Cross St. Pancras|Victoria': 1,
-  'Hillingdon|Ickenham|Metropolitan_Uxbridge_Aldgate': 4,
-  'Hillingdon|Ickenham|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Hillingdon|Uxbridge|Metropolitan_Uxbridge_Aldgate': 4,
-  'Hillingdon|Uxbridge|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Holborn|Chancery Lane|Central_Ealing_Broadway_Epping': 1,
-  'Holborn|Chancery Lane|Central_Ealing_Broadway_Hainault': 1,
-  'Holborn|Chancery Lane|Central_West_Ruislip_Epping': 1,
-  'Holborn|Chancery Lane|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Holborn|Chancery Lane|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Holborn|Covent Garden|Piccadilly_T4_Cockfosters': 1,
-  'Holborn|Covent Garden|Piccadilly_T5_Cockfosters': 1,
-  'Holborn|Covent Garden|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Holborn|Russell Square|Piccadilly_T4_Cockfosters': 1,
-  'Holborn|Russell Square|Piccadilly_T5_Cockfosters': 1,
-  'Holborn|Russell Square|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Holborn|Tottenham Court Road|Central_Ealing_Broadway_Epping': 1,
-  'Holborn|Tottenham Court Road|Central_Ealing_Broadway_Hainault': 1,
-  'Holborn|Tottenham Court Road|Central_West_Ruislip_Epping': 1,
-  'Holborn|Tottenham Court Road|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Holborn|Tottenham Court Road|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Ickenham|Hillingdon|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ickenham|Hillingdon|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Ickenham|Ruislip|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ickenham|Ruislip|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Kensal Green|Queen\'s Park|Bakerloo': 4,
-  'Kensal Green|Queen\'s Park|Overground_Lioness': 8,
-  'Kensal Green|Willesden Junction|Bakerloo': 4,
-  'Kensal Green|Willesden Junction|Overground_Lioness': 8,
-  'Kensington (Olympia)|Earl\'s Court|District_Kensington_Olympia_Earls_Court': 8,
-  'Kensington (Olympia)|Shepherd\'s Bush (Overground)|Overground_Mildmay_Clapham': 8,
-  'Kensington (Olympia)|West Brompton|Overground_Mildmay_Clapham': 8,
-  'Kenton|Harrow & Wealdstone|Bakerloo': 8,
-  'Kenton|Harrow & Wealdstone|Overground_Lioness': 8,
-  'Kenton|South Kenton|Bakerloo': 8,
-  'Kenton|South Kenton|Overground_Lioness': 8,
-  'Kew Gardens|Gunnersbury|District_Richmond_Upminster': 5,
-  'Kew Gardens|Gunnersbury|Overground_Mildmay_Richmond': 8,
-  'Kew Gardens|Richmond|District_Richmond_Upminster': 5,
-  'Kew Gardens|Richmond|Overground_Mildmay_Richmond': 7,
-  'Kings Cross St. Pancras|Angel|Northern_Bank_to_Edgware': 1,
-  'Kings Cross St. Pancras|Angel|Northern_Bank_to_High_Barnet': 1,
-  'Kings Cross St. Pancras|Caledonian Road|Piccadilly_T4_Cockfosters': 1,
-  'Kings Cross St. Pancras|Caledonian Road|Piccadilly_T5_Cockfosters': 1,
-  'Kings Cross St. Pancras|Caledonian Road|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Kings Cross St. Pancras|Euston|Northern_Bank_to_Edgware': 1,
-  'Kings Cross St. Pancras|Euston|Northern_Bank_to_High_Barnet': 1,
-  'Kings Cross St. Pancras|Euston|Victoria': 1,
-  'Kings Cross St. Pancras|Euston Square|Circle': 5,
-  'Kings Cross St. Pancras|Euston Square|Hammersmith & City': 5,
-  'Kings Cross St. Pancras|Euston Square|Metropolitan_Amersham_Aldgate': 2,
-  'Kings Cross St. Pancras|Euston Square|Metropolitan_Chesham_Aldgate': 2,
-  'Kings Cross St. Pancras|Euston Square|Metropolitan_Uxbridge_Aldgate': 2,
-  'Kings Cross St. Pancras|Euston Square|Metropolitan_Watford_Aldgate': 2,
-  'Kings Cross St. Pancras|Farringdon|Circle': 5,
-  'Kings Cross St. Pancras|Farringdon|Hammersmith & City': 5,
-  'Kings Cross St. Pancras|Farringdon|Metropolitan_Amersham_Aldgate': 2,
-  'Kings Cross St. Pancras|Farringdon|Metropolitan_Chesham_Aldgate': 2,
-  'Kings Cross St. Pancras|Farringdon|Metropolitan_Uxbridge_Aldgate': 2,
-  'Kings Cross St. Pancras|Farringdon|Metropolitan_Watford_Aldgate': 2,
-  'Kings Cross St. Pancras|Highbury & Islington|Victoria': 1,
-  'Kings Cross St. Pancras|Russell Square|Piccadilly_T4_Cockfosters': 1,
-  'Kings Cross St. Pancras|Russell Square|Piccadilly_T5_Cockfosters': 1,
-  'Kings Cross St. Pancras|Russell Square|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Ladbroke Grove|Latimer Road|Circle': 5,
-  'Ladbroke Grove|Latimer Road|Hammersmith & City': 5,
-  'Ladbroke Grove|Westbourne Park|Circle': 5,
-  'Ladbroke Grove|Westbourne Park|Hammersmith & City': 5,
-  'Latimer Road|Ladbroke Grove|Circle': 5,
-  'Latimer Road|Ladbroke Grove|Hammersmith & City': 5,
-  'Latimer Road|Wood Lane|Circle': 5,
-  'Latimer Road|Wood Lane|Hammersmith & City': 5,
-  'Leicester Square|Charing Cross|Northern_Charing_Cross_to_Edgware': 1,
-  'Leicester Square|Charing Cross|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Leicester Square|Covent Garden|Piccadilly_T4_Cockfosters': 1,
-  'Leicester Square|Covent Garden|Piccadilly_T5_Cockfosters': 1,
-  'Leicester Square|Covent Garden|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Leicester Square|Piccadilly Circus|Piccadilly_T4_Cockfosters': 1,
-  'Leicester Square|Piccadilly Circus|Piccadilly_T5_Cockfosters': 1,
-  'Leicester Square|Piccadilly Circus|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Leicester Square|Tottenham Court Road|Northern_Charing_Cross_to_Edgware': 1,
-  'Leicester Square|Tottenham Court Road|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Liverpool Street|Aldgate|Circle': 5,
-  'Liverpool Street|Aldgate|Metropolitan_Amersham_Aldgate': 2,
-  'Liverpool Street|Aldgate|Metropolitan_Chesham_Aldgate': 2,
-  'Liverpool Street|Aldgate|Metropolitan_Uxbridge_Aldgate': 2,
-  'Liverpool Street|Aldgate|Metropolitan_Watford_Aldgate': 2,
-  'Liverpool Street|Aldgate East|Hammersmith & City': 5,
-  'Liverpool Street|Bank|Central_Ealing_Broadway_Epping': 1,
-  'Liverpool Street|Bank|Central_Ealing_Broadway_Hainault': 1,
-  'Liverpool Street|Bank|Central_West_Ruislip_Epping': 1,
-  'Liverpool Street|Bank|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Liverpool Street|Bank|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Liverpool Street|Bethnal Green|Central_Ealing_Broadway_Epping': 1,
-  'Liverpool Street|Bethnal Green|Central_Ealing_Broadway_Hainault': 1,
-  'Liverpool Street|Bethnal Green|Central_West_Ruislip_Epping': 1,
-  'Liverpool Street|Bethnal Green|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Liverpool Street|Bethnal Green|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Liverpool Street|Bethnal Green (Overground)|Overground_Weaver_Cheshunt': 4,
-  'Liverpool Street|Bethnal Green (Overground)|Overground_Weaver_Chingford': 4,
-  'Liverpool Street|Bethnal Green (Overground)|Overground_Weaver_Enfield_Town': 4,
-  'Liverpool Street|Farringdon|Elizabeth_Abbey_Wood_T4': 2,
-  'Liverpool Street|Farringdon|Elizabeth_Abbey_Wood_T5': 2,
-  'Liverpool Street|Farringdon|Elizabeth_Shenfield_T4': 2,
-  'Liverpool Street|Farringdon|Elizabeth_Shenfield_T5': 2,
-  'Liverpool Street|Moorgate|Circle': 5,
-  'Liverpool Street|Moorgate|Hammersmith & City': 5,
-  'Liverpool Street|Moorgate|Metropolitan_Amersham_Aldgate': 2,
-  'Liverpool Street|Moorgate|Metropolitan_Chesham_Aldgate': 2,
-  'Liverpool Street|Moorgate|Metropolitan_Uxbridge_Aldgate': 2,
-  'Liverpool Street|Moorgate|Metropolitan_Watford_Aldgate': 2,
-  'Liverpool Street|Whitechapel|Elizabeth_Abbey_Wood_T4': 2,
-  'Liverpool Street|Whitechapel|Elizabeth_Abbey_Wood_T5': 2,
-  'Liverpool Street|Whitechapel|Elizabeth_Shenfield_T4': 2,
-  'Liverpool Street|Whitechapel|Elizabeth_Shenfield_T5': 2,
-  'London Bridge|Bank|Northern_Bank_to_Edgware': 1,
-  'London Bridge|Bank|Northern_Bank_to_High_Barnet': 1,
-  'London Bridge|Bermondsey|Jubilee': 1,
-  'London Bridge|Borough|Northern_Bank_to_Edgware': 1,
-  'London Bridge|Borough|Northern_Bank_to_High_Barnet': 1,
-  'London Bridge|Southwark|Jubilee': 1,
-  'Mansion House|Blackfriars|Circle': 5,
-  'Mansion House|Blackfriars|District_Ealing_Broadway_Upminster': 2,
-  'Mansion House|Blackfriars|District_Richmond_Upminster': 2,
-  'Mansion House|Blackfriars|District_Wimbledon_Upminster': 2,
-  'Mansion House|Cannon Street|Circle': 5,
-  'Mansion House|Cannon Street|District_Ealing_Broadway_Upminster': 2,
-  'Mansion House|Cannon Street|District_Richmond_Upminster': 2,
-  'Mansion House|Cannon Street|District_Wimbledon_Upminster': 2,
-  'Mile End|Bethnal Green|Central_Ealing_Broadway_Epping': 1,
-  'Mile End|Bethnal Green|Central_Ealing_Broadway_Hainault': 1,
-  'Mile End|Bethnal Green|Central_West_Ruislip_Epping': 1,
-  'Mile End|Bethnal Green|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Mile End|Bethnal Green|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Mile End|Bow Road|District_Ealing_Broadway_Upminster': 2,
-  'Mile End|Bow Road|District_Richmond_Upminster': 2,
-  'Mile End|Bow Road|District_Wimbledon_Upminster': 2,
-  'Mile End|Bow Road|Hammersmith & City': 5,
-  'Mile End|Stepney Green|District_Ealing_Broadway_Upminster': 2,
-  'Mile End|Stepney Green|District_Richmond_Upminster': 2,
-  'Mile End|Stepney Green|District_Wimbledon_Upminster': 2,
-  'Mile End|Stepney Green|Hammersmith & City': 5,
-  'Mile End|Stratford|Central_Ealing_Broadway_Epping': 1,
-  'Mile End|Stratford|Central_Ealing_Broadway_Hainault': 1,
-  'Mile End|Stratford|Central_West_Ruislip_Epping': 1,
-  'Mile End|Stratford|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Mile End|Stratford|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Monument|Cannon Street|Circle': 5,
-  'Monument|Cannon Street|District_Ealing_Broadway_Upminster': 2,
-  'Monument|Cannon Street|District_Richmond_Upminster': 2,
-  'Monument|Cannon Street|District_Wimbledon_Upminster': 2,
-  'Monument|Tower Hill|Circle': 5,
-  'Monument|Tower Hill|District_Ealing_Broadway_Upminster': 2,
-  'Monument|Tower Hill|District_Richmond_Upminster': 2,
-  'Monument|Tower Hill|District_Wimbledon_Upminster': 2,
-  'Moorgate|Bank|Northern_Bank_to_Edgware': 2,
-  'Moorgate|Bank|Northern_Bank_to_High_Barnet': 2,
-  'Moorgate|Barbican|Circle': 5,
-  'Moorgate|Barbican|Hammersmith & City': 5,
-  'Moorgate|Barbican|Metropolitan_Amersham_Aldgate': 2,
-  'Moorgate|Barbican|Metropolitan_Chesham_Aldgate': 2,
-  'Moorgate|Barbican|Metropolitan_Uxbridge_Aldgate': 2,
-  'Moorgate|Barbican|Metropolitan_Watford_Aldgate': 2,
-  'Moorgate|Liverpool Street|Circle': 5,
-  'Moorgate|Liverpool Street|Hammersmith & City': 5,
-  'Moorgate|Liverpool Street|Metropolitan_Amersham_Aldgate': 2,
-  'Moorgate|Liverpool Street|Metropolitan_Chesham_Aldgate': 2,
-  'Moorgate|Liverpool Street|Metropolitan_Uxbridge_Aldgate': 2,
-  'Moorgate|Liverpool Street|Metropolitan_Watford_Aldgate': 2,
-  'Moorgate|Old Street|Northern_Bank_to_Edgware': 2,
-  'Moorgate|Old Street|Northern_Bank_to_High_Barnet': 2,
-  'North Wembley|South Kenton|Bakerloo': 8,
-  'North Wembley|South Kenton|Overground_Lioness': 8,
-  'North Wembley|Wembley Central|Bakerloo': 8,
-  'North Wembley|Wembley Central|Overground_Lioness': 8,
-  'Notting Hill Gate|Bayswater|Circle': 5,
-  'Notting Hill Gate|Bayswater|District_Wimbledon_Edgware_Road': 5,
-  'Notting Hill Gate|High Street Kensington|Circle': 5,
-  'Notting Hill Gate|High Street Kensington|District_Wimbledon_Edgware_Road': 5,
-  'Notting Hill Gate|Holland Park|Central_Ealing_Broadway_Epping': 1,
-  'Notting Hill Gate|Holland Park|Central_Ealing_Broadway_Hainault': 1,
-  'Notting Hill Gate|Holland Park|Central_West_Ruislip_Epping': 1,
-  'Notting Hill Gate|Holland Park|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Notting Hill Gate|Holland Park|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Notting Hill Gate|Queensway|Central_Ealing_Broadway_Epping': 1,
-  'Notting Hill Gate|Queensway|Central_Ealing_Broadway_Hainault': 1,
-  'Notting Hill Gate|Queensway|Central_West_Ruislip_Epping': 1,
-  'Notting Hill Gate|Queensway|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Notting Hill Gate|Queensway|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Oxford Circus|Bond Street|Central_Ealing_Broadway_Epping': 1,
-  'Oxford Circus|Bond Street|Central_Ealing_Broadway_Hainault': 1,
-  'Oxford Circus|Bond Street|Central_West_Ruislip_Epping': 1,
-  'Oxford Circus|Bond Street|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Oxford Circus|Bond Street|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Oxford Circus|Green Park|Victoria': 1,
-  'Oxford Circus|Piccadilly Circus|Bakerloo': 2,
-  'Oxford Circus|Regent\'s Park|Bakerloo': 2,
-  'Oxford Circus|Tottenham Court Road|Central_Ealing_Broadway_Epping': 1,
-  'Oxford Circus|Tottenham Court Road|Central_Ealing_Broadway_Hainault': 1,
-  'Oxford Circus|Tottenham Court Road|Central_West_Ruislip_Epping': 1,
-  'Oxford Circus|Tottenham Court Road|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Oxford Circus|Tottenham Court Road|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Oxford Circus|Warren Street|Victoria': 1,
-  'Paddington|Acton Main Line|Elizabeth_Abbey_Wood_T4': 8,
-  'Paddington|Acton Main Line|Elizabeth_Abbey_Wood_T5': 8,
-  'Paddington|Acton Main Line|Elizabeth_Shenfield_T4': 8,
-  'Paddington|Acton Main Line|Elizabeth_Shenfield_T5': 8,
-  'Paddington|Bayswater|Circle': 5,
-  'Paddington|Bayswater|District_Wimbledon_Edgware_Road': 5,
-  'Paddington|Bond Street|Elizabeth_Abbey_Wood_T4': 2,
-  'Paddington|Bond Street|Elizabeth_Abbey_Wood_T5': 2,
-  'Paddington|Bond Street|Elizabeth_Shenfield_T4': 2,
-  'Paddington|Bond Street|Elizabeth_Shenfield_T5': 2,
-  'Paddington|Edgware Road|Bakerloo': 2,
-  'Paddington|Edgware Road|Circle': 5,
-  'Paddington|Edgware Road|District_Wimbledon_Edgware_Road': 5,
-  'Paddington|Edgware Road|Hammersmith & City': 5,
-  'Paddington|Royal Oak|Circle': 5,
-  'Paddington|Royal Oak|Hammersmith & City': 5,
-  'Paddington|Warwick Avenue|Bakerloo': 2,
-  'Piccadilly Circus|Charing Cross|Bakerloo': 2,
-  'Piccadilly Circus|Green Park|Piccadilly_T4_Cockfosters': 1,
-  'Piccadilly Circus|Green Park|Piccadilly_T5_Cockfosters': 1,
-  'Piccadilly Circus|Green Park|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Piccadilly Circus|Leicester Square|Piccadilly_T4_Cockfosters': 1,
-  'Piccadilly Circus|Leicester Square|Piccadilly_T5_Cockfosters': 1,
-  'Piccadilly Circus|Leicester Square|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Piccadilly Circus|Oxford Circus|Bakerloo': 2,
-  'Plaistow|Upton Park|District_Ealing_Broadway_Upminster': 2,
-  'Plaistow|Upton Park|District_Richmond_Upminster': 2,
-  'Plaistow|Upton Park|District_Wimbledon_Upminster': 2,
-  'Plaistow|Upton Park|Hammersmith & City': 5,
-  'Plaistow|West Ham|District_Ealing_Broadway_Upminster': 2,
-  'Plaistow|West Ham|District_Richmond_Upminster': 2,
-  'Plaistow|West Ham|District_Wimbledon_Upminster': 2,
-  'Plaistow|West Ham|Hammersmith & City': 5,
-  'Queen\'s Park|Kensal Green|Bakerloo': 2,
-  'Queen\'s Park|Kensal Green|Overground_Lioness': 8,
-  'Queen\'s Park|Kilburn High Road|Overground_Lioness': 8,
-  'Queen\'s Park|Kilburn Park|Bakerloo': 2,
-  'Rayners Lane|Eastcote|Metropolitan_Uxbridge_Aldgate': 4,
-  'Rayners Lane|Eastcote|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Rayners Lane|South Harrow|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Rayners Lane|West Harrow|Metropolitan_Uxbridge_Aldgate': 4,
-  'Richmond|Kew Gardens|District_Richmond_Upminster': 5,
-  'Richmond|Kew Gardens|Overground_Mildmay_Richmond': 8,
-  'Romford|Chadwell Heath|Elizabeth_Shenfield_T4': 4,
-  'Romford|Chadwell Heath|Elizabeth_Shenfield_T5': 4,
-  'Romford|Emerson Park|Overground_Liberty': 15,
-  'Romford|Gidea Park|Elizabeth_Shenfield_T4': 4,
-  'Romford|Gidea Park|Elizabeth_Shenfield_T5': 4,
-  'Royal Oak|Paddington|Circle': 5,
-  'Royal Oak|Paddington|Hammersmith & City': 5,
-  'Royal Oak|Westbourne Park|Circle': 5,
-  'Royal Oak|Westbourne Park|Hammersmith & City': 5,
-  'Ruislip|Ickenham|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ruislip|Ickenham|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Ruislip|Ruislip Manor|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ruislip|Ruislip Manor|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Ruislip Manor|Eastcote|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ruislip Manor|Eastcote|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Ruislip Manor|Ruislip|Metropolitan_Uxbridge_Aldgate': 4,
-  'Ruislip Manor|Ruislip|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Shepherd\'s Bush Market|Goldhawk Road|Circle': 5,
-  'Shepherd\'s Bush Market|Goldhawk Road|Hammersmith & City': 5,
-  'Shepherd\'s Bush Market|Wood Lane|Circle': 5,
-  'Shepherd\'s Bush Market|Wood Lane|Hammersmith & City': 5,
-  'Sloane Square|South Kensington|Circle': 5,
-  'Sloane Square|South Kensington|District_Ealing_Broadway_Upminster': 2,
-  'Sloane Square|South Kensington|District_Richmond_Upminster': 2,
-  'Sloane Square|South Kensington|District_Wimbledon_Upminster': 2,
-  'Sloane Square|Victoria|Circle': 5,
-  'Sloane Square|Victoria|District_Ealing_Broadway_Upminster': 2,
-  'Sloane Square|Victoria|District_Richmond_Upminster': 2,
-  'Sloane Square|Victoria|District_Wimbledon_Upminster': 2,
-  'South Kensington|Gloucester Road|Circle': 5,
-  'South Kensington|Gloucester Road|District_Ealing_Broadway_Upminster': 2,
-  'South Kensington|Gloucester Road|District_Richmond_Upminster': 2,
-  'South Kensington|Gloucester Road|District_Wimbledon_Upminster': 2,
-  'South Kensington|Gloucester Road|Piccadilly_T4_Cockfosters': 1,
-  'South Kensington|Gloucester Road|Piccadilly_T5_Cockfosters': 1,
-  'South Kensington|Gloucester Road|Piccadilly_Uxbridge_Cockfosters': 1,
-  'South Kensington|Knightsbridge|Piccadilly_T4_Cockfosters': 1,
-  'South Kensington|Knightsbridge|Piccadilly_T5_Cockfosters': 1,
-  'South Kensington|Knightsbridge|Piccadilly_Uxbridge_Cockfosters': 1,
-  'South Kensington|Sloane Square|Circle': 5,
-  'South Kensington|Sloane Square|District_Ealing_Broadway_Upminster': 2,
-  'South Kensington|Sloane Square|District_Richmond_Upminster': 2,
-  'South Kensington|Sloane Square|District_Wimbledon_Upminster': 2,
-  'South Kenton|Kenton|Bakerloo': 8,
-  'South Kenton|Kenton|Overground_Lioness': 8,
-  'South Kenton|North Wembley|Bakerloo': 8,
-  'South Kenton|North Wembley|Overground_Lioness': 8,
-  'St. James\'s Park|Victoria|Circle': 5,
-  'St. James\'s Park|Victoria|District_Ealing_Broadway_Upminster': 2,
-  'St. James\'s Park|Victoria|District_Richmond_Upminster': 2,
-  'St. James\'s Park|Victoria|District_Wimbledon_Upminster': 2,
-  'St. James\'s Park|Westminster|Circle': 5,
-  'St. James\'s Park|Westminster|District_Ealing_Broadway_Upminster': 2,
-  'St. James\'s Park|Westminster|District_Richmond_Upminster': 2,
-  'St. James\'s Park|Westminster|District_Wimbledon_Upminster': 2,
-  'Stepney Green|Mile End|District_Ealing_Broadway_Upminster': 2,
-  'Stepney Green|Mile End|District_Richmond_Upminster': 2,
-  'Stepney Green|Mile End|District_Wimbledon_Upminster': 2,
-  'Stepney Green|Mile End|Hammersmith & City': 5,
-  'Stepney Green|Whitechapel|District_Ealing_Broadway_Upminster': 2,
-  'Stepney Green|Whitechapel|District_Richmond_Upminster': 2,
-  'Stepney Green|Whitechapel|District_Wimbledon_Upminster': 2,
-  'Stepney Green|Whitechapel|Hammersmith & City': 5,
-  'Stockwell|Brixton|Victoria': 1,
-  'Stockwell|Clapham North|Northern_Bank_to_Edgware': 1,
-  'Stockwell|Clapham North|Northern_Bank_to_High_Barnet': 1,
-  'Stockwell|Clapham North|Northern_Charing_Cross_to_Edgware': 1,
-  'Stockwell|Clapham North|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Stockwell|Oval|Northern_Bank_to_Edgware': 1,
-  'Stockwell|Oval|Northern_Bank_to_High_Barnet': 1,
-  'Stockwell|Oval|Northern_Charing_Cross_to_Edgware': 1,
-  'Stockwell|Oval|Northern_Charing_Cross_to_High_Barnet': 1,
-  'Stockwell|Vauxhall|Victoria': 1,
-  'Stonebridge Park|Harlesden|Bakerloo': 3,
-  'Stonebridge Park|Harlesden|Overground_Lioness': 8,
-  'Stonebridge Park|Wembley Central|Bakerloo': 3,
-  'Stonebridge Park|Wembley Central|Overground_Lioness': 8,
-  'Stratford|Hackney Wick|Overground_Mildmay_Clapham': 4,
-  'Stratford|Hackney Wick|Overground_Mildmay_Richmond': 4,
-  'Stratford|Leyton|Central_Ealing_Broadway_Epping': 1,
-  'Stratford|Leyton|Central_Ealing_Broadway_Hainault': 1,
-  'Stratford|Leyton|Central_West_Ruislip_Epping': 1,
-  'Stratford|Leyton|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Stratford|Leyton|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Stratford|Maryland|Elizabeth_Shenfield_T4': 4,
-  'Stratford|Maryland|Elizabeth_Shenfield_T5': 4,
-  'Stratford|Mile End|Central_Ealing_Broadway_Epping': 1,
-  'Stratford|Mile End|Central_Ealing_Broadway_Hainault': 1,
-  'Stratford|Mile End|Central_West_Ruislip_Epping': 1,
-  'Stratford|Mile End|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Stratford|Mile End|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Stratford|Stratford High Street|DLR_Stratford_International_Woolwich_Arsenal': 5,
-  'Stratford|Stratford International|DLR_Stratford_International_Woolwich_Arsenal': 5,
-  'Stratford|West Ham|Jubilee': 1,
-  'Stratford|Whitechapel|Elizabeth_Shenfield_T4': 4,
-  'Stratford|Whitechapel|Elizabeth_Shenfield_T5': 4,
-  'Temple|Blackfriars|Circle': 5,
-  'Temple|Blackfriars|District_Ealing_Broadway_Upminster': 2,
-  'Temple|Blackfriars|District_Richmond_Upminster': 2,
-  'Temple|Blackfriars|District_Wimbledon_Upminster': 2,
-  'Temple|Embankment|Circle': 5,
-  'Temple|Embankment|District_Ealing_Broadway_Upminster': 2,
-  'Temple|Embankment|District_Richmond_Upminster': 2,
-  'Temple|Embankment|District_Wimbledon_Upminster': 2,
-  'Tottenham Court Road|Bond Street|Elizabeth_Abbey_Wood_T4': 2,
-  'Tottenham Court Road|Bond Street|Elizabeth_Abbey_Wood_T5': 2,
-  'Tottenham Court Road|Bond Street|Elizabeth_Shenfield_T4': 2,
-  'Tottenham Court Road|Bond Street|Elizabeth_Shenfield_T5': 2,
-  'Tottenham Court Road|Farringdon|Elizabeth_Abbey_Wood_T4': 2,
-  'Tottenham Court Road|Farringdon|Elizabeth_Abbey_Wood_T5': 2,
-  'Tottenham Court Road|Farringdon|Elizabeth_Shenfield_T4': 2,
-  'Tottenham Court Road|Farringdon|Elizabeth_Shenfield_T5': 2,
-  'Tottenham Court Road|Goodge Street|Northern_Charing_Cross_to_Edgware': 2,
-  'Tottenham Court Road|Goodge Street|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Tottenham Court Road|Holborn|Central_Ealing_Broadway_Epping': 1,
-  'Tottenham Court Road|Holborn|Central_Ealing_Broadway_Hainault': 1,
-  'Tottenham Court Road|Holborn|Central_West_Ruislip_Epping': 1,
-  'Tottenham Court Road|Holborn|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Tottenham Court Road|Holborn|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Tottenham Court Road|Leicester Square|Northern_Charing_Cross_to_Edgware': 2,
-  'Tottenham Court Road|Leicester Square|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Tottenham Court Road|Oxford Circus|Central_Ealing_Broadway_Epping': 1,
-  'Tottenham Court Road|Oxford Circus|Central_Ealing_Broadway_Hainault': 1,
-  'Tottenham Court Road|Oxford Circus|Central_West_Ruislip_Epping': 1,
-  'Tottenham Court Road|Oxford Circus|Central_West_Ruislip_Hainault_via_Newbury': 1,
-  'Tottenham Court Road|Oxford Circus|Central_West_Ruislip_Hainault_via_Woodford': 1,
-  'Tower Hill|Aldgate|Circle': 5,
-  'Tower Hill|Aldgate East|District_Ealing_Broadway_Upminster': 2,
-  'Tower Hill|Aldgate East|District_Richmond_Upminster': 2,
-  'Tower Hill|Aldgate East|District_Wimbledon_Upminster': 2,
-  'Tower Hill|Monument|Circle': 5,
-  'Tower Hill|Monument|District_Ealing_Broadway_Upminster': 2,
-  'Tower Hill|Monument|District_Richmond_Upminster': 2,
-  'Tower Hill|Monument|District_Wimbledon_Upminster': 2,
-  'Turnham Green|Acton Town|Piccadilly_T4_Cockfosters': 1,
-  'Turnham Green|Acton Town|Piccadilly_T5_Cockfosters': 1,
-  'Turnham Green|Acton Town|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Turnham Green|Chiswick Park|District_Ealing_Broadway_Upminster': 2,
-  'Turnham Green|Gunnersbury|District_Richmond_Upminster': 2,
-  'Turnham Green|Hammersmith|Piccadilly_T4_Cockfosters': 1,
-  'Turnham Green|Hammersmith|Piccadilly_T5_Cockfosters': 1,
-  'Turnham Green|Hammersmith|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Turnham Green|Stamford Brook|District_Ealing_Broadway_Upminster': 2,
-  'Turnham Green|Stamford Brook|District_Richmond_Upminster': 2,
-  'Upminster|Emerson Park|Overground_Liberty': 15,
-  'Upminster|Upminster Bridge|District_Ealing_Broadway_Upminster': 2,
-  'Upminster|Upminster Bridge|District_Richmond_Upminster': 2,
-  'Upminster|Upminster Bridge|District_Wimbledon_Upminster': 2,
-  'Upton Park|East Ham|District_Ealing_Broadway_Upminster': 2,
-  'Upton Park|East Ham|District_Richmond_Upminster': 2,
-  'Upton Park|East Ham|District_Wimbledon_Upminster': 2,
-  'Upton Park|East Ham|Hammersmith & City': 5,
-  'Upton Park|Plaistow|District_Ealing_Broadway_Upminster': 2,
-  'Upton Park|Plaistow|District_Richmond_Upminster': 2,
-  'Upton Park|Plaistow|District_Wimbledon_Upminster': 2,
-  'Upton Park|Plaistow|Hammersmith & City': 5,
-  'Uxbridge|Hillingdon|Metropolitan_Uxbridge_Aldgate': 4,
-  'Uxbridge|Hillingdon|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Victoria|Green Park|Victoria': 1,
-  'Victoria|Pimlico|Victoria': 1,
-  'Victoria|Sloane Square|Circle': 5,
-  'Victoria|Sloane Square|District_Ealing_Broadway_Upminster': 2,
-  'Victoria|Sloane Square|District_Richmond_Upminster': 2,
-  'Victoria|Sloane Square|District_Wimbledon_Upminster': 2,
-  'Victoria|St. James\'s Park|Circle': 5,
-  'Victoria|St. James\'s Park|District_Ealing_Broadway_Upminster': 2,
-  'Victoria|St. James\'s Park|District_Richmond_Upminster': 2,
-  'Victoria|St. James\'s Park|District_Wimbledon_Upminster': 2,
-  'Walthamstow Central|Blackhorse Road|Victoria': 1,
-  'Walthamstow Central|St. James Street|Overground_Weaver_Chingford': 8,
-  'Walthamstow Central|Wood Street|Overground_Weaver_Chingford': 8,
-  'Warren Street|Euston|Northern_Charing_Cross_to_Edgware': 2,
-  'Warren Street|Euston|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Warren Street|Euston|Victoria': 1,
-  'Warren Street|Goodge Street|Northern_Charing_Cross_to_Edgware': 2,
-  'Warren Street|Goodge Street|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Warren Street|Oxford Circus|Victoria': 1,
-  'Waterloo|Bank|Waterloo & City': 2,
-  'Waterloo|Embankment|Bakerloo': 2,
-  'Waterloo|Embankment|Northern_Charing_Cross_to_Edgware': 2,
-  'Waterloo|Embankment|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Waterloo|Kennington|Northern_Charing_Cross_to_Edgware': 2,
-  'Waterloo|Kennington|Northern_Charing_Cross_to_High_Barnet': 2,
-  'Waterloo|Lambeth North|Bakerloo': 2,
-  'Waterloo|Southwark|Jubilee': 1,
-  'Waterloo|Westminster|Jubilee': 1,
-  'Wembley Central|North Wembley|Bakerloo': 8,
-  'Wembley Central|North Wembley|Overground_Lioness': 8,
-  'Wembley Central|Stonebridge Park|Bakerloo': 8,
-  'Wembley Central|Stonebridge Park|Overground_Lioness': 8,
-  'Wembley Park|Finchley Road|Metropolitan_Amersham_Aldgate': 2,
-  'Wembley Park|Finchley Road|Metropolitan_Chesham_Aldgate': 2,
-  'Wembley Park|Finchley Road|Metropolitan_Uxbridge_Aldgate': 2,
-  'Wembley Park|Finchley Road|Metropolitan_Watford_Aldgate': 2,
-  'Wembley Park|Kingsbury|Jubilee': 2,
-  'Wembley Park|Neasden|Jubilee': 2,
-  'Wembley Park|Preston Road|Metropolitan_Amersham_Aldgate': 2,
-  'Wembley Park|Preston Road|Metropolitan_Chesham_Aldgate': 2,
-  'Wembley Park|Preston Road|Metropolitan_Uxbridge_Aldgate': 2,
-  'Wembley Park|Preston Road|Metropolitan_Watford_Aldgate': 2,
-  'West Brompton|Earl\'s Court|District_Wimbledon_Edgware_Road': 2,
-  'West Brompton|Earl\'s Court|District_Wimbledon_Upminster': 2,
-  'West Brompton|Fulham Broadway|District_Wimbledon_Edgware_Road': 2,
-  'West Brompton|Fulham Broadway|District_Wimbledon_Upminster': 2,
-  'West Brompton|Imperial Wharf|Overground_Mildmay_Clapham': 8,
-  'West Brompton|Kensington (Olympia)|Overground_Mildmay_Clapham': 8,
-  'West Ham|Abbey Road|DLR_Stratford_International_Woolwich_Arsenal': 5,
-  'West Ham|Bromley-by-Bow|District_Ealing_Broadway_Upminster': 2,
-  'West Ham|Bromley-by-Bow|District_Richmond_Upminster': 2,
-  'West Ham|Bromley-by-Bow|District_Wimbledon_Upminster': 2,
-  'West Ham|Bromley-by-Bow|Hammersmith & City': 5,
-  'West Ham|Canning Town|Jubilee': 1,
-  'West Ham|Plaistow|District_Ealing_Broadway_Upminster': 2,
-  'West Ham|Plaistow|District_Richmond_Upminster': 2,
-  'West Ham|Plaistow|District_Wimbledon_Upminster': 2,
-  'West Ham|Plaistow|Hammersmith & City': 5,
-  'West Ham|Star Lane|DLR_Stratford_International_Woolwich_Arsenal': 5,
-  'West Ham|Stratford|Jubilee': 1,
-  'West Hampstead|Brondesbury|Overground_Mildmay_Clapham': 4,
-  'West Hampstead|Brondesbury|Overground_Mildmay_Richmond': 4,
-  'West Hampstead|Finchley Road|Jubilee': 2,
-  'West Hampstead|Finchley Road & Frognal|Overground_Mildmay_Clapham': 4,
-  'West Hampstead|Finchley Road & Frognal|Overground_Mildmay_Richmond': 4,
-  'West Hampstead|Kilburn|Jubilee': 2,
-  'Westbourne Park|Ladbroke Grove|Circle': 5,
-  'Westbourne Park|Ladbroke Grove|Hammersmith & City': 5,
-  'Westbourne Park|Royal Oak|Circle': 5,
-  'Westbourne Park|Royal Oak|Hammersmith & City': 5,
-  'Westminster|Embankment|Circle': 5,
-  'Westminster|Embankment|District_Ealing_Broadway_Upminster': 2,
-  'Westminster|Embankment|District_Richmond_Upminster': 2,
-  'Westminster|Embankment|District_Wimbledon_Upminster': 2,
-  'Westminster|Green Park|Jubilee': 1,
-  'Westminster|St. James\'s Park|Circle': 5,
-  'Westminster|St. James\'s Park|District_Ealing_Broadway_Upminster': 2,
-  'Westminster|St. James\'s Park|District_Richmond_Upminster': 2,
-  'Westminster|St. James\'s Park|District_Wimbledon_Upminster': 2,
-  'Westminster|Waterloo|Jubilee': 1,
-  'Whitechapel|Aldgate East|District_Ealing_Broadway_Upminster': 2,
-  'Whitechapel|Aldgate East|District_Richmond_Upminster': 2,
-  'Whitechapel|Aldgate East|District_Wimbledon_Upminster': 2,
-  'Whitechapel|Aldgate East|Hammersmith & City': 5,
-  'Whitechapel|Canary Wharf|Elizabeth_Abbey_Wood_T4': 4,
-  'Whitechapel|Canary Wharf|Elizabeth_Abbey_Wood_T5': 4,
-  'Whitechapel|Liverpool Street|Elizabeth_Abbey_Wood_T4': 2,
-  'Whitechapel|Liverpool Street|Elizabeth_Abbey_Wood_T5': 2,
-  'Whitechapel|Liverpool Street|Elizabeth_Shenfield_T4': 2,
-  'Whitechapel|Liverpool Street|Elizabeth_Shenfield_T5': 2,
-  'Whitechapel|Shadwell (Overground)|Overground_Windrush_Clapham': 2,
-  'Whitechapel|Shadwell (Overground)|Overground_Windrush_CrystalPalace': 2,
-  'Whitechapel|Shadwell (Overground)|Overground_Windrush_NewCross': 2,
-  'Whitechapel|Shadwell (Overground)|Overground_Windrush_WCroydon': 2,
-  'Whitechapel|Shoreditch High Street|Overground_Windrush_Clapham': 2,
-  'Whitechapel|Shoreditch High Street|Overground_Windrush_CrystalPalace': 2,
-  'Whitechapel|Shoreditch High Street|Overground_Windrush_NewCross': 2,
-  'Whitechapel|Shoreditch High Street|Overground_Windrush_WCroydon': 2,
-  'Whitechapel|Stepney Green|District_Ealing_Broadway_Upminster': 2,
-  'Whitechapel|Stepney Green|District_Richmond_Upminster': 2,
-  'Whitechapel|Stepney Green|District_Wimbledon_Upminster': 2,
-  'Whitechapel|Stepney Green|Hammersmith & City': 5,
-  'Whitechapel|Stratford|Elizabeth_Shenfield_T4': 4,
-  'Whitechapel|Stratford|Elizabeth_Shenfield_T5': 4,
-  'Willesden Junction|Acton Central|Overground_Mildmay_Richmond': 8,
-  'Willesden Junction|Harlesden|Bakerloo': 3,
-  'Willesden Junction|Harlesden|Overground_Lioness': 8,
-  'Willesden Junction|Kensal Green|Bakerloo': 3,
-  'Willesden Junction|Kensal Green|Overground_Lioness': 8,
-  'Willesden Junction|Kensal Rise|Overground_Mildmay_Clapham': 4,
-  'Willesden Junction|Kensal Rise|Overground_Mildmay_Richmond': 4,
-  'Willesden Junction|Shepherd\'s Bush (Overground)|Overground_Mildmay_Clapham': 8,
-  'Wood Lane|Latimer Road|Circle': 5,
-  'Wood Lane|Latimer Road|Hammersmith & City': 5,
-  'Wood Lane|Shepherd\'s Bush Market|Circle': 5,
-  'Wood Lane|Shepherd\'s Bush Market|Hammersmith & City': 5,
-  'Woolwich Arsenal|Abbey Wood|Elizabeth_Abbey_Wood_T4': 4,
-  'Woolwich Arsenal|Abbey Wood|Elizabeth_Abbey_Wood_T5': 4,
-  'Woolwich Arsenal|Custom House for ExCel|Elizabeth_Abbey_Wood_T4': 4,
-  'Woolwich Arsenal|Custom House for ExCel|Elizabeth_Abbey_Wood_T5': 4,
-  'Woolwich Arsenal|King George V|DLR_Bank_Woolwich_Arsenal': 2,
-  'Woolwich Arsenal|King George V|DLR_Stratford_International_Woolwich_Arsenal': 2,
-};
-
-
-// Default wait when WAIT_MINS has no entry (rare; mainly real-world
-// quirks like Piccadilly skipping Turnham Green off-peak).
-const WAIT_MINS_DEFAULT = 3;
-
-// For a leg on `branchLine` from `legFrom` to `legTo`, return the
-// immediately-next station after `legFrom` along that branch in the
-// direction of `legTo`. Used to compute wait time at the boarding
-// station — WAIT_MINS is keyed by the *first hop*, not the leg's end.
-//
-// Falls back to `legTo` if the branch isn't found (last-resort; the
-// waitTime() lookup will then degrade to its no-direction fallback).
-function firstHopOnLeg(legFrom, legTo, branchLine) {
-  if (!branchLine || branchLine === 'Walk') return legTo;
-  const arr = (typeof NETWORK !== 'undefined') ? NETWORK[branchLine] : null;
-  if (!arr) return legTo;
-  // Stations can appear multiple times on a branch (Circle teardrop pivots
-  // like Paddington/Edgware Road on the Circle). We have to pick the
-  // *direction* of traversal, not just the first match.
-  //
-  // Pass 1: if any occurrence of legFrom has legTo as an immediate neighbour,
-  //         that's unambiguous — return it. Without this, a forward scan
-  //         from an early occurrence of legFrom that "passes through" legTo
-  //         later in the array would return the wrong neighbour.
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== legFrom) continue;
-    if (i + 1 < arr.length && arr[i + 1] === legTo) return legTo;
-    if (i - 1 >= 0          && arr[i - 1] === legTo) return legTo;
-  }
-  // Pass 2: scan forward/backward from each occurrence; pick the direction
-  //         that reaches legTo first without crossing back through legFrom.
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== legFrom) continue;
-    for (let j = i + 1; j < arr.length; j++) {
-      if (arr[j] === legFrom) break;       // looped back
-      if (arr[j] === legTo)   return arr[i + 1];
-    }
-    for (let j = i - 1; j >= 0; j--) {
-      if (arr[j] === legFrom) break;
-      if (arr[j] === legTo)   return arr[i - 1];
-    }
-  }
-  return legTo;
-}
-
-// Wait minutes for boarding `line` at `from` heading toward `to`.
-// Returns 0 when no line change is happening (caller decides).
-//
-// `line` may be a branch ID (e.g. 'Northern_Bank_to_Edgware') or a display
-// line ('Northern'). The build_headways pipeline writes branch-keyed
-// entries; user route input uses display lines.
-//
-// Lookup order:
-//   1. Exact (from|to|branch) — required for direction-sensitive cases
-//      (Circle teardrop pivots: Edgware Road → Paddington = 2, but
-//      Edgware Road → Baker Street = 5 on the same Circle line).
-//   2. If `line` is a display line, scan for any branch at `from` whose
-//      displayLine matches AND whose `to` matches — preserves direction.
-//   3. Same as 2 but ignoring `to` — last-resort fallback. Variance within
-//      a line at one station is usually small, but Circle pivots show
-//      this is not guaranteed; this is why we tried (2) first.
-//   4. WAIT_MINS_DEFAULT.
-//
-// Cache is keyed by (from, to, line) so direction-sensitive answers are
-// never poisoned across directions.
-const _WAIT_CACHE = {};
-function waitTime(from, to, line) {
-  if (!from || !line || line === 'Walk') return 0;
-  const fromName = _stationName(from);
-  const toName = to ? _stationName(to) : '';
-  const cacheKey = fromName + '|' + toName + '|' + line;
-  if (cacheKey in _WAIT_CACHE) return _WAIT_CACHE[cacheKey];
-
-  // 1. Exact (from, to, line) match.
-  if (toName) {
-    const exactKey = fromName + '|' + toName + '|' + line;
-    if (exactKey in WAIT_MINS) {
-      _WAIT_CACHE[cacheKey] = WAIT_MINS[exactKey];
-      return WAIT_MINS[exactKey];
-    }
-  }
-
-  // Scan candidates for (2) and (3).
-  const prefix = fromName + '|';
-  let directionMatch = null;  // (2): same line family + matching `to`
-  let anyMatch = null;        // (3): same line family, any `to`
-  for (const k in WAIT_MINS) {
-    if (!k.startsWith(prefix)) continue;
-    // k = 'From|To|BranchLine'
-    const lastPipe = k.lastIndexOf('|');
-    const branchLine = k.slice(lastPipe + 1);
-    if (branchLine !== line && displayLine(branchLine) !== line) continue;
-    if (anyMatch === null) anyMatch = WAIT_MINS[k];
-    if (toName) {
-      const kTo = k.slice(prefix.length, lastPipe);
-      if (kTo === toName) {
-        directionMatch = WAIT_MINS[k];
-        break;
-      }
-    }
-  }
-
-  const result = directionMatch !== null
-    ? directionMatch
-    : (anyMatch !== null ? anyMatch : WAIT_MINS_DEFAULT);
-  _WAIT_CACHE[cacheKey] = result;
-  return result;
-}
-
 
 // Returns all display lines that share physical platforms with `dl` at `stn`
 // (including `dl` itself). Used so a single walking-time entry covers every
@@ -4251,19 +3162,7 @@ function dijkstra(graph, start, end) {
         }
         if (visited) continue;
       }
-      // Wait time: when this travel edge is the first hop on a new line
-      // (i.e. the path just came through an `interchange` or `walk` node),
-      // add the line's half-headway at this station heading toward the
-      // next stop. The very first edge of the path (prev.type === 'start')
-      // gets no wait — players choose when to start.
-      let waitMins = 0;
-      if (edge.type === 'travel' && path.length > 0) {
-        const prev = path[path.length - 1];
-        if (prev.type === 'interchange' || prev.type === 'walk') {
-          waitMins = waitTime(station, edge.station, edge.line);
-        }
-      }
-      const nc = cost + edge.cost + waitMins;
+      const nc = cost + edge.cost;
       const entries = getEntries(edge.station, edge.line);
       // Accept if cost is not worse than our worst stored path (or we have room)
       const worst = entries.length > 0 ? entries[entries.length - 1].cost : Infinity;
@@ -4294,7 +3193,7 @@ function dijkstra(graph, start, end) {
           legMins += getTime(prev, stnDisplay, legLine) || 0;
           prev = stnDisplay;
         } else {
-          if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+          if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
           legFrom = prev; legLine = node.line;
           legMins = getTime(prev, stnDisplay, legLine) || 0;
           prev = stnDisplay;
@@ -4303,15 +3202,15 @@ function dijkstra(graph, start, end) {
         // OSI walk leg: emit as its own 'Walk' leg with the OSI time.
         // Flush any in-progress tube leg first, then push the walk, then
         // reset state so the next tube leg starts at the walk's destination.
-        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
         const walkMins = osiTime(prev, stnDisplay);
         if (walkMins != null) {
-          legs.push({from: prev, to: stnDisplay, line: 'Walk', branchLine: 'Walk', mins: walkMins});
+          legs.push({from: prev, to: stnDisplay, line: 'Walk', mins: walkMins});
         }
         legFrom = stnDisplay; legLine = 'Walk'; legMins = 0;
         prev = stnDisplay;
       } else if (node.type === 'interchange') {
-        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
         // For same-station interchanges, node.station === prev. For cross-station
         // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
         // and we need to update both legFrom AND prev so the next travel leg's
@@ -4320,7 +3219,7 @@ function dijkstra(graph, start, end) {
         prev = stnDisplay;
       }
     }
-    if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+    if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), mins:legMins});
     return legs;
   }
 
@@ -4503,38 +3402,16 @@ function buildUserLegs(start, route) {
     // belt-and-braces if anyone changes that.)
     if (nextLine === 'Walk') return null;
 
-    // Wait time for boarding `nextLine` at `from`. `opts.nextHop` is the
-    // immediately next station on the new line (the destination of the
-    // upcoming leg's first hop) — this matches the WAIT_MINS key shape.
-    // For Bank/Monument cross-walks and implicit cross-walks, the wait
-    // applies at the *destination* station on the new line.
-    const waitAt = (opts.isBankMonumentCross || opts.needsImplicitCrossWalk)
-      ? (opts.partner || opts.to)
-      : from;
-    const nextLineForWait = opts.isBankMonumentCross
-      ? opts.nextLineForBmCross
-      : nextLine;
-    const waitMins = waitTime(waitAt, opts.nextHop, nextLineForWait);
-
     if (opts.isBankMonumentCross) {
-      const walkMins = interchangeTime(from, prevLine, opts.nextLineForBmCross);
-      return {
-        entry: {at: `${from}↔${opts.to}`, walkMins, waitMins, mins: walkMins + waitMins},
-        mins: walkMins + waitMins,
-      };
+      const xwMins = interchangeTime(from, prevLine, opts.nextLineForBmCross);
+      return {entry: {at: `${from}↔${opts.to}`, mins: xwMins}, mins: xwMins};
     }
     if (opts.needsImplicitCrossWalk) {
-      const walkMins = interchangeTime(from, prevLine, nextLine);
-      return {
-        entry: {at: `${from}↔${opts.partner}`, walkMins, waitMins, mins: walkMins + waitMins},
-        mins: walkMins + waitMins,
-      };
+      const xwMins = interchangeTime(from, prevLine, nextLine);
+      return {entry: {at: `${from}↔${opts.partner}`, mins: xwMins}, mins: xwMins};
     }
-    const walkMins = interchangeTime(from, prevLine, nextLine);
-    return {
-      entry: {at: from, walkMins, waitMins, mins: walkMins + waitMins},
-      mins: walkMins + waitMins,
-    };
+    const ic = interchangeTime(from, prevLine, nextLine);
+    return {entry: {at: from, mins: ic}, mins: ic};
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -4626,7 +3503,6 @@ function buildUserLegs(start, route) {
         needsImplicitCrossWalk,
         partner,
         to,
-        nextHop: to,
         nextLineForBmCross,
       });
       if (ic) {
@@ -4714,150 +3590,6 @@ function requiresChange(a, b) {
 // can be adjusted without diving into todayPuzzle(). See the rule explanations
 // in todayPuzzle() for what each gate is doing.
 // ─────────────────────────────────────────────────────────────────────────────
-// Bumped whenever scoring semantics change in a way that would render past
-// player results incomparable to fresh recomputes. Stored alongside each
-// saved result; the restore path uses the snapshot if version matches, and
-// recomputes (with current scoring) only when version is missing/older.
-//   1 = original (travel time only)
-//   2 = + per-edge wait times from TfL headways (June 2026)
-const SCORING_VERSION = 2;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ANNOUNCEMENTS
-// ─────────────────────────────────────────────────────────────────────────────
-// One dismissible top-of-page banner per entry. Newest at the top of the
-// array is shown first; only ONE banner is visible at a time (whichever is
-// the most recent that this player has not dismissed and that hasn't expired).
-//
-// Fields:
-//   id          — stable string. Used as the per-player localStorage key for
-//                 dismissal. NEVER reuse an ID across announcements.
-//   headline    — short bold lead-in (e.g. "Update").
-//   body        — HTML allowed. Keep to one short sentence on mobile.
-//   learnMoreAnchor — DOM id within the How-to-play modal to scroll to when
-//                     'Learn more' is clicked. The modal opens, then scrolls.
-//                     Set to null to hide the Learn more link.
-//   expiresOn   — ISO date 'YYYY-MM-DD' (London). After this date, the banner
-//                 is hidden even if the player never dismissed it. Defensive:
-//                 prevents stale banners sitting on the page for non-engaged
-//                 players if we forget to remove the entry.
-const ANNOUNCEMENTS = [
-  {
-    id: 'wait-times-2026-06',
-    headline: 'Update',
-    body: 'Routes now factor in realistic <strong>average wait times</strong> at each change.',
-    learnMoreAnchor: 'whats-new-wait-times',
-    expiresOn: '2026-07-15',
-  },
-];
-
-const ANNOUNCEMENT_DISMISS_KEY = 'tubed_announcement_dismissed';
-
-function _getDismissedAnnouncements() {
-  try {
-    const raw = localStorage.getItem(ANNOUNCEMENT_DISMISS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch(e) { return {}; }
-}
-function _setDismissedAnnouncements(d) {
-  try { localStorage.setItem(ANNOUNCEMENT_DISMISS_KEY, JSON.stringify(d)); } catch(e){}
-}
-
-// Pick the first announcement that's neither dismissed nor expired. Returns
-// null if there's nothing to show.
-function _activeAnnouncement(now) {
-  now = now || new Date();
-  const dismissed = _getDismissedAnnouncements();
-  for (const a of ANNOUNCEMENTS) {
-    if (dismissed[a.id]) continue;
-    if (a.expiresOn) {
-      // Compare ISO date strings directly (lexicographic order is correct
-      // for YYYY-MM-DD). `now` is the player's local date; that's fine —
-      // expiry doesn't need to be timezone-precise.
-      const today = now.toISOString().slice(0, 10);
-      if (today > a.expiresOn) continue;
-    }
-    return a;
-  }
-  return null;
-}
-
-function renderAnnouncements() {
-  const bar = document.getElementById('announcement-bar');
-  if (!bar) return;
-  const a = _activeAnnouncement();
-  if (!a) { bar.innerHTML = ''; return; }
-  // Build via DOM rather than template string so the body HTML is the only
-  // place that's interpreted as HTML (and that's authored, not user input).
-  bar.innerHTML = '';
-  const wrap = document.createElement('div');
-  wrap.className = 'announcement-banner';
-  wrap.setAttribute('role', 'status');
-
-  const icon = document.createElement('span');
-  icon.className = 'announcement-banner-icon';
-  icon.textContent = a.headline || 'New';
-  wrap.appendChild(icon);
-
-  const body = document.createElement('span');
-  body.className = 'announcement-banner-body';
-  body.innerHTML = a.body;  // authored markup — safe by design
-  if (a.learnMoreAnchor) {
-    const link = document.createElement('a');
-    link.className = 'announcement-banner-link';
-    link.textContent = 'Learn more';
-    link.onclick = (e) => { e.preventDefault(); _openAnnouncementDetails(a); };
-    body.appendChild(document.createTextNode(' '));
-    body.appendChild(link);
-  }
-  wrap.appendChild(body);
-
-  const close = document.createElement('button');
-  close.className = 'announcement-banner-close';
-  close.setAttribute('aria-label', 'Dismiss announcement');
-  close.innerHTML = '&times;';
-  close.onclick = () => dismissAnnouncement(a.id);
-  wrap.appendChild(close);
-
-  bar.appendChild(wrap);
-}
-
-function dismissAnnouncement(id) {
-  const d = _getDismissedAnnouncements();
-  d[id] = new Date().toISOString();
-  _setDismissedAnnouncements(d);
-  renderAnnouncements();
-}
-
-// Open the How-to-play modal and scroll the chosen anchor into view. Falls
-// back to just opening the modal if the anchor isn't in the DOM yet.
-//
-// We also mark this announcement for auto-dismissal on the next modal
-// close. The intent: once the player has clicked "Learn more" and read
-// the explanation, they've engaged with the announcement, so the banner
-// no longer needs to nag them.
-let _pendingAnnouncementDismiss = null;
-function _openAnnouncementDetails(a) {
-  _pendingAnnouncementDismiss = a.id;
-  openModal();
-  if (!a.learnMoreAnchor) return;
-  requestAnimationFrame(() => {
-    const el = document.getElementById(a.learnMoreAnchor);
-    if (el && typeof el.scrollIntoView === 'function') {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-}
-
-// Called by closeModal() to dismiss any announcement that was opened via
-// Learn more. Safe to call when no pending dismiss exists.
-function _consumePendingAnnouncementDismiss() {
-  if (!_pendingAnnouncementDismiss) return;
-  const id = _pendingAnnouncementDismiss;
-  _pendingAnnouncementDismiss = null;
-  dismissAnnouncement(id);
-}
-
 const PUZZLE_CONFIG = {
   // Optimal-time bounds per mode (minutes). Outside these, the candidate is
   // rejected.
@@ -4906,19 +3638,15 @@ function londonDateParts(d) {
 }
 
 // Cache key for today's pre-generated puzzles. Each entry stores just the
-// {start, end} pair, the routes/graph are rebuilt cheaply on demand
+// {start, end} pair — the routes/graph are rebuilt cheaply on demand
 // (one targeted dijkstra ~130ms vs up to 200 attempts at ~95ms each).
 // Auto-invalidates when the date rolls over. Bumped to v2 when the date
-// source switched from local time to London time, old entries are keyed by
+// source switched from local time to London time — old entries are keyed by
 // a date string that may not match the new London date. Bumped to v3 when
 // the easy/hard filters were tightened (easy rejects walks, hard requires
-// ≥3 tube legs), players who pre-cached 06-12+ under the old rules would
+// ≥3 tube legs) — players who pre-cached 06-12+ under the old rules would
 // otherwise see stale pairs that no longer satisfy the current filter.
-// Bumped to v7 when per-edge wait times were added to scoring (June 2026):
-// optimal routes can change (sometimes by several minutes), so any cached
-// pair pre-computed against pre-wait optimals could land outside the new
-// mode bounds (e.g. exceed the 60-min hard cap).
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v7';
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v6';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5013,18 +3741,6 @@ function todayPuzzle(mode, opts) {
   //      they will need to clear localStorage or wait until tomorrow.
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
-
-  // 2026-06-22 Hard: wait-time scoring was added mid-day. Many candidates
-  // that previously passed the hard bounds now exceed them, shifting the
-  // seeded generator's first acceptable pair. Pin the published pair
-  // (Willesden Junction → Arsenal) so returning players see the same
-  // puzzle they started on this morning. New optimal under wait-aware
-  // scoring is 35 min (well within the 15-60 min hard band).
-  if (m === 'hard' && date === '2026-06-22') {
-    const start = 'Willesden Junction', end = 'Arsenal';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
 
   // 2026-06-11 Easy: Canary Wharf Elizabeth↔Jubilee interchange was corrected
   // mid-day (9 → 6) to kill an OSI walk-arbitrage optimal (CW→HQ→CW loop), and
@@ -5582,7 +4298,6 @@ function maybeShowSolvedResult() {
 // ═══════════════════════════════════════════════════════════════════════════════
 function init() {
   document.getElementById('yr').textContent = new Date().getFullYear();
-  renderAnnouncements();
   currentMode = pickDefaultMode();
   document.querySelectorAll('.mode-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.mode === currentMode);
@@ -5966,7 +4681,7 @@ function renderRoute() {
   // Hint text
   const hint = document.getElementById('route-hint');
   if (hint) hint.textContent = nbDestLocked
-    ? 'Route complete - submit when ready!'
+    ? 'Route complete — submit when ready!'
     : 'Add stops above, ending at your destination';
 
   updateMap();
@@ -5999,7 +4714,7 @@ function validateStep(fromStn, toStn, line) {
       return {ok: false, error: `That's your start station.`};
     }
     if (!isOsi(fromStn, toStn)) {
-      return {ok: false, error: `You can't walk from ${fromStn} to ${toStn} - they're not a recognised walking interchange.`};
+      return {ok: false, error: `You can't walk from ${fromStn} to ${toStn} — they're not a recognised walking interchange.`};
     }
     return {ok: true};
   }
@@ -6015,7 +4730,7 @@ function validateStep(fromStn, toStn, line) {
   }
   const effectiveFrom = lineServesPartner ? partner : fromStn;
   if (!isBankMonumentWalk && !shareSubLine(effectiveFrom, toStn, line)) {
-    return {ok: false, error: `You can't go directly from ${fromStn} to ${toStn} on the ${line} line - a change is required.`};
+    return {ok: false, error: `You can't go directly from ${fromStn} to ${toStn} on the ${line} line — a change is required.`};
   }
   if (toStn === fromStn) {
     return {ok: false, error: `You're already at ${toStn}.`};
@@ -6183,18 +4898,9 @@ function renderRouteLegsHtml(legs, interchanges) {
       </div>`;
     }
     if (interchanges[i]) {
-      const ic = interchanges[i];
-      // Always show the breakdown when both pieces are available. A
-      // 0-min wait is a red flag worth surfacing — it should never happen
-      // for a real line change and indicates either missing data or a
-      // branchLine-resolution bug.
-      const hasBreakdown = (typeof ic.walkMins === 'number' && typeof ic.waitMins === 'number');
-      const breakdownStr = hasBreakdown
-        ? ` <span style="opacity:0.7;">(${ic.walkMins} walk + ${ic.waitMins} wait)</span>`
-        : '';
       html += `<div class="opt-leg" style="padding-left:4px;">
         <div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--brd);flex-shrink:0;"></div>
-        <div style="color:var(--muted);font-size:12px;">Change at ${ic.at} &nbsp;+${ic.mins} min${breakdownStr}</div>
+        <div style="color:var(--muted);font-size:12px;">Change at ${interchanges[i].at} &nbsp;+${interchanges[i].mins} min</div>
       </div>`;
     }
   });
@@ -6208,26 +4914,21 @@ function renderRouteLegsHtml(legs, interchanges) {
 // "PERSIST RESULT" comment in submitRoute for what we do persist.
 function renderResultCard(data) {
   const { puzzleData: pd, userLegsData, hintsUsed: hu, completionSecs, mode } = data;
+  const userMins    = userLegsData.totalMins;
+  const optimalMins = pd.optimal.mins;
+  const diff        = userMins - optimalMins;
 
-  // If a scoring snapshot exists from when the player originally solved
-  // this puzzle, use it. This preserves their displayed medal/totals
-  // across deploys that change scoring (e.g. wait times, OSI cost model).
-  // Without this, refreshing yesterday's solved puzzle could show a
-  // different medal than the player actually got.
-  const persisted = mode ? getModeStore(mode) : null;
-  const snapshot = persisted && persisted.submittedScoring;
-  const useSnapshot = snapshot && snapshot.version === SCORING_VERSION;
-
-  // Compute the *current-scoring* values up front. We may discard them in
-  // favour of the snapshot, but having them in scope keeps the branches
-  // below symmetrical (totals + display data both swappable).
-  const currentUserMins    = userLegsData.totalMins;
-  const currentOptimalMins = pd.optimal.mins;
-  const currentDiff        = currentUserMins - currentOptimalMins;
+  let medal, color, title, subtitle;
+  if (diff <= 0)       { medal='🥇'; color='#b45309'; title='Optimal!';        subtitle='You matched the fastest possible route!'; }
+  else if (diff <= 2)  { medal='🥇'; color='#b45309'; title='Perfect!';        subtitle=`Only ${diff} min off optimal`; }
+  else if (diff <= 5)  { medal='🥈'; color='#64748b'; title='Nearly optimal!'; subtitle=`${diff} min off optimal`; }
+  else if (diff <= 10) { medal='🥉'; color='#92400e'; title='Good effort!';    subtitle=`${diff} min off optimal`; }
+  else if (diff <= 20) { medal='⭐'; color='#1d4ed8'; title='Not bad!';        subtitle=`${diff} min off optimal`; }
+  else                 { medal='🚇'; color='var(--muted)'; title='Keep practicing!'; subtitle=`${diff} min off optimal`; }
 
   // Optimal-route interchanges (same logic as submit-time render).
   const BM_PARTNER_MAP = {'Bank': 'Monument', 'Monument': 'Bank'};
-  const currentOptInterchanges = pd.optimal.legs.slice(0, -1).map((l, i) => {
+  const optInterchanges = pd.optimal.legs.slice(0, -1).map((l, i) => {
     const nextLeg = pd.optimal.legs[i + 1];
     if (l.line === 'Walk' || nextLeg.line === 'Walk') return null;
     const at = l.to;
@@ -6235,84 +4936,11 @@ function renderResultCard(data) {
     const isCrossWalk = partner &&
       !stationsForDisplayLine(nextLeg.line).includes(at) &&
       stationsForDisplayLine(nextLeg.line).includes(partner);
-    const walkMins = interchangeTime(at, l.line, nextLeg.line);
-    // Wait is the half-headway for boarding nextLeg at the boarding station.
-    // WAIT_MINS is keyed by the *first hop* of the next leg, not its end
-    // station, so we must resolve `at → firstHop` along the branch.
-    // Without this, multi-hop legs fall back to a non-direction lookup,
-    // which can return the wrong value at Circle teardrop pivots
-    // (Edgware Road → Paddington = 2 vs → Baker Street = 5).
-    const boardAt = nextLeg.from || at;
-    const firstHop = firstHopOnLeg(boardAt, nextLeg.to, nextLeg.branchLine);
-    const waitMins = waitTime(at, firstHop, nextLeg.branchLine);
-    return {
-      at: isCrossWalk ? `${at}↔${partner}` : at,
-      walkMins,
-      waitMins,
-      mins: walkMins + waitMins,
-    };
+    return { at: isCrossWalk ? `${at}↔${partner}` : at, mins: interchangeTime(at, l.line, nextLeg.line) };
   });
-
-  let userMins, optimalMins, diff, medal, color, title, subtitle;
-  let optInterchanges, userInterchanges, optLegs, userLegs;
-  if (useSnapshot) {
-    userMins    = snapshot.userMins;
-    optimalMins = snapshot.optimalMins;
-    diff        = snapshot.diff;
-    medal       = snapshot.medal;
-    color       = snapshot.medalColor;
-    title       = snapshot.medalTitle;
-    subtitle    = snapshot.medalSubtitle;
-    // Use snapshotted display data if present (snapshots written before this
-    // change won't have it — fall back to current values then).
-    optLegs           = snapshot.optLegs           || pd.optimal.legs;
-    optInterchanges   = snapshot.optInterchanges   || currentOptInterchanges;
-    userLegs          = snapshot.userLegs          || userLegsData.legs;
-    userInterchanges  = snapshot.userInterchanges  || userLegsData.interchanges;
-  } else {
-    userMins    = currentUserMins;
-    optimalMins = currentOptimalMins;
-    diff        = currentDiff;
-    if (diff <= 0)       { medal='🥇'; color='#b45309'; title='Optimal!';        subtitle='You matched the fastest possible route!'; }
-    else if (diff <= 2)  { medal='🥇'; color='#b45309'; title='Perfect!';        subtitle=`Only ${diff} min off optimal`; }
-    else if (diff <= 5)  { medal='🥈'; color='#64748b'; title='Nearly optimal!'; subtitle=`${diff} min off optimal`; }
-    else if (diff <= 10) { medal='🥉'; color='#92400e'; title='Good effort!';    subtitle=`${diff} min off optimal`; }
-    else if (diff <= 20) { medal='⭐'; color='#1d4ed8'; title='Not bad!';        subtitle=`${diff} min off optimal`; }
-    else                 { medal='🚇'; color='var(--muted)'; title='Keep practicing!'; subtitle=`${diff} min off optimal`; }
-    optLegs           = pd.optimal.legs;
-    optInterchanges   = currentOptInterchanges;
-    userLegs          = userLegsData.legs;
-    userInterchanges  = userLegsData.interchanges;
-
-    // Write the snapshot here (single source of truth) so:
-    //   (a) submitRoute only needs to render — no duplicate scoring logic
-    //   (b) the FIRST render of any solved puzzle under a new SCORING_VERSION
-    //       freezes what the player saw, fixing the v1→v2 launch problem
-    //       where players who solved before the deploy had no snapshot.
-    // Skip if there's no mode (defensive — shouldn't happen) or if a
-    // current-version snapshot somehow exists (should have hit useSnapshot).
-    if (persisted && (!snapshot || snapshot.version !== SCORING_VERSION)) {
-      persisted.submittedScoring = {
-        version: SCORING_VERSION,
-        userMins,
-        optimalMins,
-        diff,
-        medal,
-        medalColor: color,
-        medalTitle: title,
-        medalSubtitle: subtitle,
-        optLegs,
-        optInterchanges,
-        userLegs,
-        userInterchanges,
-      };
-      setModeStore(mode, persisted);
-    }
-  }
-
-  const optLegsHtml  = renderRouteLegsHtml(optLegs, optInterchanges);
-  const userLegsHtml = renderRouteLegsHtml(userLegs, userInterchanges);
-  const numChanges   = userLegs.length - 1;
+  const optLegsHtml  = renderRouteLegsHtml(pd.optimal.legs, optInterchanges);
+  const userLegsHtml = renderRouteLegsHtml(userLegsData.legs, userLegsData.interchanges);
+  const numChanges   = userLegsData.legs.length - 1;
 
   const hintsLine = hu === 0
     ? `<div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:4px;">✨ No hints needed</div>`
@@ -6338,6 +4966,7 @@ function renderResultCard(data) {
         <div class="opt-lbl">Optimal route</div>
         ${optLegsHtml}
       </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:12px;">Travel time only — no waiting included</div>
       <div class="puzzle-num">Tubed #${pd.puzzleNum} · ${pd.date} · ${mode === 'hard' ? 'Hard' : 'Easy'}</div>
       <button class="btn-share" id="share-btn" onclick="shareResult(${diff},${hu},${numChanges},${completionSecs})">&#128172; Share my result</button>
       <button class="btn-copy-fallback" id="copy-btn" onclick="copyResult(${diff},${hu},${numChanges},${completionSecs})" style="display:none;">&#128203; Copy to clipboard</button>
@@ -6400,7 +5029,7 @@ function submitRoute() {
       setTimeout(() => {
         hint.style.color = '';
         hint.textContent = nbDestLocked
-          ? 'Route complete - submit when ready!'
+          ? 'Route complete — submit when ready!'
           : 'Add stops above, ending at your destination';
       }, 5000);
     }
@@ -6471,11 +5100,6 @@ function submitRoute() {
   cardSnap.submittedRoute     = userRoute.slice();
   cardSnap.completionSecs     = completionSecs;
   cardSnap.submittedHintsUsed = hintsUsed;
-  // Note: the scoring snapshot (submittedScoring) is written by
-  // renderResultCard() the first time it computes fresh values for a
-  // given SCORING_VERSION. Doing it there (not here) keeps a single
-  // source of truth for scoring and means pre-existing players whose
-  // results predate the current version get a snapshot on first reopen.
   // Legacy resultHtml from older versions: clear it so it doesn't get
   // accidentally re-injected later. New restore path rebuilds via
   // renderResultCard() from submittedRoute.
@@ -6631,7 +5255,6 @@ function closeModal() {
   m.classList.remove('open');
   setTimeout(()=>m.style.display='none',200);
   if (!timerInterval && !timerStopped) startTimer();
-  _consumePendingAnnouncementDismiss();
 }
 function closeModalOnBg(e) { if(e.target===document.getElementById('modal-overlay')) closeModal(); }
 
@@ -6660,11 +5283,11 @@ async function submitFeedback() {
 
   const payload = {
     access_key: '24bf0458-2dcb-492b-840c-a8e37b6a8b7d',
-    subject: `Tubed Feedback - Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`,
+    subject: `Tubed Feedback — Puzzle #${puzzleData ? puzzleData.puzzleNum : '?'}`,
     from_name: 'Tubed Player',
     message: msg,
     email: email || 'noreply@playtubed.co.uk',
-    puzzle: puzzleData ? `#${puzzleData.puzzleNum} - ${puzzleData.start} → ${puzzleData.end}` : 'Unknown',
+    puzzle: puzzleData ? `#${puzzleData.puzzleNum} — ${puzzleData.start} → ${puzzleData.end}` : 'Unknown',
     botcheck: ''
   };
 
