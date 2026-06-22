@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-21",
-  "puzzleNum": 80,
+  "date": "2026-06-22",
+  "puzzleNum": 81,
   "easy": {
-    "start": "Oxford Circus",
-    "end": "Ravenscourt Park"
+    "start": "Golders Green",
+    "end": "Notting Hill Gate"
   },
   "hard": {
-    "start": "Gloucester Road",
-    "end": "Clapham South"
+    "start": "Willesden Junction",
+    "end": "Arsenal"
   }
 }

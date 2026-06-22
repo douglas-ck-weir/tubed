@@ -1,15 +1,4 @@
 {
-  "2026-06-21": {
-    "puzzleNum": 80,
-    "easy": {
-      "start": "Oxford Circus",
-      "end": "Ravenscourt Park"
-    },
-    "hard": {
-      "start": "Gloucester Road",
-      "end": "Clapham South"
-    }
-  },
   "2026-06-22": {
     "puzzleNum": 81,
     "easy": {
@@ -112,8 +101,8 @@
   "2026-07-01": {
     "puzzleNum": 90,
     "easy": {
-      "start": "Mansion House",
-      "end": "Stockwell"
+      "start": "Ravenscourt Park",
+      "end": "Oxford Circus"
     },
     "hard": {
       "start": "Crystal Palace",
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Goldhawk Road",
       "end": "Colliers Wood"
+    }
+  },
+  "2026-09-19": {
+    "puzzleNum": 170,
+    "easy": {
+      "start": "Limehouse",
+      "end": "Mansion House"
+    },
+    "hard": {
+      "start": "Holloway Road",
+      "end": "Hackney Central"
     }
   }
 }
