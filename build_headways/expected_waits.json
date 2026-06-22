@@ -1,0 +1,58 @@
+{
+  "_comment": "Hand-validated wait times for well-known interchanges. Used by `--validate` (check 6) to catch regressions. Tolerance: ±1 minute. Update when TfL frequencies change.",
+  "_format": "from|to|branch_id: expected_wait_minutes",
+
+  "_kings_cross": "Kings Cross is the densest interchange in the network. All 6 lines.",
+  "Kings Cross St. Pancras|Euston Square|Hammersmith & City": 5,
+  "Kings Cross St. Pancras|Euston Square|Circle": 5,
+  "Kings Cross St. Pancras|Euston Square|Metropolitan_Uxbridge_Aldgate": 2,
+  "Kings Cross St. Pancras|Euston|Northern_Bank_to_High_Barnet": 1,
+  "Kings Cross St. Pancras|Euston|Victoria": 1,
+  "Kings Cross St. Pancras|Russell Square|Piccadilly_T5_Cockfosters": 1,
+
+  "_victoria_line_core": "Fastest line, ~27 tph off-peak.",
+  "Stockwell|Vauxhall|Victoria": 1,
+  "Victoria|Pimlico|Victoria": 1,
+  "Oxford Circus|Warren Street|Victoria": 1,
+
+  "_jubilee_core": "30 tph peak / 24 off-peak.",
+  "Bond Street|Green Park|Jubilee": 1,
+  "Waterloo|Southwark|Jubilee": 1,
+
+  "_central_core": "27-34 tph on core White City to Leytonstone.",
+  "Bond Street|Marble Arch|Central_Ealing_Broadway_Epping": 1,
+  "Oxford Circus|Bond Street|Central_Ealing_Broadway_Epping": 1,
+
+  "_circle_hc": "Sub-surface, 6 tph each = 5 min half-headway.",
+  "Liverpool Street|Aldgate|Circle": 5,
+  "Aldgate East|Whitechapel|Hammersmith & City": 5,
+  "Baker Street|Edgware Road|Circle": 5,
+
+  "_district_trunk": "Trunk through central London ~8-10 tph combined.",
+  "Earl's Court|Gloucester Road|District_Wimbledon_Upminster": 1,
+  "Victoria|Sloane Square|District_Wimbledon_Upminster": 2,
+  "Westminster|St. James's Park|District_Wimbledon_Upminster": 2,
+
+  "_metropolitan_trunk": "Aldgate-Baker St trunk combines 4 branches ~16 tph.",
+  "Baker Street|Great Portland Street|Metropolitan_Uxbridge_Aldgate": 2,
+
+  "_overground_low_freq": "Mildmay / Lioness / Suffragette ~4 tph = 7-8 min wait.",
+  "Highbury & Islington|Canonbury|Overground_Mildmay_Clapham": 4,
+  "Harrow & Wealdstone|Kenton|Overground_Lioness": 8,
+  "Gospel Oak|Upper Holloway|Overground_Suffragette": 8,
+
+  "_overground_high_freq": "Windrush core (combined sub-branches) is more frequent.",
+  "Whitechapel|Shoreditch High Street|Overground_Windrush_Clapham": 2,
+
+  "_elizabeth_core": "16 tph core ~2 min wait.",
+  "Bond Street|Paddington|Elizabeth_Abbey_Wood_T4": 2,
+  "Liverpool Street|Whitechapel|Elizabeth_Abbey_Wood_T4": 2,
+
+  "_dlr_core": "12 tph Bank-Lewisham trunk.",
+  "Bank|Shadwell|DLR_Bank_Lewisham": 2,
+  "Canary Wharf|West India Quay|DLR_Bank_Lewisham": 2,
+
+  "_branch_endings": "Outer branches lower freq.",
+  "Heathrow Terminal 5|Heathrow Terminals 2&3|Piccadilly_T5_Cockfosters": 5,
+  "Uxbridge|Hillingdon|Piccadilly_Uxbridge_Cockfosters": 10
+}
