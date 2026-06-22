@@ -39,8 +39,8 @@
       "end": "Regent's Park"
     },
     "hard": {
-      "start": "Surrey Quays",
-      "end": "Knightsbridge"
+      "start": "New Cross Gate",
+      "end": "Edgware Road"
     }
   },
   "2026-06-26": {
@@ -50,8 +50,8 @@
       "end": "Ravenscourt Park"
     },
     "hard": {
-      "start": "Chalk Farm",
-      "end": "Crystal Palace"
+      "start": "Stamford Brook",
+      "end": "Colliers Wood"
     }
   },
   "2026-06-27": {
@@ -61,8 +61,8 @@
       "end": "Highbury & Islington"
     },
     "hard": {
-      "start": "Ealing Broadway",
-      "end": "Harrow on the Hill"
+      "start": "Holloway Road",
+      "end": "Limehouse"
     }
   },
   "2026-06-28": {
@@ -72,8 +72,8 @@
       "end": "Barons Court"
     },
     "hard": {
-      "start": "Tufnell Park",
-      "end": "Marylebone"
+      "start": "White City",
+      "end": "Dalston Kingsland"
     }
   },
   "2026-06-29": {
@@ -83,8 +83,8 @@
       "end": "Parsons Green"
     },
     "hard": {
-      "start": "Hampstead",
-      "end": "Marylebone"
+      "start": "Clapham Common",
+      "end": "Earl's Court"
     }
   },
   "2026-06-30": {
@@ -94,8 +94,8 @@
       "end": "Shadwell"
     },
     "hard": {
-      "start": "Brent Cross",
-      "end": "Surrey Quays"
+      "start": "Harrow on the Hill",
+      "end": "Oval"
     }
   },
   "2026-07-01": {
@@ -112,8 +112,8 @@
   "2026-07-02": {
     "puzzleNum": 91,
     "easy": {
-      "start": "Lancaster Gate",
-      "end": "High Street Kensington"
+      "start": "London Bridge",
+      "end": "Chiswick Park"
     },
     "hard": {
       "start": "Surrey Quays",
@@ -127,8 +127,8 @@
       "end": "Holloway Road"
     },
     "hard": {
-      "start": "Belsize Park",
-      "end": "Regent's Park"
+      "start": "Old Street",
+      "end": "Bayswater"
     }
   },
   "2026-07-04": {
@@ -171,26 +171,26 @@
       "end": "Clapham South"
     },
     "hard": {
-      "start": "Finsbury Park",
-      "end": "Shadwell"
+      "start": "Baker Street",
+      "end": "Dalston Kingsland"
     }
   },
   "2026-07-08": {
     "puzzleNum": 97,
     "easy": {
-      "start": "Clapham South",
-      "end": "Westminster"
+      "start": "Aldgate East",
+      "end": "Elephant & Castle"
     },
     "hard": {
-      "start": "Hyde Park Corner",
-      "end": "Dalston Kingsland"
+      "start": "Knightsbridge",
+      "end": "Clapham Junction"
     }
   },
   "2026-07-09": {
     "puzzleNum": 98,
     "easy": {
-      "start": "West Ham",
-      "end": "Pimlico"
+      "start": "Finsbury Park",
+      "end": "Ladbroke Grove"
     },
     "hard": {
       "start": "Lambeth North",
@@ -200,12 +200,12 @@
   "2026-07-10": {
     "puzzleNum": 99,
     "easy": {
-      "start": "Aldgate",
-      "end": "Willesden Junction"
+      "start": "West Brompton",
+      "end": "Waterloo"
     },
     "hard": {
-      "start": "Wembley Central",
-      "end": "Limehouse"
+      "start": "Chiswick Park",
+      "end": "Colliers Wood"
     }
   },
   "2026-07-11": {
@@ -215,8 +215,8 @@
       "end": "Arsenal"
     },
     "hard": {
-      "start": "Edgware Road",
-      "end": "Limehouse"
+      "start": "Borough",
+      "end": "Knightsbridge"
     }
   },
   "2026-07-12": {
@@ -237,8 +237,8 @@
       "end": "Barons Court"
     },
     "hard": {
-      "start": "Temple",
-      "end": "Preston Road"
+      "start": "Harrow & Wealdstone",
+      "end": "Sloane Square"
     }
   },
   "2026-07-14": {
@@ -259,8 +259,8 @@
       "end": "Richmond"
     },
     "hard": {
-      "start": "Chancery Lane",
-      "end": "Richmond"
+      "start": "East Putney",
+      "end": "Angel"
     }
   },
   "2026-07-16": {
@@ -281,8 +281,8 @@
       "end": "Whitechapel"
     },
     "hard": {
-      "start": "Marylebone",
-      "end": "Limehouse"
+      "start": "Parsons Green",
+      "end": "Dalston Kingsland"
     }
   },
   "2026-07-18": {
@@ -303,8 +303,8 @@
       "end": "Knightsbridge"
     },
     "hard": {
-      "start": "Preston Road",
-      "end": "St. James's Park"
+      "start": "Arsenal",
+      "end": "Crystal Palace"
     }
   },
   "2026-07-20": {
@@ -321,12 +321,12 @@
   "2026-07-21": {
     "puzzleNum": 110,
     "easy": {
-      "start": "Acton Town",
-      "end": "Finchley Road"
+      "start": "Camden Town",
+      "end": "Highbury & Islington"
     },
     "hard": {
-      "start": "Sloane Square",
-      "end": "Harrow on the Hill"
+      "start": "Harrow on the Hill",
+      "end": "West Kensington"
     }
   },
   "2026-07-22": {
@@ -343,12 +343,12 @@
   "2026-07-23": {
     "puzzleNum": 112,
     "easy": {
-      "start": "Wembley Park",
-      "end": "Charing Cross"
+      "start": "Liverpool Street",
+      "end": "North Greenwich"
     },
     "hard": {
-      "start": "High Street Kensington",
-      "end": "Angel"
+      "start": "Old Street",
+      "end": "Marylebone"
     }
   },
   "2026-07-24": {
@@ -369,8 +369,8 @@
       "end": "Tower Hill"
     },
     "hard": {
-      "start": "New Cross Gate",
-      "end": "Belsize Park"
+      "start": "Preston Road",
+      "end": "Wimbledon"
     }
   },
   "2026-07-26": {
@@ -387,12 +387,12 @@
   "2026-07-27": {
     "puzzleNum": 116,
     "easy": {
-      "start": "Holloway Road",
-      "end": "Southfields"
+      "start": "Notting Hill Gate",
+      "end": "Borough"
     },
     "hard": {
-      "start": "Lancaster Gate",
-      "end": "Harrow on the Hill"
+      "start": "Clapham North",
+      "end": "Putney Bridge"
     }
   },
   "2026-07-28": {
@@ -413,8 +413,8 @@
       "end": "Latimer Road"
     },
     "hard": {
-      "start": "East Putney",
-      "end": "Harrow on the Hill"
+      "start": "Colliers Wood",
+      "end": "Sloane Square"
     }
   },
   "2026-07-30": {
@@ -424,8 +424,8 @@
       "end": "Chancery Lane"
     },
     "hard": {
-      "start": "New Cross Gate",
-      "end": "Angel"
+      "start": "Dalston Kingsland",
+      "end": "Royal Oak"
     }
   },
   "2026-07-31": {
@@ -435,8 +435,8 @@
       "end": "Pimlico"
     },
     "hard": {
-      "start": "Ravenscourt Park",
-      "end": "Preston Road"
+      "start": "Holborn",
+      "end": "Dalston Kingsland"
     }
   },
   "2026-08-01": {
@@ -475,12 +475,12 @@
   "2026-08-04": {
     "puzzleNum": 124,
     "easy": {
-      "start": "Notting Hill Gate",
-      "end": "Wembley Park"
+      "start": "Mornington Crescent",
+      "end": "Canary Wharf"
     },
     "hard": {
-      "start": "Queen's Park",
-      "end": "Shadwell"
+      "start": "Tufnell Park",
+      "end": "New Cross Gate"
     }
   },
   "2026-08-05": {
@@ -497,12 +497,12 @@
   "2026-08-06": {
     "puzzleNum": 126,
     "easy": {
-      "start": "Southfields",
-      "end": "Kilburn"
+      "start": "Queen's Park",
+      "end": "Belsize Park"
     },
     "hard": {
-      "start": "Parsons Green",
-      "end": "Harrow on the Hill"
+      "start": "Leicester Square",
+      "end": "New Cross Gate"
     }
   },
   "2026-08-07": {
@@ -512,8 +512,8 @@
       "end": "Bermondsey"
     },
     "hard": {
-      "start": "Dalston Kingsland",
-      "end": "South Kensington"
+      "start": "Arsenal",
+      "end": "Surrey Quays"
     }
   },
   "2026-08-08": {
@@ -534,8 +534,8 @@
       "end": "Dalston Kingsland"
     },
     "hard": {
-      "start": "West Kensington",
-      "end": "Angel"
+      "start": "Surrey Quays",
+      "end": "Charing Cross"
     }
   },
   "2026-08-10": {
@@ -556,8 +556,8 @@
       "end": "Stockwell"
     },
     "hard": {
-      "start": "Bayswater",
-      "end": "Old Street"
+      "start": "Clapham South",
+      "end": "Acton Town"
     }
   },
   "2026-08-12": {
@@ -578,8 +578,8 @@
       "end": "Hyde Park Corner"
     },
     "hard": {
-      "start": "Bow Road",
-      "end": "Hackney Central"
+      "start": "Crystal Palace",
+      "end": "Edgware Road"
     }
   },
   "2026-08-14": {
@@ -589,15 +589,15 @@
       "end": "Wembley Central"
     },
     "hard": {
-      "start": "Hampstead",
-      "end": "Crystal Palace"
+      "start": "Angel",
+      "end": "High Street Kensington"
     }
   },
   "2026-08-15": {
     "puzzleNum": 135,
     "easy": {
-      "start": "Old Street",
-      "end": "Stepney Green"
+      "start": "Holborn",
+      "end": "Waterloo"
     },
     "hard": {
       "start": "New Cross Gate",
@@ -622,8 +622,8 @@
       "end": "Kings Cross St. Pancras"
     },
     "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Colliers Wood"
+      "start": "West Brompton",
+      "end": "Clapham Common"
     }
   },
   "2026-08-18": {
@@ -644,8 +644,8 @@
       "end": "Hampstead"
     },
     "hard": {
-      "start": "Willesden Junction",
-      "end": "Shadwell"
+      "start": "Leicester Square",
+      "end": "Harrow on the Hill"
     }
   },
   "2026-08-20": {
@@ -666,8 +666,8 @@
       "end": "St. Paul's"
     },
     "hard": {
-      "start": "Mornington Crescent",
-      "end": "Surrey Quays"
+      "start": "Balham",
+      "end": "Chiswick Park"
     }
   },
   "2026-08-22": {
@@ -677,8 +677,8 @@
       "end": "Mansion House"
     },
     "hard": {
-      "start": "Gloucester Road",
-      "end": "Preston Road"
+      "start": "Preston Road",
+      "end": "Temple"
     }
   },
   "2026-08-23": {
@@ -699,8 +699,8 @@
       "end": "Whitechapel"
     },
     "hard": {
-      "start": "Richmond",
-      "end": "Harrow on the Hill"
+      "start": "Acton Town",
+      "end": "Clapham North"
     }
   },
   "2026-08-25": {
@@ -710,8 +710,8 @@
       "end": "Vauxhall"
     },
     "hard": {
-      "start": "Shadwell",
-      "end": "Edgware Road"
+      "start": "Arsenal",
+      "end": "Bayswater"
     }
   },
   "2026-08-26": {
@@ -721,8 +721,8 @@
       "end": "East Putney"
     },
     "hard": {
-      "start": "St. Paul's",
-      "end": "West Kensington"
+      "start": "Balham",
+      "end": "Wimbledon"
     }
   },
   "2026-08-27": {
@@ -743,8 +743,8 @@
       "end": "Gloucester Road"
     },
     "hard": {
-      "start": "Southfields",
-      "end": "Harrow on the Hill"
+      "start": "High Street Kensington",
+      "end": "Clapham South"
     }
   },
   "2026-08-29": {
@@ -754,8 +754,8 @@
       "end": "Kings Cross St. Pancras"
     },
     "hard": {
-      "start": "New Cross Gate",
-      "end": "Marylebone"
+      "start": "Sloane Square",
+      "end": "Chancery Lane"
     }
   },
   "2026-08-30": {
@@ -765,8 +765,8 @@
       "end": "Knightsbridge"
     },
     "hard": {
-      "start": "Covent Garden",
-      "end": "Surrey Quays"
+      "start": "Turnham Green",
+      "end": "Clapham North"
     }
   },
   "2026-08-31": {
@@ -776,19 +776,19 @@
       "end": "Ealing Broadway"
     },
     "hard": {
-      "start": "White City",
-      "end": "Crystal Palace"
+      "start": "Bermondsey",
+      "end": "St. Paul's"
     }
   },
   "2026-09-01": {
     "puzzleNum": 152,
     "easy": {
-      "start": "Marylebone",
-      "end": "Preston Road"
+      "start": "Canning Town",
+      "end": "White City"
     },
     "hard": {
-      "start": "East Putney",
-      "end": "Angel"
+      "start": "Clapham Common",
+      "end": "Southfields"
     }
   },
   "2026-09-02": {
@@ -805,12 +805,12 @@
   "2026-09-03": {
     "puzzleNum": 154,
     "easy": {
-      "start": "Paddington",
-      "end": "St. John's Wood"
+      "start": "Whitechapel",
+      "end": "Finchley Road"
     },
     "hard": {
-      "start": "Pimlico",
-      "end": "New Cross Gate"
+      "start": "Balham",
+      "end": "West Brompton"
     }
   },
   "2026-09-04": {
@@ -820,15 +820,15 @@
       "end": "Brixton"
     },
     "hard": {
-      "start": "Royal Oak",
-      "end": "Clapham Junction"
+      "start": "Arsenal",
+      "end": "Queen's Park"
     }
   },
   "2026-09-05": {
     "puzzleNum": 156,
     "easy": {
-      "start": "Southwark",
-      "end": "Monument"
+      "start": "Bethnal Green",
+      "end": "Southfields"
     },
     "hard": {
       "start": "Elephant & Castle",
@@ -838,12 +838,12 @@
   "2026-09-06": {
     "puzzleNum": 157,
     "easy": {
-      "start": "Moorgate",
-      "end": "St. Paul's"
+      "start": "Pimlico",
+      "end": "Covent Garden"
     },
     "hard": {
-      "start": "Covent Garden",
-      "end": "Shadwell"
+      "start": "Brixton",
+      "end": "Shepherd's Bush Market"
     }
   },
   "2026-09-07": {
@@ -853,15 +853,15 @@
       "end": "Liverpool Street"
     },
     "hard": {
-      "start": "Old Street",
-      "end": "Surrey Quays"
+      "start": "South Kensington",
+      "end": "Clapham North"
     }
   },
   "2026-09-08": {
     "puzzleNum": 159,
     "easy": {
-      "start": "East Putney",
-      "end": "White City"
+      "start": "Hammersmith",
+      "end": "Harrow on the Hill"
     },
     "hard": {
       "start": "Arsenal",
@@ -875,118 +875,8 @@
       "end": "Chancery Lane"
     },
     "hard": {
-      "start": "Shadwell",
-      "end": "Holloway Road"
-    }
-  },
-  "2026-09-10": {
-    "puzzleNum": 161,
-    "easy": {
-      "start": "Victoria",
-      "end": "Bermondsey"
-    },
-    "hard": {
-      "start": "Brent Cross",
-      "end": "Borough"
-    }
-  },
-  "2026-09-11": {
-    "puzzleNum": 162,
-    "easy": {
-      "start": "Stepney Green",
-      "end": "Arsenal"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Leicester Square"
-    }
-  },
-  "2026-09-12": {
-    "puzzleNum": 163,
-    "easy": {
-      "start": "Moorgate",
-      "end": "Kilburn"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Clapham Common"
-    }
-  },
-  "2026-09-13": {
-    "puzzleNum": 164,
-    "easy": {
-      "start": "Borough",
-      "end": "Swiss Cottage"
-    },
-    "hard": {
-      "start": "Belsize Park",
-      "end": "Crystal Palace"
-    }
-  },
-  "2026-09-14": {
-    "puzzleNum": 165,
-    "easy": {
-      "start": "Canada Water",
-      "end": "Cannon Street"
-    },
-    "hard": {
-      "start": "Stockwell",
-      "end": "Goldhawk Road"
-    }
-  },
-  "2026-09-15": {
-    "puzzleNum": 166,
-    "easy": {
-      "start": "Acton Town",
-      "end": "Goldhawk Road"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "High Street Kensington"
-    }
-  },
-  "2026-09-16": {
-    "puzzleNum": 167,
-    "easy": {
-      "start": "West Kensington",
-      "end": "Covent Garden"
-    },
-    "hard": {
-      "start": "Shepherd's Bush Market",
-      "end": "Stockwell"
-    }
-  },
-  "2026-09-17": {
-    "puzzleNum": 168,
-    "easy": {
-      "start": "Putney Bridge",
-      "end": "North Greenwich"
-    },
-    "hard": {
-      "start": "Parsons Green",
-      "end": "Angel"
-    }
-  },
-  "2026-09-18": {
-    "puzzleNum": 169,
-    "easy": {
-      "start": "St. Paul's",
-      "end": "Old Street"
-    },
-    "hard": {
-      "start": "White City",
-      "end": "New Cross Gate"
-    }
-  },
-  "2026-09-19": {
-    "puzzleNum": 170,
-    "easy": {
-      "start": "Bow Road",
-      "end": "Holloway Road"
-    },
-    "hard": {
-      "start": "Holloway Road",
-      "end": "Hackney Central"
+      "start": "Colliers Wood",
+      "end": "Putney Bridge"
     }
   },
   "2026-09-10": {
