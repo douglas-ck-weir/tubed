@@ -3646,7 +3646,13 @@ function londonDateParts(d) {
 // the easy/hard filters were tightened (easy rejects walks, hard requires
 // ≥3 tube legs) — players who pre-cached 06-12+ under the old rules would
 // otherwise see stale pairs that no longer satisfy the current filter.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v6';
+// Bumped to v7 on 2026-06-23: that morning's cron pushed today.json with
+// hard = Willesden Junction → Arsenal (a duplicate of 2026-06-22 caused
+// by a build-lookup no-repeat seed bug). We patched today.json to Chalk
+// Farm → Marylebone mid-morning, but any player who had already opened
+// the page that day had the wrong pair cached under v6. Bumping forces
+// a re-resolve from the live generator.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v7';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -3741,6 +3747,19 @@ function todayPuzzle(mode, opts) {
   //      they will need to clear localStorage or wait until tomorrow.
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
+
+  // 2026-06-23 Hard: this morning's cron pushed today.json with hard =
+  // Willesden Junction → Arsenal — a duplicate of yesterday's pair caused
+  // by a build-lookup no-repeat seed bug (the no-repeat set only blocks
+  // within the future horizon, not against recently-published past). We
+  // patched today.json to Chalk Farm → Marylebone, but the in-browser
+  // seeded generator (which has no recentPairs context) still picks the
+  // duplicate. Pin to the published pair.
+  if (m === 'hard' && date === '2026-06-23') {
+    const start = 'Chalk Farm', end = 'Marylebone';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
 
   // 2026-06-11 Easy: Canary Wharf Elizabeth↔Jubilee interchange was corrected
   // mid-day (9 → 6) to kill an OSI walk-arbitrage optimal (CW→HQ→CW loop), and
