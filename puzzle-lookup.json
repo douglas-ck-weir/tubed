@@ -1,15 +1,4 @@
 {
-  "2026-06-22": {
-    "puzzleNum": 81,
-    "easy": {
-      "start": "Golders Green",
-      "end": "Notting Hill Gate"
-    },
-    "hard": {
-      "start": "Willesden Junction",
-      "end": "Arsenal"
-    }
-  },
   "2026-06-23": {
     "puzzleNum": 82,
     "easy": {
@@ -17,8 +6,8 @@
       "end": "St. Paul's"
     },
     "hard": {
-      "start": "Chalk Farm",
-      "end": "Marylebone"
+      "start": "Willesden Junction",
+      "end": "Arsenal"
     }
   },
   "2026-06-24": {
@@ -987,6 +976,17 @@
     "hard": {
       "start": "Holloway Road",
       "end": "Hackney Central"
+    }
+  },
+  "2026-09-20": {
+    "puzzleNum": 171,
+    "easy": {
+      "start": "Turnham Green",
+      "end": "Bethnal Green"
+    },
+    "hard": {
+      "start": "Shadwell",
+      "end": "Brixton"
     }
   }
 }

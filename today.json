@@ -1,9 +1,9 @@
 {
-  "date": "2026-06-22",
-  "puzzleNum": 81,
+  "date": "2026-06-23",
+  "puzzleNum": 82,
   "easy": {
-    "start": "Golders Green",
-    "end": "Notting Hill Gate"
+    "start": "Parsons Green",
+    "end": "St. Paul's"
   },
   "hard": {
     "start": "Willesden Junction",
