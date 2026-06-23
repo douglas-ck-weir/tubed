@@ -4973,6 +4973,30 @@ function todayPuzzle(mode, opts) {
   const { dateStr: date, baseSeed: londonBaseSeed, puzzleNum } = londonDateParts();
   const GRAPH = buildGraph();
 
+  // Lookup-first: if puzzle-lookup.json is loaded AND has an entry for
+  // this date, use its {start, end}. This is the same source the Reddit
+  // bot reads, so any date in the lookup window is guaranteed to show
+  // the same puzzle in-browser as on Reddit. Test-mode date jumps now
+  // preview accurately, and the cron's recentPairs no-repeat decisions
+  // are reflected in the browser too. Skip recentPairs path — caller
+  // (build-lookup itself) needs to bypass the lookup to actually generate
+  // new entries; it never sets opts.recentPairs from the browser.
+  if (!recentPairs && typeof window !== 'undefined' && window.PUZZLE_LOOKUP
+      && window.PUZZLE_LOOKUP[date] && window.PUZZLE_LOOKUP[date][m]) {
+    const entry = window.PUZZLE_LOOKUP[date][m];
+    if (_isValidStation(entry.start) && _isValidStation(entry.end)) {
+      try {
+        const routes = dijkstra(GRAPH, entry.start, entry.end);
+        if (routes && routes.length > 0) {
+          _tel('puzzle_lookup_hit', { mode: m, ms: Date.now() - _t0 });
+          return { start: entry.start, end: entry.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+        }
+      } catch (e) {
+        console.error('[todayPuzzle] lookup pair threw, falling through:', e);
+      }
+    }
+  }
+
   // Cache hit: rebuild routes for the stored {start, end} without re-running
   // the seeded generator + filters. Validate the stored pair first — a
   // corrupted cache (manual edit, removed station) would otherwise crash
@@ -6704,7 +6728,33 @@ async function submitFeedback() {
   }
 }
 
-window.addEventListener('load', init);
+// Pre-fetch puzzle-lookup.json so todayPuzzle() can use it as the canonical
+// source of {start, end} for any date in the lookup window. Without this,
+// the in-browser generator can produce a different pair than the cron
+// publishes (the cron's recentPairs no-repeat filter is absent in the
+// browser), which means test mode previews diverge from what Reddit sees.
+//
+// Failure modes:
+//   - 404 / network error: window.PUZZLE_LOOKUP stays undefined,
+//     todayPuzzle() falls through to its existing seeded-generator path.
+//     The page still works, just without the lookup parity guarantee.
+//   - Stale lookup (cached): tomorrow's first load might miss the daily
+//     cron's update; cache-buster query string keeps it fresh.
+async function _preloadPuzzleLookup() {
+  try {
+    const url = 'puzzle-lookup.json?_=' + Math.floor(Date.now() / 60000);  // 1-min cache buster
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    window.PUZZLE_LOOKUP = await res.json();
+  } catch (e) {
+    console.warn('[tubed] puzzle-lookup.json preload failed; falling back to in-browser generator:', e.message);
+    window.PUZZLE_LOOKUP = null;
+  }
+}
+window.addEventListener('load', async () => {
+  await _preloadPuzzleLookup();
+  init();
+});
 </script>
 </body>
 </html>
