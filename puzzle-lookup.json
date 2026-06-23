@@ -1,4 +1,114 @@
 {
+  "2026-06-22": {
+    "puzzleNum": 81,
+    "easy": {
+      "start": "Golders Green",
+      "end": "Notting Hill Gate"
+    },
+    "hard": {
+      "start": "Willesden Junction",
+      "end": "Arsenal"
+    }
+  },
+  "2026-06-21": {
+    "puzzleNum": 80,
+    "easy": {
+      "start": "Oxford Circus",
+      "end": "Ravenscourt Park"
+    },
+    "hard": {
+      "start": "Gloucester Road",
+      "end": "Clapham South"
+    }
+  },
+  "2026-06-20": {
+    "puzzleNum": 79,
+    "easy": {
+      "start": "Caledonian Road",
+      "end": "Belsize Park"
+    },
+    "hard": {
+      "start": "Westbourne Park",
+      "end": "Dalston Kingsland"
+    }
+  },
+  "2026-06-19": {
+    "puzzleNum": 78,
+    "easy": {
+      "start": "Tufnell Park",
+      "end": "Queen's Park"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Notting Hill Gate"
+    }
+  },
+  "2026-06-18": {
+    "puzzleNum": 77,
+    "easy": {
+      "start": "Regent's Park",
+      "end": "Barons Court"
+    },
+    "hard": {
+      "start": "High Street Kensington",
+      "end": "Clapham Common"
+    }
+  },
+  "2026-06-17": {
+    "puzzleNum": 76,
+    "easy": {
+      "start": "St. John's Wood",
+      "end": "Aldgate"
+    },
+    "hard": {
+      "start": "Angel",
+      "end": "Putney Bridge"
+    }
+  },
+  "2026-06-16": {
+    "puzzleNum": 75,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Green Park"
+    },
+    "hard": {
+      "start": "Southfields",
+      "end": "Dalston Kingsland"
+    }
+  },
+  "2026-06-15": {
+    "puzzleNum": 74,
+    "easy": {
+      "start": "Ealing Broadway",
+      "end": "Knightsbridge"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Piccadilly Circus"
+    }
+  },
+  "2026-06-14": {
+    "puzzleNum": 73,
+    "easy": {
+      "start": "Turnham Green",
+      "end": "Stratford"
+    },
+    "hard": {
+      "start": "Holloway Road",
+      "end": "Dalston Kingsland"
+    }
+  },
+  "2026-06-13": {
+    "puzzleNum": 72,
+    "easy": {
+      "start": "Arsenal",
+      "end": "Chiswick Park"
+    },
+    "hard": {
+      "start": "Borough",
+      "end": "Crystal Palace"
+    }
+  },
   "2026-06-23": {
     "puzzleNum": 82,
     "easy": {
@@ -90,8 +200,8 @@
   "2026-07-01": {
     "puzzleNum": 90,
     "easy": {
-      "start": "Ravenscourt Park",
-      "end": "Oxford Circus"
+      "start": "Mansion House",
+      "end": "Stockwell"
     },
     "hard": {
       "start": "Crystal Palace",
@@ -622,8 +732,8 @@
       "end": "Covent Garden"
     },
     "hard": {
-      "start": "Westbourne Park",
-      "end": "Dalston Kingsland"
+      "start": "Stamford Brook",
+      "end": "Wembley Central"
     }
   },
   "2026-08-19": {

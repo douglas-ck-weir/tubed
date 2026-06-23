@@ -84,13 +84,71 @@ today.setHours(12, 0, 0, 0);
 // day's draw within the lookup horizon. We pass a Set of `start|end` strings
 // into todayPuzzle() so its inner attempt loop skips collisions. Both
 // directions are inserted because the generator may draw the reverse.
+//
+// IMPORTANT: We also seed this Set with recently-published pairs from the
+// previous on-disk lookup BEFORE the generation loop runs. Without this,
+// day 0 (today) of every cron run starts with empty recentPairs and can
+// pick a pair that was published yesterday — the no-repeat window only
+// protected against future-vs-future collisions, not against the recent
+// past. This was a latent bug from the day recentPairs was introduced;
+// it surfaced on 2026-06-23 when 22nd's and 23rd's seeded RNGs both
+// produced Willesden Junction → Arsenal as their first acceptable pair.
+const HISTORY_WINDOW_DAYS = 30;
 const recentPairs = new Set();
 function record(pair) {
   recentPairs.add(`${pair.start}|${pair.end}`);
   recentPairs.add(`${pair.end}|${pair.start}`);
 }
 
+// Seed recentPairs from the previous on-disk lookup. We keep a rolling
+// HISTORY_WINDOW_DAYS of past pairs so the generator can't reuse anything
+// from roughly the last month. Larger window = stronger no-repeat
+// guarantee, but eventually exhausts the acceptable-pair pool, so we cap.
+try {
+  const prevLookup = JSON.parse(readFileSync('puzzle-lookup.json', 'utf8'));
+  const todayStr = (() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  })();
+  // Take every entry STRICTLY before today. Cap at HISTORY_WINDOW_DAYS most
+  // recent. Dates are ISO YYYY-MM-DD so lexicographic sort = chronological.
+  const pastEntries = Object.entries(prevLookup)
+    .filter(([d]) => d < todayStr)
+    .sort(([a], [b]) => b.localeCompare(a))  // newest first
+    .slice(0, HISTORY_WINDOW_DAYS);
+  let seeded = 0;
+  for (const [, entry] of pastEntries) {
+    if (entry.easy) { record(entry.easy); seeded++; }
+    if (entry.hard) { record(entry.hard); seeded++; }
+  }
+  console.log(`Seeded recentPairs with ${seeded} pairs from ${pastEntries.length} past lookup days.`);
+} catch (e) {
+  // First-ever run: no previous lookup exists. That's fine — recentPairs
+  // stays empty for the very first generation. Future runs will seed from
+  // the lookup this run is about to write.
+  console.warn('No previous puzzle-lookup.json to seed recentPairs from (first run?):', e.message);
+}
+
+// Preserve past entries from the previous lookup so the no-repeat history
+// stays on disk. Without this, every regen drops yesterday's pair and
+// loses the data we just seeded recentPairs from — meaning tomorrow's
+// cron has nothing to seed from. We cap to a HISTORY_KEEP_DAYS rolling
+// window so the file doesn't grow unbounded.
+const HISTORY_KEEP_DAYS = 60;
 const lookup = {};
+try {
+  const prev = JSON.parse(readFileSync('puzzle-lookup.json', 'utf8'));
+  const todayStr = (() => {
+    const t = new Date();
+    return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`;
+  })();
+  const past = Object.entries(prev)
+    .filter(([d]) => d < todayStr)
+    .sort(([a], [b]) => b.localeCompare(a))
+    .slice(0, HISTORY_KEEP_DAYS);
+  for (const [d, entry] of past) lookup[d] = entry;
+} catch (e) { /* first run: no previous to preserve */ }
+
 for (let i = 0; i < DAYS; i++) {
   const d = new Date(today);
   d.setDate(today.getDate() + i);
