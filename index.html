@@ -5689,12 +5689,12 @@ function buildHintText(n) {
     return `<strong>${puzzleData.start}</strong> is served by: ${lineTags(startLines)}`;
   }
   if (n === 2) {
-    return `<strong>${puzzleData.end}</strong> is served by: ${lineTags(endLines)}`;
+    const firstChange = puzzleData.optimal.legs[0].to;
+    const letter = firstChange[0].toUpperCase();
+    return `Your first change is at a station starting with <strong>${letter}</strong>.`;
   }
   if (n === 3) {
-    const firstLine = puzzleData.optimal.legs[0].line;
-    const lc = lineColour(firstLine);
-    return `Start by taking the <span class="hint-tag" style="background:${lc.bg};color:${lc.txt};">${firstLine}</span> line`;
+    return `<strong>${puzzleData.end}</strong> is served by: ${lineTags(endLines)}`;
   }
   return '';
 }
