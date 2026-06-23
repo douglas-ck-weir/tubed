@@ -4973,30 +4973,6 @@ function todayPuzzle(mode, opts) {
   const { dateStr: date, baseSeed: londonBaseSeed, puzzleNum } = londonDateParts();
   const GRAPH = buildGraph();
 
-  // Lookup-first: if puzzle-lookup.json is loaded AND has an entry for
-  // this date, use its {start, end}. This is the same source the Reddit
-  // bot reads, so any date in the lookup window is guaranteed to show
-  // the same puzzle in-browser as on Reddit. Test-mode date jumps now
-  // preview accurately, and the cron's recentPairs no-repeat decisions
-  // are reflected in the browser too. Skip recentPairs path — caller
-  // (build-lookup itself) needs to bypass the lookup to actually generate
-  // new entries; it never sets opts.recentPairs from the browser.
-  if (!recentPairs && typeof window !== 'undefined' && window.PUZZLE_LOOKUP
-      && window.PUZZLE_LOOKUP[date] && window.PUZZLE_LOOKUP[date][m]) {
-    const entry = window.PUZZLE_LOOKUP[date][m];
-    if (_isValidStation(entry.start) && _isValidStation(entry.end)) {
-      try {
-        const routes = dijkstra(GRAPH, entry.start, entry.end);
-        if (routes && routes.length > 0) {
-          _tel('puzzle_lookup_hit', { mode: m, ms: Date.now() - _t0 });
-          return { start: entry.start, end: entry.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
-        }
-      } catch (e) {
-        console.error('[todayPuzzle] lookup pair threw, falling through:', e);
-      }
-    }
-  }
-
   // Cache hit: rebuild routes for the stored {start, end} without re-running
   // the seeded generator + filters. Validate the stored pair first — a
   // corrupted cache (manual edit, removed station) would otherwise crash
@@ -5079,6 +5055,36 @@ function todayPuzzle(mode, opts) {
     const start = 'Colliers Wood', end = 'Goldhawk Road';
     const routes = dijkstra(GRAPH, start, end);
     return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+
+  // Lookup oracle: if puzzle-lookup.json is loaded AND has an entry for
+  // this date, use it as the source of truth. This is the same file the
+  // Reddit bot reads, so any date in the lookup window is guaranteed to
+  // show the same puzzle in-browser as on Reddit.
+  //
+  // Ordering rationale: this lives AFTER the freeze blocks (which are
+  // hand-pinned hot-fixes that must always win) and AFTER the localStorage
+  // cache (which avoids re-running dijkstra for a previously-resolved
+  // pair). It runs BEFORE the seeded generator, so any date the cron has
+  // already published wins over what the in-browser generator would pick.
+  //
+  // The recentPairs guard ensures build-lookup.mjs's own sandbox doesn't
+  // recurse - it always sets opts.recentPairs and never loads PUZZLE_LOOKUP
+  // anyway, but belt-and-braces.
+  if (!recentPairs && typeof window !== 'undefined' && window.PUZZLE_LOOKUP
+      && window.PUZZLE_LOOKUP[date] && window.PUZZLE_LOOKUP[date][m]) {
+    const entry = window.PUZZLE_LOOKUP[date][m];
+    if (_isValidStation(entry.start) && _isValidStation(entry.end)) {
+      try {
+        const routes = dijkstra(GRAPH, entry.start, entry.end);
+        if (routes && routes.length > 0) {
+          _tel('puzzle_lookup_hit', { mode: m, ms: Date.now() - _t0 });
+          return { start: entry.start, end: entry.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+        }
+      } catch (e) {
+        console.error('[todayPuzzle] lookup pair threw, falling through:', e);
+      }
+    }
   }
 
   // Daily seed shared with Easy mode. Hard uses an offset so its draw is
@@ -6729,32 +6735,61 @@ async function submitFeedback() {
 }
 
 // Pre-fetch puzzle-lookup.json so todayPuzzle() can use it as the canonical
-// source of {start, end} for any date in the lookup window. Without this,
-// the in-browser generator can produce a different pair than the cron
-// publishes (the cron's recentPairs no-repeat filter is absent in the
-// browser), which means test mode previews diverge from what Reddit sees.
+// source of {start, end} for any date in the lookup window. This is the
+// same file the Reddit bot reads, so a hit guarantees parity with what
+// gets posted.
 //
-// Failure modes:
-//   - 404 / network error: window.PUZZLE_LOOKUP stays undefined,
-//     todayPuzzle() falls through to its existing seeded-generator path.
-//     The page still works, just without the lookup parity guarantee.
-//   - Stale lookup (cached): tomorrow's first load might miss the daily
-//     cron's update; cache-buster query string keeps it fresh.
-async function _preloadPuzzleLookup() {
+// Fire-and-forget: init() runs immediately, NOT awaiting this fetch. If
+// the lookup loads before todayPuzzle() is called (almost always true,
+// since init does DOM setup first), great - parity. If it's still in
+// flight, todayPuzzle() falls through to localStorage cache / freeze /
+// seeded generator. The page never blocks on the lookup.
+//
+// Cache-buster uses the London date (changes once per day) so the daily
+// cron's update is picked up on the first reload after midnight without
+// risking a player at 00:01 seeing yesterday's lookup from HTTP cache.
+function _lookupCacheBusterKey() {
+  // Mirror londonDateParts() format without depending on it (this runs
+  // before that helper may be needed).
   try {
-    const url = 'puzzle-lookup.json?_=' + Math.floor(Date.now() / 60000);  // 1-min cache buster
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    window.PUZZLE_LOOKUP = await res.json();
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date());
+    const get = t => parts.find(p => p.type === t).value;
+    return `${get('year')}${get('month')}${get('day')}`;
   } catch (e) {
-    console.warn('[tubed] puzzle-lookup.json preload failed; falling back to in-browser generator:', e.message);
-    window.PUZZLE_LOOKUP = null;
+    // Intl unavailable: fall back to local-date string. Worst case the
+    // buster is one day off for ~1 hour around midnight; acceptable.
+    const d = new Date();
+    return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
   }
 }
-window.addEventListener('load', async () => {
-  await _preloadPuzzleLookup();
-  init();
-});
+function _preloadPuzzleLookup() {
+  window.PUZZLE_LOOKUP = null;  // explicit null until fetch resolves
+  const url = 'puzzle-lookup.json?d=' + _lookupCacheBusterKey();
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(json => {
+      // Defensive shape check. A malformed lookup shouldn't break the page.
+      if (json && typeof json === 'object' && Object.keys(json).length > 0) {
+        const sampleKey = Object.keys(json)[0];
+        const sample = json[sampleKey];
+        if (sample && sample.easy && sample.hard) {
+          window.PUZZLE_LOOKUP = json;
+          return;
+        }
+      }
+      console.warn('[tubed] puzzle-lookup.json loaded but shape is unexpected; ignoring.');
+    })
+    .catch(e => {
+      console.warn('[tubed] puzzle-lookup.json preload failed; falling back to in-browser generator:', e.message);
+    });
+}
+_preloadPuzzleLookup();  // fire immediately, do not await
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
