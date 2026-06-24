@@ -1,4 +1,15 @@
 {
+  "2026-06-23": {
+    "puzzleNum": 82,
+    "easy": {
+      "start": "Parsons Green",
+      "end": "St. Paul's"
+    },
+    "hard": {
+      "start": "Chalk Farm",
+      "end": "Marylebone"
+    }
+  },
   "2026-06-22": {
     "puzzleNum": 81,
     "easy": {
@@ -107,17 +118,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-23": {
-    "puzzleNum": 82,
-    "easy": {
-      "start": "Parsons Green",
-      "end": "St. Paul's"
-    },
-    "hard": {
-      "start": "Chalk Farm",
-      "end": "Marylebone"
     }
   },
   "2026-06-24": {
@@ -1097,6 +1097,17 @@
     "hard": {
       "start": "Shadwell",
       "end": "Brixton"
+    }
+  },
+  "2026-09-21": {
+    "puzzleNum": 172,
+    "easy": {
+      "start": "Bethnal Green",
+      "end": "West Ham"
+    },
+    "hard": {
+      "start": "Lambeth North",
+      "end": "Surrey Quays"
     }
   }
 }

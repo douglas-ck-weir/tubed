@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-23",
-  "puzzleNum": 82,
+  "date": "2026-06-24",
+  "puzzleNum": 83,
   "easy": {
-    "start": "Parsons Green",
-    "end": "St. Paul's"
+    "start": "Shepherd's Bush",
+    "end": "Tower Hill"
   },
   "hard": {
-    "start": "Chalk Farm",
-    "end": "Marylebone"
+    "start": "Shepherd's Bush",
+    "end": "New Cross Gate"
   }
 }
