@@ -1,4 +1,15 @@
 {
+  "2026-06-24": {
+    "puzzleNum": 83,
+    "easy": {
+      "start": "Shepherd's Bush",
+      "end": "Tower Hill"
+    },
+    "hard": {
+      "start": "Shepherd's Bush",
+      "end": "New Cross Gate"
+    }
+  },
   "2026-06-23": {
     "puzzleNum": 82,
     "easy": {
@@ -118,17 +129,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-24": {
-    "puzzleNum": 83,
-    "easy": {
-      "start": "Shepherd's Bush",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Shepherd's Bush",
-      "end": "New Cross Gate"
     }
   },
   "2026-06-25": {
@@ -1108,6 +1108,17 @@
     "hard": {
       "start": "Lambeth North",
       "end": "Surrey Quays"
+    }
+  },
+  "2026-09-22": {
+    "puzzleNum": 173,
+    "easy": {
+      "start": "West Hampstead",
+      "end": "Marylebone"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Regent's Park"
     }
   }
 }
