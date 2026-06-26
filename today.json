@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-25",
-  "puzzleNum": 84,
+  "date": "2026-06-26",
+  "puzzleNum": 85,
   "easy": {
-    "start": "Royal Oak",
-    "end": "Regent's Park"
+    "start": "Liverpool Street",
+    "end": "Ravenscourt Park"
   },
   "hard": {
-    "start": "Surrey Quays",
-    "end": "Knightsbridge"
+    "start": "Chalk Farm",
+    "end": "Crystal Palace"
   }
 }

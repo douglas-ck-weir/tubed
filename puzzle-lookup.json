@@ -1,4 +1,15 @@
 {
+  "2026-06-25": {
+    "puzzleNum": 84,
+    "easy": {
+      "start": "Royal Oak",
+      "end": "Regent's Park"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Knightsbridge"
+    }
+  },
   "2026-06-24": {
     "puzzleNum": 83,
     "easy": {
@@ -129,17 +140,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-25": {
-    "puzzleNum": 84,
-    "easy": {
-      "start": "Royal Oak",
-      "end": "Regent's Park"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Knightsbridge"
     }
   },
   "2026-06-26": {
@@ -1119,6 +1119,17 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Regent's Park"
+    }
+  },
+  "2026-09-23": {
+    "puzzleNum": 174,
+    "easy": {
+      "start": "Arsenal",
+      "end": "Old Street"
+    },
+    "hard": {
+      "start": "Lancaster Gate",
+      "end": "New Cross Gate"
     }
   }
 }
