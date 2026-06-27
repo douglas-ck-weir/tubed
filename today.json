@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-26",
-  "puzzleNum": 85,
+  "date": "2026-06-27",
+  "puzzleNum": 86,
   "easy": {
-    "start": "Liverpool Street",
-    "end": "Ravenscourt Park"
+    "start": "Moorgate",
+    "end": "Highbury & Islington"
   },
   "hard": {
-    "start": "Chalk Farm",
-    "end": "Crystal Palace"
+    "start": "Holloway Road",
+    "end": "Limehouse"
   }
 }

@@ -1,4 +1,15 @@
 {
+  "2026-06-26": {
+    "puzzleNum": 85,
+    "easy": {
+      "start": "Liverpool Street",
+      "end": "Ravenscourt Park"
+    },
+    "hard": {
+      "start": "Chalk Farm",
+      "end": "Crystal Palace"
+    }
+  },
   "2026-06-25": {
     "puzzleNum": 84,
     "easy": {
@@ -139,17 +150,6 @@
     },
     "hard": {
       "start": "Borough",
-      "end": "Crystal Palace"
-    }
-  },
-  "2026-06-26": {
-    "puzzleNum": 85,
-    "easy": {
-      "start": "Liverpool Street",
-      "end": "Ravenscourt Park"
-    },
-    "hard": {
-      "start": "Chalk Farm",
       "end": "Crystal Palace"
     }
   },
@@ -1129,6 +1129,17 @@
     },
     "hard": {
       "start": "Lancaster Gate",
+      "end": "New Cross Gate"
+    }
+  },
+  "2026-09-24": {
+    "puzzleNum": 175,
+    "easy": {
+      "start": "Arsenal",
+      "end": "Camden Town"
+    },
+    "hard": {
+      "start": "Highgate",
       "end": "New Cross Gate"
     }
   }
