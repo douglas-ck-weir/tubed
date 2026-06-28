@@ -1,4 +1,15 @@
 {
+  "2026-06-27": {
+    "puzzleNum": 86,
+    "easy": {
+      "start": "Moorgate",
+      "end": "Highbury & Islington"
+    },
+    "hard": {
+      "start": "Holloway Road",
+      "end": "Limehouse"
+    }
+  },
   "2026-06-26": {
     "puzzleNum": 85,
     "easy": {
@@ -151,17 +162,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-27": {
-    "puzzleNum": 86,
-    "easy": {
-      "start": "Moorgate",
-      "end": "Highbury & Islington"
-    },
-    "hard": {
-      "start": "Holloway Road",
-      "end": "Limehouse"
     }
   },
   "2026-06-28": {
@@ -1141,6 +1141,17 @@
     "hard": {
       "start": "Highgate",
       "end": "New Cross Gate"
+    }
+  },
+  "2026-09-25": {
+    "puzzleNum": 176,
+    "easy": {
+      "start": "Knightsbridge",
+      "end": "Monument"
+    },
+    "hard": {
+      "start": "West Brompton",
+      "end": "Angel"
     }
   }
 }
