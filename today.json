@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-28",
-  "puzzleNum": 87,
+  "date": "2026-06-29",
+  "puzzleNum": 88,
   "easy": {
     "start": "Highbury & Islington",
-    "end": "Barons Court"
+    "end": "Parsons Green"
   },
   "hard": {
-    "start": "Tufnell Park",
+    "start": "Hampstead",
     "end": "Marylebone"
   }
 }

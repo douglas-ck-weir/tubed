@@ -1,4 +1,15 @@
 {
+  "2026-06-28": {
+    "puzzleNum": 87,
+    "easy": {
+      "start": "Highbury & Islington",
+      "end": "Barons Court"
+    },
+    "hard": {
+      "start": "Tufnell Park",
+      "end": "Marylebone"
+    }
+  },
   "2026-06-27": {
     "puzzleNum": 86,
     "easy": {
@@ -162,17 +173,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-28": {
-    "puzzleNum": 87,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Barons Court"
-    },
-    "hard": {
-      "start": "Tufnell Park",
-      "end": "Marylebone"
     }
   },
   "2026-06-29": {
@@ -1152,6 +1152,17 @@
     "hard": {
       "start": "West Brompton",
       "end": "Angel"
+    }
+  },
+  "2026-09-26": {
+    "puzzleNum": 177,
+    "easy": {
+      "start": "Marylebone",
+      "end": "Earl's Court"
+    },
+    "hard": {
+      "start": "Caledonian Road",
+      "end": "Shadwell"
     }
   }
 }
