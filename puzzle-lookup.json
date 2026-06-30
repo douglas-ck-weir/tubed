@@ -1,4 +1,15 @@
 {
+  "2026-06-29": {
+    "puzzleNum": 88,
+    "easy": {
+      "start": "Highbury & Islington",
+      "end": "Parsons Green"
+    },
+    "hard": {
+      "start": "Hampstead",
+      "end": "Marylebone"
+    }
+  },
   "2026-06-28": {
     "puzzleNum": 87,
     "easy": {
@@ -173,17 +184,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-29": {
-    "puzzleNum": 88,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Parsons Green"
-    },
-    "hard": {
-      "start": "Hampstead",
-      "end": "Marylebone"
     }
   },
   "2026-06-30": {
@@ -1163,6 +1163,17 @@
     "hard": {
       "start": "Caledonian Road",
       "end": "Shadwell"
+    }
+  },
+  "2026-09-27": {
+    "puzzleNum": 178,
+    "easy": {
+      "start": "Old Street",
+      "end": "East Putney"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Piccadilly Circus"
     }
   }
 }

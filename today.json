@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-29",
-  "puzzleNum": 88,
+  "date": "2026-06-30",
+  "puzzleNum": 89,
   "easy": {
-    "start": "Highbury & Islington",
-    "end": "Parsons Green"
+    "start": "Richmond",
+    "end": "Shadwell"
   },
   "hard": {
-    "start": "Hampstead",
-    "end": "Marylebone"
+    "start": "Brent Cross",
+    "end": "Surrey Quays"
   }
 }
