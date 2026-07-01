@@ -1,12 +1,12 @@
 {
-  "date": "2026-06-30",
-  "puzzleNum": 89,
+  "date": "2026-07-01",
+  "puzzleNum": 90,
   "easy": {
-    "start": "Richmond",
-    "end": "Shadwell"
+    "start": "Mansion House",
+    "end": "Stockwell"
   },
   "hard": {
-    "start": "Brent Cross",
-    "end": "Surrey Quays"
+    "start": "Crystal Palace",
+    "end": "Bethnal Green"
   }
 }

@@ -1,4 +1,15 @@
 {
+  "2026-06-30": {
+    "puzzleNum": 89,
+    "easy": {
+      "start": "Richmond",
+      "end": "Shadwell"
+    },
+    "hard": {
+      "start": "Brent Cross",
+      "end": "Surrey Quays"
+    }
+  },
   "2026-06-29": {
     "puzzleNum": 88,
     "easy": {
@@ -184,17 +195,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-30": {
-    "puzzleNum": 89,
-    "easy": {
-      "start": "Richmond",
-      "end": "Shadwell"
-    },
-    "hard": {
-      "start": "Brent Cross",
-      "end": "Surrey Quays"
     }
   },
   "2026-07-01": {
@@ -1174,6 +1174,17 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "Piccadilly Circus"
+    }
+  },
+  "2026-09-28": {
+    "puzzleNum": 179,
+    "easy": {
+      "start": "Stratford",
+      "end": "Victoria"
+    },
+    "hard": {
+      "start": "Golders Green",
+      "end": "Marylebone"
     }
   }
 }
