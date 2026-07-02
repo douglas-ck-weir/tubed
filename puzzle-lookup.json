@@ -1,4 +1,15 @@
 {
+  "2026-07-01": {
+    "puzzleNum": 90,
+    "easy": {
+      "start": "Mansion House",
+      "end": "Stockwell"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Bethnal Green"
+    }
+  },
   "2026-06-30": {
     "puzzleNum": 89,
     "easy": {
@@ -195,17 +206,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-01": {
-    "puzzleNum": 90,
-    "easy": {
-      "start": "Mansion House",
-      "end": "Stockwell"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Bethnal Green"
     }
   },
   "2026-07-02": {
@@ -1185,6 +1185,17 @@
     "hard": {
       "start": "Golders Green",
       "end": "Marylebone"
+    }
+  },
+  "2026-09-29": {
+    "puzzleNum": 180,
+    "easy": {
+      "start": "Hampstead",
+      "end": "Southwark"
+    },
+    "hard": {
+      "start": "Harrow on the Hill",
+      "end": "Shepherd's Bush"
     }
   }
 }
