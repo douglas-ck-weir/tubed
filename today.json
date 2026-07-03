@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-02",
-  "puzzleNum": 91,
+  "date": "2026-07-03",
+  "puzzleNum": 92,
   "easy": {
-    "start": "Lancaster Gate",
-    "end": "High Street Kensington"
+    "start": "Aldgate East",
+    "end": "Holloway Road"
   },
   "hard": {
-    "start": "Surrey Quays",
-    "end": "Archway"
+    "start": "Belsize Park",
+    "end": "Regent's Park"
   }
 }

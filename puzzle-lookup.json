@@ -1,4 +1,15 @@
 {
+  "2026-07-02": {
+    "puzzleNum": 91,
+    "easy": {
+      "start": "Lancaster Gate",
+      "end": "High Street Kensington"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Archway"
+    }
+  },
   "2026-07-01": {
     "puzzleNum": 90,
     "easy": {
@@ -206,17 +217,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-02": {
-    "puzzleNum": 91,
-    "easy": {
-      "start": "Lancaster Gate",
-      "end": "High Street Kensington"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Archway"
     }
   },
   "2026-07-03": {
@@ -1196,6 +1196,17 @@
     "hard": {
       "start": "Harrow on the Hill",
       "end": "Shepherd's Bush"
+    }
+  },
+  "2026-09-30": {
+    "puzzleNum": 181,
+    "easy": {
+      "start": "Shepherd's Bush",
+      "end": "Stockwell"
+    },
+    "hard": {
+      "start": "Mornington Crescent",
+      "end": "New Cross Gate"
     }
   }
 }
