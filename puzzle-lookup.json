@@ -1,4 +1,15 @@
 {
+  "2026-07-03": {
+    "puzzleNum": 92,
+    "easy": {
+      "start": "Aldgate East",
+      "end": "Holloway Road"
+    },
+    "hard": {
+      "start": "Belsize Park",
+      "end": "Regent's Park"
+    }
+  },
   "2026-07-02": {
     "puzzleNum": 91,
     "easy": {
@@ -217,17 +228,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-03": {
-    "puzzleNum": 92,
-    "easy": {
-      "start": "Aldgate East",
-      "end": "Holloway Road"
-    },
-    "hard": {
-      "start": "Belsize Park",
-      "end": "Regent's Park"
     }
   },
   "2026-07-04": {
@@ -1207,6 +1207,17 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "New Cross Gate"
+    }
+  },
+  "2026-10-01": {
+    "puzzleNum": 182,
+    "easy": {
+      "start": "Willesden Green",
+      "end": "Liverpool Street"
+    },
+    "hard": {
+      "start": "Putney Bridge",
+      "end": "Preston Road"
     }
   }
 }
