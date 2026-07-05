@@ -1,4 +1,15 @@
 {
+  "2026-07-04": {
+    "puzzleNum": 93,
+    "easy": {
+      "start": "Swiss Cottage",
+      "end": "Stepney Green"
+    },
+    "hard": {
+      "start": "Angel",
+      "end": "Stamford Brook"
+    }
+  },
   "2026-07-03": {
     "puzzleNum": 92,
     "easy": {
@@ -228,17 +239,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-04": {
-    "puzzleNum": 93,
-    "easy": {
-      "start": "Swiss Cottage",
-      "end": "Stepney Green"
-    },
-    "hard": {
-      "start": "Angel",
-      "end": "Stamford Brook"
     }
   },
   "2026-07-05": {
@@ -1218,6 +1218,17 @@
     "hard": {
       "start": "Putney Bridge",
       "end": "Preston Road"
+    }
+  },
+  "2026-10-02": {
+    "puzzleNum": 183,
+    "easy": {
+      "start": "Brent Cross",
+      "end": "Canada Water"
+    },
+    "hard": {
+      "start": "Camden Town",
+      "end": "Crystal Palace"
     }
   }
 }

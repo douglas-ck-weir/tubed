@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-04",
-  "puzzleNum": 93,
+  "date": "2026-07-05",
+  "puzzleNum": 94,
   "easy": {
-    "start": "Swiss Cottage",
-    "end": "Stepney Green"
+    "start": "Parsons Green",
+    "end": "Barbican"
   },
   "hard": {
-    "start": "Angel",
-    "end": "Stamford Brook"
+    "start": "Bethnal Green",
+    "end": "New Cross Gate"
   }
 }
