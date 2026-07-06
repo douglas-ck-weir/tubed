@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-05",
-  "puzzleNum": 94,
+  "date": "2026-07-06",
+  "puzzleNum": 95,
   "easy": {
-    "start": "Parsons Green",
-    "end": "Barbican"
+    "start": "Warren Street",
+    "end": "Notting Hill Gate"
   },
   "hard": {
-    "start": "Bethnal Green",
-    "end": "New Cross Gate"
+    "start": "Crystal Palace",
+    "end": "Shepherd's Bush"
   }
 }

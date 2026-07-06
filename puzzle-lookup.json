@@ -1,4 +1,15 @@
 {
+  "2026-07-05": {
+    "puzzleNum": 94,
+    "easy": {
+      "start": "Parsons Green",
+      "end": "Barbican"
+    },
+    "hard": {
+      "start": "Bethnal Green",
+      "end": "New Cross Gate"
+    }
+  },
   "2026-07-04": {
     "puzzleNum": 93,
     "easy": {
@@ -239,17 +250,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-05": {
-    "puzzleNum": 94,
-    "easy": {
-      "start": "Parsons Green",
-      "end": "Barbican"
-    },
-    "hard": {
-      "start": "Bethnal Green",
-      "end": "New Cross Gate"
     }
   },
   "2026-07-06": {
@@ -1229,6 +1229,17 @@
     "hard": {
       "start": "Camden Town",
       "end": "Crystal Palace"
+    }
+  },
+  "2026-10-03": {
+    "puzzleNum": 184,
+    "easy": {
+      "start": "Brixton",
+      "end": "Monument"
+    },
+    "hard": {
+      "start": "New Cross Gate",
+      "end": "Piccadilly Circus"
     }
   }
 }
