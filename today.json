@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-06",
-  "puzzleNum": 95,
+  "date": "2026-07-08",
+  "puzzleNum": 97,
   "easy": {
-    "start": "Warren Street",
-    "end": "Notting Hill Gate"
+    "start": "Clapham South",
+    "end": "Westminster"
   },
   "hard": {
-    "start": "Crystal Palace",
-    "end": "Shepherd's Bush"
+    "start": "Hyde Park Corner",
+    "end": "Dalston Kingsland"
   }
 }

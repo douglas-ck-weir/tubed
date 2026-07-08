@@ -1,4 +1,26 @@
 {
+  "2026-07-07": {
+    "puzzleNum": 96,
+    "easy": {
+      "start": "Barbican",
+      "end": "Clapham South"
+    },
+    "hard": {
+      "start": "Finsbury Park",
+      "end": "Shadwell"
+    }
+  },
+  "2026-07-06": {
+    "puzzleNum": 95,
+    "easy": {
+      "start": "Warren Street",
+      "end": "Notting Hill Gate"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Shepherd's Bush"
+    }
+  },
   "2026-07-05": {
     "puzzleNum": 94,
     "easy": {
@@ -250,28 +272,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-06": {
-    "puzzleNum": 95,
-    "easy": {
-      "start": "Warren Street",
-      "end": "Notting Hill Gate"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Shepherd's Bush"
-    }
-  },
-  "2026-07-07": {
-    "puzzleNum": 96,
-    "easy": {
-      "start": "Barbican",
-      "end": "Clapham South"
-    },
-    "hard": {
-      "start": "Finsbury Park",
-      "end": "Shadwell"
     }
   },
   "2026-07-08": {
@@ -1240,6 +1240,28 @@
     "hard": {
       "start": "New Cross Gate",
       "end": "Piccadilly Circus"
+    }
+  },
+  "2026-10-04": {
+    "puzzleNum": 185,
+    "easy": {
+      "start": "Wembley Central",
+      "end": "Golders Green"
+    },
+    "hard": {
+      "start": "Shepherd's Bush Market",
+      "end": "Brixton"
+    }
+  },
+  "2026-10-05": {
+    "puzzleNum": 186,
+    "easy": {
+      "start": "Vauxhall",
+      "end": "Sloane Square"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Angel"
     }
   }
 }
