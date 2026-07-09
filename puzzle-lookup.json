@@ -1,4 +1,15 @@
 {
+  "2026-07-08": {
+    "puzzleNum": 97,
+    "easy": {
+      "start": "Clapham South",
+      "end": "Westminster"
+    },
+    "hard": {
+      "start": "Hyde Park Corner",
+      "end": "Dalston Kingsland"
+    }
+  },
   "2026-07-07": {
     "puzzleNum": 96,
     "easy": {
@@ -272,17 +283,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-08": {
-    "puzzleNum": 97,
-    "easy": {
-      "start": "Clapham South",
-      "end": "Westminster"
-    },
-    "hard": {
-      "start": "Hyde Park Corner",
-      "end": "Dalston Kingsland"
     }
   },
   "2026-07-09": {
@@ -1262,6 +1262,17 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Angel"
+    }
+  },
+  "2026-10-06": {
+    "puzzleNum": 187,
+    "easy": {
+      "start": "Shepherd's Bush Market",
+      "end": "Finsbury Park"
+    },
+    "hard": {
+      "start": "Marylebone",
+      "end": "Shadwell"
     }
   }
 }
