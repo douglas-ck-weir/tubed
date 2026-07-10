@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-09",
-  "puzzleNum": 98,
+  "date": "2026-07-10",
+  "puzzleNum": 99,
   "easy": {
-    "start": "West Ham",
-    "end": "Pimlico"
+    "start": "Aldgate",
+    "end": "Willesden Junction"
   },
   "hard": {
-    "start": "Lambeth North",
-    "end": "New Cross Gate"
+    "start": "Wembley Central",
+    "end": "Limehouse"
   }
 }

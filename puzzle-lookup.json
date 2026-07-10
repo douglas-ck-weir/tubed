@@ -1,4 +1,15 @@
 {
+  "2026-07-09": {
+    "puzzleNum": 98,
+    "easy": {
+      "start": "West Ham",
+      "end": "Pimlico"
+    },
+    "hard": {
+      "start": "Lambeth North",
+      "end": "New Cross Gate"
+    }
+  },
   "2026-07-08": {
     "puzzleNum": 97,
     "easy": {
@@ -283,17 +294,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-09": {
-    "puzzleNum": 98,
-    "easy": {
-      "start": "West Ham",
-      "end": "Pimlico"
-    },
-    "hard": {
-      "start": "Lambeth North",
-      "end": "New Cross Gate"
     }
   },
   "2026-07-10": {
@@ -1273,6 +1273,17 @@
     "hard": {
       "start": "Marylebone",
       "end": "Shadwell"
+    }
+  },
+  "2026-10-07": {
+    "puzzleNum": 188,
+    "easy": {
+      "start": "Finsbury Park",
+      "end": "Queen's Park"
+    },
+    "hard": {
+      "start": "St. James's Park",
+      "end": "Holloway Road"
     }
   }
 }
