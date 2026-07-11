@@ -1,4 +1,15 @@
 {
+  "2026-07-10": {
+    "puzzleNum": 99,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Willesden Junction"
+    },
+    "hard": {
+      "start": "Wembley Central",
+      "end": "Limehouse"
+    }
+  },
   "2026-07-09": {
     "puzzleNum": 98,
     "easy": {
@@ -294,17 +305,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-10": {
-    "puzzleNum": 99,
-    "easy": {
-      "start": "Aldgate",
-      "end": "Willesden Junction"
-    },
-    "hard": {
-      "start": "Wembley Central",
-      "end": "Limehouse"
     }
   },
   "2026-07-11": {
@@ -1284,6 +1284,17 @@
     "hard": {
       "start": "St. James's Park",
       "end": "Holloway Road"
+    }
+  },
+  "2026-10-08": {
+    "puzzleNum": 189,
+    "easy": {
+      "start": "Kennington",
+      "end": "Turnham Green"
+    },
+    "hard": {
+      "start": "Marylebone",
+      "end": "Brent Cross"
     }
   }
 }
