@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-11",
-  "puzzleNum": 100,
+  "date": "2026-07-12",
+  "puzzleNum": 101,
   "easy": {
-    "start": "Latimer Road",
-    "end": "Arsenal"
+    "start": "Canning Town",
+    "end": "Notting Hill Gate"
   },
   "hard": {
-    "start": "Edgware Road",
-    "end": "Limehouse"
+    "start": "Goldhawk Road",
+    "end": "Brixton"
   }
 }
