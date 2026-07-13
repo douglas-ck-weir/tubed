@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-12",
-  "puzzleNum": 101,
+  "date": "2026-07-13",
+  "puzzleNum": 102,
   "easy": {
-    "start": "Canning Town",
-    "end": "Notting Hill Gate"
+    "start": "Stratford",
+    "end": "Barons Court"
   },
   "hard": {
-    "start": "Goldhawk Road",
-    "end": "Brixton"
+    "start": "Temple",
+    "end": "Preston Road"
   }
 }
