@@ -1,4 +1,15 @@
 {
+  "2026-07-13": {
+    "puzzleNum": 102,
+    "easy": {
+      "start": "Stratford",
+      "end": "Barons Court"
+    },
+    "hard": {
+      "start": "Temple",
+      "end": "Preston Road"
+    }
+  },
   "2026-07-12": {
     "puzzleNum": 101,
     "easy": {
@@ -327,17 +338,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-13": {
-    "puzzleNum": 102,
-    "easy": {
-      "start": "Stratford",
-      "end": "Barons Court"
-    },
-    "hard": {
-      "start": "Temple",
-      "end": "Preston Road"
     }
   },
   "2026-07-14": {
@@ -1317,6 +1317,17 @@
     "hard": {
       "start": "Bayswater",
       "end": "Angel"
+    }
+  },
+  "2026-10-11": {
+    "puzzleNum": 192,
+    "easy": {
+      "start": "Fulham Broadway",
+      "end": "Oxford Circus"
+    },
+    "hard": {
+      "start": "Dalston Kingsland",
+      "end": "Clapham South"
     }
   }
 }
