@@ -1,4 +1,15 @@
 {
+  "2026-07-14": {
+    "puzzleNum": 103,
+    "easy": {
+      "start": "Southwark",
+      "end": "Gloucester Road"
+    },
+    "hard": {
+      "start": "Hackney Central",
+      "end": "Piccadilly Circus"
+    }
+  },
   "2026-07-13": {
     "puzzleNum": 102,
     "easy": {
@@ -338,17 +349,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-14": {
-    "puzzleNum": 103,
-    "easy": {
-      "start": "Southwark",
-      "end": "Gloucester Road"
-    },
-    "hard": {
-      "start": "Hackney Central",
-      "end": "Piccadilly Circus"
     }
   },
   "2026-07-15": {
@@ -1328,6 +1328,17 @@
     "hard": {
       "start": "Dalston Kingsland",
       "end": "Clapham South"
+    }
+  },
+  "2026-10-12": {
+    "puzzleNum": 193,
+    "easy": {
+      "start": "South Kensington",
+      "end": "Old Street"
+    },
+    "hard": {
+      "start": "Dalston Kingsland",
+      "end": "Barons Court"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-14",
-  "puzzleNum": 103,
+  "date": "2026-07-15",
+  "puzzleNum": 104,
   "easy": {
-    "start": "Southwark",
-    "end": "Gloucester Road"
+    "start": "Shepherd's Bush Market",
+    "end": "Richmond"
   },
   "hard": {
-    "start": "Hackney Central",
-    "end": "Piccadilly Circus"
+    "start": "Chancery Lane",
+    "end": "Richmond"
   }
 }
