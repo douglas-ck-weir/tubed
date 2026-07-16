@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-15",
-  "puzzleNum": 104,
+  "date": "2026-07-16",
+  "puzzleNum": 105,
   "easy": {
-    "start": "Shepherd's Bush Market",
-    "end": "Richmond"
+    "start": "St. Paul's",
+    "end": "Victoria"
   },
   "hard": {
-    "start": "Chancery Lane",
-    "end": "Richmond"
+    "start": "Shadwell",
+    "end": "Arsenal"
   }
 }
