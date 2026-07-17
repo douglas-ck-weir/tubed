@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-16",
-  "puzzleNum": 105,
+  "date": "2026-07-17",
+  "puzzleNum": 106,
   "easy": {
-    "start": "St. Paul's",
-    "end": "Victoria"
+    "start": "Golders Green",
+    "end": "Whitechapel"
   },
   "hard": {
-    "start": "Shadwell",
-    "end": "Arsenal"
+    "start": "Marylebone",
+    "end": "Limehouse"
   }
 }

@@ -1,4 +1,15 @@
 {
+  "2026-07-16": {
+    "puzzleNum": 105,
+    "easy": {
+      "start": "St. Paul's",
+      "end": "Victoria"
+    },
+    "hard": {
+      "start": "Shadwell",
+      "end": "Arsenal"
+    }
+  },
   "2026-07-15": {
     "puzzleNum": 104,
     "easy": {
@@ -360,17 +371,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-16": {
-    "puzzleNum": 105,
-    "easy": {
-      "start": "St. Paul's",
-      "end": "Victoria"
-    },
-    "hard": {
-      "start": "Shadwell",
-      "end": "Arsenal"
     }
   },
   "2026-07-17": {
@@ -1350,6 +1350,17 @@
     "hard": {
       "start": "Regent's Park",
       "end": "Angel"
+    }
+  },
+  "2026-10-14": {
+    "puzzleNum": 195,
+    "easy": {
+      "start": "Richmond",
+      "end": "Royal Oak"
+    },
+    "hard": {
+      "start": "Pimlico",
+      "end": "Goldhawk Road"
     }
   }
 }
