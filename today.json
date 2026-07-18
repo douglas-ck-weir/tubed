@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-17",
-  "puzzleNum": 106,
+  "date": "2026-07-18",
+  "puzzleNum": 107,
   "easy": {
-    "start": "Golders Green",
-    "end": "Whitechapel"
+    "start": "Highbury & Islington",
+    "end": "Turnham Green"
   },
   "hard": {
-    "start": "Marylebone",
-    "end": "Limehouse"
+    "start": "Golders Green",
+    "end": "New Cross Gate"
   }
 }

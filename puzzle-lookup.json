@@ -1,4 +1,15 @@
 {
+  "2026-07-17": {
+    "puzzleNum": 106,
+    "easy": {
+      "start": "Golders Green",
+      "end": "Whitechapel"
+    },
+    "hard": {
+      "start": "Marylebone",
+      "end": "Limehouse"
+    }
+  },
   "2026-07-16": {
     "puzzleNum": 105,
     "easy": {
@@ -371,17 +382,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-17": {
-    "puzzleNum": 106,
-    "easy": {
-      "start": "Golders Green",
-      "end": "Whitechapel"
-    },
-    "hard": {
-      "start": "Marylebone",
-      "end": "Limehouse"
     }
   },
   "2026-07-18": {
@@ -1361,6 +1361,17 @@
     "hard": {
       "start": "Pimlico",
       "end": "Goldhawk Road"
+    }
+  },
+  "2026-10-15": {
+    "puzzleNum": 196,
+    "easy": {
+      "start": "Aldgate East",
+      "end": "Clapham South"
+    },
+    "hard": {
+      "start": "Shepherd's Bush Market",
+      "end": "Pimlico"
     }
   }
 }
