@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-18",
-  "puzzleNum": 107,
+  "date": "2026-07-19",
+  "puzzleNum": 108,
   "easy": {
-    "start": "Highbury & Islington",
-    "end": "Turnham Green"
+    "start": "Aldgate East",
+    "end": "Knightsbridge"
   },
   "hard": {
-    "start": "Golders Green",
-    "end": "New Cross Gate"
+    "start": "Preston Road",
+    "end": "St. James's Park"
   }
 }

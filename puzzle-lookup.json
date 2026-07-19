@@ -1,4 +1,15 @@
 {
+  "2026-07-18": {
+    "puzzleNum": 107,
+    "easy": {
+      "start": "Highbury & Islington",
+      "end": "Turnham Green"
+    },
+    "hard": {
+      "start": "Golders Green",
+      "end": "New Cross Gate"
+    }
+  },
   "2026-07-17": {
     "puzzleNum": 106,
     "easy": {
@@ -382,17 +393,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-18": {
-    "puzzleNum": 107,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Turnham Green"
-    },
-    "hard": {
-      "start": "Golders Green",
-      "end": "New Cross Gate"
     }
   },
   "2026-07-19": {
@@ -1372,6 +1372,17 @@
     "hard": {
       "start": "Shepherd's Bush Market",
       "end": "Pimlico"
+    }
+  },
+  "2026-10-16": {
+    "puzzleNum": 197,
+    "easy": {
+      "start": "Bank",
+      "end": "Vauxhall"
+    },
+    "hard": {
+      "start": "Regent's Park",
+      "end": "Archway"
     }
   }
 }
