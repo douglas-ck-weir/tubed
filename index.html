@@ -836,9 +836,14 @@ const INTERCHANGE_MINS = {
     // cross-platform walk is longer than Edgware Road's adjacent platforms.
     "Circle|Circle": 7,
     "Circle|District": 1,
-    "Circle|Elizabeth": 16,
+    // Circle|Elizabeth and District|Elizabeth: manual overrides matching
+    // MANUAL_OVERRIDES['Paddington'] in build_interchanges/overrides.py.
+    // API returns 16 / 18 via the mainline concourse; the direct sub-surface
+    // subway to the Elizabeth ticket hall is ~10 min. Circle and District
+    // share the sub-surface platforms so both pairs match.
+    "Circle|Elizabeth": 10,
     "Circle|Hammersmith & City": 1,
-    "District|Elizabeth": 18,
+    "District|Elizabeth": 10,
     "District|Hammersmith & City": 14,
     "Elizabeth|Hammersmith & City": 16,
   },

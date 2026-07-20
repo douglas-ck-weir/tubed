@@ -8,6 +8,9 @@ interchange_new.js
 times_new.js
 times_new.json
 
+# Local experiments / scratch scripts
+centrality_sample.mjs
+
 # build_interchanges generated outputs (live in repo root; not source-of-truth)
 interchange_diff.txt
 big_changes_ranked.txt

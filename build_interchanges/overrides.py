@@ -270,6 +270,16 @@ MANUAL_OVERRIDES: Dict[str, Dict[str, int]] = {
     'Heathrow Terminals 2&3': {
         'Elizabeth|Elizabeth': 1,
     },
+    # Paddington: TfL Stop Structure API returns walk times computed via
+    # the mainline concourse route (Circle|Elizabeth: 16, District|
+    # Elizabeth: 18). Reality is shorter — the Circle/District sub-surface
+    # subway leads directly to the Elizabeth ticket hall in ~10 min.
+    # Player-verified via feedback July 2026. Circle and District share
+    # the sub-surface platforms so both pairs get the same value.
+    'Paddington': {
+        'Circle|Elizabeth': 10,
+        'District|Elizabeth': 10,
+    },
 }
 
 
