@@ -1,4 +1,15 @@
 {
+  "2026-07-19": {
+    "puzzleNum": 108,
+    "easy": {
+      "start": "Aldgate East",
+      "end": "Knightsbridge"
+    },
+    "hard": {
+      "start": "Preston Road",
+      "end": "St. James's Park"
+    }
+  },
   "2026-07-18": {
     "puzzleNum": 107,
     "easy": {
@@ -393,17 +404,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-19": {
-    "puzzleNum": 108,
-    "easy": {
-      "start": "Aldgate East",
-      "end": "Knightsbridge"
-    },
-    "hard": {
-      "start": "Preston Road",
-      "end": "St. James's Park"
     }
   },
   "2026-07-20": {
@@ -1383,6 +1383,17 @@
     "hard": {
       "start": "Regent's Park",
       "end": "Archway"
+    }
+  },
+  "2026-10-17": {
+    "puzzleNum": 198,
+    "easy": {
+      "start": "Swiss Cottage",
+      "end": "Oxford Circus"
+    },
+    "hard": {
+      "start": "Shadwell",
+      "end": "Pimlico"
     }
   }
 }

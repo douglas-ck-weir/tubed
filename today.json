@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-19",
-  "puzzleNum": 108,
+  "date": "2026-07-20",
+  "puzzleNum": 109,
   "easy": {
-    "start": "Aldgate East",
-    "end": "Knightsbridge"
+    "start": "Stockwell",
+    "end": "Hammersmith"
   },
   "hard": {
-    "start": "Preston Road",
-    "end": "St. James's Park"
+    "start": "Arsenal",
+    "end": "Dalston Kingsland"
   }
 }
