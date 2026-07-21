@@ -195,12 +195,12 @@ test('#1 waitTime returns the correct value per direction for every sensitive pa
 test('#1 cache does NOT poison across directions (Heathrow T5 vs Hayes & Harlington)', () => {
   resetCache();
   // Heathrow Terminals 2&3 on Elizabeth_Abbey_Wood_T5:
-  //   → Hayes & Harlington = 5
+  //   → Hayes & Harlington = 4
   //   → Heathrow Terminal 5 = 15
   // Old broken cache would return whichever was queried first for both.
   const east = waitTime('Heathrow Terminals 2&3', 'Hayes & Harlington', 'Elizabeth_Abbey_Wood_T5');
   const west = waitTime('Heathrow Terminals 2&3', 'Heathrow Terminal 5', 'Elizabeth_Abbey_Wood_T5');
-  eq(east, 5, 'Heathrow T2&3 → Hayes & Harlington');
+  eq(east, 4, 'Heathrow T2&3 → Hayes & Harlington');
   eq(west, 15, 'Heathrow T2&3 → Heathrow Terminal 5');
   ne(east, west, 'cache must not return same value for both directions');
 });
@@ -210,19 +210,20 @@ test('#1 cache poisoning regression — query in opposite order', () => {
   const west = waitTime('Heathrow Terminals 2&3', 'Heathrow Terminal 5', 'Elizabeth_Abbey_Wood_T5');
   const east = waitTime('Heathrow Terminals 2&3', 'Hayes & Harlington', 'Elizabeth_Abbey_Wood_T5');
   eq(west, 15, 'west-first: T5 direction');
-  eq(east, 5, 'east-second: Hayes & Harlington');
+  eq(east, 4, 'east-second: Hayes & Harlington');
 });
 
 test('#1 cache stores per-direction values (Paddington Elizabeth)', () => {
   resetCache();
-  // Paddington Elizabeth_Abbey_Wood_T4: Acton Main Line = 8, Bond Street = 2
+  // Paddington Elizabeth_Abbey_Wood_T4: Acton Main Line = 7, Bond Street = 1
   const west = waitTime('Paddington', 'Acton Main Line', 'Elizabeth_Abbey_Wood_T4');
   const east = waitTime('Paddington', 'Bond Street', 'Elizabeth_Abbey_Wood_T4');
-  eq(west, 8);
-  eq(east, 2);
+  eq(west, 7);
+  eq(east, 1);
+  ne(west, east, 'per-direction values must differ');
   // Querying again should hit cache and return the same per-direction value.
-  eq(waitTime('Paddington', 'Acton Main Line', 'Elizabeth_Abbey_Wood_T4'), 8);
-  eq(waitTime('Paddington', 'Bond Street', 'Elizabeth_Abbey_Wood_T4'), 2);
+  eq(waitTime('Paddington', 'Acton Main Line', 'Elizabeth_Abbey_Wood_T4'), 7);
+  eq(waitTime('Paddington', 'Bond Street', 'Elizabeth_Abbey_Wood_T4'), 1);
 });
 
 test('#1 display-line fallback still works (Northern → Bank-branch)', () => {
@@ -230,8 +231,8 @@ test('#1 display-line fallback still works (Northern → Bank-branch)', () => {
   // User route input uses display lines like "Northern". Should resolve to a
   // matching branch value at that station.
   const got = waitTime('Bank', 'London Bridge', 'Northern');
-  // From data: Bank|London Bridge|Northern_Bank_to_Edgware = 2 (and _High_Barnet = 2)
-  eq(got, 2, 'display line "Northern" should match Northern_Bank_* branches at Bank');
+  // From data: Bank|London Bridge|Northern_Bank_to_Edgware = 1 (and _High_Barnet = 1)
+  eq(got, 1, 'display line "Northern" should match Northern_Bank_* branches at Bank');
 });
 
 test('#1 unknown line falls back to WAIT_MINS_DEFAULT', () => {

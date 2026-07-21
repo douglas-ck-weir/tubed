@@ -4,13 +4,15 @@ Two paths:
 
 * `headway_from_tube_timetable(timetable_json, line_name_filter=None)`
   For Tube lines: parse `knownJourneys` from the Mon–Fri off-peak window
-  and return the mean gap between consecutive departures.
+  and return the median gap between consecutive departures.
 
 * `headway_from_journey_results(jr_json, line_name)`
   For non-Tube modes: filter journeys to those whose first leg is on
   `line_name`, then return the gap between consecutive departures.
 """
 
+import math
+import statistics
 from datetime import datetime
 from typing import List, Optional
 
@@ -83,7 +85,7 @@ def headway_from_tube_timetable(
     timetable_json: dict,
     target_naptan: Optional[str] = None,
 ) -> Optional[float]:
-    """Mean off-peak headway in minutes from /Line/.../Timetable response.
+    """Median off-peak headway in minutes from /Line/.../Timetable response.
 
     When `target_naptan` is given, restrict to routes whose service actually
     reaches that stop — important at teardrop pivots (Paddington / Edgware
@@ -109,7 +111,17 @@ def headway_from_tube_timetable(
 
     if not all_gaps:
         return None
-    return sum(all_gaps) / len(all_gaps)
+    # Median, not mean: real service is discrete ("every 3 min", "every 10
+    # min"), but the mean of off-peak gaps smears that into fractional
+    # headways (2.99, 9.966) as end-of-window and skipped-journey gaps drag
+    # it around. Those fractions then straddle a rounding boundary in
+    # wait_minutes, so two stations on identical service disagree by a whole
+    # minute. The median recovers the clean integer headway and removes the
+    # noise at the source. Round it: an even-count gap list makes median
+    # average the two middle values, which can be fractional (e.g. 4.5) and
+    # would reintroduce the boundary fragility — rounding guarantees the
+    # integer headway the fix relies on.
+    return round(statistics.median(all_gaps))
 
 
 def line_departures_from_jr(jr_json: dict, line_name: str) -> List[datetime]:
@@ -136,7 +148,7 @@ def line_departures_from_jr(jr_json: dict, line_name: str) -> List[datetime]:
 
 
 def headway_from_journey_results(jr_json: dict, line_name: str) -> Optional[float]:
-    """Mean headway from /Journey/JourneyResults response, filtered to `line_name`.
+    """Median headway from /Journey/JourneyResults response, filtered to `line_name`.
 
     `line_name` matches the `routeOptions[0].name` field, e.g.
     'Hammersmith & City', 'Mildmay', 'DLR'. TfL appends ' line' to
@@ -173,9 +185,22 @@ def headway_from_journey_results(jr_json: dict, line_name: str) -> Optional[floa
     gaps = [g for g in gaps if 0 < g < 60]
     if not gaps:
         return None
-    return sum(gaps) / len(gaps)
+    # Median (rounded) for the same reason as headway_from_tube_timetable:
+    # discrete service smeared by mean produces fractional headways that flip
+    # the rounded wait between adjacent stations; rounding the median keeps
+    # the headway a clean integer even for even-count gap lists.
+    return round(statistics.median(gaps))
 
 
 def wait_minutes(headway: float) -> int:
-    """Half-headway, rounded to the nearest minute, minimum 1."""
-    return max(1, round(headway / 2))
+    """Floor of the half-headway, minimum 1.
+
+    The headway is now a rounded median (see the aggregation functions
+    above), so it is always a whole minute and the old rounding fragility is
+    gone: stations on identical track get identical waits. Floor (rather than
+    round) resolves the remaining odd-headway case uniformly and
+    keeps the high-frequency core reading as a 1-min wait, which matches how
+    those lines feel to ride. Example: a 3-min-headway line floors to a 1-min
+    wait everywhere; a 10-min Circle floors to 5 everywhere.
+    """
+    return max(1, math.floor(headway / 2))

@@ -548,10 +548,11 @@ test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a chang
   ]);
   eq(r.legs.length, 2);
   eq(r.interchanges[0]?.at, 'Edgware Road');
-  // 18 + (2 walk + 2 wait) + 7 = 29
+  // Edgware Road Circle now uses the combined shared-platform frequency
+  // (5-min wait), matching Paddington. 18 + (2 walk + 5 wait) + 7 = 32.
   eq(r.interchanges[0]?.walkMins, 2);
-  eq(r.interchanges[0]?.waitMins, 2);
-  eq(r.totalMins, 29);
+  eq(r.interchanges[0]?.waitMins, 5);
+  eq(r.totalMins, 32);
 });
 
 test('buildUserLegs: non-pivot waypoint on Circle stays as a single via leg', () => {

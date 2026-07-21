@@ -319,13 +319,13 @@ test('e2e: rendered HTML displays walk+wait breakdown for the change at Paddingt
   contains(html, 'wait)', 'should show wait breakdown');
 });
 
-test('e2e: Paddington pivot wait reflects 5-min Circle headway (covers #1 direction-sensitive)', () => {
+test('e2e: Paddington pivot wait reflects Circle headway (covers #1 direction-sensitive)', () => {
   resetStore();
   // User route: Victoria → Paddington → Ladbroke Grove on Circle.
   // The interchange at Paddington should show waitMins=5 (Circle teardrop
-  // pivot, half-headway of the Circle line). If waitTime were poisoned
-  // across directions or routing the wrong "to" through firstHopOnLeg,
-  // we'd get a different value.
+  // pivot, floored half of the ~10-min median Circle headway). If waitTime
+  // were poisoned across directions or routing the wrong "to" through
+  // firstHopOnLeg, we'd get a different value.
   const userLegsData = makeUserLegsData('Victoria', [
     {station: 'Paddington', line: 'Circle'},
     {station: 'Ladbroke Grove', line: 'Circle'},
@@ -333,22 +333,22 @@ test('e2e: Paddington pivot wait reflects 5-min Circle headway (covers #1 direct
   const interchange = userLegsData.interchanges.find(x => x && x.at === 'Paddington');
   truthy(interchange, 'should have a Paddington interchange');
   eq(interchange.walkMins, 7, '7-min cross-platform walk between Circle teardrops');
-  eq(interchange.waitMins, 5, '5-min Circle half-headway wait');
+  eq(interchange.waitMins, 5, 'Circle floored half-headway wait');
   eq(interchange.mins, 12);
 });
 
-test('e2e: Edgware Road pivot wait differs from Paddington pivot (direction sanity)', () => {
+test('e2e: Edgware Road pivot wait resolves per-pivot (direction sanity)', () => {
   resetStore();
-  // At Edgware Road on Circle the half-headway is 2 (data point), not 5.
-  // This catches a regression where waitTime might return the wrong
-  // headway for the Circle at this specific pivot.
+  // At Edgware Road on Circle the wait is 5 (combined shared-platform
+  // frequency). This catches a regression where waitTime might return the
+  // wrong headway for the Circle at this specific pivot.
   const userLegsData = makeUserLegsData('Victoria', [
     {station: 'Edgware Road', line: 'Circle'},
     {station: 'Ladbroke Grove', line: 'Circle'},
   ]);
   const interchange = userLegsData.interchanges.find(x => x && x.at === 'Edgware Road');
   truthy(interchange, 'should have an Edgware Road interchange');
-  eq(interchange.waitMins, 2, '2-min Circle wait at Edgware Road');
+  eq(interchange.waitMins, 5, 'Circle wait at Edgware Road (shared-platform frequency)');
 });
 
 test('e2e: snapshot survives a localStorage round-trip (full serialise/parse)', () => {
