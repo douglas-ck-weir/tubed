@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-20",
-  "puzzleNum": 109,
+  "date": "2026-07-21",
+  "puzzleNum": 110,
   "easy": {
-    "start": "Stockwell",
-    "end": "Hammersmith"
+    "start": "Acton Town",
+    "end": "Finchley Road"
   },
   "hard": {
-    "start": "Arsenal",
-    "end": "Dalston Kingsland"
+    "start": "Sloane Square",
+    "end": "Harrow on the Hill"
   }
 }
