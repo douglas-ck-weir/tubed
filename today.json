@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-21",
-  "puzzleNum": 110,
+  "date": "2026-07-22",
+  "puzzleNum": 111,
   "easy": {
-    "start": "Acton Town",
-    "end": "Finchley Road"
+    "start": "Canning Town",
+    "end": "Old Street"
   },
   "hard": {
-    "start": "Sloane Square",
-    "end": "Harrow on the Hill"
+    "start": "Borough",
+    "end": "Surrey Quays"
   }
 }
