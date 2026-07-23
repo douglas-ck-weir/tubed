@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-22",
-  "puzzleNum": 111,
+  "date": "2026-07-23",
+  "puzzleNum": 112,
   "easy": {
-    "start": "Canning Town",
-    "end": "Old Street"
+    "start": "Wembley Park",
+    "end": "Charing Cross"
   },
   "hard": {
-    "start": "Borough",
-    "end": "Surrey Quays"
+    "start": "High Street Kensington",
+    "end": "Angel"
   }
 }
