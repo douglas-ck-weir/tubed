@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-23",
-  "puzzleNum": 112,
+  "date": "2026-07-24",
+  "puzzleNum": 113,
   "easy": {
-    "start": "Wembley Park",
-    "end": "Charing Cross"
+    "start": "Shepherd's Bush Market",
+    "end": "Swiss Cottage"
   },
   "hard": {
-    "start": "High Street Kensington",
-    "end": "Angel"
+    "start": "New Cross Gate",
+    "end": "Elephant & Castle"
   }
 }
