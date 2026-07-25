@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-24",
-  "puzzleNum": 113,
+  "date": "2026-07-25",
+  "puzzleNum": 114,
   "easy": {
-    "start": "Shepherd's Bush Market",
-    "end": "Swiss Cottage"
+    "start": "Willesden Green",
+    "end": "Tower Hill"
   },
   "hard": {
-    "start": "New Cross Gate",
-    "end": "Elephant & Castle"
+    "start": "Dalston Kingsland",
+    "end": "Parsons Green"
   }
 }
