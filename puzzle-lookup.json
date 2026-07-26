@@ -1,4 +1,15 @@
 {
+  "2026-07-25": {
+    "puzzleNum": 114,
+    "easy": {
+      "start": "Willesden Green",
+      "end": "Tower Hill"
+    },
+    "hard": {
+      "start": "Dalston Kingsland",
+      "end": "Parsons Green"
+    }
+  },
   "2026-07-24": {
     "puzzleNum": 113,
     "easy": {
@@ -459,17 +470,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-25": {
-    "puzzleNum": 114,
-    "easy": {
-      "start": "Willesden Green",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Parsons Green"
     }
   },
   "2026-07-26": {
@@ -1449,6 +1449,17 @@
     "hard": {
       "start": "Piccadilly Circus",
       "end": "Surrey Quays"
+    }
+  },
+  "2026-10-23": {
+    "puzzleNum": 204,
+    "easy": {
+      "start": "Finchley Road",
+      "end": "Wimbledon"
+    },
+    "hard": {
+      "start": "Wembley Central",
+      "end": "Fulham Broadway"
     }
   }
 }

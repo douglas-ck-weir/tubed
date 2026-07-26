@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-25",
-  "puzzleNum": 114,
+  "date": "2026-07-26",
+  "puzzleNum": 115,
   "easy": {
-    "start": "Willesden Green",
-    "end": "Tower Hill"
+    "start": "Finchley Road",
+    "end": "Oval"
   },
   "hard": {
     "start": "Dalston Kingsland",
-    "end": "Parsons Green"
+    "end": "Knightsbridge"
   }
 }
