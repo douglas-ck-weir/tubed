@@ -4211,7 +4211,14 @@ function dijkstra(graph, start, end) {
 
   // Store up to MAX_PATHS paths per (station, line) so that routes of equal
   // cost via different interchange stations all survive to the results stage.
-  const MAX_PATHS = 8;
+  // Raised 8 -> 16 (2026-07-26): at 8 the search under-explored long, branch-
+  // dense corridors (District/Circle West London) and evicted the genuinely
+  // optimal path before it reached the destination, so it published a too-slow
+  // "optimal" that players could beat (e.g. puzzle #104 Chancery Lane ->
+  // Richmond: reported 51 min vs a real 48-min route). 16 is comfortably above
+  // the depth needed for every published puzzle; see the dijkstra-admissibility
+  // regression test in tests/dijkstra_optimal.test.mjs.
+  const MAX_PATHS = 16;
   const dist = {};   // dist[station][line] = [{cost, path}, ...]
   const pq   = [];
   function push(item) { pq.push(item); pq.sort((a,b) => a.cost - b.cost); }

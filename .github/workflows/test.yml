@@ -22,3 +22,6 @@ jobs:
 
       - name: Puzzle sources agreement (today.json ↔ puzzle-lookup.json ↔ index.html)
         run: node tests/puzzle-sources.test.mjs
+
+      - name: Dijkstra admissibility (published "optimal" is not beatable)
+        run: node tests/dijkstra_optimal.test.mjs
