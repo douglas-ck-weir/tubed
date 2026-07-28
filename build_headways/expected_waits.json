@@ -1,11 +1,12 @@
 {
   "_comment": "Hand-validated wait times for well-known interchanges. Used by `--validate` (check 6) to catch regressions. Tolerance: ±1 minute. Update when TfL frequencies change.",
   "_format": "from|to|branch_id: expected_wait_minutes",
+  "_model": "Wait = COMBINED frequency of every line sharing a boarding hop (see combine_shared_hops). On shared track a rider boards whichever train comes first, so all lines on a hop share one wait; a line's own headway only shows once it splits onto its own branch.",
 
-  "_kings_cross": "Kings Cross is the densest interchange in the network. All 6 lines.",
-  "Kings Cross St. Pancras|Euston Square|Hammersmith & City": 5,
-  "Kings Cross St. Pancras|Euston Square|Circle": 5,
-  "Kings Cross St. Pancras|Euston Square|Metropolitan_Uxbridge_Aldgate": 2,
+  "_kings_cross": "Kings Cross is the densest interchange. The sub-surface hop to Euston Sq is Circle+H&C+Metropolitan combined, so all three read the same low wait.",
+  "Kings Cross St. Pancras|Euston Square|Hammersmith & City": 1,
+  "Kings Cross St. Pancras|Euston Square|Circle": 1,
+  "Kings Cross St. Pancras|Euston Square|Metropolitan_Uxbridge_Aldgate": 1,
   "Kings Cross St. Pancras|Euston|Northern_Bank_to_High_Barnet": 1,
   "Kings Cross St. Pancras|Euston|Victoria": 1,
   "Kings Cross St. Pancras|Russell Square|Piccadilly_T5_Cockfosters": 1,
@@ -23,20 +24,20 @@
   "Bond Street|Marble Arch|Central_Ealing_Broadway_Epping": 1,
   "Oxford Circus|Bond Street|Central_Ealing_Broadway_Epping": 1,
 
-  "_circle_hc": "Sub-surface, 6 tph each = 10-min median headway = 5-min wait.",
-  "Liverpool Street|Aldgate|Circle": 5,
-  "Aldgate East|Whitechapel|Hammersmith & City": 5,
-  "Baker Street|Edgware Road|Circle": 5,
+  "_circle_hc": "Sub-surface core: Circle+H&C+Metropolitan interleave on the same track, so the combined frequency is high and the shared hop reads a 1-min wait. Edgware Rd is a Circle/District pivot with fewer trains combining, so it stays a touch higher.",
+  "Liverpool Street|Aldgate|Circle": 1,
+  "Aldgate East|Whitechapel|Hammersmith & City": 1,
+  "Baker Street|Edgware Road|Circle": 2,
 
   "_district_trunk": "Trunk through central London ~8-10 tph combined.",
   "Earl's Court|Gloucester Road|District_Wimbledon_Upminster": 1,
   "Victoria|Sloane Square|District_Wimbledon_Upminster": 1,
   "Westminster|St. James's Park|District_Wimbledon_Upminster": 1,
 
-  "_metropolitan_trunk": "Aldgate-Baker St trunk combines 4 branches ~16 tph.",
+  "_metropolitan_trunk": "Metropolitan uses its OWN platforms at Baker St (Circle/H&C share a different platform), so Met does not combine with them. Its 4 branches combine among themselves to a ~2-min trunk wait.",
   "Baker Street|Great Portland Street|Metropolitan_Uxbridge_Aldgate": 2,
 
-  "_overground_low_freq": "Mildmay / Lioness / Suffragette ~4 tph = 7 min wait.",
+  "_overground_shared": "Overground lines only combine where TfL platform data confirms a shared platform. Lioness/Bakerloo at Harrow board separate platforms; Canonbury exposes no platform data, so Mildmay/Windrush do NOT combine there and each keeps its own ~3-min wait.",
   "Highbury & Islington|Canonbury|Overground_Mildmay_Clapham": 3,
   "Harrow & Wealdstone|Kenton|Overground_Lioness": 7,
   "Gospel Oak|Upper Holloway|Overground_Suffragette": 7,
@@ -52,7 +53,7 @@
   "Bank|Shadwell|DLR_Bank_Lewisham": 1,
   "Canary Wharf|West India Quay|DLR_Bank_Lewisham": 1,
 
-  "_branch_endings": "Outer branches lower freq.",
+  "_branch_endings": "Outer branches lower freq. Same-platform shares still combine (Uxbridge-Hillingdon: Metropolitan+Piccadilly board the same platform). But Elizabeth and Piccadilly serve Heathrow on separate stations/platforms, so the Piccadilly wait to T2&3 stays its own single-line value.",
   "Heathrow Terminal 5|Heathrow Terminals 2&3|Piccadilly_T5_Cockfosters": 4,
-  "Uxbridge|Hillingdon|Piccadilly_Uxbridge_Cockfosters": 10
+  "Uxbridge|Hillingdon|Piccadilly_Uxbridge_Cockfosters": 2
 }

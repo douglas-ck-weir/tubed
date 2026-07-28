@@ -18,7 +18,7 @@ import csv
 import logging
 import re
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, FrozenSet, List, Optional
 
 from .tfl_api import TflClient
 
@@ -162,6 +162,39 @@ def load_csv_naptan_map() -> Dict[str, str]:
             if not (naptan.startswith('940G') or naptan.startswith('910G')):
                 continue
             out[name] = naptan
+    return out
+
+
+def _collect_metro_platforms(node: dict, out: List[FrozenSet[str]]) -> None:
+    """Recurse a StopPoint node's INLINE children, collecting the set of line
+    names on each NaptanMetroPlatform. Children are read in place — a station's
+    /StopPoint response embeds its platform children (and their `lines`), so no
+    per-child re-fetch is needed (re-fetching returns the flattened complex,
+    not a drill-down)."""
+    if node.get('stopType') == 'NaptanMetroPlatform':
+        lines = frozenset(l.get('name') for l in node.get('lines', []) if l.get('name'))
+        if lines:
+            out.append(lines)
+    for ch in node.get('children', []):
+        _collect_metro_platforms(ch, out)
+
+
+def platform_line_sets(naptan: str, client: TflClient) -> List[FrozenSet[str]]:
+    """Return the line-name sets sharing each physical platform at `naptan`.
+
+    Each entry is the set of lines calling at one NaptanMetroPlatform, e.g.
+    Baker Street returns [{'Bakerloo'}, {'Bakerloo'}, {'Circle','Hammersmith &
+    City'}, ..., {'Metropolitan'}, {'Metropolitan'}]. Two lines board the same
+    platform iff some set contains both — this is the authoritative "board
+    whichever comes first" signal for the wait model. Empty list if the stop
+    exposes no metro platforms (e.g. Overground-only 910G stops)."""
+    try:
+        data = client._get(f'/StopPoint/{naptan}', f'sp_{naptan}')
+    except Exception as e:
+        logger.warning('platform fetch failed for %s: %s', naptan, e)
+        return []
+    out: List[FrozenSet[str]] = []
+    _collect_metro_platforms(data, out)
     return out
 
 

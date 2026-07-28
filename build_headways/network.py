@@ -97,6 +97,26 @@ def stations_by_display_line(network: Dict[str, List[str]]) -> Dict[str, Set[str
     return out
 
 
+def branches_by_hop(
+    network: Dict[str, List[str]],
+) -> Dict[Tuple[str, str], Set[str]]:
+    """Return {(from, to): {branch_id, ...}} for every adjacent pair.
+
+    Both directions are recorded. A hop served by 2+ branches is "trunk"
+    (a rider boards whichever train comes first); a hop served by exactly
+    one branch is that branch's own tail. This is what lets the wait model
+    charge combined frequency on shared track and single-branch frequency
+    where a branch splits off — derived from topology, no curation.
+    """
+    out: Dict[Tuple[str, str], Set[str]] = {}
+    for branch, stns in network.items():
+        for i in range(len(stns) - 1):
+            a, b = stns[i], stns[i + 1]
+            out.setdefault((a, b), set()).add(branch)
+            out.setdefault((b, a), set()).add(branch)
+    return out
+
+
 def enumerate_interchange_edges(
     network: Dict[str, List[str]],
 ) -> List[Tuple[str, str, str]]:

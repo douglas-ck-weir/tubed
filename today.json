@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-26",
-  "puzzleNum": 115,
+  "date": "2026-07-27",
+  "puzzleNum": 116,
   "easy": {
-    "start": "Finchley Road",
-    "end": "Oval"
+    "start": "Holloway Road",
+    "end": "Southfields"
   },
   "hard": {
-    "start": "Dalston Kingsland",
-    "end": "Knightsbridge"
+    "start": "Lancaster Gate",
+    "end": "Harrow on the Hill"
   }
 }

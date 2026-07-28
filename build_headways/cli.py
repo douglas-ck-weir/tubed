@@ -5,7 +5,7 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, FrozenSet, List, Optional, Tuple
 
 from .headway import (
     headway_from_tube_timetable,
@@ -13,7 +13,7 @@ from .headway import (
     wait_minutes,
 )
 from .line_map import tfl_for_branch
-from .naptan import load_csv_naptan_map, resolve_naptan
+from .naptan import load_csv_naptan_map, platform_line_sets, resolve_naptan
 from .network import display_line, enumerate_interchange_edges, parse_network
 from .tfl_api import TflClient
 
@@ -92,23 +92,34 @@ def compute_wait_for_edge(
     branch: str,
     naptan_map: Dict[str, str],
     client: TflClient,
-) -> Tuple[Optional[int], str]:
-    """Return (wait_mins, source_tag) for one edge.
+) -> Tuple[Optional[int], Optional[float], str]:
+    """Return (wait_mins, raw_headway, source_tag) for one edge.
+
+    `raw_headway` is the full (pre-halved) headway in minutes that produced
+    `wait_mins`, so callers can recombine frequencies across branches that
+    share a boarding hop without losing precision to the half-headway floor.
+    For a manual override it is 2*wait (the override's implied headway); it is
+    None only when there is no wait at all (no live data).
 
     source_tag is one of: 'tube-tt', 'jr', 'manual', 'no-data',
     'no-naptan', 'unmapped-line'.
     """
     if (from_stn, to_stn, branch) in MANUAL_WAIT_OVERRIDES:
-        return MANUAL_WAIT_OVERRIDES[(from_stn, to_stn, branch)], 'manual'
+        # A manual override IS the intended half-headway wait, so its implied
+        # full headway is exactly 2*wait. Return that as raw_headway so a
+        # combine involving this edge uses the intended value rather than
+        # re-flooring 2*wait a second time (see combine_shared_hops).
+        ov = MANUAL_WAIT_OVERRIDES[(from_stn, to_stn, branch)]
+        return ov, 2.0 * ov, 'manual'
 
     tfl_line, tfl_mode = tfl_for_branch(branch)
     if tfl_line is None:
-        return None, 'unmapped-line'
+        return None, None, 'unmapped-line'
 
     from_naptan = resolve_naptan(from_stn, naptan_map, client, tfl_line=tfl_line)
     to_naptan = resolve_naptan(to_stn, naptan_map, client, tfl_line=tfl_line)
     if from_naptan is None or to_naptan is None:
-        return None, 'no-naptan'
+        return None, None, 'no-naptan'
 
     # Tube: use Line Timetable (full day, can filter to off-peak in-process).
     # We pass to_naptan so headway_from_tube_timetable can isolate the route
@@ -126,7 +137,7 @@ def compute_wait_for_edge(
                 data2 = client.line_timetable(tfl_line, from_naptan, direction='outbound')
                 h = headway_from_tube_timetable(data2, target_naptan=to_naptan)
             if h is not None:
-                return wait_minutes(h), 'tube-tt'
+                return wait_minutes(h), h, 'tube-tt'
         except Exception as e:
             logger.warning('Tube TT failed for %s @ %s: %s', tfl_line, from_naptan, e)
 
@@ -174,9 +185,10 @@ def compute_wait_for_edge(
                 for i in range(len(deps) - 1)]
         gaps = [g for g in gaps if 0 < g < 60]
         if gaps:
-            return wait_minutes(sum(gaps) / len(gaps)), 'jr'
+            h = sum(gaps) / len(gaps)
+            return wait_minutes(h), h, 'jr'
 
-    return None, 'no-data'
+    return None, None, 'no-data'
 
 
 def write_wait_times_js(
@@ -252,6 +264,146 @@ EXPECTED_ASYMMETRIES = {
 }
 
 
+def platform_line_components(
+    platforms: List[FrozenSet[str]],
+) -> Dict[str, FrozenSet[str]]:
+    """Map each line to the set of lines it can 'board whichever comes first'
+    with, i.e. the connected component of the co-occurrence graph over the
+    station's platforms.
+
+    Two lines that appear together on any platform are linked; the relation is
+    transitive. At Paddington the platforms are {Circle,District},
+    {Circle,H&C}, {H&C}, {Bakerloo}×2 — Circle links District and links H&C, so
+    Circle/District/H&C form ONE component (a rider on any of the three boards
+    whichever train comes first), while Bakerloo stays separate. First-match
+    platform keying would have wrongly split H&C off Circle here.
+    """
+    parent: Dict[str, str] = {}
+
+    def find(x: str) -> str:
+        parent.setdefault(x, x)
+        root = x
+        while parent[root] != root:
+            root = parent[root]
+        while parent[x] != root:
+            parent[x], x = root, parent[x]
+        return root
+
+    def union(a: str, b: str) -> None:
+        parent[find(a)] = find(b)
+
+    for lines in platforms:
+        it = list(lines)
+        for other in it[1:]:
+            union(it[0], other)
+
+    comps: Dict[str, set] = {}
+    for line in parent:
+        comps.setdefault(find(line), set()).add(line)
+    return {line: frozenset(members)
+            for members in comps.values() for line in members}
+
+
+def platform_group_key(
+    station: str,
+    branch: str,
+    boarding_naptan: Dict[Tuple[str, str], str],
+    station_components: Dict[str, Dict[str, FrozenSet[str]]],
+) -> object:
+    """Return a key EQUAL for two branches iff a rider can board whichever train
+    comes first among them at `station`, and unique otherwise.
+
+    Keys on (station NAME, the connected component of lines this branch's line
+    shares platforms with — see platform_line_components). NB: station NAME, not
+    NaPTAN — see the split-site note at the end of this docstring; do not change
+    this to key on the NaPTAN. Two branches whose lines are in the same component
+    share the key; a line on its own platform (Metropolitan at Baker St, Northern
+    vs Victoria at Kings Cross) is a singleton component and gets a singleton key.
+
+    Falls back to a unique sentinel — never merges — when the boarding NaPTAN is
+    unresolved, is a multi-modal HUB (doesn't prove a shared platform), or the
+    station exposes no platform data (e.g. Overground-only 910G stops).
+
+    The key is (station NAME, component) rather than (NaPTAN, component) on
+    purpose: split-site stations give one line a different sub-station NaPTAN
+    (Paddington H&C is 940GZZLUPAH while Circle/District is 940GZZLUPAC) even
+    though they share platforms. The component is computed from the same
+    platform list regardless of which NaPTAN we entered by, so keying on the
+    station name keeps a genuine shared component together.
+    """
+    nap = boarding_naptan.get((station, branch))
+    if nap is None or nap.startswith('HUB'):
+        return ('__unresolved__', station, branch)
+    dl = display_line(branch)
+    comp = station_components.get(nap, {}).get(dl)
+    if comp is None:
+        return ('__no_platform__', station, branch)
+    return (station, comp)
+
+
+def combine_shared_hops(
+    waits: Dict[Tuple[str, str, str], int],
+    raw_headways: Dict[Tuple[str, str, str], Optional[float]],
+    network: Dict[str, List[str]],
+    boarding_naptan: Dict[Tuple[str, str], str],
+    station_components: Dict[str, Dict[str, FrozenSet[str]]],
+) -> Dict[Tuple[str, str, str], int]:
+    """Collapse each shared boarding platform to its combined-frequency wait.
+
+    Two branches share a wait only when a rider on one physically boards from
+    the same platform as the other and takes whichever train comes first. The
+    authoritative signal is TfL's per-platform line list (NaptanMetroPlatform
+    children): two lines board the same platform iff some platform lists both.
+    Station-level NaPTAN is NOT enough — Kings Cross gives one NaPTAN to Northern
+    (plats 4/5) and Victoria (plats 1/2), physically separate platforms; likewise
+    Metropolitan sits on its own platforms at Baker Street while Circle/H&C share
+    another. See platform_group_key and naptan.platform_line_sets.
+
+    We group the branches on a hop by shared platform and combine only within
+    each group, via the combined headway H_c = 1 / sum(1 / H_i), writing that
+    value to every branch in the group. Singleton groups are left untouched.
+
+    Combining uses the raw (pre-floor) headways where available, falling back
+    to reconstructing H_i = 2 * wait for entries without one (manual overrides).
+    """
+    from collections import defaultdict
+
+    from .network import branches_by_hop
+
+    hop_branches = branches_by_hop(network)
+    combined = dict(waits)
+
+    for (a, b), branch_ids in hop_branches.items():
+        # Which of those branches actually have a wait for this hop.
+        present = [br for br in branch_ids if (a, b, br) in waits]
+        if len(present) < 2:
+            continue  # single-branch hop: nothing to combine
+
+        by_platform: Dict[object, List[str]] = defaultdict(list)
+        for br in present:
+            key = platform_group_key(a, br, boarding_naptan, station_components)
+            by_platform[key].append(br)
+
+        for group in by_platform.values():
+            if len(group) < 2:
+                continue  # only one branch boards this platform: no combine
+
+            inv_sum = 0.0
+            for br in group:
+                h = raw_headways.get((a, b, br))
+                if h is None or h <= 0:
+                    h = 2 * waits[(a, b, br)]  # reconstruct from half-headway
+                inv_sum += 1.0 / h
+            if inv_sum <= 0:
+                continue
+            w_combined = wait_minutes(1.0 / inv_sum)
+
+            for br in group:
+                combined[(a, b, br)] = w_combined
+
+    return combined
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     args = _parse_args(argv)
     _configure_logging(args.verbose)
@@ -276,17 +428,59 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     results: Dict[Tuple[str, str, str], Tuple[Optional[int], str]] = {}
     waits: Dict[Tuple[str, str, str], int] = {}
+    raw_headways: Dict[Tuple[str, str, str], Optional[float]] = {}
     for i, edge in enumerate(edges):
         a, b, branch = edge
-        wait, src = compute_wait_for_edge(a, b, branch, naptan_map, client)
+        wait, raw_h, src = compute_wait_for_edge(a, b, branch, naptan_map, client)
         results[edge] = (wait, src)
         if wait is not None:
             waits[edge] = wait
+            raw_headways[edge] = raw_h
         if (i + 1) % 25 == 0:
             logger.info('Processed %d/%d edges (%d with data)',
                         i + 1, len(edges), len(waits))
 
     logger.info('Done: %d/%d edges have wait data', len(waits), len(edges))
+
+    # Resolve the boarding NaPTAN for each (from-station, branch) that has a
+    # wait, then fetch each station's per-platform line lists. combine_shared_hops
+    # merges only branches that call at the same physical platform (a NaPTAN's
+    # NaptanMetroPlatform child listing both lines) — station NaPTAN alone is too
+    # coarse (Kings Cross gives one NaPTAN to Northern and Victoria on separate
+    # platforms). Cache is already warm from the wait loop for the resolves; the
+    # platform fetches are one StopPoint per station (cached on disk).
+    boarding_naptan: Dict[Tuple[str, str], str] = {}
+    for (a, _b, branch) in waits:
+        if (a, branch) in boarding_naptan:
+            continue
+        tfl_line, _mode = tfl_for_branch(branch)
+        if tfl_line is None:
+            continue
+        nap = resolve_naptan(a, naptan_map, client, tfl_line=tfl_line)
+        if nap is not None:
+            boarding_naptan[(a, branch)] = nap
+
+    station_components: Dict[str, Dict[str, FrozenSet[str]]] = {}
+    for nap in set(boarding_naptan.values()):
+        station_components[nap] = platform_line_components(
+            platform_line_sets(nap, client))
+
+    # Collapse shared boarding platforms (branches sharing a physical platform)
+    # to their combined frequency, so a player is never scored differently for
+    # boarding the same physical train stream under a different line name.
+    pre_combine = dict(waits)
+    waits = combine_shared_hops(
+        waits, raw_headways, network, boarding_naptan, station_components)
+    n_changed = sum(1 for e, w in waits.items() if pre_combine.get(e) != w)
+    logger.info('Combined shared hops: %d edge waits adjusted (of %d)',
+                n_changed, len(waits))
+
+    # Keep `results` (the human-readable report) in sync with the combined
+    # waits actually written to wait_times.js — otherwise the report shows the
+    # pre-combine per-line values, which no longer match the shipped data.
+    for e, w in waits.items():
+        _old_wait, src = results.get(e, (None, 'combined'))
+        results[e] = (w, src)
 
     if not args.dry_run:
         write_wait_times_js(waits, args.output)
@@ -310,12 +504,19 @@ def _run_validate(args) -> int:
     def resolver(name: str, tfl_line: str):
         return resolve_naptan(name, naptan_map, client, tfl_line=tfl_line)
 
+    def platform_fetcher(naptan: str):
+        return platform_line_sets(naptan, client)
+
+    network = parse_network(args.html.read_text())
+
     findings_by_check = validate.run_all_checks(
         wait_times_path=args.output,
         cache_dir=args.cache,
         fixture_path=DEFAULT_EXPECTED_FIXTURE,
         naptan_resolver=resolver,
         expected_asym=EXPECTED_ASYMMETRIES,
+        network=network,
+        platform_fetcher=platform_fetcher,
     )
     report = validate.format_findings(findings_by_check)
     print(report)
