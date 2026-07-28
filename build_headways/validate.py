@@ -381,6 +381,76 @@ def check_6_expected(
     return findings
 
 
+# ── Check 7: Shared-hop agreement ──────────────────────────────────────────
+
+
+def check_7_shared_hop_agreement(
+    waits: Dict[Tuple[str, str, str], int],
+    network: Optional[Dict[str, List[str]]],
+    naptan_resolver=None,
+    platform_fetcher=None,
+) -> List[dict]:
+    """Flag same-platform boarding groups whose waits disagree.
+
+    A rider boards whichever train comes first only among lines calling at the
+    same physical platform (a NaptanMetroPlatform listing both lines). Those
+    branches must carry the same combined-frequency wait; divergence is the
+    "same route, different score by line name" bug class. Branches that merely
+    share a station but board different platforms (Northern vs Victoria at Kings
+    Cross, Metropolitan vs Circle/H&C at Baker Street) legitimately differ and
+    are not flagged. Checks 2/3 are within-line (A↔B symmetry, per-branch
+    median) and can't catch this, so this is the structural guardrail that keeps
+    combine_shared_hops honest. Uses the SAME grouping (platform_group_key) as
+    the combine, so the two can never disagree.
+    """
+    if not network:
+        return []
+    from collections import defaultdict
+
+    from .cli import platform_group_key, platform_line_components
+    from .line_map import tfl_for_branch
+    from .network import branches_by_hop
+
+    hop_branches = branches_by_hop(network)
+    boarding_naptan: Dict[Tuple[str, str], str] = {}
+    for (a, _b), branch_ids in hop_branches.items():
+        for br in branch_ids:
+            if naptan_resolver is None or (a, br) in boarding_naptan:
+                continue
+            tfl_line, _ = tfl_for_branch(br)
+            nap = naptan_resolver(a, tfl_line) if tfl_line else None
+            if nap is not None:
+                boarding_naptan[(a, br)] = nap
+
+    station_components: Dict[str, dict] = {}
+    if platform_fetcher is not None:
+        for nap in set(boarding_naptan.values()):
+            station_components[nap] = platform_line_components(platform_fetcher(nap))
+
+    findings: List[dict] = []
+    for (a, b), branch_ids in hop_branches.items():
+        present = [br for br in branch_ids if (a, b, br) in waits]
+        if len(present) < 2:
+            continue
+        by_platform: Dict[object, List[str]] = defaultdict(list)
+        for br in present:
+            key = platform_group_key(a, br, boarding_naptan, station_components)
+            by_platform[key].append(br)
+        for group in by_platform.values():
+            if len(group) < 2:
+                continue
+            vals = {br: waits[(a, b, br)] for br in group}
+            if len(set(vals.values())) > 1:
+                summary = ', '.join(f'{br}={w}' for br, w in sorted(vals.items()))
+                findings.append({
+                    'edge': (a, b, ''),
+                    'severity': 'error',
+                    'check': 'shared-hop',
+                    'detail': f'same-platform branches disagree: {summary}',
+                })
+    return findings
+
+
 # ── Runner ─────────────────────────────────────────────────────────────────
 
 
@@ -390,8 +460,10 @@ def run_all_checks(
     fixture_path: Path,
     naptan_resolver,
     expected_asym: set = frozenset(),
+    network: Optional[Dict[str, List[str]]] = None,
+    platform_fetcher=None,
 ) -> Dict[str, List[dict]]:
-    """Run all six checks; return findings keyed by check name."""
+    """Run all seven checks; return findings keyed by check name."""
     waits = parse_wait_times_js(wait_times_path)
     logger.info('Parsed %d entries from %s', len(waits), wait_times_path)
 
@@ -402,6 +474,8 @@ def run_all_checks(
     results['sparse-service'] = check_4_sparse_service(cache_dir)
     results['naptan-mode']    = check_5_naptan_modes(waits, naptan_resolver, cache_dir)
     results['expected']       = check_6_expected(waits, fixture_path)
+    results['shared-hop']     = check_7_shared_hop_agreement(
+        waits, network, naptan_resolver, platform_fetcher)
     return results
 
 
