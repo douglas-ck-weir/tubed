@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-27",
-  "puzzleNum": 116,
+  "date": "2026-07-28",
+  "puzzleNum": 117,
   "easy": {
-    "start": "Holloway Road",
-    "end": "Southfields"
+    "start": "West Hampstead",
+    "end": "Oxford Circus"
   },
   "hard": {
-    "start": "Lancaster Gate",
-    "end": "Harrow on the Hill"
+    "start": "Clapham North",
+    "end": "Dalston Kingsland"
   }
 }
