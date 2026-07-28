@@ -525,8 +525,9 @@ test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces
   // Player adds Paddington as a pivot waypoint → leg splits with a
   // Circle|Circle interchange at Paddington. Interchange is 7-min walk
   // (cross-platform between Bayswater-side and Royal-Oak-side Circle
-  // platforms) + 5-min half-headway wait for the next Circle train.
-  // Total: 16 + (7 walk + 5 wait) + 5 = 33.
+  // platforms) + 2-min wait: Circle shares its Paddington platform with
+  // District and H&C, so the wait is the combined-frequency value, not the
+  // old Circle-only 5. Total: 16 + (7 walk + 2 wait) + 5 = 30.
   const r = buildUserLegs('Victoria', [
     {station:'Paddington', line:'Circle'},
     {station:'Ladbroke Grove', line:'Circle'},
@@ -536,9 +537,9 @@ test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces
   eq(r.legs[1].mins, 5);
   eq(r.interchanges[0]?.at, 'Paddington');
   eq(r.interchanges[0]?.walkMins, 7);
-  eq(r.interchanges[0]?.waitMins, 5);
-  eq(r.interchanges[0]?.mins, 12);
-  eq(r.totalMins, 33);
+  eq(r.interchanges[0]?.waitMins, 2);
+  eq(r.interchanges[0]?.mins, 9);
+  eq(r.totalMins, 30);
 });
 
 test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a change at Edgware Road', () => {
@@ -548,11 +549,12 @@ test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a chang
   ]);
   eq(r.legs.length, 2);
   eq(r.interchanges[0]?.at, 'Edgware Road');
-  // Edgware Road Circle now uses the combined shared-platform frequency
-  // (5-min wait), matching Paddington. 18 + (2 walk + 5 wait) + 7 = 32.
+  // Edgware Road Circle uses the combined shared-platform frequency
+  // (2-min wait; Circle/H&C share the platform), matching Paddington.
+  // 18 + (2 walk + 2 wait) + 7 = 29.
   eq(r.interchanges[0]?.walkMins, 2);
-  eq(r.interchanges[0]?.waitMins, 5);
-  eq(r.totalMins, 32);
+  eq(r.interchanges[0]?.waitMins, 2);
+  eq(r.totalMins, 29);
 });
 
 test('buildUserLegs: non-pivot waypoint on Circle stays as a single via leg', () => {
@@ -575,7 +577,8 @@ test('buildUserLegs: Hammersmith → Victoria direct on Circle = 46 min continuo
 
 test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington uses 1-min interchange', () => {
   // Circle and H&C share platforms at Paddington-N — 1-min cross-platform
-  // interchange walk + 5-min half-headway wait for the H&C train.
+  // interchange walk + 1-min wait: they board the same platform, so the wait
+  // is the combined Circle+District+H&C frequency (not the old 5).
   const r = buildUserLegs('Victoria', [
     {station:'Paddington', line:'Circle'},
     {station:'Ladbroke Grove', line:'Hammersmith & City'},
@@ -584,10 +587,10 @@ test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington use
   eq(r.legs[0].line, 'Circle');
   eq(r.legs[1].line, 'Hammersmith & City');
   eq(r.interchanges[0]?.walkMins, 1);
-  eq(r.interchanges[0]?.waitMins, 5);
-  eq(r.interchanges[0]?.mins, 6);
-  // 16 + (1 walk + 5 wait) + 5 = 27
-  eq(r.totalMins, 27);
+  eq(r.interchanges[0]?.waitMins, 1);
+  eq(r.interchanges[0]?.mins, 2);
+  // 16 + (1 walk + 1 wait) + 5 = 23
+  eq(r.totalMins, 23);
 });
 
 test('Optimal Victoria → Ladbroke Grove uses Paddington change (not the long anticlockwise way)', () => {
