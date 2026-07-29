@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-28",
-  "puzzleNum": 117,
+  "date": "2026-07-29",
+  "puzzleNum": 118,
   "easy": {
-    "start": "West Hampstead",
-    "end": "Oxford Circus"
+    "start": "Richmond",
+    "end": "Latimer Road"
   },
   "hard": {
-    "start": "Clapham North",
-    "end": "Dalston Kingsland"
+    "start": "East Putney",
+    "end": "Harrow on the Hill"
   }
 }
