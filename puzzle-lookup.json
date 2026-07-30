@@ -1,4 +1,15 @@
 {
+  "2026-07-29": {
+    "puzzleNum": 118,
+    "easy": {
+      "start": "Richmond",
+      "end": "Latimer Road"
+    },
+    "hard": {
+      "start": "East Putney",
+      "end": "Harrow on the Hill"
+    }
+  },
   "2026-07-28": {
     "puzzleNum": 117,
     "easy": {
@@ -503,17 +514,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-07-29": {
-    "puzzleNum": 118,
-    "easy": {
-      "start": "Richmond",
-      "end": "Latimer Road"
-    },
-    "hard": {
-      "start": "East Putney",
-      "end": "Harrow on the Hill"
     }
   },
   "2026-07-30": {
@@ -1493,6 +1493,17 @@
     "hard": {
       "start": "Angel",
       "end": "Southfields"
+    }
+  },
+  "2026-10-27": {
+    "puzzleNum": 208,
+    "easy": {
+      "start": "Covent Garden",
+      "end": "Brent Cross"
+    },
+    "hard": {
+      "start": "Wimbledon",
+      "end": "Angel"
     }
   }
 }

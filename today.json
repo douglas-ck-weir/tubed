@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-29",
-  "puzzleNum": 118,
+  "date": "2026-07-30",
+  "puzzleNum": 119,
   "easy": {
-    "start": "Richmond",
-    "end": "Latimer Road"
+    "start": "White City",
+    "end": "Golders Green"
   },
   "hard": {
-    "start": "East Putney",
-    "end": "Harrow on the Hill"
+    "start": "Dalston Kingsland",
+    "end": "Royal Oak"
   }
 }
