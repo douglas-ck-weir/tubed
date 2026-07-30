@@ -4298,6 +4298,20 @@ function dijkstra(graph, start, end) {
   function pathToLegs(path) {
     const legs = [];
     let legFrom = null, legLine = null, legMins = 0, prev = null;
+    // Flush the in-progress tube leg. `legMins` is the per-hop running sum,
+    // used only to detect that travel happened (> 0). The DISPLAYED minutes
+    // are recomputed whole-leg via travelTimeOnLine, which respects Circle
+    // teardrop pivots — a merged leg like Victoria→Paddington→Ladbroke Grove
+    // can't cross the pivot for free, so its true time is higher than the sum
+    // of the per-hop shortest paths. This keeps pathToLegs in lockstep with
+    // buildUserLegs (which already does whole-leg recomputation) so the
+    // optimal route's shown leg times add up to its total. Fall back to the
+    // per-hop sum if travelTimeOnLine can't resolve the pair (defensive).
+    function flushLeg() {
+      const whole = travelTimeOnLine(legFrom, prev, displayLine(legLine));
+      const mins = (whole != null) ? whole : legMins;
+      legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins});
+    }
     // node.station may be a synthetic key (Paddington#Circle_Clockwise@8) for
     // multi-occurrence stations on Circle. Display fields and getTime lookups
     // must use the bare real-station name; the synthetic suffix only matters
@@ -4310,7 +4324,7 @@ function dijkstra(graph, start, end) {
           legMins += getTime(prev, stnDisplay, legLine) || 0;
           prev = stnDisplay;
         } else {
-          if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+          if (legMins > 0) flushLeg();
           legFrom = prev; legLine = node.line;
           legMins = getTime(prev, stnDisplay, legLine) || 0;
           prev = stnDisplay;
@@ -4319,7 +4333,7 @@ function dijkstra(graph, start, end) {
         // OSI walk leg: emit as its own 'Walk' leg with the OSI time.
         // Flush any in-progress tube leg first, then push the walk, then
         // reset state so the next tube leg starts at the walk's destination.
-        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+        if (legMins > 0) flushLeg();
         const walkMins = osiTime(prev, stnDisplay);
         if (walkMins != null) {
           legs.push({from: prev, to: stnDisplay, line: 'Walk', branchLine: 'Walk', mins: walkMins});
@@ -4327,7 +4341,7 @@ function dijkstra(graph, start, end) {
         legFrom = stnDisplay; legLine = 'Walk'; legMins = 0;
         prev = stnDisplay;
       } else if (node.type === 'interchange') {
-        if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+        if (legMins > 0) flushLeg();
         // For same-station interchanges, node.station === prev. For cross-station
         // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
         // and we need to update both legFrom AND prev so the next travel leg's
@@ -4336,7 +4350,7 @@ function dijkstra(graph, start, end) {
         prev = stnDisplay;
       }
     }
-    if (legMins > 0) legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins:legMins});
+    if (legMins > 0) flushLeg();
     return legs;
   }
 
@@ -4974,6 +4988,39 @@ function _tel(event, data) {
   try { console.log(`[tubed] ${event}`, data || ''); } catch(e){}
 }
 
+// Single chokepoint for turning dijkstra's ranked routes into the puzzle's
+// published "optimal". EVERY todayPuzzle return path (cache hit, freeze pins,
+// lookup oracle, live generator, fallback) MUST route through here so the
+// invariant is enforced in one place instead of defended at each reader.
+//
+// Invariant: the published optimal is a NON-EMPTY, PURE-TUBE route.
+//   - No Walk legs: the generator filters reject walk-optima, but the cache /
+//     lookup / freeze paths call dijkstra directly and skip those filters, so
+//     a stale pinned pair could otherwise surface a walk leg. Players reject
+//     walk legs in the "optimal", and an under-priced OSI walk can make the
+//     true fastest route beatable. See [[feedback_walk_legs_in_optimal]].
+//   - Non-empty: guards Hint 2 (optimal.legs[0]), the result card, share
+//     text and the map from an empty-legs optimal.
+//
+// dijkstra already returns up to 5 candidates, tie-broken to prefer fewer
+// walks, so a pure-tube alternative for the SAME pair is usually present even
+// when routes[0] happens to walk. Prefer the cheapest such tube route; only if
+// none exists do we fall back to routes[0] (so the game still runs) and log
+// loudly — that means a pinned pair violates the pure-tube rule and should be
+// re-generated, not that the player did anything wrong.
+function pickOptimal(routes, ctx) {
+  if (!routes || routes.length === 0) return null;
+  const tube = routes.filter(r => r.legs.length > 0 && !r.legs.some(l => l.line === 'Walk'));
+  if (tube.length > 0) return tube[0];  // routes are already cost-ranked
+  const nonEmpty = routes.find(r => r.legs.length > 0);
+  if (nonEmpty) {
+    console.error('[todayPuzzle] no pure-tube optimal available; ' +
+      'pinned pair likely violates the walk-free rule — regenerate it.', ctx || '');
+    return nonEmpty;
+  }
+  return null;
+}
+
 function todayPuzzle(mode, opts) {
   const m = mode === 'hard' ? 'hard' : 'easy';
   // Optional rejection predicate. build-lookup.mjs passes a `recentPairs` set
@@ -4998,10 +5045,16 @@ function todayPuzzle(mode, opts) {
   if (cached && _isValidStation(cached.start) && _isValidStation(cached.end)) {
     try {
       const routes = dijkstra(GRAPH, cached.start, cached.end);
-      if (routes && routes.length > 0) {
+      const optimal = pickOptimal(routes, { start: cached.start, end: cached.end });
+      if (optimal) {
         _tel('puzzle_cache_hit', { mode: m, ms: Date.now() - _t0 });
-        return { start: cached.start, end: cached.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+        return { start: cached.start, end: cached.end, optimal, routes, date, puzzleNum, graph: GRAPH, mode: m };
       }
+      // No valid (non-empty, pure-tube) optimal for the cached pair — drop the
+      // stale entry and fall through to live generation rather than publish a
+      // walk/empty optimal.
+      console.warn('[todayPuzzle] cached pair has no valid optimal, ignoring:', cached);
+      _setCachedPuzzle(date, m, null);
     } catch (e) {
       console.error('[todayPuzzle] cached pair threw, falling through:', e);
     }
@@ -5042,7 +5095,7 @@ function todayPuzzle(mode, opts) {
   if (m === 'hard' && date === '2026-06-23') {
     const start = 'Chalk Farm', end = 'Marylebone';
     const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
   // 2026-06-11 Easy: Canary Wharf Elizabeth↔Jubilee interchange was corrected
@@ -5054,7 +5107,7 @@ function todayPuzzle(mode, opts) {
   if (m === 'easy' && date === '2026-06-11') {
     const start = "North Greenwich", end = 'Tottenham Court Road';
     const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
   // 2026-06-08 Easy & Hard: Hammersmith and Earl's Court interchange times
@@ -5065,12 +5118,12 @@ function todayPuzzle(mode, opts) {
   if (m === 'easy' && date === '2026-06-08') {
     const start = 'Kennington', end = 'Holborn';
     const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
   if (m === 'hard' && date === '2026-06-08') {
     const start = 'Colliers Wood', end = 'Goldhawk Road';
     const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
   // Lookup oracle: if puzzle-lookup.json is loaded AND has an entry for
@@ -5093,9 +5146,14 @@ function todayPuzzle(mode, opts) {
     if (_isValidStation(entry.start) && _isValidStation(entry.end)) {
       try {
         const routes = dijkstra(GRAPH, entry.start, entry.end);
-        if (routes && routes.length > 0) {
+        // The lookup is the source of truth shared with the Reddit bot, so we
+        // must publish THIS pair even if pickOptimal has to log a degenerate
+        // optimal — falling through to the generator would desync the site
+        // from Reddit, which is worse than the walk-free warning.
+        const optimal = pickOptimal(routes, { start: entry.start, end: entry.end });
+        if (optimal) {
           _tel('puzzle_lookup_hit', { mode: m, ms: Date.now() - _t0 });
-          return { start: entry.start, end: entry.end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+          return { start: entry.start, end: entry.end, optimal, routes, date, puzzleNum, graph: GRAPH, mode: m };
         }
       } catch (e) {
         console.error('[todayPuzzle] lookup pair threw, falling through:', e);
@@ -5210,7 +5268,7 @@ function todayPuzzle(mode, opts) {
   // expensive seeded-generator loop.
   _setCachedPuzzle(date, m, { start, end });
   _tel('puzzle_generated', { mode: m, ms: Date.now() - _t0 });
-  return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m, usedFallback };
+  return { start, end, optimal: pickOptimal(routes, {start, end}) || routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m, usedFallback };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -5705,7 +5763,15 @@ function buildHintText(n) {
     return `<strong>${puzzleData.start}</strong> is served by: ${lineTags(startLines)}`;
   }
   if (n === 2) {
-    const firstChange = puzzleData.optimal.legs[0].to;
+    // The published optimal is guaranteed non-empty and pure-tube by
+    // pickOptimal(), so legs[0] is a real interchange (not a Walk). Still
+    // guard defensively: a degenerate optimal (e.g. the no-route fallback
+    // sentinel) must degrade to a graceful hint, never throw.
+    const legs = puzzleData.optimal && puzzleData.optimal.legs;
+    const firstChange = legs && legs[0] && legs[0].to;
+    if (!firstChange) {
+      return `This puzzle can be solved in a single change — focus on where the two lines meet.`;
+    }
     const letter = firstChange[0].toUpperCase();
     return `Your first change is at a station starting with <strong>${letter}</strong>.`;
   }

@@ -68,7 +68,7 @@ function loadTubed(maxPaths) {
     src = src.replace(needle, `const MAX_PATHS = ${maxPaths};`);
   }
   const scripts = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, COORDS };`;
+  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS };`;
   const fullScript = scripts.join('\n;\n') + exportSuffix;
 
   function makeStub(name = 'stub') {
@@ -204,6 +204,54 @@ test('regression: Chancery Lane -> Richmond optimal is not the too-slow route (#
   if (ship == null || ship > probe) {
     throw new Error(`Chancery Lane -> Richmond: shipped cap gives ${ship == null ? 'NONE' : ship} ` +
       `but a deeper search finds ${probe}. This is the #104 regression.`);
+  }
+});
+
+// pickOptimal() is the single chokepoint every todayPuzzle return path uses to
+// turn ranked routes into the published optimal. Invariant: the optimal is
+// non-empty and pure-tube (no Walk legs). These unit checks pin that contract
+// so a refactor can't silently reintroduce a walk/empty optimal.
+test('pickOptimal: prefers the cheapest pure-tube route over a cheaper walk route', () => {
+  const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const r = Tship.pickOptimal([walk, tube], { start: 'A', end: 'C' });
+  if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
+  if (r.legs.some(l => l.line === 'Walk')) throw new Error('picked a route containing a Walk leg');
+});
+test('pickOptimal: returns null for empty/degenerate input (no throw)', () => {
+  if (Tship.pickOptimal([], {}) !== null) throw new Error('empty list should give null');
+  if (Tship.pickOptimal(null, {}) !== null) throw new Error('null should give null');
+  if (Tship.pickOptimal([{ mins: 0, legs: [] }], {}) !== null) throw new Error('all-empty routes should give null');
+});
+test('pickOptimal: falls back to a walk route only when no tube route exists', () => {
+  const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const r = Tship.pickOptimal([walk], { start: 'A', end: 'C' });
+  if (!r || r.mins !== 10) throw new Error('should fall back to the only (walk) route so the game still runs');
+});
+
+// End-to-end invariant: every TODAY-OR-FUTURE published optimal is non-empty
+// and pure-tube. This is the real user-facing guarantee — a walk or empty
+// optimal reaching the card/hints/share is the bug class pickOptimal exists to
+// prevent. Past dates are excluded on purpose: those puzzles are already played
+// and their pairs are immutable history (regenerating them would rewrite player
+// results and desync from what Reddit posted). Regenerate the FUTURE lookup via
+// build-lookup.mjs whenever this test names an upcoming date.
+test('every today-or-future lookup puzzle publishes a non-empty, walk-free optimal', () => {
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const bad = [];
+  for (const p of puzzles) {
+    if (p.date < todayIso) continue; // immutable past — see note above
+    const routes = Tship.dijkstra(gShip, p.start, p.end);
+    const opt = Tship.pickOptimal(routes, { start: p.start, end: p.end });
+    if (!opt || opt.legs.length === 0) {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (empty/null optimal)`);
+    } else if (opt.legs.some(l => l.line === 'Walk')) {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal contains a Walk leg)`);
+    }
+  }
+  if (bad.length) {
+    throw new Error(`${bad.length} upcoming lookup puzzle(s) publish an invalid optimal ` +
+      `(regenerate the future lookup via build-lookup.mjs):\n  ` + bad.join('\n  '));
   }
 });
 
