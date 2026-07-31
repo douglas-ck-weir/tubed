@@ -1,12 +1,12 @@
 {
-  "date": "2026-07-30",
-  "puzzleNum": 119,
+  "date": "2026-07-31",
+  "puzzleNum": 120,
   "easy": {
-    "start": "White City",
-    "end": "Golders Green"
+    "start": "Balham",
+    "end": "Pimlico"
   },
   "hard": {
-    "start": "Dalston Kingsland",
-    "end": "Royal Oak"
+    "start": "Sloane Square",
+    "end": "Hackney Central"
   }
 }
