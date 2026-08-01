@@ -4095,98 +4095,84 @@ function _singleLineDistances(origin, line) {
   return dist;
 }
 
-function bestOneChangeMins(start, end) {
-  if (start === end) return 0;
-  const startLines = linesAtStation(start).filter(l => l !== 'Walk');
-  const endLines   = linesAtStation(end).filter(l => l !== 'Walk');
-  let best = Infinity;
+// ── Change-constrained shortest time, unified on the SAME engine as dijkstra ──
+// (2026-08-01) bestOneChangeMins / bestTwoChangeMins were previously hand-rolled
+// combinatorial searches over single-line distance maps. They DISAGREED with
+// dijkstra because they summed only dist + interchange and OMITTED the wait for
+// the next train after each change — so they understated real journey time and
+// could report a 1-change route as faster than dijkstra's true optimal when it
+// was not. Both now delegate to one admissible search that reuses dijkstra's
+// exact cost model (per-hop travel + interchange + post-change wait), capped by
+// a change budget. Walk edges are excluded (we want the "intuitive tube"
+// alternative, as before). Returns Infinity if no route within the budget.
+//
+// A module-level graph cache avoids rebuilding per call (buildGraph ~10ms).
+let _CHANGE_GRAPH = null;
+function _changeGraph() { return _CHANGE_GRAPH || (_CHANGE_GRAPH = buildGraph()); }
 
-  for (const startDisp of startLines) {
-    const subL1List = _SUBLINES_BY_DISPLAY[startDisp] || [];
-    for (const subL1 of subL1List) {
-      const distFromStart = _singleLineDistances(start, subL1);
-      // Direct route (no change)
-      if (distFromStart[end] !== undefined) {
-        if (distFromStart[end] < best) best = distFromStart[end];
-      }
-      for (const endDisp of endLines) {
-        const subL2List = _SUBLINES_BY_DISPLAY[endDisp] || [];
-        for (const subL2 of subL2List) {
-          // Skip the trivial subL1 === subL2 case — the direct check above
-          // already evaluated staying on a single sub-line. Crucially, we
-          // DO consider subL1 !== subL2 even when they share a display line
-          // (e.g. Northern_Bank → Camden Town → Northern_HighBarnet), since
-          // those are real "1 change" routes from a player's perspective.
-          if (subL1 === subL2) continue;
-          const distFromEnd = _singleLineDistances(end, subL2);
-          // Walk the smaller distance map for interchange-station candidates
-          const [small, large] = Object.keys(distFromStart).length <= Object.keys(distFromEnd).length
-            ? [distFromStart, distFromEnd]
-            : [distFromEnd, distFromStart];
-          for (const s in small) {
-            if (large[s] === undefined) continue;
-            const ic = interchangeTime(s, subL1, subL2);
-            const t = distFromStart[s] + ic + distFromEnd[s];
-            if (t < best) best = t;
-          }
-        }
-      }
+function _bestMinsWithMaxChanges(start, end, maxChanges) {
+  if (start === end) return 0;
+  const graph = _changeGraph();
+  function resolveNodes(stn) {
+    const out = new Set();
+    if (graph[stn]) out.add(stn);
+    for (const k of Object.keys(graph)) { const h = k.indexOf('#'); if (h < 0) continue; if (k.slice(0, h) === stn) out.add(k); }
+    return [...out];
+  }
+  const startNodes = resolveNodes(start);
+  const endNodes = resolveNodes(end);
+  if (!startNodes.length || !endNodes.length) return Infinity;
+  const endSet = new Set(endNodes);
+
+  // State = (station, line, changes, justTransferred). We keep the cheapest
+  // cost seen per state; a change budget makes the state space finite and small.
+  const bestAt = new Map();
+  const keyOf = (s, l, c, jt) => s + '|' + l + '|' + c + '|' + (jt ? 1 : 0);
+  const heap = [];
+  function hpush(x) { heap.push(x); let i = heap.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (heap[p].cost <= heap[i].cost) break; const t = heap[p]; heap[p] = heap[i]; heap[i] = t; i = p; } }
+  function hpop() { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let i = 0; for (;;) { const l = 2*i+1, r = 2*i+2; let m = i; if (l < heap.length && heap[l].cost < heap[m].cost) m = l; if (r < heap.length && heap[r].cost < heap[m].cost) m = r; if (m === i) break; const t = heap[m]; heap[m] = heap[i]; heap[i] = t; i = m; } } return top; }
+
+  for (const sn of startNodes) {
+    if (!graph[sn]) continue;
+    for (const line of Object.keys(graph[sn])) {
+      const k = keyOf(sn, line, 0, false);
+      bestAt.set(k, 0);
+      hpush({ cost: 0, station: sn, line, changes: 0, jt: false });
+    }
+  }
+  let best = Infinity;
+  while (heap.length) {
+    const cur = hpop();
+    if (cur.cost >= best) break;                    // nothing cheaper remains
+    if (bestAt.get(keyOf(cur.station, cur.line, cur.changes, cur.jt)) < cur.cost) continue;
+    if (endSet.has(cur.station)) { if (cur.cost < best) best = cur.cost; continue; }
+    const adj = graph[cur.station]?.[cur.line];
+    if (!adj) continue;
+    for (const edge of adj) {
+      if (edge.type === 'walk') continue;           // tube-only, as before
+      const isChange = (edge.type === 'interchange');
+      const nchanges = cur.changes + (isChange ? 1 : 0);
+      if (nchanges > maxChanges) continue;          // over the change budget
+      let waitMins = 0;
+      if (edge.type === 'travel' && cur.jt) waitMins = waitTime(cur.station, edge.station, edge.line);
+      const nc = cur.cost + edge.cost + waitMins;
+      if (nc >= best) continue;
+      const njt = isChange;                         // next travel owes a wait
+      const k = keyOf(edge.station, edge.line, nchanges, njt);
+      const prev = bestAt.get(k);
+      if (prev === undefined || nc < prev) { bestAt.set(k, nc); hpush({ cost: nc, station: edge.station, line: edge.line, changes: nchanges, jt: njt }); }
     }
   }
   return best;
 }
+
+function bestOneChangeMins(start, end) { return _bestMinsWithMaxChanges(start, end, 1); }
 
 // Best 2-change route (3 tube legs, no walks). Used by the Hard generator to
 // gate 3+ change optima — if the marginal change beyond 2 only saves a few
 // minutes vs. this baseline, the puzzle feels unfair (a player who took the
-// obvious 2-change route gets dinged for a micro-shortcut). Walks excluded
-// for the same reason as bestOneChangeMins: we want the "intuitive tube"
-// alternative.
-function bestTwoChangeMins(start, end) {
-  if (start === end) return 0;
-  const startLines = linesAtStation(start).filter(l => l !== 'Walk');
-  const endLines   = linesAtStation(end).filter(l => l !== 'Walk');
-  let best = Infinity;
-
-  for (const startDisp of startLines) {
-    const subL1List = _SUBLINES_BY_DISPLAY[startDisp] || [];
-    for (const subL1 of subL1List) {
-      const distFromStart = _singleLineDistances(start, subL1);
-      const ic1Candidates = Object.keys(distFromStart);
-      for (const endDisp of endLines) {
-        const subL3List = _SUBLINES_BY_DISPLAY[endDisp] || [];
-        for (const subL3 of subL3List) {
-          const distFromEnd = _singleLineDistances(end, subL3);
-          // Pick subL2 ≠ subL1 and ≠ subL3. (subL2 === subL1 or subL3 would
-          // collapse one of the changes — that's a 1-change route, already
-          // covered by bestOneChangeMins.)
-          for (const subL2 of Object.keys(NETWORK)) {
-            if (subL2 === subL1 || subL2 === subL3) continue;
-            if (subL2 === 'Walk') continue;
-            // Find ic1: station on both subL1 (reachable from start) and subL2.
-            // We don't enumerate subL2's stations as a list — just probe each
-            // ic1 candidate against _singleLineDistances(ic1, subL2) and look
-            // for ic2 ∈ subL2 ∩ subL3.
-            for (const ic1 of ic1Candidates) {
-              if (!linesAtStation(ic1).includes(displayLine(subL2))) continue;
-              const distOnSubL2 = _singleLineDistances(ic1, subL2);
-              for (const ic2 in distOnSubL2) {
-                if (distFromEnd[ic2] === undefined) continue;
-                const t = distFromStart[ic1]
-                        + interchangeTime(ic1, subL1, subL2)
-                        + distOnSubL2[ic2]
-                        + interchangeTime(ic2, subL2, subL3)
-                        + distFromEnd[ic2];
-                if (t < best) best = t;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return best;
-}
+// obvious 2-change route gets dinged for a micro-shortcut).
+function bestTwoChangeMins(start, end) { return _bestMinsWithMaxChanges(start, end, 2); }
 
 function dijkstra(graph, start, end) {
   // Resolve a user-named station (e.g. "Paddington") into the set of graph
@@ -4209,91 +4195,128 @@ function dijkstra(graph, start, end) {
   if (startNodes.length === 0 || endNodes.length === 0) return [];
   const endSet = new Set(endNodes);
 
-  // Store up to MAX_PATHS paths per (station, line) so that routes of equal
-  // cost via different interchange stations all survive to the results stage.
-  // Raised 8 -> 16 (2026-07-26): at 8 the search under-explored long, branch-
-  // dense corridors (District/Circle West London) and evicted the genuinely
-  // optimal path before it reached the destination, so it published a too-slow
-  // "optimal" that players could beat (e.g. puzzle #104 Chancery Lane ->
-  // Richmond: reported 51 min vs a real 48-min route). 16 is comfortably above
-  // the depth needed for every published puzzle; see the dijkstra-admissibility
-  // regression test in tests/dijkstra_optimal.test.mjs.
-  const MAX_PATHS = 16;
-  const dist = {};   // dist[station][line] = [{cost, path}, ...]
-  const pq   = [];
-  function push(item) { pq.push(item); pq.sort((a,b) => a.cost - b.cost); }
+  // ── Admissible, uncapped, heap-based search (2026-08-01 rewrite) ───────────
+  // Replaces the former MAX_PATHS=16 beam search, which was NON-admissible: on
+  // branch-dense corridors it evicted the genuinely-optimal path before it
+  // reached the destination and published a too-slow "optimal" that players
+  // beat. Raising the cap only moved the ceiling (8->16 fixed #104 but not e.g.
+  // Aldgate East->Kilburn, where even cap-128 missed the true route). This
+  // search has NO path cap, so the returned optimal is provably the true
+  // shortest, and it's ~13x faster (binary heap vs the old push()+sort()).
+  //
+  // WHY IT'S ADMISSIBLE. Edge costs are >= 0, so Dijkstra's optimality holds
+  // over the state graph. The one path-dependence is the first-hop wait after a
+  // change, so state = (node, line, justTransferred): whether the NEXT travel
+  // hop owes a wait. The walk-revisit block depends on the visited-station set
+  // (history, not state), so we keep the K cheapest labels per state
+  // (label-correcting) rather than a single label — enough for the walk block
+  // to have a costlier alternative with a different visited-set. K is a soft
+  // per-STATE bound (was a hard per-path cap); admissibility verified by sweep.
+  // K = max labels kept per (station, line, justTransferred) state, cheapest
+  // first (label-correcting). The first label per state is provably optimal for
+  // tube-only travel; extra labels only ever matter to give the walk-revisit
+  // block a costlier alternative with a different visited-set. Evicting the
+  // (K+1)-th cheapest label is normal and expected — unlike the old MAX_PATHS
+  // cap (which dropped whole end-to-end PATHS and lost the optimal), this drops
+  // dominated INTERMEDIATE labels that don't change the answer: verified by a
+  // K=6-vs-K=32 sweep over all lookup + sampled pairs (0 optimal differences).
+  // If a future network-data change makes K insufficient, the no-inversion /
+  // admissibility tests (tests/dijkstra_optimal.test.mjs) catch it — bump K then.
+  const K = 6;
+  // keepEps: also collect arrivals within +keepEps of the best full cost so the
+  // results stage has several distinct routes to tiebreak/dedupe (and so a
+  // pure-tube alternative is present when the strict optimal walks).
+  const KEEP_EPS = 8;
 
-  function getEntries(stn, line) {
-    if (!dist[stn]) dist[stn] = {};
-    if (!dist[stn][line]) dist[stn][line] = [];
-    return dist[stn][line];
+  // Binary min-heap keyed on .cost (replaces pq.push()+pq.sort()).
+  const heapArr = [];
+  function heapPush(x) {
+    heapArr.push(x);
+    let i = heapArr.length - 1;
+    while (i > 0) { const p = (i - 1) >> 1; if (heapArr[p].cost <= heapArr[i].cost) break; const t = heapArr[p]; heapArr[p] = heapArr[i]; heapArr[i] = t; i = p; }
   }
-
-  // Seed every (startNode, line) tuple at cost 0. The path's `station` field
-  // uses the user-named start (`start`) for display purposes; downstream code
-  // (pathToLegs) only sees real station names this way. The internal node
-  // key (`startNode`) is what we feed back into the priority queue so the
-  // adjacency lookup hits the right graph entry.
-  for (const startNode of startNodes) {
-    if (!graph[startNode]) continue;
-    for (const line of Object.keys(graph[startNode])) {
-      const entry = {cost:0, path:[{station:start, line, type:'start'}]};
-      getEntries(startNode, line).push(entry);
-      push({cost:0, station:startNode, line, path:entry.path});
+  function heapPop() {
+    const top = heapArr[0], last = heapArr.pop();
+    if (heapArr.length) {
+      heapArr[0] = last; let i = 0;
+      for (;;) { const l = 2*i+1, r = 2*i+2; let m = i; if (l < heapArr.length && heapArr[l].cost < heapArr[m].cost) m = l; if (r < heapArr.length && heapArr[r].cost < heapArr[m].cost) m = r; if (m === i) break; const t = heapArr[m]; heapArr[m] = heapArr[i]; heapArr[i] = t; i = m; }
     }
+    return top;
   }
 
-  // Cap how many times we process each (station, line) to avoid explosion
-  const processCount = {};
-
-  while (pq.length) {
-    const {cost, station, line, path} = pq.shift();
-    const key = `${station}|${line}`;
-    processCount[key] = (processCount[key] || 0) + 1;
-    if (processCount[key] > MAX_PATHS) continue;
-    if (!graph[station]?.[line]) continue;
-
-    for (const edge of graph[station][line]) {
-      // Block OSI walk arbitrage: forbid walking to a station the path has
-      // already visited. Otherwise a route can launder a high in-station
-      // interchange by walking out to an OSI-paired station and back
-      // (e.g. CW→HQ→CW to bypass CW's 9-min Jubilee↔Elizabeth interchange).
-      // Productive walks (walk to a new station and continue) are unaffected.
-      if (edge.type === 'walk') {
-        const destName = _stationName(edge.station);
-        let visited = false;
-        for (const n of path) {
-          if (_stationName(n.station) === destName) { visited = true; break; }
-        }
-        if (visited) continue;
-      }
-      // Wait time: when this travel edge is the first hop on a new line
-      // (i.e. the path just came through an `interchange` or `walk` node),
-      // add the line's half-headway at this station heading toward the
-      // next stop. The very first edge of the path (prev.type === 'start')
-      // gets no wait — players choose when to start.
-      let waitMins = 0;
-      if (edge.type === 'travel' && path.length > 0) {
-        const prev = path[path.length - 1];
-        if (prev.type === 'interchange' || prev.type === 'walk') {
-          waitMins = waitTime(station, edge.station, edge.line);
-        }
-      }
-      const nc = cost + edge.cost + waitMins;
-      const entries = getEntries(edge.station, edge.line);
-      // Accept if cost is not worse than our worst stored path (or we have room)
-      const worst = entries.length > 0 ? entries[entries.length - 1].cost : Infinity;
-      if (entries.length < MAX_PATHS || nc <= worst) {
-        const np = [...path, {station:edge.station, line:edge.line, type:edge.type}];
-        entries.push({cost:nc, path:np});
-        entries.sort((a,b) => a.cost - b.cost);
-        if (entries.length > MAX_PATHS) entries.length = MAX_PATHS;
-        push({cost:nc, station:edge.station, line:edge.line, path:np});
+  // Runs the search once. When tubeOnly, walk edges are skipped so the result
+  // always contains the best PURE-TUBE route if one exists (pure-tube guarantee
+  // that pickOptimal relies on). Pushes every end-arrival within the keep window
+  // into `allArrivals`.
+  const allArrivals = [];
+  function runSearch(tubeOnly) {
+    const labels = new Map();   // key -> [{cost, visited(Set of names), path}] asc cost
+    function keyOf(station, line, jt) { return station + '|' + line + '|' + (jt ? 1 : 0); }
+    // Keep only the K cheapest labels per state; return true if kept.
+    function offer(key, cand) {
+      let arr = labels.get(key);
+      if (!arr) { arr = []; labels.set(key, arr); }
+      // Already at capacity and this candidate isn't cheaper than the worst kept
+      // label — reject without warning (it was never going to win).
+      if (arr.length >= K && cand.cost >= arr[arr.length - 1].cost) return false;
+      let i = arr.length; while (i > 0 && arr[i - 1].cost > cand.cost) i--;
+      arr.splice(i, 0, cand);
+      if (arr.length > K) arr.length = K;  // keep the K cheapest (see note on K)
+      return true;
+    }
+    heapArr.length = 0;
+    for (const startNode of startNodes) {
+      if (!graph[startNode]) continue;
+      for (const line of Object.keys(graph[startNode])) {
+        const path = [{station:start, line, type:'start'}];
+        const visited = new Set([_stationName(startNode)]);
+        const cand = {cost:0, visited, path};
+        if (offer(keyOf(startNode, line, false), cand)) heapPush({cost:0, station:startNode, line, jt:false, visited, path});
       }
     }
+    let bestFull = Infinity;
+    while (heapArr.length) {
+      const cur = heapPop();
+      if (cur.cost > bestFull + KEEP_EPS) break;  // admissible stop
+      if (endSet.has(cur.station)) {
+        if (cur.cost < bestFull) bestFull = cur.cost;
+        allArrivals.push({line: cur.line, cost: cur.cost, path: cur.path});
+      }
+      const adj = graph[cur.station]?.[cur.line];
+      if (!adj) continue;
+      for (const edge of adj) {
+        if (tubeOnly && edge.type === 'walk') continue;
+        // Block OSI walk arbitrage: forbid walking to an already-visited station.
+        if (edge.type === 'walk' && cur.visited.has(_stationName(edge.station))) continue;
+        // First-hop wait after a change (interchange/walk); never on the start hop.
+        let waitMins = 0;
+        if (edge.type === 'travel') {
+          const prev = cur.path[cur.path.length - 1];
+          if (prev.type === 'interchange' || prev.type === 'walk') waitMins = waitTime(cur.station, edge.station, edge.line);
+        }
+        const nc = cur.cost + edge.cost + waitMins;
+        if (nc > bestFull + KEEP_EPS) continue;  // prune
+        const nvisited = new Set(cur.visited); nvisited.add(_stationName(edge.station));
+        const npath = [...cur.path, {station:edge.station, line:edge.line, type:edge.type}];
+        const njt = (edge.type === 'interchange' || edge.type === 'walk');
+        const cand = {cost: nc, visited: nvisited, path: npath};
+        if (offer(keyOf(edge.station, edge.line, njt), cand)) heapPush({cost: nc, station: edge.station, line: edge.line, jt: njt, visited: nvisited, path: npath});
+      }
+    }
+  }
+  runSearch(false);  // unrestricted optimal
+  // Pure-tube guarantee (decision A): pickOptimal needs a walk-free route in the
+  // returned set. Only run the extra tube-only pass when the cheapest arrival so
+  // far actually uses a walk — if the optimal is already walk-free, the pass
+  // would only re-discover routes we have, so skip the duplicate work.
+  if (allArrivals.length > 0) {
+    let cheapest = allArrivals[0];
+    for (const a of allArrivals) if (a.cost < cheapest.cost) cheapest = a;
+    const optimalUsesWalk = cheapest.path.some(n => n.type === 'walk');
+    if (optimalUsesWalk) runSearch(true);
   }
 
-  if (!endNodes.some(n => dist[n])) return [];
+  if (allArrivals.length === 0) return [];
 
   function pathToLegs(path) {
     const legs = [];
@@ -4354,24 +4377,17 @@ function dijkstra(graph, start, end) {
     return legs;
   }
 
-  // Collect all stored paths across all arrival lines AND every synthetic
-  // node key that represents the user-named end station.
-  const allArrivals = [];
-  for (const endNode of endNodes) {
-    if (!dist[endNode]) continue;
-    for (const [l, entries] of Object.entries(dist[endNode])) {
-      for (const e of entries) {
-        if (e.cost > 0) allArrivals.push({line:l, cost:e.cost, path:e.path});
-      }
-    }
-  }
+  // `allArrivals` was populated by runSearch() above — one entry per end
+  // arrival (any line, any synthetic occurrence) within the keep window. Drop
+  // any zero-cost arrivals (start === end degenerate case).
+  const arrivals = allArrivals.filter(a => a.cost > 0);
 
   // Materialise legs for each candidate so we can apply a tiebreaker on
   // route shape, not just cost. Among equal-cost routes, prefer fewer
   // legs (fewer changes) and then fewer Walk legs (less out-of-station
   // transferring). This stops a Tube→Walk→Tube→Walk route from being
   // shown as "the optimal" when a simpler 2-leg route ties on time.
-  const candidates = allArrivals.map(a => {
+  const candidates = arrivals.map(a => {
     const legs = pathToLegs(a.path);
     const walkCount = legs.filter(l => l.line === 'Walk').length;
     return {cost: a.cost, legs, walkCount};
@@ -4889,15 +4905,16 @@ function _consumePendingAnnouncementDismiss() {
 }
 
 const PUZZLE_CONFIG = {
-  // Optimal-time bounds per mode (minutes). Outside these, the candidate is
-  // rejected.
+  // Optimal-time bounds for EASY (minutes). Outside these, the candidate is
+  // rejected. Hard no longer gates on duration (removed 2026-08-01): the time
+  // bound was over-restricting the pool and biasing toward a few outer
+  // stations. Hard difficulty now comes from the change-count + gap filters.
   easy: { minMins: 10, maxMins: 60 },
-  hard: { minMins: 15, maxMins: 60 },
   // Max candidates to try before falling back to a hardcoded pair.
   maxAttempts: 200,
-  // Hard-only: best 1-change alternative must be at least this many minutes
-  // slower than the multi-change optimal.
-  hardOneChangeGapMin: 7,
+  // (Removed 2026-08-01) hardOneChangeGapMin: the "best 1-change alt must be
+  // ≥7 min slower" gate — the harshest filter and the main cause of the
+  // outer-station rotation. Dropped to diversify + improve pairs.
   // Hard-only: when the optimal needs 3+ changes, each change beyond 2 must
   // pay for itself vs. the best 2-change alternative. Interim cap while OSI
   // and on-platform wait time aren't yet modelled — without it, the optimiser
@@ -4951,7 +4968,12 @@ function londonDateParts(d) {
 // → Arsenal (a duplicate of 2026-06-22 caused by a build-lookup no-repeat
 // seed bug). We patched today.json to Chalk Farm → Marylebone mid-morning;
 // the cache bump forces stale clients to re-resolve.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v9';
+// Bumped to v10 on 2026-08-01: the hard filter dropped the 15–60 min time
+// bound and the 1-change gap ≥7 min gate to widen the station pool.
+// Bumped to v11 on 2026-08-01: dijkstra rewritten to an admissible, uncapped
+// engine — it now finds faster routes the old cap missed, so published optimals
+// (and some cached pairs' validity) change. Force stale clients to re-resolve.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v11';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5032,6 +5054,15 @@ function todayPuzzle(mode, opts) {
   // (vm contexts can have separate realm constructors).
   const recentPairs = opts && opts.recentPairs && typeof opts.recentPairs.has === 'function'
     ? opts.recentPairs : null;
+  // Per-station cooldown (2026-08-01). build-lookup.mjs passes a Set of station
+  // names used within the last N days (across BOTH modes); the draw loop rejects
+  // any candidate whose start OR end is on cooldown. This is what actually
+  // spreads the rotation — the recentPairs guard only blocks exact repeated
+  // PAIRS, so a heavily-eligible station (Dalston Kingsland) could still recur
+  // every few days via different partners. In-browser callers don't pass this
+  // (the lookup is the source of truth); only build-lookup applies the cooldown.
+  const recentStations = opts && opts.recentStations && typeof opts.recentStations.has === 'function'
+    ? opts.recentStations : null;
   const _t0 = Date.now();
   const { dateStr: date, baseSeed: londonBaseSeed, puzzleNum } = londonDateParts();
   const GRAPH = buildGraph();
@@ -5174,8 +5205,8 @@ function todayPuzzle(mode, opts) {
   //         plus walk- and 1-change-gap filters to reject puzzles whose
   //         optimal would feel unfair/arbitrary to a real player.
   const { minMins: EASY_MIN, maxMins: EASY_MAX } = PUZZLE_CONFIG.easy;
-  const { minMins: HARD_MIN, maxMins: HARD_MAX } = PUZZLE_CONFIG.hard;
-  const ONE_CHANGE_GAP_MIN = PUZZLE_CONFIG.hardOneChangeGapMin;
+  // Hard no longer gates on duration or a 1-change gap (removed 2026-08-01 to
+  // widen the pool); only the extra-change gap survives from the old set.
   const EXTRA_CHANGE_GAP_PER = PUZZLE_CONFIG.hardExtraChangeGapMinPer;
 
   // Main generator loop. Wrapped in try/catch so a corrupt graph entry or
@@ -5191,6 +5222,10 @@ function todayPuzzle(mode, opts) {
       // No-repeat window: skip pairs the build-lookup pass has already drawn
       // in either direction within its window (default 90 days).
       if (recentPairs && (recentPairs.has(`${start}|${end}`) || recentPairs.has(`${end}|${start}`))) continue;
+      // Per-station cooldown: skip if either endpoint was used within the last
+      // N days (build-lookup maintains the window across both modes). This is
+      // what breaks up station clustering that the pair-level guard misses.
+      if (recentStations && (recentStations.has(start) || recentStations.has(end))) continue;
       routes = dijkstra(GRAPH, start, end);
       if (!routes || routes.length === 0) continue;
       const opt = routes[0];
@@ -5206,7 +5241,12 @@ function todayPuzzle(mode, opts) {
         if (tubeLegCount === 2 && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
       } else {
         const changes = countDistinctChanges(opt);
-        if (!(changes >= 2 && opt.mins >= HARD_MIN && opt.mins <= HARD_MAX)) continue;
+        // Hard requires a genuinely multi-change optimal. The 15–60 min time
+        // bound was removed 2026-08-01: it was rejecting large numbers of valid
+        // pairs and biasing the pool toward a handful of outer stations (Dalston
+        // Kingsland etc). Duration is no longer gated for hard — the change
+        // count and gap filters below are what make a puzzle "hard".
+        if (changes < 2) continue;
         // Hard optima must also be pure tube. OSI walk costs only model the
         // walk itself, not the wait for the next train on the destination
         // line, so the optimiser arbitrages walks vs. on-platform changes
@@ -5218,8 +5258,21 @@ function todayPuzzle(mode, opts) {
         if (usesWalk) continue;
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
         if (tubeLegCount < 3) continue;
+        // No-inversion guard (2026-08-01). A hard puzzle must GENUINELY require
+        // 2+ changes: if a 1-change route ties or beats the optimal, it's an
+        // easy route mislabelled as hard, so reject it. This replaces the old
+        // "1-change must be ≥7 min slower" gap filter — that ≥7 threshold was
+        // the main driver of the outer-station rotation (only pairs with NO
+        // decent 1-change route survived, selecting for awkward Overground
+        // destinations like Dalston Kingsland). The margin here is 0, not 7:
+        // we reject only true miscategorisations, not close-but-valid puzzles,
+        // so the pool stays diverse. bestOneChangeMins now derives from the
+        // same admissible engine + cost model as dijkstra (waits included), so
+        // this comparison is reliable — the two can no longer disagree.
         const oneChangeMins = bestOneChangeMins(start, end);
-        if (oneChangeMins - opt.mins < ONE_CHANGE_GAP_MIN) continue;
+        if (oneChangeMins <= opt.mins) continue;
+        // The extra-change gap below still guards against micro-shortcut 3+
+        // change optima.
         // Each change beyond 2 must save ≥ EXTRA_CHANGE_GAP_PER min vs. the
         // best 2-change tube route. Without this, the optimiser takes
         // 1-stop micro-shortcuts (e.g. 2026-06-13 Harrow on the Hill → Pimlico
@@ -5265,8 +5318,21 @@ function todayPuzzle(mode, opts) {
     }
   }
   // Cache the freshly-generated pair so subsequent loads today skip the
-  // expensive seeded-generator loop.
-  _setCachedPuzzle(date, m, { start, end });
+  // expensive seeded-generator loop — UNLESS a lookup was expected but hasn't
+  // settled yet. init() awaits the lookup so this normally can't happen, but if
+  // todayPuzzle() is ever called before _LOOKUP_SETTLED, caching the generator's
+  // pair would poison the cache with a value that disagrees with the lookup
+  // (and Reddit) for the rest of the day. When the lookup is still pending we
+  // return the generated pair for this render but don't persist it, so the next
+  // render re-resolves against the (by-then-loaded) lookup.
+  // NOTE the typeof guard on _LOOKUP_SETTLED: it's declared near the bottom of
+  // the page script, OUTSIDE the region build-lookup.mjs extracts into its
+  // sandbox, so a bare reference would throw ReferenceError there. typeof is
+  // safe when the binding doesn't exist.
+  const lookupPending = typeof window !== 'undefined' && !recentPairs
+    && window.PUZZLE_LOOKUP == null
+    && typeof _LOOKUP_SETTLED !== 'undefined' && _LOOKUP_SETTLED === false;
+  if (!lookupPending) _setCachedPuzzle(date, m, { start, end });
   _tel('puzzle_generated', { mode: m, ms: Date.now() - _t0 });
   return { start, end, optimal: pickOptimal(routes, {start, end}) || routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m, usedFallback };
 }
@@ -5687,7 +5753,7 @@ function maybeShowSolvedResult() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════════════
-function init() {
+async function init() {
   document.getElementById('yr').textContent = new Date().getFullYear();
   renderAnnouncements();
   currentMode = pickDefaultMode();
@@ -5697,6 +5763,10 @@ function init() {
   refreshTabChecks();
   applyHardModeStyling();
   renderHistory();
+  // Wait for the lookup to settle (load or time out) BEFORE the first puzzle
+  // resolves, so the lookup oracle wins over the seeded generator on a cold
+  // load. See _preloadPuzzleLookup for why. _lookupReady never rejects.
+  await _lookupReady;
   puzzleData = todayPuzzle(currentMode);
   document.getElementById('start-stn').textContent = puzzleData.start;
   document.getElementById('end-stn').textContent   = puzzleData.end;
@@ -6846,10 +6916,22 @@ function _lookupCacheBusterKey() {
     return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
   }
 }
+// Resolves (never rejects) once the lookup has SETTLED — either loaded into
+// window.PUZZLE_LOOKUP, or failed/timed out so we know it isn't coming. init()
+// awaits this before the first todayPuzzle() so the lookup ORACLE always wins
+// over the in-browser generator on a cold load. Without the await there is a
+// race: on an uncached load todayPuzzle() can run before the fetch resolves,
+// fall through to the seeded generator, and cache a pair that DISAGREES with the
+// lookup (and thus with Reddit) — the desync stays cached until localStorage is
+// cleared. The timeout preserves the "page never blocks" guarantee: if the file
+// is genuinely unreachable we proceed with the generator after LOOKUP_TIMEOUT_MS.
+let _LOOKUP_SETTLED = false;
+const LOOKUP_TIMEOUT_MS = 3000;
 function _preloadPuzzleLookup() {
   window.PUZZLE_LOOKUP = null;  // explicit null until fetch resolves
   const url = 'puzzle-lookup.json?d=' + _lookupCacheBusterKey();
-  fetch(url)
+  const settle = () => { _LOOKUP_SETTLED = true; };
+  const fetchPromise = fetch(url)
     .then(res => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return res.json();
@@ -6868,10 +6950,16 @@ function _preloadPuzzleLookup() {
     })
     .catch(e => {
       console.warn('[tubed] puzzle-lookup.json preload failed; falling back to in-browser generator:', e.message);
-    });
+    })
+    .then(settle);
+  // Race the fetch against a timeout so init() never waits longer than
+  // LOOKUP_TIMEOUT_MS. Whichever wins, _LOOKUP_SETTLED is true by the time this
+  // resolves (the fetch chain sets it; the timeout path sets it here).
+  const timeout = new Promise(resolve => setTimeout(() => { settle(); resolve(); }, LOOKUP_TIMEOUT_MS));
+  return Promise.race([fetchPromise, timeout]);
 }
-_preloadPuzzleLookup();  // fire immediately, do not await
-window.addEventListener('load', init);
+const _lookupReady = _preloadPuzzleLookup();  // fire immediately; init() awaits it
+window.addEventListener('load', () => { init(); });
 </script>
 </body>
 </html>

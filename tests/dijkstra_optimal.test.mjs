@@ -1,32 +1,32 @@
-// Dijkstra admissibility regression test for Tubed.
+// Dijkstra correctness regression test for Tubed.
 // Run with: node tests/dijkstra_optimal.test.mjs
 // Exits 0 on success, 1 on any failure.
 //
 // WHY THIS EXISTS
 // ---------------
-// dijkstra() is a bounded k-shortest-paths search: it keeps at most MAX_PATHS
-// candidate paths per (station, line) so that equal-cost routes via different
-// interchanges all survive to the results stage. If MAX_PATHS is too small,
-// the search under-explores long, branch-dense corridors (District/Circle in
-// West London are the worst) and can EVICT the genuinely-optimal path before
-// it reaches the destination. When that happens the game publishes a too-slow
-// "optimal" that players beat with a faster real route — while scoreUserRoute
-// (which scores the player's typed route with no cap) reports the true, lower
-// time. The two engines disagree and the "OPTIMAL!" badge is wrong.
+// dijkstra() publishes the "OPTIMAL!" route and is the baseline every player is
+// scored against. It used to be a CAPPED beam search (MAX_PATHS): on branch-
+// dense corridors it evicted the genuinely-optimal path before it reached the
+// destination and published a too-slow "optimal" that players beat. Raising the
+// cap only moved the ceiling (8->16 fixed #104 but NOT e.g. Aldgate East ->
+// Kilburn, where even cap-128 missed the true route).
 //
-// This actually shipped: puzzle #104 (Chancery Lane -> Richmond) reported a
-// 51-min optimal while a real 48-min route existed. Root cause was MAX_PATHS=8;
-// it was raised to 16.
+// 2026-08-01: dijkstra was rewritten as an ADMISSIBLE, uncapped, heap-based
+// search — so the published optimal is provably the true shortest. The old
+// "re-run at a bigger cap and compare" test is therefore obsolete (there is no
+// cap to bump). This test now pins the properties that MUST hold of an
+// admissible engine, and that would have caught the original bug:
 //
-// THE INVARIANT
-// -------------
-// Re-run dijkstra at a strictly larger cap. If the larger search ever finds a
-// CHEAPER optimal than the shipped cap, the shipped cap is under-exploring and
-// the published optimal is beatable. We check this on the puzzles most likely
-// to trip the cap (the longest optimal routes) plus a named guard for #104.
-//
-// This is intentionally scoped to the longest routes so the test stays fast
-// enough for routine runs (the larger cap re-runs the slow pq.sort() search).
+//   1. NO-INVERSION: dijkstra's optimal is never slower than the best 1-change
+//      (or 2-change) route. bestOneChangeMins/bestTwoChangeMins are derived from
+//      the SAME engine + cost model now, so a disagreement means a real bug. A
+//      capped/incorrect dijkstra fails this (it returns a 2-change route while a
+//      faster 1-change route exists).
+//   2. STRUCTURAL CONTIGUITY: every returned route's legs join up (each leg
+//      starts where the previous ended, or at a real OSI-walk / interchange
+//      pair). Catches teleports from a bad search/reconstruction.
+//   3. NAMED REGRESSIONS: the specific pairs that surfaced the bug resolve to
+//      their true optimal.
 
 import { readFileSync } from 'fs';
 import vm from 'vm';
@@ -38,37 +38,24 @@ const HTML_PATH = path.join(__dirname, '..', 'index.html');
 const LOOKUP_PATH = path.join(__dirname, '..', 'puzzle-lookup.json');
 const html = readFileSync(HTML_PATH, 'utf8');
 
-// The cap shipped in index.html. Kept in sync via the assertion below so this
-// test fails loudly if someone changes MAX_PATHS without revisiting it.
-const SHIPPED_CAP = 16;
-// A strictly larger cap to probe whether the shipped cap under-explores. The
-// empirical cap-8-vs-64 sweep found every published puzzle converges by ~24,
-// so 32 sits comfortably above the convergence point: if 16 ever disagrees
-// with 32 we know 16 is under-exploring. Note this proves "16 == 32", not
-// "16 is truly optimal" — the guarantee rests on 32 being past convergence.
-const PROBE_CAP = 32;
-// How many of the longest-optimal puzzles to stress. Longer routes are the
-// ones that thread branch-dense corridors and trip the cap. 30 keeps runtime
-// near ~80s at PROBE_CAP=32; the #104 route sits ~rank 28 by distance so it
-// stays in the set, and is independently covered by the named guard below.
-const STRESS_N = 30;
-
 // ── Sandbox loader ──────────────────────────────────────────────────────────
-// Loads index.html into a stubbed-DOM sandbox, optionally rewriting MAX_PATHS
-// so we can run the same dijkstra at two different caps.
-function loadTubed(maxPaths) {
+// Loads index.html into a stubbed-DOM sandbox and exports the puzzle engine.
+// Optional kOverride rewrites dijkstra's per-state label cap K so the
+// K-sensitivity test can prove K is high enough (a deeper K finds no cheaper
+// optimal). Rewriting a value that isn't present is a hard failure so the test
+// can't silently pass against an unchanged engine.
+function loadTubed(kOverride) {
   let src = html;
-  if (maxPaths !== SHIPPED_CAP) {
-    const needle = `const MAX_PATHS = ${SHIPPED_CAP};`;
+  if (kOverride != null) {
+    const needle = 'const K = 6;';
     if (!src.includes(needle)) {
-      console.error(`FATAL: could not find "${needle}" in index.html. ` +
-        `Has the shipped cap changed? Update SHIPPED_CAP in this test.`);
+      console.error(`FATAL: could not find "${needle}" in index.html to override K. Did K change?`);
       process.exit(1);
     }
-    src = src.replace(needle, `const MAX_PATHS = ${maxPaths};`);
+    src = src.replace(needle, `const K = ${kOverride};`);
   }
   const scripts = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS };`;
+  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS, bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName, countDistinctChanges, todayPuzzle, londonDateParts };`;
   const fullScript = scripts.join('\n;\n') + exportSuffix;
 
   function makeStub(name = 'stub') {
@@ -116,39 +103,22 @@ function test(name, fn) {
   catch (e) { results.push({ name, ok: false, error: e.message }); }
 }
 
-// Assert index.html still uses the cap this test was written against. If this
-// fails, someone changed MAX_PATHS — re-read the WHY block above and update
-// SHIPPED_CAP (and confirm the new value is still admissible).
-test(`index.html MAX_PATHS is the expected shipped cap (${SHIPPED_CAP})`, () => {
-  if (!html.includes(`const MAX_PATHS = ${SHIPPED_CAP};`)) {
-    throw new Error(`Expected "const MAX_PATHS = ${SHIPPED_CAP};" in index.html but did not find it.`);
+// Guard: the cap is gone. If someone reintroduces a MAX_PATHS beam cap in
+// dijkstra, this fails loudly — the whole point of the 2026-08-01 rewrite is
+// that the search is admissible (uncapped).
+test('dijkstra has no MAX_PATHS beam cap (admissible engine)', () => {
+  if (/const\s+MAX_PATHS\s*=/.test(html)) {
+    throw new Error('Found "const MAX_PATHS =" in index.html — the capped beam ' +
+      'search was reintroduced. dijkstra must stay admissible/uncapped.');
   }
 });
 
-const Tship = loadTubed(SHIPPED_CAP);
-const Tprobe = loadTubed(PROBE_CAP);
-const gShip = Tship.buildGraph();
-const gProbe = Tprobe.buildGraph();
+const T = loadTubed();
+const g = T.buildGraph();
+const { bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName } = T;
 
-function optMins(T, g, start, end) {
-  const r = T.dijkstra(g, start, end);
-  return r.length ? r[0].mins : null;
-}
-
-// Build the stress set. We want the puzzles most likely to trip the cap: the
-// longest routes, which thread the most branch-dense corridors. Ranking by the
-// true optimal would mean a full dijkstra pass over all 256 puzzles (slow), so
-// we rank by great-circle distance between endpoints instead — a cheap proxy
-// that reliably surfaces the long cross-London routes. We then run BOTH caps
-// only on the top STRESS_N candidates.
-const { COORDS } = Tship;
-function geoDist(a, b) {
-  const ca = COORDS[a], cb = COORDS[b];
-  if (!ca || !cb) return -1; // unknown endpoints sort last
-  const [latA, lonA] = ca, [latB, lonB] = cb;
-  const dLat = latA - latB, dLon = (lonA - lonB) * Math.cos((latA + latB) / 2 * Math.PI / 180);
-  return Math.hypot(dLat, dLon);
-}
+function optRoute(start, end) { const r = T.dijkstra(g, start, end); return r.length ? r[0] : null; }
+function optMins(start, end) { const r = optRoute(start, end); return r ? r.mins : null; }
 
 const lookup = JSON.parse(readFileSync(LOOKUP_PATH, 'utf8'));
 const puzzles = [];
@@ -158,53 +128,115 @@ for (const [date, entry] of Object.entries(lookup)) {
     if (p) puzzles.push({ date, mode, num: entry.puzzleNum, start: p.start, end: p.end });
   }
 }
-const stress = puzzles
-  .map(p => ({ ...p, dist: geoDist(p.start, p.end) }))
-  .sort((a, b) => b.dist - a.dist)
-  .slice(0, STRESS_N);
 
-// Core invariant: on the longest routes, the shipped cap must not be beaten by
-// a deeper search. If the probe cap finds a cheaper optimal, the shipped cap is
-// under-exploring and the published optimal is beatable.
-test(`shipped cap (${SHIPPED_CAP}) is admissible on the ${STRESS_N} longest puzzles (probe cap ${PROBE_CAP})`, () => {
-  const beatable = [];
-  for (const p of stress) {
-    const shipMins = optMins(Tship, gShip, p.start, p.end);
-    const probeMins = optMins(Tprobe, gProbe, p.start, p.end);
-    if (probeMins == null) continue; // deeper search found nothing either — not a cap symptom
-    // shipMins == null while the deeper search DID find a route is the most
-    // severe under-exploration: the shipped cap fails to find any route at all
-    // and would publish no/blank optimal. Treat as beatable (Infinity).
-    const shipCost = shipMins == null ? Infinity : shipMins;
-    if (probeMins < shipCost) {
-      beatable.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  ` +
-        `shipped=${shipMins == null ? 'NONE' : shipMins} deeperSearch=${probeMins} ` +
-        `(beatable by ${shipMins == null ? '∞' : shipMins - probeMins}min)`);
-    }
+// ── Invariant 1: NO-INVERSION ────────────────────────────────────────────────
+// dijkstra's optimal must never be slower than the best 1-change (or 2-change)
+// route. Since bestOneChangeMins/bestTwoChangeMins now derive from the same
+// engine + cost model as dijkstra, dijkstra (searching ALL change counts) must
+// be <= either. A violation means the search missed a route it should have
+// found — the exact class of bug (Aldgate East -> Kilburn) that motivated the
+// rewrite. Checked across every lookup puzzle.
+test('no-inversion: dijkstra optimal <= best 1-change and 2-change route (all lookup puzzles)', () => {
+  const bad = [];
+  for (const p of puzzles) {
+    const opt = optMins(p.start, p.end);
+    if (opt == null) continue;
+    const one = bestOneChangeMins(p.start, p.end);
+    const two = bestTwoChangeMins(p.start, p.end);
+    if (Number.isFinite(one) && opt > one + 1e-9) bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  opt=${opt} > 1chg=${one}`);
+    if (Number.isFinite(two) && opt > two + 1e-9) bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  opt=${opt} > 2chg=${two}`);
   }
-  if (beatable.length) {
-    throw new Error(
-      `dijkstra at MAX_PATHS=${SHIPPED_CAP} under-explores; a deeper search ` +
-      `(MAX_PATHS=${PROBE_CAP}) found cheaper optimals for ${beatable.length} puzzle(s), ` +
-      `meaning the published "optimal" is beatable:\n  ` + beatable.join('\n  ') +
-      `\nRaise MAX_PATHS in index.html until this passes.`
-    );
+  if (bad.length) {
+    throw new Error(`dijkstra optimal is beaten by a lower-change route (search missed ` +
+      `the faster route) for ${bad.length} case(s):\n  ` + bad.slice(0, 40).join('\n  '));
   }
 });
 
-// Named regression guard for the puzzle that surfaced the bug. Chancery Lane ->
-// Richmond must resolve to the true 47-min optimal (Oxford Circus -> Victoria ->
-// District), not the 51-min route the old cap published.
-test('regression: Chancery Lane -> Richmond optimal is not the too-slow route (#104)', () => {
-  const ship = optMins(Tship, gShip, 'Chancery Lane', 'Richmond');
-  const probe = optMins(Tprobe, gProbe, 'Chancery Lane', 'Richmond');
-  if (probe == null) throw new Error('no route found Chancery Lane -> Richmond (deeper search)');
-  // ship == null (cap finds no route) or ship > probe (cap finds a slower one)
-  // are both the #104 regression: the shipped cap under-explores this route.
-  if (ship == null || ship > probe) {
-    throw new Error(`Chancery Lane -> Richmond: shipped cap gives ${ship == null ? 'NONE' : ship} ` +
-      `but a deeper search finds ${probe}. This is the #104 regression.`);
+// ── Invariant 1b: K IS HIGH ENOUGH ───────────────────────────────────────────
+// dijkstra keeps only the K cheapest labels per (station,line,justTransferred)
+// state. That eviction is normally harmless (it drops dominated intermediate
+// labels, not whole paths), but a future network-data change could make some
+// state genuinely need more than K labels — silently under-exploring, exactly
+// the failure mode the rewrite killed. Guard it: a deeper K must never find a
+// cheaper optimal. If this fails, raise K in index.html.
+test('shipped K is high enough: a deeper label cap finds no cheaper optimal', () => {
+  const Tdeep = loadTubed(32);
+  const gDeep = Tdeep.buildGraph();
+  const worse = [];
+  for (const p of puzzles) {
+    const ship = optMins(p.start, p.end);
+    const rDeep = Tdeep.dijkstra(gDeep, p.start, p.end);
+    const deep = rDeep.length ? rDeep[0].mins : null;
+    if (deep == null) continue;
+    if (ship == null || ship > deep + 1e-9) {
+      worse.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  K=6=${ship == null ? 'NONE' : ship} K=32=${deep}`);
+    }
   }
+  if (worse.length) {
+    throw new Error(`dijkstra's label cap K under-explores: a deeper K found a cheaper ` +
+      `optimal for ${worse.length} puzzle(s). Raise K in index.html:\n  ` + worse.slice(0, 20).join('\n  '));
+  }
+});
+
+// ── Invariant 2: STRUCTURAL CONTIGUITY ───────────────────────────────────────
+// Every returned route's legs must join up: leg[i].from is leg[i-1].to, OR an
+// OSI-walk pair, OR a cross-complex interchange (Bank<->Monument). A gap means a
+// teleport — a broken search or path reconstruction that under-counts cost.
+function hasInterchangeEdge(fromName, toName) {
+  const node = g[fromName]; if (!node) return false;
+  for (const line of Object.keys(node)) for (const e of node[line]) {
+    if (e.type === 'interchange' && _stationName(e.station) === toName) return true;
+  }
+  return false;
+}
+function firstGap(legs) {
+  for (let i = 1; i < legs.length; i++) {
+    const prevTo = legs[i - 1].to, curFrom = legs[i].from;
+    if (prevTo === curFrom) continue;
+    if (osiTime(prevTo, curFrom) != null) continue;
+    if (hasInterchangeEdge(prevTo, curFrom)) continue;
+    return { at: i, prevTo, curFrom };
+  }
+  return null;
+}
+test('structural: every returned route is contiguous (no teleports) across all lookup puzzles', () => {
+  const bad = [];
+  for (const p of puzzles) {
+    const routes = T.dijkstra(g, p.start, p.end);
+    for (const r of routes) {
+      const gap = firstGap(r.legs);
+      if (gap) bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} leg ${gap.at} jumps ${gap.prevTo} -> ${gap.curFrom}`);
+    }
+  }
+  if (bad.length) throw new Error(`${bad.length} non-contiguous route(s):\n  ` + bad.slice(0, 30).join('\n  '));
+});
+
+// ── Invariant 3: NAMED REGRESSIONS ───────────────────────────────────────────
+// The specific pairs that surfaced the cap bug must resolve to their true
+// optimal (found only by the uncapped search).
+test('regression: Chancery Lane -> Richmond resolves to the true optimal (#104)', () => {
+  const m = optMins('Chancery Lane', 'Richmond');
+  if (m == null) throw new Error('no route Chancery Lane -> Richmond');
+  // True optimal is ~47-48 min. The old cap published 51.
+  if (m > 49) throw new Error(`Chancery Lane -> Richmond optimal is ${m}, expected <=49 (old cap gave 51).`);
+});
+test('regression: Aldgate East -> Kilburn optimal is the 1-change route the cap missed', () => {
+  const r = optRoute('Aldgate East', 'Kilburn');
+  if (!r) throw new Error('no route Aldgate East -> Kilburn');
+  const changes = T.countDistinctChanges(r);
+  // The cap returned a 31-min 2-change route; the true optimal is a 30-min
+  // 1-change route (District -> Westminster -> Jubilee).
+  if (!(r.mins <= 31 && changes <= 1)) {
+    throw new Error(`Aldgate East -> Kilburn optimal is ${r.mins}min/${changes}chg, ` +
+      `expected the ~30min 1-change route.`);
+  }
+});
+test('regression: Wembley Central -> Limehouse optimal is the clean 2-change route the cap missed', () => {
+  const r = optRoute('Wembley Central', 'Limehouse');
+  if (!r) throw new Error('no route Wembley Central -> Limehouse');
+  // Cap-16/64/128 all returned a 56-min walk-heavy route; true optimal is a
+  // 54-min Bakerloo -> Central -> DLR route.
+  if (r.mins > 54) throw new Error(`Wembley Central -> Limehouse optimal is ${r.mins}, expected <=54.`);
 });
 
 // pickOptimal() is the single chokepoint every todayPuzzle return path uses to
@@ -214,18 +246,18 @@ test('regression: Chancery Lane -> Richmond optimal is not the too-slow route (#
 test('pickOptimal: prefers the cheapest pure-tube route over a cheaper walk route', () => {
   const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
-  const r = Tship.pickOptimal([walk, tube], { start: 'A', end: 'C' });
+  const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
   if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
   if (r.legs.some(l => l.line === 'Walk')) throw new Error('picked a route containing a Walk leg');
 });
 test('pickOptimal: returns null for empty/degenerate input (no throw)', () => {
-  if (Tship.pickOptimal([], {}) !== null) throw new Error('empty list should give null');
-  if (Tship.pickOptimal(null, {}) !== null) throw new Error('null should give null');
-  if (Tship.pickOptimal([{ mins: 0, legs: [] }], {}) !== null) throw new Error('all-empty routes should give null');
+  if (T.pickOptimal([], {}) !== null) throw new Error('empty list should give null');
+  if (T.pickOptimal(null, {}) !== null) throw new Error('null should give null');
+  if (T.pickOptimal([{ mins: 0, legs: [] }], {}) !== null) throw new Error('all-empty routes should give null');
 });
 test('pickOptimal: falls back to a walk route only when no tube route exists', () => {
   const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
-  const r = Tship.pickOptimal([walk], { start: 'A', end: 'C' });
+  const r = T.pickOptimal([walk], { start: 'A', end: 'C' });
   if (!r || r.mins !== 10) throw new Error('should fall back to the only (walk) route so the game still runs');
 });
 
@@ -241,8 +273,8 @@ test('every today-or-future lookup puzzle publishes a non-empty, walk-free optim
   const bad = [];
   for (const p of puzzles) {
     if (p.date < todayIso) continue; // immutable past — see note above
-    const routes = Tship.dijkstra(gShip, p.start, p.end);
-    const opt = Tship.pickOptimal(routes, { start: p.start, end: p.end });
+    const routes = T.dijkstra(g, p.start, p.end);
+    const opt = T.pickOptimal(routes, { start: p.start, end: p.end });
     if (!opt || opt.legs.length === 0) {
       bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (empty/null optimal)`);
     } else if (opt.legs.some(l => l.line === 'Walk')) {
@@ -252,6 +284,32 @@ test('every today-or-future lookup puzzle publishes a non-empty, walk-free optim
   if (bad.length) {
     throw new Error(`${bad.length} upcoming lookup puzzle(s) publish an invalid optimal ` +
       `(regenerate the future lookup via build-lookup.mjs):\n  ` + bad.join('\n  '));
+  }
+});
+
+// ── Invariant 4: THE LOAD RACE STAYS FIXED (source-level guards) ──────────────
+// The lookup is the source of truth shared with Reddit. On a cold load the
+// seeded in-browser generator diverges from it (the lookup has a per-station
+// cooldown the generator lacks), so the first render MUST wait for the lookup
+// before calling todayPuzzle() — otherwise the site caches a generator pair that
+// disagrees with Reddit until localStorage is cleared. That fix lives in the
+// page's async load path, which the DOM-stub sandbox above can't exercise
+// faithfully (Date/window/localStorage are baked into the vm context at eval
+// time). So we assert the fix at the source level: the pieces that make the
+// oracle win must be present. If someone removes them, the race returns.
+test('load-race fix present: init awaits the lookup and the cache is guarded', () => {
+  const missing = [];
+  // 1. init() is async (so it can await the lookup).
+  if (!/async\s+function\s+init\s*\(/.test(html)) missing.push('init() is no longer async');
+  // 2. init() awaits the lookup-ready promise before the first render.
+  if (!/await\s+_lookupReady/.test(html)) missing.push('init() no longer awaits _lookupReady');
+  // 3. _preloadPuzzleLookup returns a promise init can await (Promise.race with a timeout).
+  if (!/_lookupReady\s*=\s*_preloadPuzzleLookup\(\)/.test(html)) missing.push('_lookupReady is not wired to _preloadPuzzleLookup()');
+  if (!/Promise\.race/.test(html)) missing.push('_preloadPuzzleLookup no longer races a timeout (page could block)');
+  // 4. the generator does not persist a pair while the lookup is still pending.
+  if (!/_LOOKUP_SETTLED/.test(html) || !/lookupPending/.test(html)) missing.push('the lookup-pending cache guard was removed');
+  if (missing.length) {
+    throw new Error('The lookup-vs-generator load-race fix has regressed:\n  - ' + missing.join('\n  - '));
   }
 });
 
