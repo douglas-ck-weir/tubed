@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-02",
-  "puzzleNum": 122,
+  "date": "2026-08-03",
+  "puzzleNum": 123,
   "easy": {
-    "start": "Lambeth North",
-    "end": "Victoria"
+    "start": "Fulham Broadway",
+    "end": "Canning Town"
   },
   "hard": {
-    "start": "Brent Cross",
-    "end": "West Brompton"
+    "start": "Wimbledon",
+    "end": "Surrey Quays"
   }
 }

@@ -1,4 +1,15 @@
 {
+  "2026-08-02": {
+    "puzzleNum": 122,
+    "easy": {
+      "start": "Lambeth North",
+      "end": "Victoria"
+    },
+    "hard": {
+      "start": "Brent Cross",
+      "end": "West Brompton"
+    }
+  },
   "2026-08-01": {
     "puzzleNum": 121,
     "easy": {
@@ -547,17 +558,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-08-02": {
-    "puzzleNum": 122,
-    "easy": {
-      "start": "Lambeth North",
-      "end": "Victoria"
-    },
-    "hard": {
-      "start": "Brent Cross",
-      "end": "West Brompton"
     }
   },
   "2026-08-03": {
@@ -1537,6 +1537,17 @@
     "hard": {
       "start": "Mansion House",
       "end": "Caledonian Road"
+    }
+  },
+  "2026-10-31": {
+    "puzzleNum": 212,
+    "easy": {
+      "start": "Kilburn",
+      "end": "West Kensington"
+    },
+    "hard": {
+      "start": "Bermondsey",
+      "end": "Tower Hill"
     }
   }
 }
