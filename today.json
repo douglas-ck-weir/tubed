@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-03",
-  "puzzleNum": 123,
+  "date": "2026-08-04",
+  "puzzleNum": 124,
   "easy": {
-    "start": "Fulham Broadway",
-    "end": "Canning Town"
+    "start": "Notting Hill Gate",
+    "end": "Wembley Park"
   },
   "hard": {
-    "start": "Wimbledon",
-    "end": "Surrey Quays"
+    "start": "Harrow & Wealdstone",
+    "end": "Clapham Common"
   }
 }
