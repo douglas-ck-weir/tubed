@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-02",
-  "puzzleNum": 122,
+  "date": "2026-08-05",
+  "puzzleNum": 125,
   "easy": {
-    "start": "Lambeth North",
-    "end": "Victoria"
+    "start": "Waterloo",
+    "end": "Ealing Broadway"
   },
   "hard": {
-    "start": "Brent Cross",
-    "end": "West Brompton"
+    "start": "Turnham Green",
+    "end": "Crystal Palace"
   }
 }
