@@ -1,4 +1,15 @@
 {
+  "2026-08-04": {
+    "puzzleNum": 124,
+    "easy": {
+      "start": "Notting Hill Gate",
+      "end": "Wembley Park"
+    },
+    "hard": {
+      "start": "Harrow & Wealdstone",
+      "end": "Clapham Common"
+    }
+  },
   "2026-08-03": {
     "puzzleNum": 123,
     "easy": {
@@ -569,17 +580,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-08-04": {
-    "puzzleNum": 124,
-    "easy": {
-      "start": "Notting Hill Gate",
-      "end": "Wembley Park"
-    },
-    "hard": {
-      "start": "Harrow & Wealdstone",
-      "end": "Clapham Common"
     }
   },
   "2026-08-05": {
@@ -1559,6 +1559,17 @@
     "hard": {
       "start": "Highgate",
       "end": "Piccadilly Circus"
+    }
+  },
+  "2026-11-02": {
+    "puzzleNum": 214,
+    "easy": {
+      "start": "Camden Town",
+      "end": "Queen's Park"
+    },
+    "hard": {
+      "start": "Belsize Park",
+      "end": "Surrey Quays"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-04",
-  "puzzleNum": 124,
+  "date": "2026-08-05",
+  "puzzleNum": 125,
   "easy": {
-    "start": "Notting Hill Gate",
-    "end": "Wembley Park"
+    "start": "Waterloo",
+    "end": "Ealing Broadway"
   },
   "hard": {
-    "start": "Harrow & Wealdstone",
-    "end": "Clapham Common"
+    "start": "Turnham Green",
+    "end": "Crystal Palace"
   }
 }
