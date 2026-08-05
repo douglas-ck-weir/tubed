@@ -1,6 +1,6 @@
 // Scoring invariants for Tubed.
 //   node tests/scoring_invariants.test.mjs
-//   TUBED_HTML=tubed-v2.html node tests/scoring_invariants.test.mjs
+//   TUBED_HTML=backups/index.html.pre-unified-engine.2026-08-05.bak node tests/scoring_invariants.test.mjs
 //
 // These are the guards for the bug class that has now surfaced three times:
 // two parts of the engine disagreeing about what a route costs. Previously this

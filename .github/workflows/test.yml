@@ -25,3 +25,12 @@ jobs:
 
       - name: Dijkstra admissibility (published "optimal" is not beatable)
         run: node tests/dijkstra_optimal.test.mjs
+
+      - name: Wait-time lookups (direction, Circle pivots, branch resolution)
+        run: node tests/wait_times.test.mjs
+
+      - name: Result card end-to-end (snapshot, breakdown, totals)
+        run: node tests/wait_times_e2e.test.mjs
+
+      - name: Scoring invariants (one cost model; no beatable optimal)
+        run: node tests/scoring_invariants.test.mjs

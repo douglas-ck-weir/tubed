@@ -2,14 +2,14 @@
 //
 // Loads a Tubed single-file HTML build into a stubbed-DOM vm sandbox and
 // returns its engine surface. Parameterised by path so the SAME assertions
-// can be run against index.html (live) and tubed-v2.html (rewrite) — that's
-// how v2 proves it is equivalent where it should be and different only where
-// we intend it to be.
+// can be run against index.html (live) and any candidate or archived build —
+// that's how a change proves it is equivalent where it should be and different
+// only where it is intended to be.
 //
 // Usage:
 //   import { loadEngine } from './lib/engine.mjs';
 //   const T = loadEngine();                      // defaults to index.html
-//   const V = loadEngine('tubed-v2.html');
+//   const V = loadEngine('backups/index.html.pre-unified-engine.2026-08-05.bak');
 //   const T = loadEngine(process.env.TUBED_HTML || 'index.html');
 
 import { readFileSync } from 'fs';

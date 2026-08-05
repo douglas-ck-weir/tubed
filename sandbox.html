@@ -81,7 +81,7 @@
     <label style="margin:0;flex:0 0 auto">Build</label>
     <select id="buildSel" style="flex:0 0 auto;width:auto">
       <option value="index.html">index.html (live)</option>
-      <option value="tubed-v2.html">tubed-v2.html (unified engine)</option>
+      <option value="backups/index.html.pre-unified-engine.2026-08-05.bak">pre-unified-engine (backup)</option>
     </select>
     <span class="mono" id="buildNow" style="opacity:.7"></span>
   </div>
@@ -142,10 +142,10 @@ let GRAPH = null;
 let lastOptimal = null;
 
 // ── Which build to borrow from ─────────────────────────────────────────────
-// The sandbox previously hardcoded index.html, so every route tested here was
-// scored by the LIVE engine no matter which build you were actually working on.
-// Pick with ?build=tubed-v2.html or the selector; switching reloads the page so
-// the iframe starts clean (the engine caches waits and adjacency internally).
+// Pick which build to borrow the engine from with ?build= or the selector.
+// Defaults to index.html. Point it at a file in backups/ to compare current
+// behaviour against a previous engine. Switching reloads the page so the iframe
+// starts clean (the engine caches waits and adjacency internally).
 const BUILD = (new URLSearchParams(location.search).get('build')) || 'index.html';
 document.getElementById('game').src = BUILD;
 (function initBuildSelector(){

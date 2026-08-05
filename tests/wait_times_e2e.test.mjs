@@ -21,7 +21,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Which build to test. Defaults to the live index.html; set TUBED_HTML to run
-// the same assertions against a candidate build (e.g. TUBED_HTML=tubed-v2.html).
+// the same assertions against a candidate build (e.g. TUBED_HTML=backups/old.bak).
 const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
   ? process.env.TUBED_HTML
   : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
