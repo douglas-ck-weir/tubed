@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-01",
-  "puzzleNum": 121,
+  "date": "2026-08-02",
+  "puzzleNum": 122,
   "easy": {
-    "start": "Dalston Kingsland",
-    "end": "Euston"
+    "start": "Lambeth North",
+    "end": "Victoria"
   },
   "hard": {
-    "start": "Shepherd's Bush Market",
-    "end": "Dalston Kingsland"
+    "start": "Brent Cross",
+    "end": "West Brompton"
   }
 }

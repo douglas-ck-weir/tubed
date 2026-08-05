@@ -11,7 +11,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HTML_PATH = path.join(__dirname, '..', 'index.html');
+// Which build to test. Defaults to the live index.html; set TUBED_HTML to run
+// the same assertions against a candidate build (e.g. TUBED_HTML=tubed-v2.html).
+const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
+  ? process.env.TUBED_HTML
+  : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
 const html = readFileSync(HTML_PATH, 'utf8');
 
 // ── Sandbox extraction ─────────────────────────────────────────────────────
@@ -549,12 +553,15 @@ test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a chang
   ]);
   eq(r.legs.length, 2);
   eq(r.interchanges[0]?.at, 'Edgware Road');
-  // Edgware Road Circle uses the combined shared-platform frequency
-  // (2-min wait; Circle/H&C share the platform), matching Paddington.
-  // 18 + (2 walk + 2 wait) + 7 = 29.
+  // Heading to Ladbroke Grove the first hop is Paddington, so the wait is
+  // Edgware Road|Paddington|Circle = 1 (Circle/District/H&C share that
+  // platform). The old expectation of 2 was Edgware Road|Baker Street|Circle
+  // — the OPPOSITE direction, reached only via waitTime's ignore-`to`
+  // fallback before buildUserLegs keyed the lookup on the first hop.
+  // 18 + (2 walk + 1 wait) + 7 = 28.
   eq(r.interchanges[0]?.walkMins, 2);
-  eq(r.interchanges[0]?.waitMins, 2);
-  eq(r.totalMins, 29);
+  eq(r.interchanges[0]?.waitMins, 1);
+  eq(r.totalMins, 28);
 });
 
 test('buildUserLegs: non-pivot waypoint on Circle stays as a single via leg', () => {
@@ -575,10 +582,17 @@ test('buildUserLegs: Hammersmith → Victoria direct on Circle = 46 min continuo
   eq(r.legs[0].mins, 46);
 });
 
-test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington uses 1-min interchange', () => {
+test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington uses 2-min wait', () => {
   // Circle and H&C share platforms at Paddington-N — 1-min cross-platform
-  // interchange walk + 1-min wait: they board the same platform, so the wait
-  // is the combined Circle+District+H&C frequency (not the old 5).
+  // interchange walk. Heading to Ladbroke Grove the first hop is Royal Oak,
+  // where only Circle + H&C run (District turns south to Bayswater), so the
+  // combined wait is Paddington|Royal Oak|H&C = 2.
+  //
+  // This previously expected 1, which was Paddington|Edgware Road|H&C — the
+  // three-line value for the OPPOSITE direction. There is no
+  // Paddington|Ladbroke Grove key (not adjacent), so the destination-keyed
+  // lookup fell through to waitTime's ignore-`to` fallback and picked it up
+  // by accident. Keying on the first hop fixes it.
   const r = buildUserLegs('Victoria', [
     {station:'Paddington', line:'Circle'},
     {station:'Ladbroke Grove', line:'Hammersmith & City'},
@@ -587,10 +601,10 @@ test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington use
   eq(r.legs[0].line, 'Circle');
   eq(r.legs[1].line, 'Hammersmith & City');
   eq(r.interchanges[0]?.walkMins, 1);
-  eq(r.interchanges[0]?.waitMins, 1);
-  eq(r.interchanges[0]?.mins, 2);
-  // 16 + (1 walk + 1 wait) + 5 = 23
-  eq(r.totalMins, 23);
+  eq(r.interchanges[0]?.waitMins, 2);
+  eq(r.interchanges[0]?.mins, 3);
+  // 16 + (1 walk + 2 wait) + 5 = 24
+  eq(r.totalMins, 24);
 });
 
 test('Optimal Victoria → Ladbroke Grove uses Paddington change (not the long anticlockwise way)', () => {

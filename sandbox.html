@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Tubed — route sandbox</title>
+<!--
+  ROUTE SANDBOX — a test harness for arbitrary start/end pairs.
+
+  WHY THIS IS A SEPARATE FILE. index.html is the live game. This page does not
+  modify it, is not linked from it, and is never loaded by it. It borrows the
+  real scoring engine by loading index.html in a hidden iframe and reading the
+  functions back out, so what you test here is EXACTLY what players run — no
+  reimplementation to drift out of sync.
+
+  HOW THE BORROW WORKS. Top-level `function` declarations (buildGraph, dijkstra,
+  buildUserLegs, waitTime, firstHopOnLeg, pickOptimal...) become properties of
+  the iframe's window. Top-level `const` bindings (NETWORK, WAIT_MINS, COORDS,
+  PUZZLE_STATIONS) do NOT — they live in the global lexical environment. But
+  that environment is shared across all classic scripts in the same document,
+  so a script injected into the iframe after load can read them and hand them
+  over. That's what grabEngine() does.
+
+  Serve over http:// (not file://) so the iframe is same-origin.
+-->
+<style>
+  :root {
+    --bg:#faf9f7; --fg:#1a1a1a; --mut:#6b6b6b; --line:#e0ddd8;
+    --card:#fff; --accent:#0b5fa5; --good:#1a7f4b; --bad:#c0392b; --warn:#b8860b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#16181c; --fg:#e8e6e3; --mut:#9a9a9a; --line:#2e3238;
+            --card:#1e2126; --accent:#5aa9e6; --good:#4ade80; --bad:#f87171; --warn:#fbbf24; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--fg);
+         font:15px/1.5 "DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  h1 { font-size:20px; margin:0 0 4px; letter-spacing:-.2px; }
+  h2 { font-size:14px; text-transform:uppercase; letter-spacing:.8px;
+       color:var(--mut); margin:0 0 12px; font-weight:600; }
+  .sub { color:var(--mut); font-size:13px; margin:0 0 24px; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px; }
+  label { display:block; font-size:12px; color:var(--mut); margin:10px 0 4px; font-weight:600; }
+  input,select,button { font:inherit; padding:8px 10px; border-radius:7px;
+        border:1px solid var(--line); background:var(--bg); color:var(--fg); width:100%; }
+  button { background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:600; }
+  button:hover { filter:brightness(1.1); }
+  button.sm { width:auto; padding:5px 10px; font-size:13px; }
+  button.ghost { background:transparent; color:var(--mut); border:1px solid var(--line); }
+  .row { display:flex; gap:8px; align-items:flex-end; }
+  .row > * { flex:1; }
+  .row > button { flex:0 0 auto; }
+  table { width:100%; border-collapse:collapse; font-size:14px; margin-top:8px; }
+  th,td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); }
+  th { font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--mut); }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .pill { display:inline-block; padding:1px 7px; border-radius:20px; font-size:12px;
+          font-weight:600; color:#fff; }
+  .verdict { margin-top:14px; padding:12px 14px; border-radius:8px; font-weight:600; }
+  .v-ok   { background:color-mix(in srgb,var(--good) 15%,transparent); color:var(--good);
+            border:1px solid color-mix(in srgb,var(--good) 35%,transparent); }
+  .v-bad  { background:color-mix(in srgb,var(--bad) 15%,transparent); color:var(--bad);
+            border:1px solid color-mix(in srgb,var(--bad) 40%,transparent); }
+  .v-warn { background:color-mix(in srgb,var(--warn) 15%,transparent); color:var(--warn);
+            border:1px solid color-mix(in srgb,var(--warn) 35%,transparent); }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; }
+  .status { padding:10px 14px; border-radius:8px; background:var(--card);
+            border:1px solid var(--line); margin-bottom:16px; font-size:13px; }
+  .err { color:var(--bad); font-size:13px; margin-top:6px; }
+  .leg { display:flex; align-items:center; gap:8px; padding:5px 0; font-size:14px; }
+  .hint { font-size:12px; color:var(--mut); margin-top:6px; }
+  iframe { display:none; }
+  .wp { display:flex; gap:6px; margin-bottom:6px; align-items:center; }
+  .wp select { flex:1; }
+  .wp button { flex:0 0 auto; width:auto; padding:6px 9px; }
+</style>
+
+<div class="wrap">
+  <h1>Tubed route sandbox</h1>
+  <p class="sub">Borrows the real scoring engine from the build below. Nothing here can affect the game.</p>
+  <div class="row" style="align-items:center;gap:8px;margin:-4px 0 10px">
+    <label style="margin:0;flex:0 0 auto">Build</label>
+    <select id="buildSel" style="flex:0 0 auto;width:auto">
+      <option value="index.html">index.html (live)</option>
+      <option value="tubed-v2.html">tubed-v2.html (unified engine)</option>
+    </select>
+    <span class="mono" id="buildNow" style="opacity:.7"></span>
+  </div>
+
+  <div class="status" id="status">Loading engine…</div>
+
+  <div class="grid">
+    <!-- ── Pair + optimal ─────────────────────────────────────────── -->
+    <div class="card">
+      <h2>1. Pick a pair</h2>
+      <label>Start</label>
+      <input id="start" list="stations" placeholder="e.g. Preston Road">
+      <label>End</label>
+      <input id="end" list="stations" placeholder="e.g. Ealing Common">
+      <datalist id="stations"></datalist>
+      <div style="margin-top:12px"><button id="go">Find optimal</button></div>
+      <div id="pairErr" class="err"></div>
+      <div id="optOut"></div>
+    </div>
+
+    <!-- ── User route ─────────────────────────────────────────────── -->
+    <div class="card">
+      <h2>2. Build a route to test</h2>
+      <div class="hint">Each row is a leg: travel to that station on that line.
+        Add a row per change. Scored with the real <span class="mono">buildUserLegs</span>.</div>
+      <div id="waypoints" style="margin-top:10px"></div>
+      <div class="row" style="margin-top:8px">
+        <button class="sm ghost" id="addWp">+ add leg</button>
+        <button class="sm ghost" id="useOpt">copy optimal</button>
+        <button class="sm" id="score">Score route</button>
+      </div>
+      <div id="userErr" class="err"></div>
+      <div id="userOut"></div>
+    </div>
+
+    <!-- ── Wait inspector ─────────────────────────────────────────── -->
+    <div class="card">
+      <h2>3. Wait inspector</h2>
+      <div class="hint">Directional wait for boarding at a station. Use this to check
+        that the two directions differ (test plan §D).</div>
+      <label>Boarding at</label>
+      <input id="wFrom" list="stations" placeholder="e.g. Rayners Lane">
+      <label>Heading toward</label>
+      <input id="wTo" list="stations" placeholder="e.g. Ealing Common">
+      <label>Line</label>
+      <select id="wLine"></select>
+      <div style="margin-top:12px"><button id="wGo">Look up</button></div>
+      <div id="wOut"></div>
+    </div>
+  </div>
+</div>
+
+<iframe id="game"></iframe>
+
+<script>
+let E = null;               // borrowed engine
+let GRAPH = null;
+let lastOptimal = null;
+
+// ── Which build to borrow from ─────────────────────────────────────────────
+// The sandbox previously hardcoded index.html, so every route tested here was
+// scored by the LIVE engine no matter which build you were actually working on.
+// Pick with ?build=tubed-v2.html or the selector; switching reloads the page so
+// the iframe starts clean (the engine caches waits and adjacency internally).
+const BUILD = (new URLSearchParams(location.search).get('build')) || 'index.html';
+document.getElementById('game').src = BUILD;
+(function initBuildSelector(){
+  const sel = document.getElementById('buildSel');
+  const now = document.getElementById('buildNow');
+  sel.value = BUILD;
+  now.textContent = '← scoring with ' + BUILD;
+  sel.addEventListener('change', () => {
+    const u = new URL(location.href);
+    u.searchParams.set('build', sel.value);
+    location.href = u.toString();   // full reload: engine caches are per-document
+  });
+})();
+
+const $ = id => document.getElementById(id);
+const status = (msg, cls) => { const s = $('status'); s.textContent = msg;
+  s.style.color = cls === 'bad' ? 'var(--bad)' : ''; };
+
+// ── Borrow the engine out of the iframe ────────────────────────────────────
+// Injecting a script into the iframe document lets it read that document's
+// top-level `const` bindings (NETWORK, WAIT_MINS, ...) which are NOT on window.
+function grabEngine(win) {
+  const doc = win.document;
+  const s = doc.createElement('script');
+  s.textContent = `
+    window.__SANDBOX__ = {
+      NETWORK, WAIT_MINS, WAIT_MINS_DEFAULT, COORDS, LINE_COLOURS,
+      PUZZLE_STATIONS: (typeof PUZZLE_STATIONS !== 'undefined') ? PUZZLE_STATIONS : null,
+      SCORING_VERSION: (typeof SCORING_VERSION !== 'undefined') ? SCORING_VERSION : null,
+    };
+    // validateStep closes over the game's \`puzzleData\` (a top-level let) for
+    // its "that's your start station" rule. This script shares that lexical
+    // environment, so it can swap in the sandbox's own start, call the REAL
+    // validator, and restore. Without this the sandbox would score routes the
+    // game rejects — e.g. Oval → Bank on the Central line, which is how a
+    // phantom "beat the optimal" appeared on 2026-08-04.
+    window.__VALIDATE__ = function(fromStn, toStn, line, sandboxStart) {
+      const saved = puzzleData;
+      puzzleData = { start: sandboxStart };
+      try { return validateStep(fromStn, toStn, line); }
+      catch (e) { return { ok:false, error:'validateStep threw: ' + e.message }; }
+      finally { puzzleData = saved; }
+    };`;
+  doc.body.appendChild(s);
+  const c = win.__SANDBOX__;
+  if (!c) throw new Error('could not read const bindings from ' + BUILD);
+  if (typeof win.__VALIDATE__ !== 'function') throw new Error('could not install validateStep bridge');
+  c.validate = win.__VALIDATE__;
+  const need = ['buildGraph','dijkstra','buildUserLegs','waitTime','firstHopOnLeg',
+                'pickOptimal','displayLine','stationsForDisplayLine'];
+  // v2-only, optional: absent on index.html and the panel degrades gracefully.
+  for (const opt of ['boardingWait','scoreLegs']) if (typeof win[opt] === 'function') c[opt] = win[opt];
+  const fns = {};
+  for (const n of need) {
+    if (typeof win[n] !== 'function') throw new Error('missing function: ' + n);
+    fns[n] = win[n].bind(win);
+  }
+  return Object.assign({}, c, fns);
+}
+
+$('game').addEventListener('load', () => {
+  try {
+    E = grabEngine($('game').contentWindow);
+    GRAPH = E.buildGraph();
+    initUI();
+    status(`Engine loaded — ${Object.keys(E.NETWORK).length} branches, `
+         + `${Object.keys(E.WAIT_MINS).length} wait entries, SCORING_VERSION ${E.SCORING_VERSION}.`);
+  } catch (err) {
+    status('Failed to load engine: ' + err.message + '  (serve over http://, not file://)', 'bad');
+    console.error(err);
+  }
+});
+
+// ── Derived data ───────────────────────────────────────────────────────────
+const allStations = () => {
+  const s = new Set();
+  for (const arr of Object.values(E.NETWORK)) for (const st of arr) s.add(st);
+  return [...s].sort();
+};
+const linesAt = stn => {
+  const s = new Set();
+  for (const [br, arr] of Object.entries(E.NETWORK)) if (arr.includes(stn)) s.add(E.displayLine(br));
+  return [...s].sort();
+};
+const allLines = () => {
+  const s = new Set();
+  for (const br of Object.keys(E.NETWORK)) s.add(E.displayLine(br));
+  return [...s].sort();
+};
+const colour = line => (E.LINE_COLOURS[line] || {bg:'#888', txt:'#fff'});
+const pill = line => {
+  const c = colour(line);
+  return `<span class="pill" style="background:${c.bg};color:${c.txt}">${line}</span>`;
+};
+
+function initUI() {
+  $('stations').innerHTML = allStations().map(s => `<option value="${s}">`).join('');
+  $('wLine').innerHTML = allLines().map(l => `<option>${l}</option>`).join('');
+  addWaypoint();
+}
+
+// ── 1. Optimal ─────────────────────────────────────────────────────────────
+$('go').onclick = () => {
+  $('pairErr').textContent = ''; $('optOut').innerHTML = '';
+  const a = $('start').value.trim(), b = $('end').value.trim();
+  const known = new Set(allStations());
+  for (const [v, lbl] of [[a,'Start'],[b,'End']]) {
+    if (!v) return $('pairErr').textContent = lbl + ' is required.';
+    if (!known.has(v)) {
+      const near = allStations().filter(s => s.toLowerCase().includes(v.toLowerCase())).slice(0,4);
+      return $('pairErr').textContent =
+        `${lbl} "${v}" is not a station.` + (near.length ? ' Did you mean: ' + near.join(', ') + '?' : '');
+    }
+  }
+  if (a === b) return $('pairErr').textContent = 'Start and end are the same.';
+
+  let routes;
+  try { routes = E.dijkstra(GRAPH, a, b); }
+  catch (err) { return $('pairErr').textContent = 'dijkstra threw: ' + err.message; }
+  if (!routes || !routes.length) return $('pairErr').textContent = 'No route found.';
+
+  const opt = E.pickOptimal(routes, {start:a, end:b});
+  lastOptimal = opt;
+  const walkFree = routes.filter(r => !r.legs.some(l => l.line === 'Walk'));
+
+  let h = `<div class="verdict v-ok">Optimal: <strong>${opt.mins} min</strong>`
+        + `, ${opt.legs.length} leg${opt.legs.length===1?'':'s'}</div>`;
+  h += '<table><tr><th>Leg</th><th>Line</th><th class="num">min</th></tr>';
+  for (const l of opt.legs)
+    h += `<tr><td>${l.from} → ${l.to}</td><td>${pill(l.line)}</td><td class="num">${l.mins}</td></tr>`;
+  h += '</table>';
+
+  h += `<div class="hint" style="margin-top:10px">${routes.length} candidate route(s), `
+     + `${walkFree.length} walk-free. Next best: `
+     + (routes.length > 1 ? `${Math.min(...routes.filter(r=>r!==opt).map(r=>r.mins))} min` : '—') + '.</div>';
+  $('optOut').innerHTML = h;
+};
+
+// ── 2. User route ──────────────────────────────────────────────────────────
+// Rebuild every row's line dropdown to contain ONLY lines the real
+// validateStep accepts for that leg. The valid set depends on where the leg
+// STARTS (the previous row's station, or the puzzle start), so any change has
+// to cascade to later rows.
+function refreshLineOptions() {
+  const start = $('start').value.trim();
+  const rows = [...document.querySelectorAll('.wp')];
+  let from = start;
+  for (const d of rows) {
+    const stnSel = d.querySelector('.wpStn'), lineSel = d.querySelector('.wpLine');
+    const to = stnSel.value;
+    const keep = lineSel.value;
+    if (!from || !to) { lineSel.innerHTML = '<option value="">—</option>'; from = to || from; continue; }
+    const valid = [...allLines(), 'Walk'].filter(l => {
+      const v = E.validate(from, to, l, start);
+      return v && v.ok;
+    });
+    lineSel.innerHTML = valid.length
+      ? valid.map(l => `<option ${l===keep?'selected':''}>${l}</option>`).join('')
+      : '<option value="">— no legal line —</option>';
+    lineSel.dataset.from = from;
+    from = to;
+  }
+}
+
+function addWaypoint(stn, line) {
+  const d = document.createElement('div');
+  d.className = 'wp';
+  const opts = allStations().map(s => `<option ${s===stn?'selected':''}>${s}</option>`).join('');
+  d.innerHTML = `<select class="wpStn"><option value="">— station —</option>${opts}</select>`
+              + `<select class="wpLine"></select>`
+              + `<button class="ghost" title="remove">✕</button>`;
+  $('waypoints').appendChild(d);
+  d.querySelector('.wpStn').onchange = refreshLineOptions;
+  d.querySelector('button').onclick = () => { d.remove(); refreshLineOptions(); };
+  refreshLineOptions();
+  if (line) { const ls = d.querySelector('.wpLine'); if ([...ls.options].some(o=>o.value===line)) ls.value = line; }
+}
+$('addWp').onclick = () => addWaypoint();
+$('start').addEventListener('change', refreshLineOptions);
+
+$('useOpt').onclick = () => {
+  if (!lastOptimal) return $('userErr').textContent = 'Find an optimal first.';
+  $('userErr').textContent = '';
+  $('waypoints').innerHTML = '';
+  for (const l of lastOptimal.legs) addWaypoint(l.to, l.line);
+};
+
+$('score').onclick = () => {
+  $('userErr').textContent = ''; $('userOut').innerHTML = '';
+  const start = $('start').value.trim();
+  if (!start) return $('userErr').textContent = 'Set a start station in panel 1.';
+  const wps = [...document.querySelectorAll('.wp')].map(d => ({
+    station: d.querySelector('.wpStn').value,
+    line:    d.querySelector('.wpLine').value,
+  })).filter(w => w.station);
+  if (!wps.length) return $('userErr').textContent = 'Add at least one leg.';
+
+  // Gate on the REAL validateStep before scoring. buildUserLegs will happily
+  // score an illegal route (it does no validation of its own — the game gates
+  // input separately), which would produce fake "beats the optimal" results.
+  let from = start;
+  for (let i = 0; i < wps.length; i++) {
+    const v = E.validate(from, wps[i].station, wps[i].line, start);
+    if (!v || !v.ok) {
+      return $('userErr').textContent =
+        `Leg ${i+1} (${from} → ${wps[i].station} on ${wps[i].line || '—'}) is not legal: `
+        + (v && v.error ? v.error : 'rejected by validateStep');
+    }
+    from = wps[i].station;
+  }
+  const endWanted = $('end').value.trim();
+  if (endWanted && wps[wps.length-1].station !== endWanted)
+    $('userErr').textContent = `Note: route ends at ${wps[wps.length-1].station}, not ${endWanted}.`;
+
+  let r;
+  try { r = E.buildUserLegs(start, wps); }
+  catch (err) { return $('userErr').textContent = 'buildUserLegs threw: ' + err.message; }
+  if (!r || typeof r.totalMins !== 'number')
+    return $('userErr').textContent = 'No score returned (invalid route?).';
+
+  let h = '<table><tr><th>Leg</th><th>Line</th><th class="num">min</th></tr>';
+  for (const l of r.legs)
+    h += `<tr><td>${l.from} → ${l.to}</td><td>${pill(l.line)}</td><td class="num">${l.mins}</td></tr>`;
+  h += '</table>';
+
+  const ics = (r.interchanges || []).filter(Boolean);
+  if (ics.length) {
+    h += '<table style="margin-top:10px"><tr><th>Change at</th><th class="num">walk</th>'
+       + '<th class="num">wait</th><th class="num">total</th></tr>';
+    for (const i of ics)
+      h += `<tr><td>${i.at}</td><td class="num">${i.walkMins}</td>`
+         + `<td class="num"><strong>${i.waitMins}</strong></td><td class="num">${i.mins}</td></tr>`;
+    h += '</table>';
+  } else {
+    h += '<div class="hint">No interchanges (single leg).</div>';
+  }
+
+  h += `<div class="verdict v-ok">Your route: <strong>${r.totalMins} min</strong></div>`;
+
+  if (lastOptimal) {
+    const d = r.totalMins - lastOptimal.mins;
+    if (d < 0) h += `<div class="verdict v-bad">⚠ BEATS THE OPTIMAL by ${-d} min `
+                  + `(${r.totalMins} vs ${lastOptimal.mins}). This is a BUG — report it.</div>`;
+    else if (d === 0) h += `<div class="verdict v-ok">✓ Matches the optimal (${lastOptimal.mins} min).</div>`;
+    else h += `<div class="verdict v-warn">${d} min slower than the optimal (${lastOptimal.mins} min). Expected for a suboptimal route.</div>`;
+  }
+  $('userOut').innerHTML = h;
+};
+
+// ── 3. Wait inspector ──────────────────────────────────────────────────────
+$('wGo').onclick = () => {
+  $('wOut').innerHTML = '';
+  const f = $('wFrom').value.trim(), t = $('wTo').value.trim(), l = $('wLine').value;
+  if (!f || !t) return $('wOut').innerHTML = '<div class="err">Both stations required.</div>';
+
+  const hop   = E.firstHopOnLeg(f, t, l);
+  const w     = E.waitTime(f, hop, l);
+  const naive = E.waitTime(f, t, l);
+  // v2 only. index.html has no boardingWait, so the panel degrades to the
+  // first-hop view it has always shown.
+  const hasV2 = typeof E.boardingWait === 'function';
+  const board = hasV2 ? E.boardingWait(f, t, l) : null;
+
+  let h = `<table style="margin-top:10px">
+      <tr><td>first hop toward ${t}</td><td class="mono"><strong>${hop}</strong></td></tr>
+      <tr><td>wait at that first hop</td><td class="mono">${w} min</td></tr>
+      <tr><td>wait (old destination-keyed)</td><td class="mono">${naive} min</td></tr>`;
+  if (hasV2) h += `<tr><td><strong>charged when boarding</strong></td>
+      <td class="mono"><strong>${board}</strong> min</td></tr>`;
+  h += '</table>';
+
+  if (hop === t) h += '<div class="hint">Destination is adjacent — first-hop and destination keying agree by definition.</div>';
+  else if (w !== naive)
+    h += `<div class="verdict v-warn">First-hop and destination keying differ. ${w} is the
+          directional answer; ${naive} is what the old lookup returned (it falls through to
+          a non-directional fallback and can pick the opposite direction).</div>`;
+
+  // ── Why the charged wait can exceed the wait at this station ──────────────
+  // The frequency AT your platform counts every train through it, including
+  // ones that terminate or branch off before your destination. Walk the line
+  // until only destination-serving trains remain; that hop's half-headway is
+  // the frequency you are really waiting for.
+  if (hasV2 && board !== w) {
+    const NET = E.NETWORK, dl = E.displayLine(l) || l;
+    const branches = Object.keys(NET).filter(k => E.displayLine(k) === dl);
+    const reaching = branches.filter(b => NET[b].includes(t));
+    const br = reaching.find(b => NET[b].includes(f));
+    if (br) {
+      const arr = NET[br];
+      let fi = -1, ti = -1, best = Infinity;
+      for (let a = 0; a < arr.length; a++) for (let b = 0; b < arr.length; b++) {
+        if (arr[a] !== f || arr[b] !== t || a === b) continue;
+        if (Math.abs(b - a) < best) { best = Math.abs(b - a); fi = a; ti = b; }
+      }
+      if (fi >= 0) {
+        const step = ti > fi ? 1 : -1;
+        h += `<div class="hint" style="margin-top:12px">Why ${board}, when every entry at
+              ${f} is smaller: walking the line until only ${t} trains remain.</div>`;
+        h += '<table><tr><th>hop</th><th class="num">branches</th><th class="num">wait</th></tr>';
+        for (let i = fi; i !== ti; i += step) {
+          const a = arr[i], b = arr[i + step];
+          if (b === undefined) break;
+          const serving = branches.filter(x => {
+            const A = NET[x];
+            for (let j = 0; j < A.length - 1; j++)
+              if ((A[j] === a && A[j+1] === b) || (A[j] === b && A[j+1] === a)) return true;
+            return false;
+          });
+          const all = serving.length > 0 && serving.every(x => reaching.includes(x));
+          const hw = E.waitTime(a, b, br);
+          h += `<tr${all ? ' style="background:rgba(220,160,0,.16);font-weight:600"' : ''}>`
+             + `<td>${a} → ${b}</td><td class="num">${serving.length}</td><td class="num">${hw}</td></tr>`;
+          if (all) {
+            h += '</table>';
+            h += `<div class="verdict v-warn">Past <strong>${a}</strong> only ${t} trains run,
+                  so that hop's half-headway (<strong>${hw}</strong> min) is the real frequency
+                  of a useful train. Charged wait = max(${w} at the platform, ${hw} past the
+                  split) = <strong>${board}</strong>.</div>`;
+            break;
+          }
+        }
+        if (!h.includes('v-warn">Past')) h += '</table>';
+      }
+    }
+  }
+
+  const keys = Object.keys(E.WAIT_MINS).filter(k => k.startsWith(f + '|'));
+  if (keys.length) {
+    h += `<div class="hint" style="margin-top:10px">All wait entries at ${f} (these are
+          per-HOP frequencies — they count every train through the platform, not just the
+          ones going where you want):</div>`;
+    h += '<table><tr><th>toward</th><th>branch</th><th class="num">wait</th></tr>';
+    for (const k of keys.sort()) {
+      const p = k.split('|');
+      h += `<tr><td>${p[1]}</td><td class="mono" style="font-size:11px">${p[2]}</td>`
+         + `<td class="num">${E.WAIT_MINS[k]}</td></tr>`;
+    }
+    h += '</table>';
+  }
+  $('wOut').innerHTML = h;
+};
+</script>

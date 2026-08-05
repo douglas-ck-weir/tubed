@@ -17,7 +17,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HTML_PATH = path.join(__dirname, '..', 'index.html');
+// Which build to test. Defaults to the live index.html; set TUBED_HTML to run
+// the same assertions against a candidate build (e.g. TUBED_HTML=tubed-v2.html).
+const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
+  ? process.env.TUBED_HTML
+  : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
 const html = readFileSync(HTML_PATH, 'utf8');
 
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
@@ -31,7 +35,7 @@ const exportSuffix = `
   WAIT_MINS, WAIT_MINS_DEFAULT,
   NETWORK, COORDS,
   displayLine,
-  waitTime, firstHopOnLeg,
+  waitTime, firstHopOnLeg, buildUserLegs,
   _WAIT_CACHE,
 };`;
 const fullScript = scripts.join('\n;\n') + exportSuffix;
@@ -111,7 +115,8 @@ try {
 }
 
 const T = ctx.__TUBED__;
-const { WAIT_MINS, WAIT_MINS_DEFAULT, NETWORK, waitTime, firstHopOnLeg, _WAIT_CACHE } = T;
+const { WAIT_MINS, WAIT_MINS_DEFAULT, NETWORK, displayLine, waitTime, firstHopOnLeg,
+        buildUserLegs, _WAIT_CACHE } = T;
 
 // ── Test framework ─────────────────────────────────────────────────────────
 const results = [];
@@ -295,6 +300,85 @@ test('#2 firstHopOnLeg: unknown branch returns legTo (safe fallback)', () => {
 test('#2 firstHopOnLeg: Walk branch returns legTo', () => {
   const hop = firstHopOnLeg('Bank', 'Monument', 'Walk');
   eq(hop, 'Monument');
+});
+
+// ─── #5 display-line resolution + directional wait ──────────────────────────
+//
+// The player picks a DISPLAY line ('Piccadilly'), but NETWORK is keyed by
+// branch ('Piccadilly_Uxbridge_Cockfosters'). Only 6 of 19 display lines are
+// also branch ids, so firstHopOnLeg must fan a display line out to its
+// branches — otherwise it silently returns legTo on 13 lines and the wait
+// falls back to the wrong direction.
+
+test('#5 firstHopOnLeg resolves a DISPLAY line to the right branch', () => {
+  // 'Piccadilly' is not a NETWORK key; the branch is Piccadilly_Uxbridge_Cockfosters.
+  const hop = firstHopOnLeg('Rayners Lane', 'Ealing Common', 'Piccadilly');
+  eq(hop, 'South Harrow', 'display line must resolve to a branch, not fall back to legTo');
+});
+
+test('#5 directional wait at Rayners Lane differs by travel direction', () => {
+  resetCache();
+  // The original beatable-optimal report. Rayners Lane is the Met/Picc split:
+  // west toward Uxbridge both lines run (wait 2); east toward South Harrow the
+  // Piccadilly runs alone (wait 5). Keying on the destination returned 2 for
+  // BOTH, letting a player beat the published optimal by 3 min.
+  const east = firstHopOnLeg('Rayners Lane', 'Ealing Common', 'Piccadilly');
+  const west = firstHopOnLeg('Rayners Lane', 'Uxbridge', 'Piccadilly');
+  eq(waitTime('Rayners Lane', east, 'Piccadilly'), 5, 'eastbound = Piccadilly-only');
+  eq(waitTime('Rayners Lane', west, 'Piccadilly'), 2, 'westbound = Met+Picc combined');
+});
+
+test('#5 regression: Preston Road → Rayners Lane → Ealing Common scores 34', () => {
+  // This exact route scored 31 under destination-keyed lookup while the
+  // published optimal was 34 — i.e. the player could beat the optimal.
+  const r = buildUserLegs('Preston Road', [
+    {station: 'Rayners Lane', line: 'Metropolitan'},
+    {station: 'Ealing Common', line: 'Piccadilly'},
+  ]);
+  eq(r.totalMins, 34, 'user scorer must agree with dijkstra, not undercut it');
+});
+
+test('#5 tie-break guard: ambiguous multi-branch lookups agree on wait', () => {
+  // firstHopOnLeg breaks ties by "nearest pairing" (shortest way round) when a
+  // display line has several branches serving a station, or a station repeats
+  // on one branch. As of 2026-08-03 that policy is unobservable: of ~11,300
+  // multi-branch lookups, only 74 disagree on DIRECTION and all 74 carry the
+  // SAME wait either way (they're dense central sections — Hainault loop,
+  // Northern via-Bank/via-Charing-Cross, DLR Poplar).
+  //
+  // If a data change ever gives two branches of one line different waits at
+  // the same station, this fails — and the tie-break must then be decided
+  // deliberately rather than by array order.
+  const byDL = {};
+  for (const br of Object.keys(NETWORK)) (byDL[displayLine(br)] ||= []).push(br);
+  const all = new Set(Object.values(NETWORK).flat());
+
+  const offenders = [];
+  for (const stn of all) {
+    for (const [, brs] of Object.entries(byDL)) {
+      const hit = brs.filter(b => NETWORK[b].includes(stn));
+      if (hit.length < 2) continue;
+      for (const dest of all) {
+        if (dest === stn) continue;
+        const waits = new Set();
+        let hops = new Set();
+        for (const br of hit) {
+          const arr = NETWORK[br];
+          const si = arr.indexOf(stn), di = arr.indexOf(dest);
+          if (si < 0 || di < 0 || si === di) continue;
+          const hop = arr[si + (di > si ? 1 : -1)];
+          if (hop === undefined) continue;
+          hops.add(hop);
+          const k = `${stn}|${hop}|${br}`;
+          if (k in WAIT_MINS) waits.add(WAIT_MINS[k]);
+        }
+        // Only ambiguous cases matter: different branches -> different hops.
+        if (hops.size > 1 && waits.size > 1) offenders.push(`${stn}->${dest}`);
+      }
+    }
+  }
+  eq(offenders.length, 0,
+     `tie-break became observable at: ${offenders.slice(0, 5).join(', ')}`);
 });
 
 test('#2 combined: waitTime via firstHopOnLeg picks the right direction', () => {

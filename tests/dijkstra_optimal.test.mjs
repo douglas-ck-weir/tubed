@@ -34,7 +34,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HTML_PATH = path.join(__dirname, '..', 'index.html');
+// Which build to test. Defaults to the live index.html; set TUBED_HTML to run
+// the same assertions against a candidate build (e.g. TUBED_HTML=tubed-v2.html).
+const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
+  ? process.env.TUBED_HTML
+  : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
 const LOOKUP_PATH = path.join(__dirname, '..', 'puzzle-lookup.json');
 const html = readFileSync(HTML_PATH, 'utf8');
 
@@ -47,12 +51,12 @@ const html = readFileSync(HTML_PATH, 'utf8');
 function loadTubed(kOverride) {
   let src = html;
   if (kOverride != null) {
-    const needle = 'const K = 6;';
-    if (!src.includes(needle)) {
-      console.error(`FATAL: could not find "${needle}" in index.html to override K. Did K change?`);
+    // Match any value so the override survives a build that ships a different K.
+    if (!/const K = \d+;/.test(src)) {
+      console.error('FATAL: could not find "const K = <n>;" to override K. Did K change shape?');
       process.exit(1);
     }
-    src = src.replace(needle, `const K = ${kOverride};`);
+    src = src.replace(/const K = \d+;/, `const K = ${kOverride};`);
   }
   const scripts = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
   const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS, bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName, countDistinctChanges, todayPuzzle, londonDateParts };`;
@@ -117,7 +121,11 @@ const T = loadTubed();
 const g = T.buildGraph();
 const { bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName } = T;
 
-function optRoute(start, end) { const r = T.dijkstra(g, start, end); return r.length ? r[0] : null; }
+// The PUBLISHED optimal — pickOptimal's walk-free choice — not routes[0].
+// routes[0] is the cheapest candidate including walk-assisted ones, which is
+// not what any player is graded against and not what the generator gates on.
+// Asserting on it made this suite fail for a route nobody ever sees.
+function optRoute(start, end) { const r = T.dijkstra(g, start, end); return r.length ? (T.pickOptimal(r, {start, end}) || r[0]) : null; }
 function optMins(start, end) { const r = optRoute(start, end); return r ? r.mins : null; }
 
 const lookup = JSON.parse(readFileSync(LOOKUP_PATH, 'utf8'));
@@ -166,7 +174,8 @@ test('shipped K is high enough: a deeper label cap finds no cheaper optimal', ()
   for (const p of puzzles) {
     const ship = optMins(p.start, p.end);
     const rDeep = Tdeep.dijkstra(gDeep, p.start, p.end);
-    const deep = rDeep.length ? rDeep[0].mins : null;
+    const oDeep = rDeep.length ? (Tdeep.pickOptimal(rDeep, {start: p.start, end: p.end}) || rDeep[0]) : null;
+    const deep = oDeep ? oDeep.mins : null;
     if (deep == null) continue;
     if (ship == null || ship > deep + 1e-9) {
       worse.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  K=6=${ship == null ? 'NONE' : ship} K=32=${deep}`);
@@ -215,10 +224,23 @@ test('structural: every returned route is contiguous (no teleports) across all l
 // The specific pairs that surfaced the cap bug must resolve to their true
 // optimal (found only by the uncapped search).
 test('regression: Chancery Lane -> Richmond resolves to the true optimal (#104)', () => {
+  // The bug this guards is the capped search HIDING the true optimal, so the
+  // assertion is "the shipped cap finds what an uncapped search finds" — not a
+  // hardcoded minute count. A fixed threshold here encodes the cost model of
+  // whichever build wrote it: this pair legitimately costs more once boarding
+  // charges the Richmond-branch frequency at Earl's Court rather than the
+  // District trunk frequency, and a literal 49 would fail a correct build for
+  // the wrong reason.
   const m = optMins('Chancery Lane', 'Richmond');
   if (m == null) throw new Error('no route Chancery Lane -> Richmond');
-  // True optimal is ~47-48 min. The old cap published 51.
-  if (m > 49) throw new Error(`Chancery Lane -> Richmond optimal is ${m}, expected <=49 (old cap gave 51).`);
+  const Tdeep = loadTubed(64);
+  const gDeep = Tdeep.buildGraph();
+  const rDeep = Tdeep.dijkstra(gDeep, 'Chancery Lane', 'Richmond');
+  const oDeep = rDeep.length ? (Tdeep.pickOptimal(rDeep, {start:'Chancery Lane', end:'Richmond'}) || rDeep[0]) : null;
+  if (!oDeep) throw new Error('uncapped search found no route Chancery Lane -> Richmond');
+  if (m > oDeep.mins + 1e-9) {
+    throw new Error(`Chancery Lane -> Richmond: shipped cap gives ${m}, uncapped finds ${oDeep.mins}.`);
+  }
 });
 test('regression: Aldgate East -> Kilburn optimal is the 1-change route the cap missed', () => {
   const r = optRoute('Aldgate East', 'Kilburn');

@@ -55,6 +55,32 @@ MANUAL_WAIT_OVERRIDES = {
     # Half-headway at 3 tph (20 min) = 10 min.
     ("Earl's Court", 'Kensington (Olympia)', 'District_Kensington_Olympia_Earls_Court'): 10,
     ('Kensington (Olympia)', "Earl's Court", 'District_Kensington_Olympia_Earls_Court'): 10,
+    # ── Wrong-direction / uncombined-frequency corrections (2026-08-02) ──────────
+    # The off-peak timetable sampler picked the wrong service direction (or the
+    # Piccadilly-only figure on shared Picc+Met track), so these edges got waits
+    # that disagree with the TfL Working Timetable off-peak (10:30-15:45) figures
+    # and with live JourneyResults. Corrected to the passenger-experienced wait.
+    #
+    # Piccadilly Uxbridge branch: Rayners Lane->South Harrow is Piccadilly-ONLY
+    # toward Acton Town (6 tph WTT -> wait 5); the sampler used the opposite
+    # Uxbridge-bound 3 tph (->10). Ruislip->Ickenham / ->Ruislip Manor are on
+    # SHARED Picc+Met track (combined ~8 min live -> wait 4); the sampler used
+    # Piccadilly-only (->10) or Metropolitan-only (->3).
+    ('Rayners Lane', 'South Harrow',  'Piccadilly_Uxbridge_Cockfosters'): 5,
+    ('Ruislip',      'Ickenham',      'Piccadilly_Uxbridge_Cockfosters'): 4,
+    ('Ruislip',      'Ruislip Manor', 'Piccadilly_Uxbridge_Cockfosters'): 4,
+    ('Ruislip',      'Ickenham',      'Metropolitan_Uxbridge_Aldgate'):   4,
+    ('Ruislip',      'Ruislip Manor', 'Metropolitan_Uxbridge_Aldgate'):   4,
+    # District medium-frequency sections under-counted (~10-11 min live -> wait 5),
+    # confirmed against the reverse-direction entries which already read 5.
+    ("Earl's Court", 'High Street Kensington', 'District_Wimbledon_Edgware_Road'): 5,
+    ('Turnham Green', 'Gunnersbury',   'District_Richmond_Upminster'):       5,
+    ('Turnham Green', 'Chiswick Park', 'District_Ealing_Broadway_Upminster'): 5,
+    ('Turnham Green', 'Stamford Brook', 'District_Ealing_Broadway_Upminster'): 5,
+    ('Turnham Green', 'Stamford Brook', 'District_Richmond_Upminster'):       5,
+    # Central Ealing Broadway stub (~10 min live -> wait 5); sampler gave 3.
+    ('Ealing Broadway', 'West Acton', 'Central_Ealing_Broadway_Epping'):    5,
+    ('Ealing Broadway', 'West Acton', 'Central_Ealing_Broadway_Hainault'):  5,
 }
 
 

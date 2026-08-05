@@ -14,7 +14,13 @@
 import { readFileSync, writeFileSync } from 'fs';
 import vm from 'vm';
 
-const html = readFileSync('index.html', 'utf8');
+// Which build to generate from, and where to write. Both default to the live
+// values, so the cron and any existing invocation behave exactly as before;
+// TUBED_HTML / LOOKUP_OUT let us dry-run a candidate engine and diff the result
+// WITHOUT touching the published lookup.
+const SRC_HTML   = process.env.TUBED_HTML || 'index.html';
+const LOOKUP_OUT = process.env.LOOKUP_OUT || 'puzzle-lookup.json';
+const html = readFileSync(SRC_HTML, 'utf8');
 
 // Find the <script> region that contains the puzzle logic. We grab from the
 // LINE COLOURS constant through the end of todayPuzzle(). Using string markers
@@ -24,7 +30,7 @@ const endMarker = '// ═══════════════════�
 const startIdx = html.indexOf(startMarker);
 const endIdx = html.indexOf(endMarker);
 if (startIdx === -1 || endIdx === -1) {
-  throw new Error(`Could not find puzzle code region (start=${startIdx}, end=${endIdx})`);
+  throw new Error(`Could not find puzzle code region in ${SRC_HTML} (start=${startIdx}, end=${endIdx})`);
 }
 const code = html.slice(startIdx, endIdx);
 
@@ -219,6 +225,6 @@ for (let i = 0; i < DAYS; i++) {
   while (stationWindow.length > STATION_COOLDOWN_DAYS) stationWindow.shift();
 }
 
-writeFileSync('puzzle-lookup.json', JSON.stringify(lookup, null, 2));
+writeFileSync(LOOKUP_OUT, JSON.stringify(lookup, null, 2));
 console.log(`Wrote ${Object.keys(lookup).length} days to puzzle-lookup.json`);
 console.log('First 3 entries:', Object.fromEntries(Object.entries(lookup).slice(0, 3)));

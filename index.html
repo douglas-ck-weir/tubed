@@ -32,9 +32,6 @@
 .mode-tab.active{background:var(--navy);color:#fff;}
 .mode-tab.hard.active{background:var(--coral);color:#fff;}
 .mode-tab .mode-check{font-size:11px;opacity:0.9;}
-/* Hard mode is in beta — small pill on the Hard tab to set expectations */
-.mode-beta{font-size:8px;font-weight:700;letter-spacing:0.8px;padding:2px 5px;border-radius:3px;background:rgba(232,93,79,0.15);color:var(--coral);margin-left:2px;line-height:1;}
-.mode-tab.hard.active .mode-beta{background:rgba(255,255,255,0.25);color:#fff;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
 .wrap{max-width:540px;margin:0 auto;padding:16px 16px 40px;}
 .hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -275,28 +272,31 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
       <div class="medal-row"><span>⭐</span><span>Within 20 minutes of optimal</span></div>
       <div class="medal-row"><span>🚇</span><span>More than 20 minutes off</span></div>
       <hr class="how-divider"/>
-      <!-- New section: Hard mode (beta) -->
-      <div style="font-size:11px;color:var(--coral);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:700;">New &middot; Hard mode <span style="background:rgba(232,93,79,0.15);color:var(--coral);padding:1px 5px;border-radius:3px;font-size:9px;margin-left:4px;">BETA</span></div>
+      <!-- Hard mode -->
+      <div style="font-size:11px;color:var(--coral);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:700;">Hard mode</div>
       <div style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:10px;">
-        Two daily puzzles now: <strong style="color:var(--navy);">🟢 Easy</strong> and <strong style="color:var(--coral);">🔥 Hard</strong>. Switch between them using the tabs above the puzzle.
+        Two daily puzzles: <strong style="color:var(--navy);">🟢 Easy</strong> and <strong style="color:var(--coral);">🔥 Hard</strong>. Switch between them using the tabs above the puzzle.
       </div>
       <div style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:10px;">
         Hard puzzles require <strong>2+ line changes</strong> for the optimal route - the obvious single-change route won't be enough.
       </div>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
-        Hard mode is in beta. If a puzzle feels unfair or its optimal route looks weird, please <strong style="color:var(--txt);">send feedback</strong> - it really helps us tune the difficulty.
+        If a puzzle feels unfair or its optimal route looks weird, please <strong style="color:var(--txt);">send feedback</strong> - it really helps us tune the difficulty.
       </div>
       <hr class="how-divider"/>
-      <!-- What's new — permanent home for recent launches. Banner entries
-           expire after a few weeks, but the explanation should remain
-           findable here for late-arriving players. Keep to last 2–3 items. -->
-      <div style="font-size:11px;color:var(--coral);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:700;">What's new</div>
+      <!-- How scoring works — reference material, NOT an announcements feed.
+           Entries live here permanently so a player arriving today can still
+           find out what wait times are. When something is genuinely new, put a
+           dated banner in ANNOUNCEMENTS and let it expire; do not re-badge this
+           section as "new", because these explanations long outlive the launch.
+           DOM ids are load-bearing: ANNOUNCEMENTS.learnMoreAnchor targets them. -->
+      <div style="font-size:11px;color:var(--coral);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:700;">How scoring works</div>
       <div id="whats-new-wait-times" style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:14px;">
-        <strong>Wait times added (June 2026):</strong> the optimal route now factors in the <strong>average wait for each line change</strong>, on top of walking time. Wait values come from <strong>TfL off-peak frequencies</strong> (Mon-Fri 10:00-15:00 timetable). This means the "optimal" is closer to what a real Londoner would take, sometimes one more change saves time, sometimes it doesn't.
+        <strong>Wait times:</strong> the optimal route factors in the <strong>average wait for each line change</strong>, on top of walking time. Wait values come from <strong>TfL off-peak frequencies</strong> (Mon-Fri 10:00-15:00 timetable), and reflect how often a train that actually serves your destination turns up - so boarding for a branch the line only serves some of the time costs more than boarding the trunk. This keeps the "optimal" close to what a real Londoner would take: sometimes one more change saves time, sometimes it doesn't.
       </div>
       <hr class="how-divider"/>
       <div id="whats-new-hint-letter" style="font-size:13px;color:var(--txt);line-height:1.6;margin-bottom:14px;">
-        <strong>Smarter hints (June 2026):</strong> Hint 2 now reveals the <strong>first letter of your first interchange station</strong> — a playful nudge toward the trickiest part of the puzzle without giving the whole route away. Hints 1 and 3 still show the lines at your start and end.
+        <strong>Hints:</strong> Hint 2 reveals the <strong>first letter of your first interchange station</strong> — a playful nudge toward the trickiest part of the puzzle without giving the whole route away. Hints 1 and 3 still show the lines at your start and end.
       </div>
       <hr class="how-divider"/>
       <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;">
@@ -328,7 +328,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
        stays visible whether the player is on the puzzle or their result. -->
   <div class="mode-toggle" id="mode-toggle">
     <button class="mode-tab easy active" data-mode="easy" onclick="switchMode('easy')">🟢 Easy<span class="mode-check" id="check-easy" style="display:none;">&#10003;</span></button>
-    <button class="mode-tab hard" data-mode="hard" onclick="switchMode('hard')">🔥 Hard<span class="mode-beta">BETA</span><span class="mode-check" id="check-hard" style="display:none;">&#10003;</span></button>
+    <button class="mode-tab hard" data-mode="hard" onclick="switchMode('hard')">🔥 Hard<span class="mode-check" id="check-hard" style="display:none;">&#10003;</span></button>
   </div>
 
   <div id="main-panel">
@@ -1203,8 +1203,8 @@ const WAIT_MINS = {
   'Ealing Broadway|Acton Main Line|Elizabeth_Shenfield_T4': 7,
   'Ealing Broadway|Acton Main Line|Elizabeth_Shenfield_T5': 7,
   'Ealing Broadway|Ealing Common|District_Ealing_Broadway_Upminster': 5,
-  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Epping': 3,
-  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Hainault': 3,
+  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Epping': 5,
+  'Ealing Broadway|West Acton|Central_Ealing_Broadway_Hainault': 5,
   'Ealing Broadway|West Ealing|Elizabeth_Abbey_Wood_T4': 4,
   'Ealing Broadway|West Ealing|Elizabeth_Abbey_Wood_T5': 4,
   'Ealing Broadway|West Ealing|Elizabeth_Shenfield_T4': 4,
@@ -1222,7 +1222,7 @@ const WAIT_MINS = {
   'Earl\'s Court|Gloucester Road|Piccadilly_T4_Cockfosters': 1,
   'Earl\'s Court|Gloucester Road|Piccadilly_T5_Cockfosters': 1,
   'Earl\'s Court|Gloucester Road|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Earl\'s Court|High Street Kensington|District_Wimbledon_Edgware_Road': 1,
+  'Earl\'s Court|High Street Kensington|District_Wimbledon_Edgware_Road': 5,
   'Earl\'s Court|Kensington (Olympia)|District_Kensington_Olympia_Earls_Court': 10,
   'Earl\'s Court|West Brompton|District_Wimbledon_Edgware_Road': 1,
   'Earl\'s Court|West Brompton|District_Wimbledon_Upminster': 1,
@@ -1668,7 +1668,7 @@ const WAIT_MINS = {
   'Queen\'s Park|Kilburn Park|Bakerloo': 2,
   'Rayners Lane|Eastcote|Metropolitan_Uxbridge_Aldgate': 2,
   'Rayners Lane|Eastcote|Piccadilly_Uxbridge_Cockfosters': 2,
-  'Rayners Lane|South Harrow|Piccadilly_Uxbridge_Cockfosters': 10,
+  'Rayners Lane|South Harrow|Piccadilly_Uxbridge_Cockfosters': 5,
   'Rayners Lane|West Harrow|Metropolitan_Uxbridge_Aldgate': 4,
   'Richmond|Kew Gardens|District_Richmond_Upminster': 5,
   'Richmond|Kew Gardens|Overground_Mildmay_Richmond': 7,
@@ -1681,10 +1681,10 @@ const WAIT_MINS = {
   'Royal Oak|Paddington|Hammersmith & City': 2,
   'Royal Oak|Westbourne Park|Circle': 2,
   'Royal Oak|Westbourne Park|Hammersmith & City': 2,
-  'Ruislip|Ickenham|Metropolitan_Uxbridge_Aldgate': 3,
-  'Ruislip|Ickenham|Piccadilly_Uxbridge_Cockfosters': 10,
-  'Ruislip|Ruislip Manor|Metropolitan_Uxbridge_Aldgate': 3,
-  'Ruislip|Ruislip Manor|Piccadilly_Uxbridge_Cockfosters': 10,
+  'Ruislip|Ickenham|Metropolitan_Uxbridge_Aldgate': 4,
+  'Ruislip|Ickenham|Piccadilly_Uxbridge_Cockfosters': 4,
+  'Ruislip|Ruislip Manor|Metropolitan_Uxbridge_Aldgate': 4,
+  'Ruislip|Ruislip Manor|Piccadilly_Uxbridge_Cockfosters': 4,
   'Ruislip Manor|Eastcote|Metropolitan_Uxbridge_Aldgate': 2,
   'Ruislip Manor|Eastcote|Piccadilly_Uxbridge_Cockfosters': 2,
   'Ruislip Manor|Ruislip|Metropolitan_Uxbridge_Aldgate': 2,
@@ -1809,13 +1809,13 @@ const WAIT_MINS = {
   'Turnham Green|Acton Town|Piccadilly_T4_Cockfosters': 1,
   'Turnham Green|Acton Town|Piccadilly_T5_Cockfosters': 1,
   'Turnham Green|Acton Town|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Turnham Green|Chiswick Park|District_Ealing_Broadway_Upminster': 2,
-  'Turnham Green|Gunnersbury|District_Richmond_Upminster': 2,
+  'Turnham Green|Chiswick Park|District_Ealing_Broadway_Upminster': 5,
+  'Turnham Green|Gunnersbury|District_Richmond_Upminster': 5,
   'Turnham Green|Hammersmith|Piccadilly_T4_Cockfosters': 1,
   'Turnham Green|Hammersmith|Piccadilly_T5_Cockfosters': 1,
   'Turnham Green|Hammersmith|Piccadilly_Uxbridge_Cockfosters': 1,
-  'Turnham Green|Stamford Brook|District_Ealing_Broadway_Upminster': 2,
-  'Turnham Green|Stamford Brook|District_Richmond_Upminster': 2,
+  'Turnham Green|Stamford Brook|District_Ealing_Broadway_Upminster': 5,
+  'Turnham Green|Stamford Brook|District_Richmond_Upminster': 5,
   'Upminster|Emerson Park|Overground_Liberty': 15,
   'Upminster|Upminster Bridge|District_Ealing_Broadway_Upminster': 2,
   'Upminster|Upminster Bridge|District_Richmond_Upminster': 2,
@@ -1964,39 +1964,87 @@ const WAIT_MINS_DEFAULT = 3;
 // direction of `legTo`. Used to compute wait time at the boarding
 // station — WAIT_MINS is keyed by the *first hop*, not the leg's end.
 //
-// Falls back to `legTo` if the branch isn't found (last-resort; the
-// waitTime() lookup will then degrade to its no-direction fallback).
+// WHY THIS EXISTS. Wait depends on DIRECTION. At Rayners Lane the Piccadilly
+// runs every ~4 min west toward Uxbridge (shared with the Metropolitan) but
+// every ~10 min east toward South Harrow (Piccadilly alone) — wait 2 vs 5.
+// Keying the lookup on the leg's DESTINATION misses, because a destination is
+// rarely adjacent, and waitTime() then falls through to its ignore-`to`
+// fallback, which can return the OPPOSITE direction's wait. Resolving the
+// first hop turns "where am I ultimately going" into "which way do I face",
+// which is what the wait table is keyed on.
+//
+// DISPLAY LINES. The player picks a display line ('Piccadilly'), but NETWORK
+// is keyed by branch ('Piccadilly_Uxbridge_Cockfosters'). Only 6 of 19 display
+// lines are also branch ids, so a bare NETWORK[branchLine] lookup silently
+// fails on 13 lines — including Piccadilly, Northern, District and Central —
+// and falls back to the destination, i.e. straight back into the bug. So we
+// fan a display line out to every branch of that line and pick between them.
+//
+// TIE-BREAK POLICY: nearest pairing, i.e. the shortest way round. This decides
+// two things — which occurrence of a repeated station (Paddington and Edgware
+// Road each appear twice on the Circle teardrop) and which branch of a line
+// (Hainault sits on a Central loop reachable via Fairlop or Grange Hill).
+// Verified 2026-08-03: of ~11,300 multi-branch lookups only 74 disagree on
+// direction, and ALL 74 carry the same wait either way, so the policy cannot
+// currently change a score. It is stated (and guarded by a test) so that a
+// future data change which DOES make it matter fails loudly instead of
+// silently shifting puzzle scores.
+//
+// Falls back to `legTo` when nothing resolves (last-resort; waitTime() then
+// degrades to its no-direction fallback as before).
+// Resolves a leg to the concrete branch a rider would actually be on, plus the
+// array indices of the boarding and alighting stations on that branch. This is
+// the shared primitive behind BOTH firstHopOnLeg (which direction do I face)
+// and the trunk/branch boarding-wait correction (which trains are useful to
+// me) — they must agree on the branch or the two halves of the wait
+// calculation would describe different journeys.
+//
+// Returns {br, hop, f, t} or null when nothing resolves.
+function resolveLegBranch(legFrom, legTo, branchLine) {
+  if (!branchLine || branchLine === 'Walk' || !legTo || !legFrom) return null;
+  if (typeof NETWORK === 'undefined') return null;
+
+  const branches = NETWORK[branchLine]
+    ? [branchLine]
+    : Object.keys(NETWORK).filter(b => displayLine(b) === branchLine);
+  if (branches.length === 0) return null;
+
+  const cands = [];
+  for (const br of branches) {
+    const arr = NETWORK[br];
+    const fromIdx = [], toIdx = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === legFrom) fromIdx.push(i);
+      if (arr[i] === legTo)   toIdx.push(i);
+    }
+    if (fromIdx.length === 0 || toIdx.length === 0) continue;
+    // Nearest (from, to) pairing on this branch = shortest way round.
+    let best = null;
+    for (const f of fromIdx) for (const t of toIdx) {
+      if (t === f) continue;
+      const d = Math.abs(t - f);
+      if (!best || d < best.d) best = {d, f, t};
+    }
+    if (!best) continue;
+    const hop = arr[best.f + (best.t > best.f ? 1 : -1)];
+    if (hop === undefined) continue;
+    cands.push({br, hop, d: best.d, f: best.f, t: best.t});
+  }
+  if (cands.length === 0) return null;
+
+  cands.sort((a, b) => a.d - b.d);
+  // Prefer a branch that actually has a wait entry for this hop, so the
+  // caller gets a real directional value rather than a default.
+  for (const c of cands) {
+    if (`${legFrom}|${c.hop}|${c.br}` in WAIT_MINS) return c;
+  }
+  return cands[0];
+}
+
 function firstHopOnLeg(legFrom, legTo, branchLine) {
-  if (!branchLine || branchLine === 'Walk') return legTo;
-  const arr = (typeof NETWORK !== 'undefined') ? NETWORK[branchLine] : null;
-  if (!arr) return legTo;
-  // Stations can appear multiple times on a branch (Circle teardrop pivots
-  // like Paddington/Edgware Road on the Circle). We have to pick the
-  // *direction* of traversal, not just the first match.
-  //
-  // Pass 1: if any occurrence of legFrom has legTo as an immediate neighbour,
-  //         that's unambiguous — return it. Without this, a forward scan
-  //         from an early occurrence of legFrom that "passes through" legTo
-  //         later in the array would return the wrong neighbour.
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== legFrom) continue;
-    if (i + 1 < arr.length && arr[i + 1] === legTo) return legTo;
-    if (i - 1 >= 0          && arr[i - 1] === legTo) return legTo;
-  }
-  // Pass 2: scan forward/backward from each occurrence; pick the direction
-  //         that reaches legTo first without crossing back through legFrom.
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== legFrom) continue;
-    for (let j = i + 1; j < arr.length; j++) {
-      if (arr[j] === legFrom) break;       // looped back
-      if (arr[j] === legTo)   return arr[i + 1];
-    }
-    for (let j = i - 1; j >= 0; j--) {
-      if (arr[j] === legFrom) break;
-      if (arr[j] === legTo)   return arr[i - 1];
-    }
-  }
-  return legTo;
+  if (!branchLine || branchLine === 'Walk' || !legTo) return legTo;
+  const r = resolveLegBranch(legFrom, legTo, branchLine);
+  return r ? r.hop : legTo;
 }
 
 // Wait minutes for boarding `line` at `from` heading toward `to`.
@@ -2061,6 +2109,85 @@ function waitTime(from, to, line) {
     : (anyMatch !== null ? anyMatch : WAIT_MINS_DEFAULT);
   _WAIT_CACHE[cacheKey] = result;
   return result;
+}
+
+// ── Trunk-vs-branch boarding wait ────────────────────────────────────────────
+// WAIT_MINS is a per-HOP half-headway: the frequency of every train that
+// traverses that hop. On a trunk section that's the COMBINED frequency of every
+// branch running there. But if your destination sits past a branch split, only
+// SOME of those trains are useful to you, so your real wait is the frequency of
+// the D-serving service pattern, not of the trunk.
+//
+// Canonical case: Paddington -> Shenfield on the Elizabeth line charges 1 min
+// (all four branches run through the core) when Shenfield trains alone are ~3.
+// Worst measured case is Bond Street -> Heathrow Terminal 5: charged 1 against
+// a real 15. Measured exposure before this fix: 998 of 8,709 boarding lookups
+// (11.5%) under-charged.
+//
+// THE RULE. Walk from the boarding station toward the destination along the
+// resolved branch. The first hop whose serving-branch set is entirely contained
+// in the set of branches that reach D is, by definition, past the divergence —
+// only D-serving trains run there, so that hop's half-headway IS the frequency
+// of the service you actually need. Charge the greater of the first hop's wait
+// and that divergence hop's wait.
+//
+// No data rebuild is needed: every value this uses is already in WAIT_MINS.
+//
+// Returns null when no divergence applies (the common case: the whole leg is
+// served by one uniform service pattern).
+function _hopOnBranch(branchKey, a, b) {
+  const arr = NETWORK[branchKey];
+  for (let i = 0; i < arr.length - 1; i++) {
+    if ((arr[i] === a && arr[i+1] === b) || (arr[i] === b && arr[i+1] === a)) return true;
+  }
+  return false;
+}
+
+const _DIVERGENCE_CACHE = {};
+function divergenceHopWait(r, legTo) {
+  const ck = `${r.br}|${r.f}|${r.t}|${legTo}`;
+  if (ck in _DIVERGENCE_CACHE) return _DIVERGENCE_CACHE[ck];
+  const arr = NETWORK[r.br];
+  const dl  = displayLine(r.br);
+
+  // Branches of this display line whose trains reach the destination at all.
+  const sameLineBranches = Object.keys(NETWORK).filter(b => displayLine(b) === dl);
+  const reaching = new Set(sameLineBranches.filter(b => NETWORK[b].includes(legTo)));
+  // Nothing to narrow to (destination off-line, or every branch reaches it).
+  if (reaching.size === 0 || reaching.size === sameLineBranches.length) {
+    return (_DIVERGENCE_CACHE[ck] = null);
+  }
+
+  const step = r.t > r.f ? 1 : -1;
+  for (let i = r.f; i !== r.t; i += step) {
+    const a = arr[i], b = arr[i + step];
+    if (b === undefined) break;
+    let serving = 0, allReach = true;
+    for (const br of sameLineBranches) {
+      if (!_hopOnBranch(br, a, b)) continue;
+      serving++;
+      if (!reaching.has(br)) { allReach = false; break; }
+    }
+    // First hop past the divergence: every train here reaches D, so this hop's
+    // half-headway is the frequency of the service the rider actually needs.
+    if (serving > 0 && allReach) {
+      return (_DIVERGENCE_CACHE[ck] = waitTime(a, b, r.br));
+    }
+  }
+  return (_DIVERGENCE_CACHE[ck] = null);
+}
+
+// THE single boarding-wait entry point. Every caller — search, user scoring and
+// the result card — goes through this, so they cannot disagree about what a
+// change costs. Resolves direction (firstHopOnLeg's job) AND service pattern
+// (the trunk/branch correction above) in one place.
+function boardingWait(boardAt, legTo, line) {
+  if (!boardAt || !line || line === 'Walk') return 0;
+  const r = resolveLegBranch(boardAt, legTo, line);
+  if (!r) return waitTime(boardAt, legTo, line);   // unresolvable: legacy path
+  const base = waitTime(boardAt, r.hop, r.br);
+  const div  = divergenceHopWait(r, legTo);
+  return div === null ? base : Math.max(base, div);
 }
 
 
@@ -3768,6 +3895,26 @@ const PUZZLE_STATIONS = [
   'Bayswater','Aldgate East','Gloucester Road','High Street Kensington','Latimer Road',
   'Ladbroke Grove','Westbourne Park','Royal Oak','Bow Road',
   'Surrey Quays','New Cross Gate','Crystal Palace',
+  // ── Zone 1-3 footfall expansion (added 2026-08-02) ──────────────────────────
+  // All ≥ 4,565 avg daily taps (the existing pool's footfall floor, Island
+  // Gardens) per stationfootfall-2025-2026.csv. Tube + major DLR only;
+  // Overground duplicate nodes excluded. See scratchpad pool analysis.
+  // Zone 1
+  'Euston Square','Blackfriars','Marble Arch','Russell Square','Queensway',
+  'Great Portland Street',
+  // Zone 2
+  'Kentish Town','Manor House','North Acton','Wood Lane','Bromley-by-Bow',
+  'Heron Quays','East Acton','Warwick Avenue','Holland Park',
+  'South Quay','Maida Vale','Kilburn Park','Kensington (Olympia)','East India',
+  'Westferry','Stratford International','Crossharbour','Kensal Green',
+  // Zone 3
+  'Tottenham Hale','Walthamstow Central','Seven Sisters','Tooting Broadway',
+  'East Ham','Custom House for ExCel','Upton Park','Blackhorse Road','Wood Green',
+  'Leyton','Turnpike Lane','Leytonstone','Tooting Bec','Hendon Central','Plaistow',
+  'Kew Gardens','Bounds Green','Gunnersbury','South Wimbledon','Dollis Hill',
+  'Neasden','Hanger Lane','Harlesden','Stonebridge Park','Northfields',
+  'London City Airport','South Ealing','Pontoon Dock','Wimbledon Park',
+  'Ealing Common','West Silvertown',
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4137,15 +4284,29 @@ function _bestMinsWithMaxChanges(start, end, maxChanges) {
     for (const line of Object.keys(graph[sn])) {
       const k = keyOf(sn, line, 0, false);
       bestAt.set(k, 0);
-      hpush({ cost: 0, station: sn, line, changes: 0, jt: false });
+      hpush({ cost: 0, station: sn, line, changes: 0, jt: false, path: [{station: sn, line, type: 'start'}] });
     }
   }
+  // Propose here, score with scoreLegs below — the same discipline dijkstra
+  // uses. In v1 this function summed its own per-edge costs and returned that
+  // number directly, making it a FIFTH independent cost model. It then
+  // disagreed with the scoreLegs-ranked optimal and the Hard generator's
+  // "is the optimal meaningfully better than the obvious 1-change route?" gate
+  // was comparing two different yardsticks.
+  // Same exact stopping rule as dijkstra: search cost is a lower bound on
+  // score, so once a path's search cost passes the best score achieved it
+  // cannot win. No slack needed here — this function returns a single number
+  // and never needs alternatives to display.
   let best = Infinity;
   while (heap.length) {
     const cur = hpop();
-    if (cur.cost >= best) break;                    // nothing cheaper remains
+    if (cur.cost > best) break;
     if (bestAt.get(keyOf(cur.station, cur.line, cur.changes, cur.jt)) < cur.cost) continue;
-    if (endSet.has(cur.station)) { if (cur.cost < best) best = cur.cost; continue; }
+    if (endSet.has(cur.station)) {
+      const sc = scoreLegs(pathToLegs(cur.path), start).totalMins;
+      if (sc < best) best = sc;
+      continue;
+    }
     const adj = graph[cur.station]?.[cur.line];
     if (!adj) continue;
     for (const edge of adj) {
@@ -4156,11 +4317,15 @@ function _bestMinsWithMaxChanges(start, end, maxChanges) {
       let waitMins = 0;
       if (edge.type === 'travel' && cur.jt) waitMins = waitTime(cur.station, edge.station, edge.line);
       const nc = cur.cost + edge.cost + waitMins;
-      if (nc >= best) continue;
+      if (nc > best) continue;
       const njt = isChange;                         // next travel owes a wait
       const k = keyOf(edge.station, edge.line, nchanges, njt);
       const prev = bestAt.get(k);
-      if (prev === undefined || nc < prev) { bestAt.set(k, nc); hpush({ cost: nc, station: edge.station, line: edge.line, changes: nchanges, jt: njt }); }
+      if (prev === undefined || nc < prev) {
+        bestAt.set(k, nc);
+        hpush({ cost: nc, station: edge.station, line: edge.line, changes: nchanges, jt: njt,
+                path: [...cur.path, {station: edge.station, line: edge.line, type: edge.type}] });
+      }
     }
   }
   return best;
@@ -4173,6 +4338,57 @@ function bestOneChangeMins(start, end) { return _bestMinsWithMaxChanges(start, e
 // minutes vs. this baseline, the puzzle feels unfair (a player who took the
 // obvious 2-change route gets dinged for a micro-shortcut).
 function bestTwoChangeMins(start, end) { return _bestMinsWithMaxChanges(start, end, 2); }
+
+// Structure only — no times. The search's own cost is a LOWER BOUND used for
+// ordering and pruning; the authoritative cost of every candidate comes from
+// scoreLegs below, so this function must not compute minutes.
+function pathToLegs(path) {
+  const legs = [];
+  let legFrom = null, legLine = null, legOpen = false, prev = null;
+  function flushLeg() {
+    legs.push({from: legFrom, to: prev, line: displayLine(legLine), branchLine: legLine});
+    legOpen = false;
+  }
+  // node.station may be a synthetic key (Paddington#Circle_Clockwise@8) for
+  // multi-occurrence stations on Circle. Display fields and getTime lookups
+  // must use the bare real-station name; the synthetic suffix only matters
+  // for graph-routing identity.
+  for (const node of path) {
+    const stnDisplay = _stationName(node.station);
+    if (node.type === 'start') { legFrom = stnDisplay; legLine = node.line; prev = stnDisplay; continue; }
+    if (node.type === 'travel') {
+      if (node.line === legLine) {
+        if (prev !== stnDisplay) legOpen = true;
+        prev = stnDisplay;
+      } else {
+        if (legOpen) flushLeg();
+        legFrom = prev; legLine = node.line;
+        if (prev !== stnDisplay) legOpen = true;
+        prev = stnDisplay;
+      }
+    } else if (node.type === 'walk') {
+      // OSI walk leg: emit as its own 'Walk' leg. Flush any in-progress tube
+      // leg first, then reset state so the next tube leg starts at the walk's
+      // destination.
+      if (legOpen) flushLeg();
+      if (osiTime(prev, stnDisplay) != null) {
+        legs.push({from: prev, to: stnDisplay, line: 'Walk', branchLine: 'Walk'});
+      }
+      legFrom = stnDisplay; legLine = 'Walk'; legOpen = false;
+      prev = stnDisplay;
+    } else if (node.type === 'interchange') {
+      if (legOpen) flushLeg();
+      // For same-station interchanges, node.station === prev. For cross-station
+      // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
+      // and we need to update both legFrom AND prev so the next travel leg
+      // boards where we actually are — scoreLegs keys the wait on leg.from.
+      legFrom = stnDisplay; legLine = node.line; legOpen = false;
+      prev = stnDisplay;
+    }
+  }
+  if (legOpen) flushLeg();
+  return legs;
+}
 
 function dijkstra(graph, start, end) {
   // Resolve a user-named station (e.g. "Paddington") into the set of graph
@@ -4223,10 +4439,6 @@ function dijkstra(graph, start, end) {
   // If a future network-data change makes K insufficient, the no-inversion /
   // admissibility tests (tests/dijkstra_optimal.test.mjs) catch it — bump K then.
   const K = 6;
-  // keepEps: also collect arrivals within +keepEps of the best full cost so the
-  // results stage has several distinct routes to tiebreak/dedupe (and so a
-  // pure-tube alternative is present when the strict optimal walks).
-  const KEEP_EPS = 8;
 
   // Binary min-heap keyed on .cost (replaces pq.push()+pq.sort()).
   const heapArr = [];
@@ -4274,12 +4486,40 @@ function dijkstra(graph, start, end) {
         if (offer(keyOf(startNode, line, false), cand)) heapPush({cost:0, station:startNode, line, jt:false, visited, path});
       }
     }
-    let bestFull = Infinity;
+    // ── Stopping rule: bound the search by the best SCORE, not the best search
+    // cost ──────────────────────────────────────────────────────────────────
+    // The search's own cost is an admissible lower bound on scoreLegs, so for
+    // any unexplored path:  score >= searchCost. The moment a path's search
+    // cost exceeds the best SCORE we have actually achieved, that path cannot
+    // win, whatever it scores. So `bestScore` is an exact cut-off, and unlike
+    // the old `bestSearchCost + KEEP_EPS` guess it needs no magic number and
+    // cannot be too tight.
+    //
+    // This matters because the trunk/branch correction decoupled the two: a
+    // route can score several minutes above its search cost, so ordering by
+    // search cost no longer orders by score, and a fixed window was cutting off
+    // genuinely-winning routes (Bank -> Green Park lost a 14-min route this way).
+    // DISPLAY_SLACK is NOT part of correctness — it only keeps a few extra
+    // arrivals around so the results stage has alternatives to show.
+    //
+    // NOTE ON WHAT THIS PASS IS EXACT FOR. `bestScore` is the best score over
+    // ALL arrivals, walk-assisted included. That makes this pass exact for the
+    // GLOBAL optimum but NOT for the walk-free one: a walk route can drag
+    // bestScore well below any walk-free route and prune the best walk-free
+    // route before it is found. Since pickOptimal publishes the WALK-FREE
+    // route, that would silently publish a slower optimal — and because which
+    // routes survive depends on the label cap, the published answer moved with
+    // K. Hence the unconditional tube-only pass after this one, which bounds
+    // itself by the best WALK-FREE score and is therefore exact for it.
+    const DISPLAY_SLACK = 8;
+    let bestScore = Infinity;
     while (heapArr.length) {
       const cur = heapPop();
-      if (cur.cost > bestFull + KEEP_EPS) break;  // admissible stop
+      if (cur.cost > bestScore + DISPLAY_SLACK) break;  // exact + display slack
       if (endSet.has(cur.station)) {
-        if (cur.cost < bestFull) bestFull = cur.cost;
+        // Score arrivals as they land so the bound tightens during the search.
+        const sc = scoreLegs(pathToLegs(cur.path), start).totalMins;
+        if (sc < bestScore) bestScore = sc;
         allArrivals.push({line: cur.line, cost: cur.cost, path: cur.path});
       }
       const adj = graph[cur.station]?.[cur.line];
@@ -4295,7 +4535,7 @@ function dijkstra(graph, start, end) {
           if (prev.type === 'interchange' || prev.type === 'walk') waitMins = waitTime(cur.station, edge.station, edge.line);
         }
         const nc = cur.cost + edge.cost + waitMins;
-        if (nc > bestFull + KEEP_EPS) continue;  // prune
+        if (nc > bestScore + DISPLAY_SLACK) continue;  // prune (see stopping rule)
         const nvisited = new Set(cur.visited); nvisited.add(_stationName(edge.station));
         const npath = [...cur.path, {station:edge.station, line:edge.line, type:edge.type}];
         const njt = (edge.type === 'interchange' || edge.type === 'walk');
@@ -4305,93 +4545,67 @@ function dijkstra(graph, start, end) {
     }
   }
   runSearch(false);  // unrestricted optimal
-  // Pure-tube guarantee (decision A): pickOptimal needs a walk-free route in the
-  // returned set. Only run the extra tube-only pass when the cheapest arrival so
-  // far actually uses a walk — if the optimal is already walk-free, the pass
-  // would only re-discover routes we have, so skip the duplicate work.
-  if (allArrivals.length > 0) {
-    let cheapest = allArrivals[0];
-    for (const a of allArrivals) if (a.cost < cheapest.cost) cheapest = a;
-    const optimalUsesWalk = cheapest.path.some(n => n.type === 'walk');
-    if (optimalUsesWalk) runSearch(true);
+
+  // ── Pure-tube pass, ALWAYS ─────────────────────────────────────────────────
+  // pickOptimal publishes the best WALK-FREE route, so that route — not the
+  // global optimum — is the number players are graded against. The pass above
+  // cannot be trusted to find it: it bounds itself by the best score over all
+  // arrivals, so a fast walk route tightens the bound and prunes better
+  // walk-free routes before they surface. This pass skips walk edges entirely,
+  // so every arrival is walk-free and its bound is the best WALK-FREE score,
+  // making it exact for exactly the thing that gets published.
+  //
+  // v1 ran this only when the SEARCH-CHEAPEST arrival happened to walk, and an
+  // earlier cut of v2 ran it only when no walk-free arrival existed at all.
+  // Both are proxies, and both left the published optimal depending on the
+  // label cap K — the deeper-K test caught 14 puzzles where a bigger K found a
+  // faster route. Running it unconditionally removes the K dependence: the
+  // walk-free answer no longer relies on what the unrestricted pass happened to
+  // stumble across first.
+  //
+  // Skip it only when the pass above produced no walk arrivals at all: the
+  // bound is tightened solely by arrivals, so if every arrival was walk-free
+  // then bestScore already WAS the best walk-free score, and the unrestricted
+  // pass explores a superset of this one's paths. Nothing to gain.
+  if (allArrivals.some(a => a.path.some(n => n.type === 'walk'))) {
+    runSearch(true);
   }
 
   if (allArrivals.length === 0) return [];
 
-  function pathToLegs(path) {
-    const legs = [];
-    let legFrom = null, legLine = null, legMins = 0, prev = null;
-    // Flush the in-progress tube leg. `legMins` is the per-hop running sum,
-    // used only to detect that travel happened (> 0). The DISPLAYED minutes
-    // are recomputed whole-leg via travelTimeOnLine, which respects Circle
-    // teardrop pivots — a merged leg like Victoria→Paddington→Ladbroke Grove
-    // can't cross the pivot for free, so its true time is higher than the sum
-    // of the per-hop shortest paths. This keeps pathToLegs in lockstep with
-    // buildUserLegs (which already does whole-leg recomputation) so the
-    // optimal route's shown leg times add up to its total. Fall back to the
-    // per-hop sum if travelTimeOnLine can't resolve the pair (defensive).
-    function flushLeg() {
-      const whole = travelTimeOnLine(legFrom, prev, displayLine(legLine));
-      const mins = (whole != null) ? whole : legMins;
-      legs.push({from:legFrom, to:prev, line:displayLine(legLine), branchLine:legLine, mins});
-    }
-    // node.station may be a synthetic key (Paddington#Circle_Clockwise@8) for
-    // multi-occurrence stations on Circle. Display fields and getTime lookups
-    // must use the bare real-station name; the synthetic suffix only matters
-    // for graph-routing identity.
-    for (const node of path) {
-      const stnDisplay = _stationName(node.station);
-      if (node.type === 'start') { legFrom = stnDisplay; legLine = node.line; prev = stnDisplay; continue; }
-      if (node.type === 'travel') {
-        if (node.line === legLine) {
-          legMins += getTime(prev, stnDisplay, legLine) || 0;
-          prev = stnDisplay;
-        } else {
-          if (legMins > 0) flushLeg();
-          legFrom = prev; legLine = node.line;
-          legMins = getTime(prev, stnDisplay, legLine) || 0;
-          prev = stnDisplay;
-        }
-      } else if (node.type === 'walk') {
-        // OSI walk leg: emit as its own 'Walk' leg with the OSI time.
-        // Flush any in-progress tube leg first, then push the walk, then
-        // reset state so the next tube leg starts at the walk's destination.
-        if (legMins > 0) flushLeg();
-        const walkMins = osiTime(prev, stnDisplay);
-        if (walkMins != null) {
-          legs.push({from: prev, to: stnDisplay, line: 'Walk', branchLine: 'Walk', mins: walkMins});
-        }
-        legFrom = stnDisplay; legLine = 'Walk'; legMins = 0;
-        prev = stnDisplay;
-      } else if (node.type === 'interchange') {
-        if (legMins > 0) flushLeg();
-        // For same-station interchanges, node.station === prev. For cross-station
-        // interchanges (Bank↔Monument cross-walk), node.station differs from prev,
-        // and we need to update both legFrom AND prev so the next travel leg's
-        // getTime() lookup uses our actual current location.
-        legFrom = stnDisplay; legLine = node.line; legMins = 0;
-        prev = stnDisplay;
-      }
-    }
-    if (legMins > 0) flushLeg();
-    return legs;
-  }
 
   // `allArrivals` was populated by runSearch() above — one entry per end
   // arrival (any line, any synthetic occurrence) within the keep window. Drop
   // any zero-cost arrivals (start === end degenerate case).
   const arrivals = allArrivals.filter(a => a.cost > 0);
 
-  // Materialise legs for each candidate so we can apply a tiebreaker on
-  // route shape, not just cost. Among equal-cost routes, prefer fewer
-  // legs (fewer changes) and then fewer Walk legs (less out-of-station
-  // transferring). This stops a Tube→Walk→Tube→Walk route from being
-  // shown as "the optimal" when a simpler 2-leg route ties on time.
+  // ── Propose, then score ────────────────────────────────────────────────────
+  // The search proposes candidates; scoreLegs decides what they cost. This is
+  // the invariant that makes "player beats the published optimal" structurally
+  // impossible: the optimal is chosen by the SAME function that grades the
+  // player, so the published optimal is by construction the minimum over
+  // everything the search found, measured on the player's own yardstick.
+  //
+  // The search cost is an admissible LOWER BOUND on the scoreLegs cost (it
+  // charges trunk frequency at boarding where scoreLegs may charge the higher
+  // branch frequency, and it sums per-hop where scoreLegs recomputes whole-leg).
+  // Because scoring can only push a candidate UP, the search can stop the
+  // moment its lower bound passes the best score already achieved — see the
+  // stopping rule in runSearch. No tuning constant is involved.
   const candidates = arrivals.map(a => {
-    const legs = pathToLegs(a.path);
-    const walkCount = legs.filter(l => l.line === 'Walk').length;
-    return {cost: a.cost, legs, walkCount};
-  });
+    const scored = scoreLegs(pathToLegs(a.path), start);
+    return {
+      cost: scored.totalMins,
+      searchCost: a.cost,
+      legs: scored.legs,
+      interchanges: scored.interchanges,
+      walkCount: scored.legs.filter(l => l.line === 'Walk').length,
+    };
+  }).filter(c => c.legs.length > 0);
+
+  // Among equal-cost routes, prefer fewer legs (fewer changes) and then fewer
+  // Walk legs (less out-of-station transferring), so a Tube→Walk→Tube→Walk
+  // route is never shown as "the optimal" when a simpler route ties on time.
   candidates.sort((a, b) =>
     a.cost - b.cost ||
     a.legs.length - b.legs.length ||
@@ -4399,13 +4613,31 @@ function dijkstra(graph, start, end) {
   );
 
   const routes = [], seen = new Set();
+  function tryPush(c) {
+    const sig = c.legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
+    if (seen.has(sig)) return;
+    seen.add(sig);
+    routes.push({rank: routes.length + 1, mins: c.cost, legs: c.legs, interchanges: c.interchanges});
+  }
   for (const c of candidates) {
     if (routes.length >= 5) break;
-    if (c.legs.length < 1) continue;
-    const sig = c.legs.map(l => `${l.line}:${l.from}-${l.to}`).join('>');
-    if (seen.has(sig)) continue;
-    seen.add(sig);
-    routes.push({rank:routes.length+1, mins:c.cost, legs:c.legs});
+    tryPush(c);
+  }
+
+  // ── Pure-tube guarantee, made explicit ─────────────────────────────────────
+  // pickOptimal publishes the best WALK-FREE route, because players reject a
+  // published "optimal" that tells them to walk between stations. v1 tried to
+  // guarantee one was available by running a second tube-only search pass — but
+  // it then truncated to the 5 cheapest routes, so a walk-free route could
+  // still be squeezed out by cheaper walk-assisted ones, and pickOptimal would
+  // silently fall back to publishing a walk route. Harlesden -> Westferry hits
+  // exactly this once the trunk/branch correction makes the tube route dearer.
+  //
+  // So: if nothing in the top 5 is walk-free, append the cheapest walk-free
+  // candidate. Costs one extra entry and removes the reliance on luck.
+  if (!routes.some(r => !r.legs.some(l => l.line === 'Walk'))) {
+    const tube = candidates.find(c => c.walkCount === 0);
+    if (tube) tryPush(tube);
   }
   return routes;
 }
@@ -4436,15 +4668,18 @@ function scoreUserRoute(start, route) {
 //
 // Must agree with how dijkstra() scores same-line travel for the optimal
 // route — keep these two in lockstep when the Circle model changes.
-function travelTimeOnLine(from, to, displayLineName) {
-  if (from === to) return 0;
+// Per-display-line adjacency, built once. v1 rebuilt this on EVERY call —
+// iterating all of NETWORK and calling getTime per hop — which was tolerable
+// when only buildUserLegs used it, but scoreLegs now calls travelTimeOnLine for
+// every leg of every candidate route, so it became the dominant cost.
+const _TTOL_ADJ_CACHE = {};
+function _ttolAdj(displayLineName) {
+  if (displayLineName in _TTOL_ADJ_CACHE) return _TTOL_ADJ_CACHE[displayLineName];
+  const adj = {};
+  const nodesFor = {};   // real station name -> [graph node key]
   function key(stn, lineKey, pos, stops) {
     return _isMultiOccurrence(stn, stops) ? `${stn}#${lineKey}@${pos}` : stn;
   }
-  const adj = {};
-  // fromKeys/toKeys: every graph-node key that represents `from`/`to` on
-  // this display line, expanded across each occurrence in each sub-line.
-  const fromKeys = [], toKeys = [];
   for (const [lineKey, stops] of Object.entries(NETWORK)) {
     if (displayLine(lineKey) !== displayLineName) continue;
     for (let i = 0; i < stops.length - 1; i++) {
@@ -4458,33 +4693,195 @@ function travelTimeOnLine(from, to, displayLineName) {
     }
     for (let i = 0; i < stops.length; i++) {
       const k = key(stops[i], lineKey, i, stops);
-      if (stops[i] === from && !fromKeys.includes(k)) fromKeys.push(k);
-      if (stops[i] === to   && !toKeys.includes(k))   toKeys.push(k);
+      const arr = (nodesFor[stops[i]] ||= []);
+      if (!arr.includes(k)) arr.push(k);
     }
   }
-  if (fromKeys.length === 0 || toKeys.length === 0) return null;
+  return (_TTOL_ADJ_CACHE[displayLineName] = {adj, nodesFor});
+}
+
+const _TTOL_CACHE = {};
+function travelTimeOnLine(from, to, displayLineName) {
+  if (from === to) return 0;
+  const ck = from + '|' + to + '|' + displayLineName;
+  if (ck in _TTOL_CACHE) return _TTOL_CACHE[ck];
+
+  const {adj, nodesFor} = _ttolAdj(displayLineName);
+  const fromKeys = nodesFor[from] || [];
+  const toKeys   = nodesFor[to]   || [];
+  if (fromKeys.length === 0 || toKeys.length === 0) return (_TTOL_CACHE[ck] = null);
   const toSet = new Set(toKeys);
-  // Multi-source Dijkstra: every fromKey is a valid boarding point. Returns
-  // the minimum cost across all (fromKey, toKey) pairs that share a single
-  // continuous adjacency chain.
+
+  // Multi-source Dijkstra: every occurrence of `from` on this display line is a
+  // valid boarding platform. Binary heap rather than v1's push()+sort().
   const dist = {};
-  const pq = [];
-  for (const k of fromKeys) { dist[k] = 0; pq.push({station: k, cost: 0}); }
+  const heap = [];
+  function hpush(x) { heap.push(x); let i = heap.length - 1; while (i > 0) { const p = (i-1)>>1; if (heap[p].cost <= heap[i].cost) break; const t = heap[p]; heap[p] = heap[i]; heap[i] = t; i = p; } }
+  function hpop() { const top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; let i = 0; for (;;) { const l = 2*i+1, r = 2*i+2; let m = i; if (l < heap.length && heap[l].cost < heap[m].cost) m = l; if (r < heap.length && heap[r].cost < heap[m].cost) m = r; if (m === i) break; const t = heap[m]; heap[m] = heap[i]; heap[i] = t; i = m; } } return top; }
+  for (const k of fromKeys) { dist[k] = 0; hpush({station: k, cost: 0}); }
+
   let best = Infinity;
-  while (pq.length) {
-    pq.sort((a, b) => a.cost - b.cost);
-    const {station, cost} = pq.shift();
+  while (heap.length) {
+    const {station, cost} = hpop();
+    if (cost >= best) break;              // heap is ordered; nothing cheaper left
     if (cost > dist[station]) continue;
-    if (toSet.has(station)) { if (cost < best) best = cost; continue; }
+    if (toSet.has(station)) { best = cost; continue; }
     for (const edge of (adj[station] || [])) {
       const nc = cost + edge.cost;
       if (dist[edge.to] === undefined || nc < dist[edge.to]) {
         dist[edge.to] = nc;
-        pq.push({station: edge.to, cost: nc});
+        hpush({station: edge.to, cost: nc});
       }
     }
   }
-  return best === Infinity ? null : best;
+  return (_TTOL_CACHE[ck] = (best === Infinity ? null : best));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// scoreLegs — THE SINGLE COST MODEL
+// ═══════════════════════════════════════════════════════════════════════════════
+// WHY THIS EXISTS. v1 computed the cost of a route in four separate places:
+// the dijkstra search loop, dijkstra's path reconstruction, buildUserLegs, and
+// renderResultCard. Every scoring bug we have ever shipped was two of those
+// four disagreeing:
+//
+//   * the directional-wait bug — buildUserLegs keyed the wait lookup on the
+//     leg's DESTINATION while the search keyed it on the first hop, so a player
+//     could be charged the opposite direction's wait and beat the published
+//     optimal (Preston Road -> Ealing Common scored 31 against a 34 "optimal").
+//   * the result-card arithmetic bug — renderResultCard looked the interchange
+//     wait up at the arrival station instead of the boarding station, so the
+//     printed breakdown disagreed with the total printed beside it.
+//
+// Both are structurally impossible now: there is exactly ONE function that can
+// say what a route costs, and everything calls it. Adding a fifth caller is
+// fine; adding a second cost model is the thing to never do.
+//
+// CONTRACT. `legs` is a canonical leg list — each leg is
+//   {from, to, line, branchLine?, via?}
+// where `from` is the station the rider ACTUALLY BOARDS AT. For a cross-complex
+// change (Bank -> Monument) that means the next leg's `from` is Monument, not
+// Bank; both producers (dijkstra's pathToLegs and buildUserLegs) already
+// guarantee this, and the boarding-station-vs-arrival-station distinction is
+// exactly what the result-card bug got wrong.
+//
+// Returns {legs, interchanges, totalMins} where `interchanges` is a PARALLEL
+// array to `legs`: interchanges[i] renders after legs[i], or is null when no
+// change happens there (e.g. either side is a Walk, whose OSI time already
+// covers the platform-to-platform transfer).
+//
+// Lines are normalised to DISPLAY lines throughout. That is what the player
+// picks, and resolveLegBranch fans a display line out to its branches; keying
+// off a branch id in one caller and a display line in another was how the
+// directional bug hid for so long.
+const BM_PARTNER_MAP = {'Bank': 'Monument', 'Monument': 'Bank'};
+
+function scoreLegs(legs, origin) {
+  const outLegs = [];
+  const interchanges = [];
+  let totalMins = 0;
+
+  // ── Origin transfer ────────────────────────────────────────────────────────
+  // If the journey starts at `origin` but the first leg boards SOMEWHERE ELSE,
+  // the rider had to get there. That only happens across the Bank/Monument
+  // complex: start at Bank, take a line that only calls at Monument.
+  //
+  // Both v1 and the first cut of v2 charged nothing for this, because an
+  // interchange was only ever computed BETWEEN two legs and there is no leg
+  // before the first one. Bank -> Green Park therefore scored 14 while the
+  // search — which does charge the crossing — costed the same route at 19. That
+  // 5-minute free walk is why the two disagreed, and it made the search cost
+  // neither an upper nor a lower bound on the score, which in turn made the
+  // published optimal depend on the search's label cap in a way nobody could
+  // explain. Charging it makes the two models agree again.
+  let originTransfer = null;
+  if (origin && legs.length > 0 && legs[0].line !== 'Walk' && legs[0].from !== origin) {
+    const firstDl = displayLine(legs[0].branchLine || legs[0].line);
+    const walkMins = interchangeTime(origin, firstDl, firstDl);
+    const waitMins = boardingWait(legs[0].from, legs[0].to, firstDl);
+    originTransfer = {at: `${origin}↔${legs[0].from}`, walkMins, waitMins, mins: walkMins + waitMins};
+    totalMins += originTransfer.mins;
+  }
+
+  for (let i = 0; i < legs.length; i++) {
+    const leg = legs[i];
+    const dl = leg.line === 'Walk' ? 'Walk' : displayLine(leg.branchLine || leg.line);
+
+    // ── Leg travel time ──
+    let mins;
+    if (dl === 'Walk') {
+      mins = osiTime(leg.from, leg.to);
+      if (mins === null) {
+        // validateStep should make this unreachable. Keep the player's route
+        // scoreable rather than failing, but make the developer notice.
+        console.error(`[scoreLegs] osiTime(${leg.from}, ${leg.to}) is null; using 5 min.`);
+        mins = 5;
+      }
+    } else {
+      // Whole-leg recomputation, NOT a per-hop sum: on the Circle a merged leg
+      // cannot cross a teardrop pivot for free, so its true time exceeds the
+      // sum of the per-hop shortest paths. `?? 8` matches v1's defensive
+      // fallback for an unresolvable pair.
+      mins = travelTimeOnLine(leg.from, leg.to, dl) ?? 8;
+    }
+    const scored = {from: leg.from, to: leg.to, line: dl, mins};
+    if (leg.branchLine) scored.branchLine = leg.branchLine;
+    // Tube legs always carry a `via` array (possibly empty); Walk legs never
+    // do. Callers index into it without guarding, so the shape must be stable.
+    if (dl !== 'Walk') scored.via = leg.via || [];
+    outLegs.push(scored);
+    interchanges.push(null);
+    totalMins += mins;
+
+    // ── Interchange into the NEXT leg ──
+    const next = legs[i + 1];
+    if (!next) continue;
+    const nextDl = next.line === 'Walk' ? 'Walk' : displayLine(next.branchLine || next.line);
+
+    // Stepping INTO a walk costs nothing extra: you just start walking. The OSI
+    // time is the whole platform-to-platform transfer.
+    if (nextDl === 'Walk') continue;
+
+    // Stepping OUT of a walk still costs a WAIT. The OSI time covers the
+    // walking, not standing on the far platform waiting for a train — that is
+    // the same half-headway any other boarding pays. Charging nothing here let
+    // a player walk between stations and board the next train instantly:
+    // Mansion House -> Tower Hill -> [walk] -> Tower Gateway -> East India came
+    // to 20 against a published optimal of 23, i.e. the optimal was beatable by
+    // walking. The search charged this wait all along (its walk edges set
+    // justTransferred), so this was the scorer and the search disagreeing —
+    // the same defect as the origin transfer above, in a different place.
+    //
+    // No walkMins: that would double-count the OSI time we already charged as
+    // the walk leg's own duration.
+    if (dl === 'Walk') {
+      const waitMins = boardingWait(next.from, next.to, nextDl);
+      if (waitMins > 0) {
+        interchanges[i] = {at: next.from, walkMins: 0, waitMins, mins: waitMins};
+        totalMins += waitMins;
+      }
+      continue;
+    }
+
+    const at = leg.to;              // where this leg puts you down
+    const boardAt = next.from;      // where the next leg picks you up
+    const walkMins = interchangeTime(at, dl, nextDl);
+    // Wait is looked up at boardAt, not at `at`. They differ only for
+    // cross-complex changes (Bank <-> Monument), and that difference is
+    // precisely the result-card bug: Bank has no Circle platforms, so a lookup
+    // at `at` missed and fell back to the 3-min default when Monument's real
+    // value is 1.
+    const waitMins = boardingWait(boardAt, next.to, nextDl);
+    interchanges[i] = {
+      at: (boardAt && boardAt !== at) ? `${at}↔${boardAt}` : at,
+      walkMins,
+      waitMins,
+      mins: walkMins + waitMins,
+    };
+    totalMins += walkMins + waitMins;
+  }
+
+  return {legs: outLegs, interchanges, totalMins, originTransfer};
 }
 
 // Converts userRoute into legs matching the optimal route format,
@@ -4495,92 +4892,33 @@ const BANK_MONUMENT_WALK_MINS = 3;  // DEPRECATED — kept for legacy reference;
 function buildUserLegs(start, route) {
   if (!route.length) return {legs:[], interchanges:[], totalMins:0};
 
-  const BM_PARTNER = {'Bank': 'Monument', 'Monument': 'Bank'};
+  const BM_PARTNER = BM_PARTNER_MAP;
 
   const stations = [start, ...route.map(s => s.station)];
   const lines    = route.map(s => s.line);
 
+  // This function's ONLY job is structural: turn the player's (station, line)
+  // picks into a canonical leg list — deciding where a train change genuinely
+  // happens (explicit line change, sub-line junction, Circle teardrop pivot,
+  // Bank/Monument cross-complex walk) and which station each leg is actually
+  // boarded at. It computes no times at all; scoreLegs owns every minute.
+  //
+  // In v1 this function ALSO summed travel, interchange and wait time, using a
+  // wait lookup that differed from the one the search used. That divergence is
+  // what let players beat the published optimal. Structure here, cost there.
   const legs = [];
-  // Interchanges are a parallel array to legs: interchanges[i] (if present)
-  // renders AFTER legs[i] in the output. We push legs as they're flushed and
-  // pad interchanges with `null` until we want to attach one — that way a
-  // Walk leg (which adds a leg but no interchange) can't shift the alignment
-  // of a later interchange. The previous implementation pushed to a separate
-  // interchanges array in tube-transition order, which silently broke when
-  // Walk legs were interleaved.
-  const interchanges = [];
-  let totalMins = 0;
 
   let legFrom = start;
   let legLine = lines[0];
-  let legMins = 0;
-  // Intermediate stations added by the user inside the current leg. When
-  // multiple consecutive same-line stops are merged into one leg, these are
-  // surfaced in the result card so the user sees why a leg's time matches a
-  // detour rather than a direct journey.
+  let legOpen = false;   // has any travel happened on the leg in progress?
+  // Intermediate stations the user added inside the current leg. Surfaced in
+  // the result card so a merged leg's time is explainable as a detour.
   let legVia  = [];
 
-  // Helper: push a leg AND simultaneously add a placeholder for its
-  // interchange slot. Using this everywhere keeps the two arrays in lock-step.
-  function pushLeg(leg) {
-    legs.push(leg);
-    interchanges.push(null);
-  }
-  // Helper: attach an interchange to the most recently pushed leg.
-  function attachInterchange(entry) {
-    if (legs.length === 0) return; // can't happen in practice
-    interchanges[legs.length - 1] = entry;
-  }
-
-  // Computes the interchange entry to insert at a line-change boundary.
-  // Returns {entry, mins} on a real interchange, or null if no entry should
-  // be added (e.g. transitioning out of a Walk leg, where the OSI time has
-  // already covered the platform-to-platform transfer cost).
-  //
-  // Centralising the skip-rule here means future interchange categories
-  // can't accidentally bypass it. Every line-change goes through this
-  // function. Keep it that way.
-  function computeInterchange(from, prevLine, nextLine, opts) {
-    // Walk → tube transition: OSI time already paid for it. No entry.
-    if (prevLine === 'Walk') return null;
-    // tube → Walk transition: the Walk leg itself carries the cost. No entry.
-    // (Defensive — currently this code path isn't hit because Walk legs are
-    // handled by the early-return branch above the line-change block, but
-    // belt-and-braces if anyone changes that.)
-    if (nextLine === 'Walk') return null;
-
-    // Wait time for boarding `nextLine` at `from`. `opts.nextHop` is the
-    // immediately next station on the new line (the destination of the
-    // upcoming leg's first hop) — this matches the WAIT_MINS key shape.
-    // For Bank/Monument cross-walks and implicit cross-walks, the wait
-    // applies at the *destination* station on the new line.
-    const waitAt = (opts.isBankMonumentCross || opts.needsImplicitCrossWalk)
-      ? (opts.partner || opts.to)
-      : from;
-    const nextLineForWait = opts.isBankMonumentCross
-      ? opts.nextLineForBmCross
-      : nextLine;
-    const waitMins = waitTime(waitAt, opts.nextHop, nextLineForWait);
-
-    if (opts.isBankMonumentCross) {
-      const walkMins = interchangeTime(from, prevLine, opts.nextLineForBmCross);
-      return {
-        entry: {at: `${from}↔${opts.to}`, walkMins, waitMins, mins: walkMins + waitMins},
-        mins: walkMins + waitMins,
-      };
-    }
-    if (opts.needsImplicitCrossWalk) {
-      const walkMins = interchangeTime(from, prevLine, nextLine);
-      return {
-        entry: {at: `${from}↔${opts.partner}`, walkMins, waitMins, mins: walkMins + waitMins},
-        mins: walkMins + waitMins,
-      };
-    }
-    const walkMins = interchangeTime(from, prevLine, nextLine);
-    return {
-      entry: {at: from, walkMins, waitMins, mins: walkMins + waitMins},
-      mins: walkMins + waitMins,
-    };
+  function pushLeg(to) {
+    legs.push({from: legFrom, to, line: legLine, via: legVia});
+    legVia = [];
+    legOpen = false;
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -4589,32 +4927,16 @@ function buildUserLegs(start, route) {
     const to   = stations[i + 1];
 
     // ── Walk leg (OSI) ────────────────────────────────────────────────
-    // Flush any pending tube leg, push the walk as its own leg. No
-    // interchange row is added — the OSI time already includes platform-
-    // to-platform faff.
-    //
-    // legLine stays as 'Walk' so the next iteration's computeInterchange
-    // call sees prevLine='Walk' and returns null (no double-count).
+    // Flush any pending tube leg, then push the walk as its own leg.
+    // legLine stays 'Walk' so scoreLegs suppresses an interchange on both
+    // sides of it — the OSI time already covers platform-to-platform faff.
     if (curLine === 'Walk') {
-      if (legMins > 0) {
-        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins, via: legVia});
-      }
+      if (legOpen) pushLeg(from);
       legVia = [];
-      let walkMins = osiTime(from, to);
-      if (walkMins === null) {
-        // Should never happen — validateStep blocks Walk legs that aren't
-        // OSI pairs. If it does, log loudly so the developer notices, and
-        // fall back to a sensible default so the player's route still
-        // completes (no user-facing failure).
-        console.error(`[OSI] osiTime(${from}, ${to}) returned null inside buildUserLegs. ` +
-                      `validateStep should have prevented this. Falling back to 5 min.`);
-        walkMins = 5;
-      }
-      pushLeg({from, to, line: 'Walk', mins: walkMins});
-      totalMins += walkMins;
+      legs.push({from, to, line: 'Walk'});
       legFrom = to;
       legLine = 'Walk';
-      legMins = 0;
+      legOpen = false;
       continue;
     }
 
@@ -4629,14 +4951,13 @@ function buildUserLegs(start, route) {
         isLineChange = true;
       }
     }
-    // Teardrop pivot waypoint: the player added `from` as an intermediate
-    // stop on the same line as the surrounding hops, AND `from` is a pivot
-    // station (it appears multiple times in some sub-line of this display
-    // line — e.g. Paddington or Edgware Road on Circle). On Circle that's
-    // an unambiguous signal of intent: the player wants to change direction
-    // at the pivot (otherwise a stop here is meaningless — you'd just stay
-    // on the train). Treat it as a same-line interchange so the leg is
-    // split here and the pivot-change cost is added.
+    // Teardrop pivot waypoint: the player added `from` as an intermediate stop
+    // on the same line as the surrounding hops, AND `from` appears multiple
+    // times in some sub-line of this display line (Paddington or Edgware Road
+    // on Circle). On Circle that's an unambiguous signal of intent — the player
+    // wants to change direction at the pivot, since otherwise stopping here is
+    // meaningless. Treat it as a same-line interchange so the leg splits and
+    // the pivot-change cost is charged.
     if (i > 0 && !isLineChange && curLine !== 'Walk' && lines[i - 1] !== 'Walk' && from !== legFrom) {
       let isPivotWaypoint = false;
       for (const k of Object.keys(NETWORK)) {
@@ -4646,88 +4967,58 @@ function buildUserLegs(start, route) {
       if (isPivotWaypoint) isLineChange = true;
     }
 
-    // Implicit cross-walk: player is at Bank/Monument but the chosen line
-    // only serves the partner station (e.g. at Bank, taking District which
-    // serves Monument).
+    // Implicit cross-walk: player is at Bank/Monument but the chosen line only
+    // serves the partner station (e.g. at Bank, taking District which serves
+    // Monument).
     const partner = BM_PARTNER[from];
     const needsImplicitCrossWalk = partner &&
       !stationsForDisplayLine(curLine).includes(from) &&
       stationsForDisplayLine(curLine).includes(partner);
 
     if (isLineChange || isBankMonumentCross || needsImplicitCrossWalk) {
-      if (legMins > 0) {
-        pushLeg({from: legFrom, to: from, line: legLine, mins: legMins, via: legVia});
-      }
+      if (legOpen) pushLeg(from);
       legVia = [];
-      // For B/M cross-walks, the interchange time is computed against the
-      // line we'll *next* travel on, not the current line (because the
-      // current line IS the cross-walk). lines[i+1] could legitimately be
-      // 'Walk' here in a contrived route, in which case interchangeTime
-      // would fall back to "worst case at station". Guard by passing
-      // curLine instead — if there's no real "next tube line", curLine
-      // is at least one of the user's actual line choices.
-      const nextLineForBmCross = (lines[i + 1] && lines[i + 1] !== 'Walk') ? lines[i + 1] : curLine;
-      const ic = computeInterchange(from, legLine, curLine, {
-        isBankMonumentCross,
-        needsImplicitCrossWalk,
-        partner,
-        to,
-        nextHop: to,
-        nextLineForBmCross,
-      });
-      if (ic) {
-        // Attach to whichever leg was just flushed above. The interchange
-        // appears AFTER that leg in the rendered output.
-        attachInterchange(ic.entry);
-        totalMins += ic.mins;
-      }
-      // Update legFrom: if implicit cross-walk, we're now at the partner
+      // Boarding station for the new leg. For a cross-complex change this is
+      // the PARTNER station, not `from` — scoreLegs keys the wait lookup on
+      // leg.from, and getting this wrong is the result-card bug.
       legFrom = (isBankMonumentCross || needsImplicitCrossWalk) ? (partner || to) : from;
       legLine = curLine;
-      legMins = 0;
+      legOpen = false;
       if (isBankMonumentCross) continue;
     }
 
-    // Use partner as effective 'from' for travelTimeOnLine if implicit cross-walk
-    const effectiveFrom = (partner && !stationsForDisplayLine(curLine).includes(from) &&
-      stationsForDisplayLine(curLine).includes(partner)) ? partner : from;
-
-    // If this iteration extends an existing leg (same line as the previous
-    // tube hop, no flush this iteration), then `from` is an intermediate stop
+    // If this iteration extends an existing leg, `from` is an intermediate stop
     // the user explicitly added — record it so the result card can show the
-    // detour. Skip when `from` is the leg start (no detour yet) or the
-    // Bank/Monument partner (already represented by the cross-walk entry).
-    if (from !== legFrom && from !== partner) {
+    // detour.
+    //
+    // Skip when `from` IS the leg start, or is the leg start's Bank/Monument
+    // counterpart. The second case is a cross-complex boarding: the player is
+    // standing at Bank and takes a line only Monument serves, so the leg starts
+    // at Monument and `from` (Bank) is where they walked FROM — not a stop on
+    // the leg. v1 compared against `BM_PARTNER[from]` instead of the leg start,
+    // which is the wrong end of the walk, so the card rendered
+    // "Monument → Bank → Cannon Street" for a train that never calls at Bank.
+    // The crossing is already shown as its own origin-transfer row.
+    if (from !== legFrom && from !== BM_PARTNER[legFrom]) {
       legVia.push(from);
     }
 
-    // Compute the leg's running total from legFrom (origin of the merged
-    // leg) all the way to `to`, then increment totalMins by the delta from
-    // the previous running total. We do whole-leg recomputation rather than
-    // per-hop summation because on the Circle line the per-hop "no-pivot
-    // shortest path" can sum to less than the whole-leg "no-pivot
-    // continuous ride": a hop Victoria → Paddington finds the short way
-    // (16 min via Bayswater) and Paddington → Ladbroke Grove finds the
-    // short way (5 min via Royal Oak), but the union "Victoria → Paddington
-    // → Ladbroke Grove on one train without changing" forces the long
-    // anticlockwise way (~39 min). Whole-leg recomputation captures that
-    // because the merged path can't cross the teardrop pivot for free.
-    // For linear lines this is identical to per-hop summation.
+    // A leg is "open" once it covers any distance. travelTimeOnLine returns 0
+    // only when its endpoints are the same station, so this is exactly v1's
+    // `legMins > 0` test without recomputing the time here.
     const effLegFrom = (BM_PARTNER[legFrom] && !stationsForDisplayLine(curLine).includes(legFrom) &&
                         stationsForDisplayLine(curLine).includes(BM_PARTNER[legFrom]))
       ? BM_PARTNER[legFrom] : legFrom;
-    const wholeLegMins = travelTimeOnLine(effLegFrom, to, curLine) ?? 8;
-    const t = wholeLegMins - legMins;
-    legMins = wholeLegMins;
-    totalMins += t;
-  }
-  // Final flush of the in-progress leg. Skip if the last leg was a Walk
-  // (already pushed inside the loop with from=to=walk endpoints).
-  if (legLine !== 'Walk' || legMins > 0) {
-    pushLeg({from: legFrom, to: stations[stations.length - 1], line: legLine, mins: legMins, via: legVia});
+    if (effLegFrom !== to) legOpen = true;
   }
 
-  return {legs, interchanges, totalMins};
+  // Final flush of the in-progress leg (mirrors v1: a trailing non-Walk leg is
+  // emitted even if it covers no distance).
+  if (legLine !== 'Walk' || legOpen) {
+    legs.push({from: legFrom, to: stations[stations.length - 1], line: legLine, via: legVia});
+  }
+
+  return scoreLegs(legs, start);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -4766,7 +5057,20 @@ function requiresChange(a, b) {
 // recomputes (with current scoring) only when version is missing/older.
 //   1 = original (travel time only)
 //   2 = + per-edge wait times from TfL headways (June 2026)
-const SCORING_VERSION = 4;
+//   3 = + admissible uncapped dijkstra (2026-08-01): published optimals fell on
+//       branch-dense corridors where the old capped search missed the true route
+//   4 = + directional boarding wait (2026-08-03): the wait lookup was keyed on a
+//       leg's DESTINATION, which is rarely adjacent, so it fell through to a
+//       non-directional fallback and could charge the opposite direction
+//   5 = + unified scoring (2026-08-05). One scoreLegs() now owns every minute,
+//       and dijkstra RANKS candidates with it, so the published optimal is
+//       chosen by the same function that grades the player. Three previously
+//       uncharged transfers are now paid for: the trunk-vs-branch boarding wait
+//       (you wait for a train that actually serves your destination, not for any
+//       train on the trunk), the Bank<->Monument walk when a route starts on one
+//       side and boards on the other, and the wait for the next train after an
+//       OSI walk. 37 of 280 published optimals get slower; none get faster.
+const SCORING_VERSION = 5;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANNOUNCEMENTS
@@ -4973,7 +5277,11 @@ function londonDateParts(d) {
 // Bumped to v11 on 2026-08-01: dijkstra rewritten to an admissible, uncapped
 // engine — it now finds faster routes the old cap missed, so published optimals
 // (and some cached pairs' validity) change. Force stale clients to re-resolve.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v11';
+// Bumped to v13 on 2026-08-05: unified scoring (SCORING_VERSION 5). The
+// difficulty filters now gate on pickOptimal's walk-free choice rather than
+// routes[0], and 37 of 280 optimals moved, so a cached pair may no longer sit
+// inside its mode's bounds. Force stale clients to re-resolve.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v13';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5072,7 +5380,24 @@ function todayPuzzle(mode, opts) {
   // corrupted cache (manual edit, removed station) would otherwise crash
   // dijkstra. On any mismatch, drop the bad entry and fall through to live
   // generation.
-  const cached = _getCachedPuzzle(date, m);
+  let cached = _getCachedPuzzle(date, m);
+  // The lookup is the source of truth shared with Reddit. If it's loaded and has
+  // today's entry, a cached pair that DISAGREES with it is stale (e.g. cached by
+  // the old load-race before the lookup arrived, or a deploy-window race) and
+  // must be discarded so the lookup oracle below wins. Without this the cache is
+  // checked before the oracle and a wrong pair persists until the date rolls
+  // over — the "someone still sees Moorgate -> Richmond" bug. Only cross-check
+  // in-browser (window present) and only when the date is actually in the
+  // lookup; dates outside the lookup window legitimately have no oracle entry.
+  if (cached && typeof window !== 'undefined' && !recentPairs
+      && window.PUZZLE_LOOKUP && window.PUZZLE_LOOKUP[date] && window.PUZZLE_LOOKUP[date][m]) {
+    const oracle = window.PUZZLE_LOOKUP[date][m];
+    if (cached.start !== oracle.start || cached.end !== oracle.end) {
+      console.warn('[todayPuzzle] cached pair disagrees with the lookup; discarding stale cache:', cached, 'lookup:', oracle);
+      _setCachedPuzzle(date, m, null);
+      cached = null;  // force the lookup oracle below to be used
+    }
+  }
   if (cached && _isValidStation(cached.start) && _isValidStation(cached.end)) {
     try {
       const routes = dijkstra(GRAPH, cached.start, cached.end);
@@ -5116,6 +5441,43 @@ function todayPuzzle(mode, opts) {
   //      they will need to clear localStorage or wait until tomorrow.
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
+
+  // 2026-08-05 Easy & Hard: two things reseed today's draw at once — the Zone
+  // 1-3 pool expansion's regenerated puzzle-lookup.json (still uncommitted, so
+  // the live site is serving the PRE-expansion pairs) and the unified-scoring
+  // engine, which moves 37 of 280 optimals and therefore shifts which pairs
+  // pass the difficulty filters. Today is already live as
+  // easy = Waterloo → Ealing Broadway, hard = Turnham Green → Crystal Palace,
+  // so pin those. Both new inputs take effect from 2026-08-06 onward.
+  // puzzle-lookup.json's 2026-08-05 entry is held at these same values so the
+  // Reddit bot matches. (Remove after 2026-08-05.)
+  if (m === 'easy' && date === '2026-08-05') {
+    const start = 'Waterloo', end = 'Ealing Broadway';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+  if (m === 'hard' && date === '2026-08-05') {
+    const start = 'Turnham Green', end = 'Crystal Palace';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+
+  // 2026-08-02 Easy & Hard: the Zone 1-3 footfall pool expansion (55 new
+  // PUZZLE_STATIONS + PUZZLE_CACHE_KEY v11→v12) reseeds every day's draw. Today
+  // was already published/live (easy = Lambeth North → Victoria, hard = Brent
+  // Cross → West Brompton), so pin the pre-expansion pairs. The new pool takes
+  // effect from 2026-08-03 onward. puzzle-lookup.json's 2026-08-02 entry is also
+  // held at these old values so the Reddit bot matches. (Remove after 2026-08-02.)
+  if (m === 'easy' && date === '2026-08-02') {
+    const start = 'Lambeth North', end = 'Victoria';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+  if (m === 'hard' && date === '2026-08-02') {
+    const start = 'Brent Cross', end = 'West Brompton';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
 
   // 2026-06-23 Hard: this morning's cron pushed today.json with hard =
   // Willesden Junction → Arsenal — a duplicate of yesterday's pair caused
@@ -5228,7 +5590,13 @@ function todayPuzzle(mode, opts) {
       if (recentStations && (recentStations.has(start) || recentStations.has(end))) continue;
       routes = dijkstra(GRAPH, start, end);
       if (!routes || routes.length === 0) continue;
-      const opt = routes[0];
+      // Gate on the route we will actually PUBLISH, not on routes[0]. v1 gated
+      // the difficulty filters on the cheapest candidate (walk routes included)
+      // while publishing pickOptimal's walk-free choice, so the puzzle could be
+      // admitted on one route's leg-count and minutes and then presented with a
+      // different one. It also made selection depend on the search's label cap,
+      // because routes[0] shifts with K where the published optimal does not.
+      const opt = pickOptimal(routes, {start, end}) || routes[0];
 
       if (m === 'easy') {
         // Easy optima must be pure tube — players reject walk legs as
@@ -6336,8 +6704,28 @@ function updateMap() {
 // Renders a list of legs with interchange rows interleaved.
 // legs: [{from, to, line, mins}]
 // interchanges: [{at, mins}] — indexed by position between legs
-function renderRouteLegsHtml(legs, interchanges) {
+// Renders one interchange row. Used for both the between-legs interchanges and
+// the origin transfer, so they can never drift apart visually.
+function renderInterchangeRow(ic) {
+  // Always show the breakdown when both pieces are available. A 0-min wait is a
+  // red flag worth surfacing — it should never happen for a real line change
+  // and indicates either missing data or a branch-resolution bug.
+  const hasBreakdown = (typeof ic.walkMins === 'number' && typeof ic.waitMins === 'number');
+  const breakdownStr = hasBreakdown
+    ? ` <span style="opacity:0.7;">(${ic.walkMins} walk + ${ic.waitMins} wait)</span>`
+    : '';
+  return `<div class="opt-leg" style="padding-left:4px;">
+    <div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--brd);flex-shrink:0;"></div>
+    <div style="color:var(--muted);font-size:12px;">Change at ${ic.at} &nbsp;+${ic.mins} min${breakdownStr}</div>
+  </div>`;
+}
+
+function renderRouteLegsHtml(legs, interchanges, originTransfer) {
   let html = '';
+  // The origin transfer renders BEFORE the first leg: it's the Bank↔Monument
+  // crossing you make before boarding anything. Charged by scoreLegs, so it has
+  // to be visible, or the card's rows would not sum to the total beside them.
+  if (originTransfer) html += renderInterchangeRow(originTransfer);
   legs.forEach((l, i) => {
     if (l.line === 'Walk') {
       // Walk leg — uncoloured, white dot with dark border, walking icon.
@@ -6367,21 +6755,7 @@ function renderRouteLegsHtml(legs, interchanges) {
         </div>
       </div>`;
     }
-    if (interchanges[i]) {
-      const ic = interchanges[i];
-      // Always show the breakdown when both pieces are available. A
-      // 0-min wait is a red flag worth surfacing — it should never happen
-      // for a real line change and indicates either missing data or a
-      // branchLine-resolution bug.
-      const hasBreakdown = (typeof ic.walkMins === 'number' && typeof ic.waitMins === 'number');
-      const breakdownStr = hasBreakdown
-        ? ` <span style="opacity:0.7;">(${ic.walkMins} walk + ${ic.waitMins} wait)</span>`
-        : '';
-      html += `<div class="opt-leg" style="padding-left:4px;">
-        <div style="width:10px;height:10px;border-radius:50%;border:2px solid var(--brd);flex-shrink:0;"></div>
-        <div style="color:var(--muted);font-size:12px;">Change at ${ic.at} &nbsp;+${ic.mins} min${breakdownStr}</div>
-      </div>`;
-    }
+    if (interchanges[i]) html += renderInterchangeRow(interchanges[i]);
   });
   return html;
 }
@@ -6416,36 +6790,26 @@ function renderResultCard(data) {
   const currentOptimalMins = pd.optimal.mins;
   const currentDiff        = currentUserMins - currentOptimalMins;
 
-  // Optimal-route interchanges (same logic as submit-time render).
-  const BM_PARTNER_MAP = {'Bank': 'Monument', 'Monument': 'Bank'};
-  const currentOptInterchanges = pd.optimal.legs.slice(0, -1).map((l, i) => {
-    const nextLeg = pd.optimal.legs[i + 1];
-    if (l.line === 'Walk' || nextLeg.line === 'Walk') return null;
-    const at = l.to;
-    const partner = BM_PARTNER_MAP[at];
-    const isCrossWalk = partner &&
-      !stationsForDisplayLine(nextLeg.line).includes(at) &&
-      stationsForDisplayLine(nextLeg.line).includes(partner);
-    const walkMins = interchangeTime(at, l.line, nextLeg.line);
-    // Wait is the half-headway for boarding nextLeg at the boarding station.
-    // WAIT_MINS is keyed by the *first hop* of the next leg, not its end
-    // station, so we must resolve `at → firstHop` along the branch.
-    // Without this, multi-hop legs fall back to a non-direction lookup,
-    // which can return the wrong value at Circle teardrop pivots
-    // (Edgware Road → Paddington = 2 vs → Baker Street = 5).
-    const boardAt = nextLeg.from || at;
-    const firstHop = firstHopOnLeg(boardAt, nextLeg.to, nextLeg.branchLine);
-    const waitMins = waitTime(at, firstHop, nextLeg.branchLine);
-    return {
-      at: isCrossWalk ? `${at}↔${partner}` : at,
-      walkMins,
-      waitMins,
-      mins: walkMins + waitMins,
-    };
-  });
+  // Optimal-route interchanges come straight from scoreLegs (via dijkstra).
+  // THE RESULT CARD DOES NO ARITHMETIC. In v1 it recomputed this breakdown
+  // itself and got the boarding station wrong for Bank↔Monument cross-walks —
+  // it looked the wait up at the arrival station, where Bank has no Circle
+  // platforms, so the lookup missed and fell back to the 3-min default against
+  // Monument's real value of 1. The printed breakdown then disagreed with the
+  // total printed beside it: Oval → Cannon Street rendered
+  // 10 + (4 walk + 3 wait) + 1 = 18 next to a stated optimal of 16.
+  //
+  // A renderer that cannot compute cannot disagree. The fallback covers stored
+  // puzzle data written before interchanges were carried on the route object.
+  const _optScored = (pd.optimal.interchanges && 'originTransfer' in pd.optimal)
+    ? pd.optimal
+    : scoreLegs(pd.optimal.legs, pd.start);
+  const currentOptInterchanges   = _optScored.interchanges;
+  const currentOptOriginTransfer = _optScored.originTransfer || null;
 
   let userMins, optimalMins, diff, medal, color, title, subtitle;
   let optInterchanges, userInterchanges, optLegs, userLegs;
+  let optOriginTransfer, userOriginTransfer;
   if (useSnapshot) {
     userMins    = snapshot.userMins;
     optimalMins = snapshot.optimalMins;
@@ -6460,6 +6824,8 @@ function renderResultCard(data) {
     optInterchanges   = snapshot.optInterchanges   || currentOptInterchanges;
     userLegs          = snapshot.userLegs          || userLegsData.legs;
     userInterchanges  = snapshot.userInterchanges  || userLegsData.interchanges;
+    optOriginTransfer  = snapshot.optOriginTransfer  !== undefined ? snapshot.optOriginTransfer  : currentOptOriginTransfer;
+    userOriginTransfer = snapshot.userOriginTransfer !== undefined ? snapshot.userOriginTransfer : (userLegsData.originTransfer || null);
   } else {
     userMins    = currentUserMins;
     optimalMins = currentOptimalMins;
@@ -6474,6 +6840,8 @@ function renderResultCard(data) {
     optInterchanges   = currentOptInterchanges;
     userLegs          = userLegsData.legs;
     userInterchanges  = userLegsData.interchanges;
+    optOriginTransfer  = currentOptOriginTransfer;
+    userOriginTransfer = userLegsData.originTransfer || null;
 
     // Write the snapshot here (single source of truth) so:
     //   (a) submitRoute only needs to render — no duplicate scoring logic
@@ -6502,13 +6870,15 @@ function renderResultCard(data) {
         optInterchanges,
         userLegs,
         userInterchanges,
+        optOriginTransfer,
+        userOriginTransfer,
       };
       setModeStore(mode, persisted);
     }
   }
 
-  const optLegsHtml  = renderRouteLegsHtml(optLegs, optInterchanges);
-  const userLegsHtml = renderRouteLegsHtml(userLegs, userInterchanges);
+  const optLegsHtml  = renderRouteLegsHtml(optLegs, optInterchanges, optOriginTransfer);
+  const userLegsHtml = renderRouteLegsHtml(userLegs, userInterchanges, userOriginTransfer);
   const numChanges   = userLegs.length - 1;
 
   const hintsLine = hu === 0

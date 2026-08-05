@@ -23,7 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const TODAY_JSON  = path.join(ROOT, 'today.json');
 const LOOKUP_JSON = path.join(ROOT, 'puzzle-lookup.json');
-const INDEX_HTML  = path.join(ROOT, 'index.html');
+const INDEX_HTML  = path.join(ROOT, process.env.TUBED_HTML || 'index.html');
 
 const results = [];
 function test(name, fn) {

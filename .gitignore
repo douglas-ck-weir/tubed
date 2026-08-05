@@ -44,3 +44,13 @@ settings.local.json
 
 # Claude memory
 .claude/
+
+# Local safety copies of index.html taken before large engine changes.
+# Not deployed, not tracked — but keep them until the change is committed,
+# because a pre-change working tree with uncommitted work is NOT recoverable
+# from git.
+backups/
+
+# Session scratch: throwaway analysis scripts and handoff notes.
+scratchpad/
+HANDOFF_*.md

@@ -20,7 +20,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const HTML_PATH = path.join(__dirname, '..', 'index.html');
+// Which build to test. Defaults to the live index.html; set TUBED_HTML to run
+// the same assertions against a candidate build (e.g. TUBED_HTML=tubed-v2.html).
+const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
+  ? process.env.TUBED_HTML
+  : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
 const html = readFileSync(HTML_PATH, 'utf8');
 
 const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
@@ -31,7 +35,7 @@ const exportSuffix = `
 ;globalThis.__TUBED__ = {
   NETWORK, COORDS,
   displayLine, getTime, interchangeTime,
-  buildGraph, dijkstra, buildUserLegs,
+  buildGraph, dijkstra, buildUserLegs, pickOptimal,
   waitTime, firstHopOnLeg,
   renderResultCard, renderRouteLegsHtml,
   getModeStore, setModeStore, emptyModeStore,
@@ -95,6 +99,7 @@ const ctx = {
   MutationObserver: class { observe(){} disconnect(){} },
   ResizeObserver: class { observe(){} disconnect(){} },
   performance: { now: () => 0 },
+  getComputedStyle: () => ({ getPropertyValue: () => '' }),
   URL: globalThis.URL,
   URLSearchParams: globalThis.URLSearchParams,
   Promise: globalThis.Promise,
@@ -115,9 +120,10 @@ try {
 
 const T = ctx.__TUBED__;
 const {
-  buildGraph, dijkstra, buildUserLegs,
+  buildGraph, dijkstra, buildUserLegs, pickOptimal,
   renderResultCard,
   getModeStore, setModeStore, emptyModeStore,
+  firstHopOnLeg, waitTime, interchangeTime,
 } = T;
 
 // ── Test framework ─────────────────────────────────────────────────────────
@@ -148,7 +154,10 @@ const GRAPH = buildGraph();
 function optimal(from, to) {
   const routes = dijkstra(GRAPH, from, to);
   if (!routes || routes.length === 0) throw new Error(`no route ${from} → ${to}`);
-  return routes[0];
+  // Use pickOptimal, NOT routes[0] — that is what the game publishes. routes[0]
+  // may be a walk-assisted route that pickOptimal's walk-free rule rejects, so
+  // asserting on it tested a route no player is ever graded against.
+  return pickOptimal(routes, {from, to}) || routes[0];
 }
 
 function makePuzzle(start, end) {
@@ -340,17 +349,22 @@ test('e2e: Paddington pivot wait reflects Circle headway (covers #1 direction-se
 
 test('e2e: Edgware Road pivot wait resolves per-pivot (direction sanity)', () => {
   resetStore();
-  // At Edgware Road on Circle the wait is 2 (combined shared-platform
-  // frequency — see commit e5d4502; the pre-fix Circle-only value was 5).
-  // This catches a regression where waitTime might return the wrong headway
-  // for the Circle at this specific pivot.
+  // Heading toward Ladbroke Grove the first hop off Edgware Road is
+  // Paddington, so the wait is the combined shared-platform frequency
+  // Edgware Road|Paddington|Circle = 1 (Circle/District/H&C).
+  //
+  // This asserted 2 until buildUserLegs keyed the wait on the first hop. 2 is
+  // Edgware Road|Baker Street|Circle — the opposite direction, and NOT the
+  // shared-platform value this test's name claims to check. It was reached
+  // via waitTime's ignore-`to` fallback, exactly the direction confusion the
+  // test was meant to catch.
   const userLegsData = makeUserLegsData('Victoria', [
     {station: 'Edgware Road', line: 'Circle'},
     {station: 'Ladbroke Grove', line: 'Circle'},
   ]);
   const interchange = userLegsData.interchanges.find(x => x && x.at === 'Edgware Road');
   truthy(interchange, 'should have an Edgware Road interchange');
-  eq(interchange.waitMins, 2, 'Circle wait at Edgware Road (shared-platform frequency)');
+  eq(interchange.waitMins, 1, 'Circle wait at Edgware Road toward Paddington (shared-platform frequency)');
 });
 
 test('e2e: snapshot survives a localStorage round-trip (full serialise/parse)', () => {
@@ -390,6 +404,57 @@ test('e2e: result-card numbers add up (userMins == sum of legs + interchanges)',
   let sum = userLegsData.legs.reduce((s, l) => s + l.mins, 0);
   sum += userLegsData.interchanges.reduce((s, ic) => s + (ic ? ic.mins : 0), 0);
   eq(sum, userLegsData.totalMins, `legs+interchanges (${sum}) must equal totalMins (${userLegsData.totalMins})`);
+});
+
+test('e2e: OPTIMAL card breakdown sums to dijkstra total (Bank↔Monument cross-walks)', () => {
+  // Companion to the user-legs test above, for the OPTIMAL route's breakdown.
+  //
+  // Regression: renderResultCard looked the interchange wait up at `at` (the
+  // station you arrive at) instead of `boardAt` (where the next leg actually
+  // starts). They differ ONLY for cross-station changes — Bank↔Monument. Bank
+  // has no Circle/District platforms, so waitTime('Bank', …, 'Circle') missed
+  // and fell back to WAIT_MINS_DEFAULT (3) while Monument's real value is 1.
+  // The card then showed a breakdown 2 min HIGHER than the total it was
+  // printed next to: Oval → Cannon Street rendered 10 + (4 walk + 3 wait) + 1
+  // = 18 beside a stated optimal of 16. Scoring was always correct (medals use
+  // dijkstra's number); it was the visible arithmetic that lied.
+  //
+  // 15 of 280 lookup puzzles were affected, every one a Bank↔Monument change.
+  // These pairs are drawn from that set.
+  // NB: this reads the interchange values renderResultCard ACTUALLY produced
+  // (via the snapshot it writes) rather than recomputing them here — a test
+  // that redid the arithmetic itself would pass even if the render path
+  // regressed, which is exactly the bug we're guarding.
+  const pairs = [
+    ['Oval', 'Cannon Street'],
+    ['Mansion House', 'East India'],
+    ['Cannon Street', 'Clapham Common'],
+    ['Holland Park', 'Tower Hill'],
+    ['Kentish Town', 'Stepney Green'],
+    ['Oval', 'East Ham'],
+    ["Shepherd's Bush", 'Tower Hill'],
+    ['Richmond', 'Shadwell'],
+    // controls: ordinary same-station changes, must also balance
+    ['Victoria', 'Stratford'],
+    ['Paddington', 'Liverpool Street'],
+  ];
+  for (const [start, end] of pairs) {
+    resetStore();
+    const pd = makePuzzle(start, end);
+    if (!pd.optimal) continue;
+    // Score the player along the optimal so the card renders both sides.
+    const userLegsData = makeUserLegsData(start,
+      pd.optimal.legs.map(l => ({station: l.to, line: l.line})));
+    renderResultCard({ puzzleData: pd, userLegsData, hintsUsed: 0, completionSecs: 60, mode: 'hard' });
+    const snap = getModeStore('hard').submittedScoring;
+    truthy(snap, `${start} → ${end}: card should write a snapshot`);
+    const ics = (snap.optInterchanges || []).filter(Boolean);
+    const legSum = (snap.optLegs || pd.optimal.legs).reduce((s, l) => s + l.mins, 0);
+    const icSum  = ics.reduce((s, ic) => s + ic.mins, 0);
+    eq(legSum + icSum, snap.optimalMins,
+       `${start} → ${end}: displayed legs (${legSum}) + interchanges (${icSum}) `
+       + `must equal the displayed optimal total (${snap.optimalMins})`);
+  }
 });
 
 test('e2e: optimal route from dijkstra carries branchLine on every non-walk leg', () => {
