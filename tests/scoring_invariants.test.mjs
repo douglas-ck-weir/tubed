@@ -9,12 +9,20 @@
 //
 // Runs over every (date, mode) instance in puzzle-lookup.json.
 
-import { loadEngine, puzzleInstances } from './lib/engine.mjs';
+import { loadEngine, puzzleInstances, ROOT } from './lib/engine.mjs';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 const BUILD = process.env.TUBED_HTML || 'index.html';
 const T = loadEngine(BUILD);
 const g = T.buildGraph();
 const instances = puzzleInstances();
+
+// Read the build's own source so the freeze dates come from the file under
+// test rather than a hardcoded list that would rot.
+function readIndexSource() {
+  return readFileSync(path.isAbsolute(BUILD) ? BUILD : path.join(ROOT, BUILD), 'utf8');
+}
 
 const results = [];
 // `fn` may return a count of instances it actually examined. A test that
@@ -277,33 +285,82 @@ anchor('boarding after an OSI walk still pays a wait (v2 only)', () => {
   if (r.totalMins !== 23) throw new Error(`route total expected 23, got ${r.totalMins}`);
 });
 
-// The corollary, swept over the whole corpus: walking must not be a way to beat
-// the published optimal. One case legitimately remains — Southfields ->
-// Dalston Kingsland, where the walk is the FINAL leg so there is no train to
-// board and no wait to charge, and the player genuinely saves a minute. That is
-// the walk-free publishing rule, not an undercharge. Anything beyond a handful
-// means a transfer is going uncharged again.
-anchor('walking beats the published optimal in at most 1 puzzle', () => {
-  let beat = 0;
+// ── WALK DOMINATION ────────────────────────────────────────────────────────
+// A pair whose genuinely cheapest route uses an OSI walk is unfit for a puzzle:
+// pickOptimal publishes the walk-FREE optimal, so the published answer is
+// beatable by anyone who spots the walk. The generator is supposed to reject
+// such pairs outright.
+//
+// It stopped doing so on 2026-08-05. The check read
+//   `if (opt.legs.some(l => l.line === 'Walk')) continue;`
+// and `opt` was changed to pickOptimal's output, whose result is walk-free BY
+// CONSTRUCTION — so the predicate could never be true and the filter silently
+// passed everything. One cron run published 59 walk-dominated pairs, including
+// Hanger Lane -> Harrow on the Hill at 54 min against an obvious 36 min walk.
+//
+// This asserts on the SHIPPED lookup, so it fails whether the cause is the
+// filter, the search, or bad data. Past dates are exempt (frozen history that
+// cannot be changed), as are dates pinned by a freeze block in todayPuzzle().
+anchor('no upcoming puzzle is beatable by walking', () => {
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date());
+  // Dates pinned by a freeze block: already live, deliberately left alone.
+  const frozen = new Set(
+    [...readIndexSource().matchAll(/date === '(\d{4}-\d{2}-\d{2})'/g)].map(m => m[1])
+  );
+  const bad = [];
+  let checked = 0;
   for (const { inst, routes, optimal } of solved) {
-    if (!optimal) continue;
-    for (const r of routes) {
-      if (!r.legs.some(l => l.line === 'Walk')) continue;
-      let mins;
-      try { mins = T.buildUserLegs(inst.start, r.legs.map(l => ({ station: l.to, line: l.line }))).totalMins; }
-      catch { continue; }
-      if (mins < optimal.mins) { beat++; break; }
+    if (!optimal || !routes.length) continue;
+    if (inst.date < today) continue;          // frozen history
+    if (frozen.has(inst.date)) continue;      // pinned by an explicit freeze
+    checked++;
+    const cheapest = routes[0];
+    if (!cheapest.legs.some(l => l.line === 'Walk')) continue;
+    const gap = optimal.mins - cheapest.mins;
+    if (gap > 0) {
+      bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} published=${optimal.mins} but walking=${cheapest.mins} (beatable by ${gap})`);
     }
   }
-  // index.html (no post-walk wait) sits at 83; v2 sits at 1.
-  if (typeof T.scoreLegs !== 'function') return 'skip';
-  if (beat > 1) throw new Error(`${beat} puzzles are beatable by walking (expected at most 1)`);
+  if (bad.length) {
+    throw new Error(`${bad.length} upcoming puzzle(s) are beatable by walking — the ` +
+      `generator's walk-domination filter is not working:\n  ` + bad.slice(0, 15).join('\n  '));
+  }
+  return checked;
+});
+
+// ── The generator's walk-domination check must test the CHEAPEST route ──────
+// The anchor above asserts on the shipped lookup, so it only fails the day
+// AFTER a bad cron run. This one fails immediately, on the code.
+//
+// The check must be evaluated against routes[0] (the genuinely cheapest route,
+// walks included). Evaluated against pickOptimal's output it is dead code: that
+// result is walk-free by construction, so the predicate is always false. This
+// is a source guard rather than a behavioural one because reproducing a cron
+// run in-process means overriding the clock across a 90-day sweep; the failure
+// mode it guards is a one-token edit, so matching the source is proportionate.
+anchor('generator rejects walk-dominated pairs using routes[0]', () => {
+  const src = readIndexSource();
+  const loop = src.slice(src.indexOf('routes = dijkstra(GRAPH, start, end);'));
+  const region = loop.slice(0, loop.indexOf("if (m === 'easy')"));
+  const testsCheapest = /(cheapest|routes\[0\])\s*\.legs\s*\.some\([^)]*'Walk'/.test(region);
+  if (!testsCheapest) {
+    throw new Error(
+      "the draw loop no longer rejects walk-dominated pairs on routes[0].\n" +
+      "      A check written against pickOptimal's output cannot fire — its result is\n" +
+      "      walk-free by construction. That silently published 59 walk-dominated\n" +
+      "      pairs on 2026-08-05, including a 54-min optimal beatable in 36 by walking.");
+  }
 });
 
 for (const a of anchors) {
   try {
     const r = a.fn();
-    results.push(r === 'skip' ? { name: a.name, ok: true, checked: 0 } : { name: a.name, ok: true, checked: 1 });
+    // Honour a returned count so a sweeping anchor reports what it actually
+    // examined. Reporting a hardcoded 1 would hide an anchor that swept zero
+    // instances — the same "green tick for nothing" problem the SKIPPED
+    // handling exists to prevent.
+    const checked = r === 'skip' ? 0 : (typeof r === 'number' ? r : 1);
+    results.push({ name: a.name, ok: true, checked });
   } catch (e) { results.push({ name: a.name, ok: false, error: e.message }); }
 }
 

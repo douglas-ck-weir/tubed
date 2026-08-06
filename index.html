@@ -5281,7 +5281,9 @@ function londonDateParts(d) {
 // difficulty filters now gate on pickOptimal's walk-free choice rather than
 // routes[0], and 37 of 280 optimals moved, so a cached pair may no longer sit
 // inside its mode's bounds. Force stale clients to re-resolve.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v13';
+// Bumped to v14 on 2026-08-06: the walk-domination filter was repaired and the
+// lookup regenerated, so most upcoming pairs change. Force clients to re-resolve.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v14';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5442,6 +5444,41 @@ function todayPuzzle(mode, opts) {
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
 
+  // 2026-08-06 Easy & Hard: last night's cron generated today's window with a
+  // broken walk-domination filter (see the WALK DOMINATION note in the draw
+  // loop), publishing easy = Bermondsey -> Holborn and hard = Hanger Lane ->
+  // Harrow on the Hill. Players have been on those pairs all day, so pin them
+  // even though the hard one is walk-dominated: today's optimal IS beatable by
+  // walking via Park Royal (54 published vs 36 walking), and that is being
+  // accepted rather than yanking a puzzle out from under anyone mid-solve.
+  // The filter fix keeps it from recurring; the regenerated lookup clears every
+  // other affected day. (Remove after 2026-08-06.)
+  if (m === 'easy' && date === '2026-08-06') {
+    const start = 'Bermondsey', end = 'Holborn';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+  if (m === 'hard' && date === '2026-08-06') {
+    const start = 'Hanger Lane', end = 'Harrow on the Hill';
+    const routes = dijkstra(GRAPH, start, end);
+    // PUBLISH THE WALK ROUTE, not pickOptimal's walk-free choice. This pair
+    // should never have been drawn (the walk-domination filter was broken when
+    // the cron generated it), and it is walk-dominated by a mile: 36 min via a
+    // 9-min walk to Park Royal against 54 min for the best tube-only route.
+    //
+    // pickOptimal exists because players dislike a walk in the optimal, but it
+    // was written for walks that ARBITRAGE the interchange model, shaving a
+    // minute off a route that was fine anyway. This is not that. Walking really
+    // is the fastest way from Hanger Lane to Harrow on the Hill, and publishing
+    // 54 would tell players something untrue about their own city while leaving
+    // the optimal beatable by 18 minutes. routes[0] is the true minimum.
+    //
+    // Deliberately scoped to this one date. Do NOT generalise it — the fix for
+    // walk-dominated pairs is to never draw them, which the repaired filter now
+    // does. (Remove with the rest of this freeze after 2026-08-06.)
+    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+
   // 2026-08-05 Easy & Hard: two things reseed today's draw at once — the Zone
   // 1-3 pool expansion's regenerated puzzle-lookup.json (still uncommitted, so
   // the live site is serving the PRE-expansion pairs) and the unified-scoring
@@ -5590,12 +5627,31 @@ function todayPuzzle(mode, opts) {
       if (recentStations && (recentStations.has(start) || recentStations.has(end))) continue;
       routes = dijkstra(GRAPH, start, end);
       if (!routes || routes.length === 0) continue;
-      // Gate on the route we will actually PUBLISH, not on routes[0]. v1 gated
-      // the difficulty filters on the cheapest candidate (walk routes included)
-      // while publishing pickOptimal's walk-free choice, so the puzzle could be
-      // admitted on one route's leg-count and minutes and then presented with a
-      // different one. It also made selection depend on the search's label cap,
-      // because routes[0] shifts with K where the published optimal does not.
+
+      // ── WALK DOMINATION: reject the pair outright ────────────────────────
+      // If the genuinely cheapest route uses an OSI walk, this pair is unfit
+      // for a puzzle: pickOptimal will publish a walk-FREE optimal, so the
+      // published answer is beatable by anyone who spots the walk. Hanger Lane
+      // -> Harrow on the Hill published 54 min against an obvious 36 min walk
+      // via Park Royal.
+      //
+      // THIS MUST BE TESTED ON routes[0], NOT ON THE PUBLISHED OPTIMAL. The
+      // per-mode `usesWalk` checks below look at `opt`, and once `opt` became
+      // pickOptimal's output they became permanently false — pickOptimal's
+      // result is walk-free BY CONSTRUCTION, so asking whether it contains a
+      // walk can only ever answer "no". That silently disabled walk rejection
+      // for both modes and published 59 walk-dominated pairs in one cron run.
+      // A filter whose predicate cannot be true is not a filter.
+      const cheapest = routes[0];
+      if (cheapest.legs.some(l => l.line === 'Walk')) continue;
+
+      // Gate difficulty on the route we will actually PUBLISH, not on
+      // routes[0]. v1 gated on the cheapest candidate while publishing
+      // pickOptimal's walk-free choice, so a puzzle could be admitted on one
+      // route's leg-count and minutes and then presented with a different one.
+      // It also made selection depend on the search's label cap, because
+      // routes[0] shifts with K where the published optimal does not. With the
+      // walk-domination check above done separately, both properties hold.
       const opt = pickOptimal(routes, {start, end}) || routes[0];
 
       if (m === 'easy') {
@@ -5603,6 +5659,9 @@ function todayPuzzle(mode, opts) {
         // unintuitive, and even legitimate OSI walks (CW↔HQ, Bank↔Monument)
         // generate feedback. Walks remain available for scoring player-chosen
         // routes and for hard puzzles where the gap-to-tube filter applies.
+        // Redundant now that walk domination is rejected above (opt is
+        // walk-free by construction), but kept as a belt-and-braces guard in
+        // case `opt` is ever re-pointed at a route that can contain a walk.
         const usesWalk = opt.legs.some(l => l.line === 'Walk');
         if (usesWalk) continue;
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
@@ -5622,6 +5681,9 @@ function todayPuzzle(mode, opts) {
         // beats the intuitive Mildmay → Victoria change at H&I, but TfL JP
         // disagrees). Until the OSI cost model includes wait time, reject any
         // walk legs from Hard optima as well as Easy.
+        // Redundant now that walk domination is rejected above (opt is
+        // walk-free by construction), but kept as a belt-and-braces guard in
+        // case `opt` is ever re-pointed at a route that can contain a walk.
         const usesWalk = opt.legs.some(l => l.line === 'Walk');
         if (usesWalk) continue;
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
