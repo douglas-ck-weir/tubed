@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-05",
-  "puzzleNum": 125,
+  "date": "2026-08-06",
+  "puzzleNum": 126,
   "easy": {
-    "start": "Waterloo",
-    "end": "Ealing Broadway"
+    "start": "Bermondsey",
+    "end": "Holborn"
   },
   "hard": {
-    "start": "Turnham Green",
-    "end": "Crystal Palace"
+    "start": "Hanger Lane",
+    "end": "Harrow on the Hill"
   }
 }
