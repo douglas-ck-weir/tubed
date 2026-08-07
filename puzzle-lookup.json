@@ -1,4 +1,15 @@
 {
+  "2026-08-06": {
+    "puzzleNum": 126,
+    "easy": {
+      "start": "Bermondsey",
+      "end": "Holborn"
+    },
+    "hard": {
+      "start": "Hanger Lane",
+      "end": "Harrow on the Hill"
+    }
+  },
   "2026-08-05": {
     "puzzleNum": 125,
     "easy": {
@@ -591,17 +602,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-08-06": {
-    "puzzleNum": 126,
-    "easy": {
-      "start": "Bermondsey",
-      "end": "Holborn"
-    },
-    "hard": {
-      "start": "Hanger Lane",
-      "end": "Harrow on the Hill"
     }
   },
   "2026-08-07": {
@@ -1581,6 +1581,17 @@
     "hard": {
       "start": "East India",
       "end": "Gunnersbury"
+    }
+  },
+  "2026-11-04": {
+    "puzzleNum": 216,
+    "easy": {
+      "start": "Seven Sisters",
+      "end": "Northfields"
+    },
+    "hard": {
+      "start": "Manor House",
+      "end": "Edgware Road"
     }
   }
 }

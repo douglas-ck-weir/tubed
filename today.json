@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-06",
-  "puzzleNum": 126,
+  "date": "2026-08-07",
+  "puzzleNum": 127,
   "easy": {
-    "start": "Bermondsey",
-    "end": "Holborn"
+    "start": "Seven Sisters",
+    "end": "Camden Town"
   },
   "hard": {
-    "start": "Hanger Lane",
-    "end": "Harrow on the Hill"
+    "start": "Tooting Broadway",
+    "end": "Wimbledon Park"
   }
 }
