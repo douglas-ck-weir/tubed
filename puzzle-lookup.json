@@ -1,4 +1,15 @@
 {
+  "2026-08-07": {
+    "puzzleNum": 127,
+    "easy": {
+      "start": "Seven Sisters",
+      "end": "Camden Town"
+    },
+    "hard": {
+      "start": "Tooting Broadway",
+      "end": "Wimbledon Park"
+    }
+  },
   "2026-08-06": {
     "puzzleNum": 126,
     "easy": {
@@ -602,17 +613,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-08-07": {
-    "puzzleNum": 127,
-    "easy": {
-      "start": "Seven Sisters",
-      "end": "Camden Town"
-    },
-    "hard": {
-      "start": "Tooting Broadway",
-      "end": "Wimbledon Park"
     }
   },
   "2026-08-08": {
@@ -1592,6 +1592,17 @@
     "hard": {
       "start": "Manor House",
       "end": "Edgware Road"
+    }
+  },
+  "2026-11-05": {
+    "puzzleNum": 217,
+    "easy": {
+      "start": "Lancaster Gate",
+      "end": "Aldgate East"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Victoria"
     }
   }
 }

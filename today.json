@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-07",
-  "puzzleNum": 127,
+  "date": "2026-08-08",
+  "puzzleNum": 128,
   "easy": {
-    "start": "Seven Sisters",
-    "end": "Camden Town"
+    "start": "North Greenwich",
+    "end": "Temple"
   },
   "hard": {
-    "start": "Tooting Broadway",
-    "end": "Wimbledon Park"
+    "start": "Regent's Park",
+    "end": "South Wimbledon"
   }
 }
