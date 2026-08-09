@@ -1,4 +1,15 @@
 {
+  "2026-08-08": {
+    "puzzleNum": 128,
+    "easy": {
+      "start": "North Greenwich",
+      "end": "Temple"
+    },
+    "hard": {
+      "start": "Regent's Park",
+      "end": "South Wimbledon"
+    }
+  },
   "2026-08-07": {
     "puzzleNum": 127,
     "easy": {
@@ -613,17 +624,6 @@
     "hard": {
       "start": "Borough",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-08-08": {
-    "puzzleNum": 128,
-    "easy": {
-      "start": "North Greenwich",
-      "end": "Temple"
-    },
-    "hard": {
-      "start": "Regent's Park",
-      "end": "South Wimbledon"
     }
   },
   "2026-08-09": {
@@ -1603,6 +1603,17 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "Victoria"
+    }
+  },
+  "2026-11-06": {
+    "puzzleNum": 218,
+    "easy": {
+      "start": "Earl's Court",
+      "end": "Westbourne Park"
+    },
+    "hard": {
+      "start": "Bounds Green",
+      "end": "Goodge Street"
     }
   }
 }

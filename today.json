@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-08",
-  "puzzleNum": 128,
+  "date": "2026-08-09",
+  "puzzleNum": 129,
   "easy": {
-    "start": "North Greenwich",
-    "end": "Temple"
+    "start": "Kilburn",
+    "end": "Oval"
   },
   "hard": {
-    "start": "Regent's Park",
-    "end": "South Wimbledon"
+    "start": "Bounds Green",
+    "end": "Charing Cross"
   }
 }
