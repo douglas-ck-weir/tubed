@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-09",
-  "puzzleNum": 129,
+  "date": "2026-08-10",
+  "puzzleNum": 130,
   "easy": {
-    "start": "Kilburn",
-    "end": "Oval"
+    "start": "Baker Street",
+    "end": "Bank"
   },
   "hard": {
-    "start": "Bounds Green",
-    "end": "Charing Cross"
+    "start": "Hackney Central",
+    "end": "Hammersmith"
   }
 }
