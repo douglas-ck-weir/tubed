@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-10",
-  "puzzleNum": 130,
+  "date": "2026-08-11",
+  "puzzleNum": 131,
   "easy": {
-    "start": "Baker Street",
-    "end": "Bank"
+    "start": "Blackfriars",
+    "end": "Stratford"
   },
   "hard": {
-    "start": "Hackney Central",
-    "end": "Hammersmith"
+    "start": "Holloway Road",
+    "end": "St. James's Park"
   }
 }
