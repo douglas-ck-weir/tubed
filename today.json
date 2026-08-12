@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-11",
-  "puzzleNum": 131,
+  "date": "2026-08-12",
+  "puzzleNum": 132,
   "easy": {
-    "start": "Blackfriars",
-    "end": "Stratford"
+    "start": "East Finchley",
+    "end": "Vauxhall"
   },
   "hard": {
-    "start": "Holloway Road",
-    "end": "St. James's Park"
+    "start": "South Kensington",
+    "end": "Stratford International"
   }
 }
