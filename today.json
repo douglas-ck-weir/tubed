@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-12",
-  "puzzleNum": 132,
+  "date": "2026-08-13",
+  "puzzleNum": 133,
   "easy": {
-    "start": "East Finchley",
-    "end": "Vauxhall"
+    "start": "Edgware Road",
+    "end": "Blackhorse Road"
   },
   "hard": {
-    "start": "South Kensington",
-    "end": "Stratford International"
+    "start": "Archway",
+    "end": "West Kensington"
   }
 }
