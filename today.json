@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-14",
-  "puzzleNum": 134,
+  "date": "2026-08-15",
+  "puzzleNum": 135,
   "easy": {
-    "start": "Russell Square",
-    "end": "Kensal Green"
+    "start": "Tottenham Court Road",
+    "end": "Aldgate East"
   },
   "hard": {
-    "start": "Lancaster Gate",
-    "end": "Clapham Common"
+    "start": "Kew Gardens",
+    "end": "Surrey Quays"
   }
 }
