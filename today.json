@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-15",
-  "puzzleNum": 135,
+  "date": "2026-08-16",
+  "puzzleNum": 136,
   "easy": {
-    "start": "Tottenham Court Road",
-    "end": "Aldgate East"
+    "start": "Canada Water",
+    "end": "Fulham Broadway"
   },
   "hard": {
-    "start": "Kew Gardens",
-    "end": "Surrey Quays"
+    "start": "Great Portland Street",
+    "end": "Holland Park"
   }
 }
