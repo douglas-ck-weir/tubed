@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-16",
-  "puzzleNum": 136,
+  "date": "2026-08-17",
+  "puzzleNum": 137,
   "easy": {
-    "start": "Canada Water",
-    "end": "Fulham Broadway"
+    "start": "Highbury & Islington",
+    "end": "Marylebone"
   },
   "hard": {
-    "start": "Great Portland Street",
-    "end": "Holland Park"
+    "start": "Manor House",
+    "end": "London City Airport"
   }
 }
