@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-17",
-  "puzzleNum": 137,
+  "date": "2026-08-18",
+  "puzzleNum": 138,
   "easy": {
-    "start": "Highbury & Islington",
-    "end": "Marylebone"
+    "start": "Mansion House",
+    "end": "Bermondsey"
   },
   "hard": {
-    "start": "Manor House",
-    "end": "London City Airport"
+    "start": "Stamford Brook",
+    "end": "Bond Street"
   }
 }
