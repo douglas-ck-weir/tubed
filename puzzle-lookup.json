@@ -1,4 +1,15 @@
 {
+  "2026-08-18": {
+    "puzzleNum": 138,
+    "easy": {
+      "start": "Mansion House",
+      "end": "Bermondsey"
+    },
+    "hard": {
+      "start": "Stamford Brook",
+      "end": "Bond Street"
+    }
+  },
   "2026-08-17": {
     "puzzleNum": 137,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Westbourne Park",
       "end": "Dalston Kingsland"
-    }
-  },
-  "2026-06-19": {
-    "puzzleNum": 78,
-    "easy": {
-      "start": "Tufnell Park",
-      "end": "Queen's Park"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Notting Hill Gate"
-    }
-  },
-  "2026-08-18": {
-    "puzzleNum": 138,
-    "easy": {
-      "start": "Mansion House",
-      "end": "Bermondsey"
-    },
-    "hard": {
-      "start": "Stamford Brook",
-      "end": "Bond Street"
     }
   },
   "2026-08-19": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Leytonstone",
       "end": "Westferry"
+    }
+  },
+  "2026-11-16": {
+    "puzzleNum": 228,
+    "easy": {
+      "start": "Finsbury Park",
+      "end": "Maida Vale"
+    },
+    "hard": {
+      "start": "Hyde Park Corner",
+      "end": "Clapham South"
     }
   }
 }

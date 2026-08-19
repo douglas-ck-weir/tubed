@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-18",
-  "puzzleNum": 138,
+  "date": "2026-08-19",
+  "puzzleNum": 139,
   "easy": {
-    "start": "Mansion House",
-    "end": "Bermondsey"
+    "start": "Stonebridge Park",
+    "end": "West Brompton"
   },
   "hard": {
-    "start": "Stamford Brook",
-    "end": "Bond Street"
+    "start": "Tooting Broadway",
+    "end": "Barons Court"
   }
 }
