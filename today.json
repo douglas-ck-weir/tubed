@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-19",
-  "puzzleNum": 139,
+  "date": "2026-08-20",
+  "puzzleNum": 140,
   "easy": {
-    "start": "Stonebridge Park",
-    "end": "West Brompton"
+    "start": "Farringdon",
+    "end": "Willesden Junction"
   },
   "hard": {
-    "start": "Tooting Broadway",
-    "end": "Barons Court"
+    "start": "Turnpike Lane",
+    "end": "Southfields"
   }
 }
