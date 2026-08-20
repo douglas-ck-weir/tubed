@@ -41,8 +41,8 @@ const EXPORT_NAMES = [
   'buildGraph', 'dijkstra', 'buildUserLegs', 'scoreUserRoute',
   'bestOneChangeMins', 'bestTwoChangeMins',
   // puzzle
-  'todayPuzzle', 'pickOptimal', 'londonDateParts', 'seededRng', 'requiresChange',
-  'countDistinctChanges',
+  'todayPuzzle', 'pickOptimal', 'isPublishableOptimal', 'londonDateParts',
+  'seededRng', 'requiresChange', 'countDistinctChanges',
 ];
 
 function makeStub(name = 'stub') {

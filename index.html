@@ -2263,42 +2263,42 @@ function interchangeTime(stn, fromLine, toLine) {
 const OSI_PAIRS = [
   {a:'Aldgate',                   b:'Aldgate East',                aToB: 3, bToA: 3},
   {a:'Archway',                   b:'Upper Holloway',              aToB: 9, bToA: 9},
-  {a:'Bank',                      b:'Cannon Street',               aToB: 7, bToA: 7},
-  {a:'Bayswater',                 b:'Queensway',                   aToB: 3, bToA: 3},
-  {a:'Bond Street',               b:'Oxford Circus',               aToB: 6, bToA: 6},
+  {a:'Bank',                      b:'Cannon Street',               aToB:14, bToA:14},
+  {a:'Bayswater',                 b:'Queensway',                   aToB:10, bToA:10},
+  {a:'Bond Street',               b:'Oxford Circus',               aToB:14, bToA:14},
   {a:'Caledonian Road',           b:'Caledonian Road & Barnsbury', aToB:10, bToA:10},
-  {a:'Camden Road',               b:'Camden Town',                 aToB: 8, bToA: 8},
-  {a:'Clapham High Street',       b:'Clapham North',               aToB: 4, bToA: 4},
-  {a:'Euston',                    b:'Euston Square',               aToB: 7, bToA: 7},
-  {a:'Euston Square',             b:'Warren Street',               aToB: 5, bToA: 5},
-  {a:'Finchley Road',             b:'Finchley Road & Frognal',     aToB: 4, bToA: 4},
-  {a:'White City',                b:'Wood Lane',                   aToB: 4, bToA: 4},
+  {a:'Camden Road',               b:'Camden Town',                 aToB:18, bToA:18},
+  {a:'Clapham High Street',       b:'Clapham North',               aToB:10, bToA:10},
+  {a:'Euston',                    b:'Euston Square',               aToB:14, bToA:14},
+  {a:'Euston Square',             b:'Warren Street',               aToB:15, bToA:15},
+  {a:'Finchley Road',             b:'Finchley Road & Frognal',     aToB:14, bToA:14},
+  {a:'White City',                b:'Wood Lane',                   aToB:11, bToA:11},
   {a:'Aldgate',                    b:'Tower Gateway',               aToB: 9, bToA: 9},
   {a:'Tower Gateway',              b:'Tower Hill',                  aToB: 5, bToA: 5},
-  {a:'Canary Wharf',              b:'Heron Quays',                 aToB: 3, bToA: 3},
-  {a:'Canary Wharf',              b:'Poplar',                      aToB: 8, bToA: 8},
-  {a:'Shadwell',                  b:'Shadwell (Overground)',       aToB: 2, bToA: 2},
-  {a:'Canary Wharf',              b:'West India Quay',             aToB: 5, bToA: 5},
-  {a:'Dalston Junction',          b:'Dalston Kingsland',           aToB: 4, bToA: 4},
+  {a:'Canary Wharf',              b:'Heron Quays',                 aToB: 9, bToA: 9},
+  {a:'Canary Wharf',              b:'Poplar',                      aToB:10, bToA:10},
+  {a:'Shadwell',                  b:'Shadwell (Overground)',       aToB: 6, bToA: 6},
+  {a:'Canary Wharf',              b:'West India Quay',             aToB: 7, bToA: 7},
+  {a:'Dalston Junction',          b:'Dalston Kingsland',           aToB: 8, bToA: 8},
   {a:'New Cross',                 b:'New Cross Gate',              aToB: 9, bToA: 9},
   {a:'Hackney Central',           b:'Hackney Downs',               aToB: 5, bToA: 5},
   {a:'Forest Gate',               b:'Wanstead Park',               aToB: 6, bToA: 6},
   {a:'Manor Park',                b:'Woodgrange Park',             aToB: 7, bToA: 7},
   {a:'Walthamstow Central',       b:'Walthamstow Queens Road',     aToB: 5, bToA: 5},
-  {a:'Liverpool Street',          b:'Moorgate',                    aToB: 5, bToA: 5},
+  {a:'Liverpool Street',          b:'Moorgate',                    aToB:12, bToA:12},
   {a:'Embankment',                b:'Waterloo',                    aToB: 8, bToA: 8},
-  {a:'Lancaster Gate',            b:'Paddington',                  aToB: 6, bToA: 6},
+  {a:'Lancaster Gate',            b:'Paddington',                  aToB:13, bToA:13},
   {a:'Bank',                      b:'Liverpool Street',            aToB:11, bToA:11},
   {a:'Blackfriars',               b:'Southwark',                   aToB:11, bToA:11},
   {a:'Seven Sisters',             b:'Seven Sisters (Overground)',  aToB: 3, bToA: 3},
-  {a:'Shepherd\'s Bush',          b:'Shepherd\'s Bush (Overground)',aToB: 4, bToA: 4},
+  {a:'Shepherd\'s Bush',          b:'Shepherd\'s Bush (Overground)',aToB: 7, bToA: 7},
   // Added in OSI audit — official TfL list, both stations in NETWORK.
   {a:'Brondesbury',               b:'Kilburn',                     aToB: 7, bToA: 7},
-  {a:'Charing Cross',             b:'Embankment',                  aToB: 3, bToA: 3},
+  {a:'Charing Cross',             b:'Embankment',                  aToB: 8, bToA: 8},
   {a:'Hanger Lane',               b:'Park Royal',                  aToB: 9, bToA: 9},
   {a:'Ickenham',                  b:'West Ruislip',                aToB:11, bToA:11},
-  {a:'Kenton',                    b:'Northwick Park',              aToB: 7, bToA: 7},
-  {a:'Kentish Town',              b:'Kentish Town West',           aToB: 6, bToA: 6},
+  {a:'Kenton',                    b:'Northwick Park',              aToB:14, bToA:14},
+  {a:'Kentish Town',              b:'Kentish Town West',           aToB:13, bToA:13},
   {a:'Leytonstone',               b:'Leytonstone High Road',       aToB: 8, bToA: 8},
   {a:'Seven Sisters',             b:'South Tottenham',             aToB: 7, bToA: 7},
 ];
@@ -4624,20 +4624,29 @@ function dijkstra(graph, start, end) {
     tryPush(c);
   }
 
-  // ── Pure-tube guarantee, made explicit ─────────────────────────────────────
-  // pickOptimal publishes the best WALK-FREE route, because players reject a
-  // published "optimal" that tells them to walk between stations. v1 tried to
-  // guarantee one was available by running a second tube-only search pass — but
-  // it then truncated to the 5 cheapest routes, so a walk-free route could
-  // still be squeezed out by cheaper walk-assisted ones, and pickOptimal would
-  // silently fall back to publishing a walk route. Harlesden -> Westferry hits
+  // ── Publishable guarantee, made explicit ───────────────────────────────────
+  // pickOptimal has to return a route the game can publish, so one had better
+  // be in the list. v1 tried to guarantee that with a second tube-only search
+  // pass — but it then truncated to the 5 cheapest routes, so the wanted route
+  // could still be squeezed out by cheaper walk-assisted ones, and pickOptimal
+  // would silently fall back to something worse. Harlesden -> Westferry hits
   // exactly this once the trunk/branch correction makes the tube route dearer.
   //
-  // So: if nothing in the top 5 is walk-free, append the cheapest walk-free
-  // candidate. Costs one extra entry and removes the reliance on luck.
-  if (!routes.some(r => !r.legs.some(l => l.line === 'Walk'))) {
-    const tube = candidates.find(c => c.walkCount === 0);
-    if (tube) tryPush(tube);
+  // So: if nothing in the top 5 is publishable, append the cheapest candidate
+  // that is. Costs one extra entry and removes the reliance on luck.
+  //
+  // The predicate is isPublishableOptimal, NOT walkCount === 0 (changed
+  // 2026-08-19 with the walk-transfer rule). Appending the cheapest WALK-FREE
+  // candidate answered the wrong question once mid-route walks became
+  // publishable: a route with a walking transfer can now be the cheapest
+  // publishable one, and reserving the slot for a walk-free route could leave
+  // the actual answer absent from the list. The generator path never noticed
+  // because it rejects any pair whose routes[0] is unpublishable — but the
+  // cache, lookup and freeze paths call dijkstra directly and have no such
+  // guard, which is precisely where this backstop is meant to earn its keep.
+  if (!routes.some(isPublishableOptimal)) {
+    const pick = candidates.find(isPublishableOptimal);   // candidates carry .legs
+    if (pick) tryPush(pick);
   }
   return routes;
 }
@@ -5070,7 +5079,20 @@ function requiresChange(a, b) {
 //       train on the trunk), the Bank<->Monument walk when a route starts on one
 //       side and boards on the other, and the wait for the next train after an
 //       OSI walk. 37 of 280 published optimals get slower; none get faster.
-const SCORING_VERSION = 5;
+//   6 = + OSI walk-time correction (2026-08-19). 21 values in OSI_PAIRS were
+//       understated because they had been sourced as street-level walking times
+//       while the model treats them as PLATFORM-TO-PLATFORM (buildGraph adds no
+//       egress or access at either end — see addOsiWalkEdges). Measured against
+//       TfL, every one was low, by a median of 7 minutes: Bond Street<->Oxford
+//       Circus 6->14, Euston Square<->Warren Street 5->15, Camden Road<->Camden
+//       Town 8->18. Charing Cross<->Embankment went 3->8 on structural grounds
+//       (every line at Charing Cross also stops at Embankment, so walking can
+//       never be required, and 3 was cheaper than the 7-min change inside
+//       Charing Cross it was dodging). Any player route using an OSI walk now
+//       scores higher. Ships alongside the walk-transfer rule, which lets a
+//       published optimal contain a MID-ROUTE walking transfer (never one that
+//       starts or ends on foot) — 4.4% of upcoming optima do.
+const SCORING_VERSION = 6;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANNOUNCEMENTS
@@ -5278,12 +5300,19 @@ function londonDateParts(d) {
 // engine — it now finds faster routes the old cap missed, so published optimals
 // (and some cached pairs' validity) change. Force stale clients to re-resolve.
 // Bumped to v13 on 2026-08-05: unified scoring (SCORING_VERSION 5). The
-// difficulty filters now gate on pickOptimal's walk-free choice rather than
+// difficulty filters now gate on pickOptimal's publishable choice rather than
 // routes[0], and 37 of 280 optimals moved, so a cached pair may no longer sit
 // inside its mode's bounds. Force stale clients to re-resolve.
 // Bumped to v14 on 2026-08-06: the walk-domination filter was repaired and the
 // lookup regenerated, so most upcoming pairs change. Force clients to re-resolve.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v14';
+// Bumped to v15 on 2026-08-19: the OSI walk-time correction (SCORING_VERSION 6)
+// changes route costs, so it changes which pairs pass the difficulty filters —
+// 74 of 180 upcoming pairs move, and the drawable pool goes from 72% to ~95%
+// because far fewer pairs are rejected for having an undercharged walk as their
+// cheapest route. Shipped with the walk-transfer rule (mid-route walks may now
+// appear in a published optimal). A cached pair may no longer sit inside its
+// mode's bounds, so force stale clients to re-resolve.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v15';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5320,34 +5349,92 @@ function _tel(event, data) {
   try { console.log(`[tubed] ${event}`, data || ''); } catch(e){}
 }
 
+// Is this route fit to be published as a puzzle's "optimal"?
+//
+// 2026-08-06: the rule changed from PURE-TUBE to NO-EDGE-WALKS. The old rule
+// banned every Walk leg, which was the right call while OSI walk cost ignored
+// the wait for the next train — the optimiser could launder an expensive
+// in-station interchange by walking out and back (the Canary Wharf loop). The
+// unified engine charges boarding wait after a walk, so that arbitrage is gone:
+// measured over 267 walk-optimal routes across the pool, zero revisit a station.
+//
+// What the blanket ban cost: ~30% of eligible pairs have a walk as their
+// genuinely cheapest route. Rejecting them wasn't neutral — it published an
+// answer the player could beat (median 3 min, max 31). Allowing mid-route walks
+// closes that gap at the source rather than discarding the pair.
+//
+// Why EDGE walks are still banned. A walk in the middle is a transfer, and the
+// common ones read as completely natural: Charing Cross <-> Embankment,
+// Liverpool Street <-> Moorgate, Bond Street <-> Oxford Circus, Tower Hill <->
+// Tower Gateway. A walk as the FIRST or LAST leg is different in kind — it makes
+// the puzzle look mis-set ("Lancaster Gate -> Kensal Green: walk to Paddington,
+// take the Bakerloo" invites "why set it at Lancaster Gate then"), and it makes
+// Hint 2 name a walk as "your first change". 73% of walk-optima are mid-route
+// only, so the narrow rule keeps nearly all of the recovered pool.
+// ZERO-LENGTH LEGS. Route reconstruction can emit a leg whose from === to — the
+// search "boards" a line at a station and travels nowhere (Central: Oxford
+// Circus > Oxford Circus). It costs 0, so it ties with the clean route and
+// survives ranking. At the shipped K it appears in ~1% of candidates.
+//
+// Under the old pure-tube rule these were invisible, because any route holding
+// one also held a Walk and was rejected anyway. Under the edge-walk rule they
+// become a LOOPHOLE, and in both directions: a null leg prepended to a walk
+// makes the walk stop being the first leg (K=32 finds exactly this for Hanger
+// Lane -> Harrow on the Hill), and a null leg appended to one makes it stop
+// being the last (West Hampstead -> Oxford Circus: Jubilee, walk Bond Street ->
+// Oxford Circus, then Central nowhere). Both are routes that really do start or
+// end on foot, wearing a disguise the rule would otherwise accept.
+//
+// So reject them outright rather than compacting and re-judging. They are also
+// malformed for display — the result card would render a 0 min leg — and if
+// the only candidate for a pair carries one, the right outcome is to drop the
+// pair, which is exactly what falling through to the generator's reject does.
+function isPublishableOptimal(r) {
+  if (!r || !r.legs || r.legs.length === 0) return false;
+  if (r.legs.some(l => l.from === l.to)) return false;
+  if (r.legs[0].line === 'Walk') return false;
+  if (r.legs[r.legs.length - 1].line === 'Walk') return false;
+  return true;
+}
+
 // Single chokepoint for turning dijkstra's ranked routes into the puzzle's
 // published "optimal". EVERY todayPuzzle return path (cache hit, freeze pins,
 // lookup oracle, live generator, fallback) MUST route through here so the
 // invariant is enforced in one place instead of defended at each reader.
 //
-// Invariant: the published optimal is a NON-EMPTY, PURE-TUBE route.
-//   - No Walk legs: the generator filters reject walk-optima, but the cache /
-//     lookup / freeze paths call dijkstra directly and skip those filters, so
-//     a stale pinned pair could otherwise surface a walk leg. Players reject
-//     walk legs in the "optimal", and an under-priced OSI walk can make the
-//     true fastest route beatable. See [[feedback_walk_legs_in_optimal]].
+// Invariant: the published optimal satisfies isPublishableOptimal().
+//   - No edge walks: the generator rejects them, but the cache / lookup /
+//     freeze paths call dijkstra directly and skip that filter, so a stale
+//     pinned pair could otherwise surface one. See [[feedback_walk_legs_in_optimal]].
 //   - Non-empty: guards Hint 2 (optimal.legs[0]), the result card, share
 //     text and the map from an empty-legs optimal.
 //
-// dijkstra already returns up to 5 candidates, tie-broken to prefer fewer
-// walks, so a pure-tube alternative for the SAME pair is usually present even
-// when routes[0] happens to walk. Prefer the cheapest such tube route; only if
-// none exists do we fall back to routes[0] (so the game still runs) and log
-// loudly — that means a pinned pair violates the pure-tube rule and should be
-// re-generated, not that the player did anything wrong.
+// NOTE the ordering contract with the generator: because the generator now
+// rejects any pair whose routes[0] is unpublishable, routes[0] IS the published
+// optimal for every freshly-drawn pair. That is what makes the answer
+// unbeatable — this function must never have to skip past routes[0] on a
+// generated pair. If it does, the pair came from a pin that predates the rule.
 function pickOptimal(routes, ctx) {
   if (!routes || routes.length === 0) return null;
-  const tube = routes.filter(r => r.legs.length > 0 && !r.legs.some(l => l.line === 'Walk'));
+  const tube = routes.filter(isPublishableOptimal);
   if (tube.length > 0) return tube[0];  // routes are already cost-ranked
-  const nonEmpty = routes.find(r => r.legs.length > 0);
+  // Last resort so the game renders something rather than throwing. Only
+  // reachable when NO candidate is publishable, which the generator makes
+  // impossible for a freshly drawn pair — so in practice this means a pinned or
+  // cached pair that predates the current rule, and it logs loudly to say so.
+  //
+  // Still exclude zero-length legs (from === to). Publishing one renders
+  // "Central: Oxford Circus → Oxford Circus, 0 min" on the card, share text and
+  // map, which is worse than the edge walk it would be standing in for. Prefer
+  // a merely unpublishable route over a malformed one, and say which it was.
+  const nonEmpty = routes.find(r => r.legs.length > 0 && !r.legs.some(l => l.from === l.to))
+                || routes.find(r => r.legs.length > 0);
   if (nonEmpty) {
-    console.error('[todayPuzzle] no pure-tube optimal available; ' +
-      'pinned pair likely violates the walk-free rule — regenerate it.', ctx || '');
+    const why = nonEmpty.legs.some(l => l.from === l.to)
+      ? 'every candidate is malformed (a leg that travels nowhere)'
+      : 'every candidate starts or ends on foot';
+    console.error(`[todayPuzzle] ${why}; pinned pair likely predates the ` +
+      'current publishability rule — regenerate it.', ctx || '');
     return nonEmpty;
   }
   return null;
@@ -5408,7 +5495,7 @@ function todayPuzzle(mode, opts) {
         _tel('puzzle_cache_hit', { mode: m, ms: Date.now() - _t0 });
         return { start: cached.start, end: cached.end, optimal, routes, date, puzzleNum, graph: GRAPH, mode: m };
       }
-      // No valid (non-empty, pure-tube) optimal for the cached pair — drop the
+      // No publishable optimal for the cached pair (non-empty, no edge walk) — drop the
       // stale entry and fall through to live generation rather than publish a
       // walk/empty optimal.
       console.warn('[todayPuzzle] cached pair has no valid optimal, ignoring:', cached);
@@ -5444,59 +5531,47 @@ function todayPuzzle(mode, opts) {
   //      We deliberately let the cache win over the freeze; otherwise we'd
   //      yank a puzzle out from under someone mid-solve.
 
-  // 2026-08-06 Easy & Hard: last night's cron generated today's window with a
-  // broken walk-domination filter (see the WALK DOMINATION note in the draw
-  // loop), publishing easy = Bermondsey -> Holborn and hard = Hanger Lane ->
-  // Harrow on the Hill. Players have been on those pairs all day, so pin them
-  // even though the hard one is walk-dominated: today's optimal IS beatable by
-  // walking via Park Royal (54 published vs 36 walking), and that is being
-  // accepted rather than yanking a puzzle out from under anyone mid-solve.
-  // The filter fix keeps it from recurring; the regenerated lookup clears every
-  // other affected day. (Remove after 2026-08-06.)
-  if (m === 'easy' && date === '2026-08-06') {
-    const start = 'Bermondsey', end = 'Holborn';
+  // 2026-08-19 Easy & Hard: the OSI walk-time correction (21 values in
+  // OSI_PAIRS, mostly measured against TfL) changes route costs, and therefore
+  // which pairs pass the difficulty filters — 76 of 180 upcoming pairs move.
+  // Today's EASY draw is one of them: the regenerated lookup wants
+  // Tower Gateway -> Crystal Palace where the live site has been serving
+  // Stonebridge Park -> West Brompton all day. Pin the live pairs so nobody
+  // loses a puzzle mid-solve and so the Reddit bot's morning post stays
+  // correct. Hard is unchanged by the correction but is pinned alongside it,
+  // so the whole day is explicit rather than half-pinned.
+  //
+  // build-lookup.mjs calls todayPuzzle(), so these blocks also hold
+  // puzzle-lookup.json's 2026-08-19 entry at the live values, keeping it in
+  // agreement with today.json (which puzzle-sources.test.mjs checks).
+  // Everything else takes effect from 2026-08-20. (Remove after 2026-08-19.)
+  if (m === 'easy' && date === '2026-08-19') {
+    const start = 'Stonebridge Park', end = 'West Brompton';
     const routes = dijkstra(GRAPH, start, end);
     return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
+  if (m === 'hard' && date === '2026-08-19') {
+    const start = 'Tooting Broadway', end = 'Barons Court';
+    const routes = dijkstra(GRAPH, start, end);
+    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
+  }
+
+  // 2026-08-06 Hard: KEPT after the date passed, unlike the other expired
+  // freezes. This one is not a pin, it is a published RESULT. Hanger Lane ->
+  // Harrow on the Hill is walk-dominated by an EDGE walk (36 min starting on
+  // foot to Park Royal, against 54 for the best tube-only route), so
+  // isPublishableOptimal rejects the 36 and pickOptimal would publish the 54 —
+  // leaving a past puzzle whose stated optimal is beatable by 18 minutes.
+  // Players were told 36 on the day and that is what history must keep saying.
+  //
+  // Removing this on 2026-08-19 as "stale, cannot fire" was wrong: todayPuzzle
+  // is called for past dates too (build-lookup regeneration, the invariant
+  // suite, history rendering), and the invariant caught it immediately.
+  // Delete only if this pair is ever removed from puzzle-lookup.json.
   if (m === 'hard' && date === '2026-08-06') {
     const start = 'Hanger Lane', end = 'Harrow on the Hill';
     const routes = dijkstra(GRAPH, start, end);
-    // PUBLISH THE WALK ROUTE, not pickOptimal's walk-free choice. This pair
-    // should never have been drawn (the walk-domination filter was broken when
-    // the cron generated it), and it is walk-dominated by a mile: 36 min via a
-    // 9-min walk to Park Royal against 54 min for the best tube-only route.
-    //
-    // pickOptimal exists because players dislike a walk in the optimal, but it
-    // was written for walks that ARBITRAGE the interchange model, shaving a
-    // minute off a route that was fine anyway. This is not that. Walking really
-    // is the fastest way from Hanger Lane to Harrow on the Hill, and publishing
-    // 54 would tell players something untrue about their own city while leaving
-    // the optimal beatable by 18 minutes. routes[0] is the true minimum.
-    //
-    // Deliberately scoped to this one date. Do NOT generalise it — the fix for
-    // walk-dominated pairs is to never draw them, which the repaired filter now
-    // does. (Remove with the rest of this freeze after 2026-08-06.)
     return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-08-05 Easy & Hard: two things reseed today's draw at once — the Zone
-  // 1-3 pool expansion's regenerated puzzle-lookup.json (still uncommitted, so
-  // the live site is serving the PRE-expansion pairs) and the unified-scoring
-  // engine, which moves 37 of 280 optimals and therefore shifts which pairs
-  // pass the difficulty filters. Today is already live as
-  // easy = Waterloo → Ealing Broadway, hard = Turnham Green → Crystal Palace,
-  // so pin those. Both new inputs take effect from 2026-08-06 onward.
-  // puzzle-lookup.json's 2026-08-05 entry is held at these same values so the
-  // Reddit bot matches. (Remove after 2026-08-05.)
-  if (m === 'easy' && date === '2026-08-05') {
-    const start = 'Waterloo', end = 'Ealing Broadway';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-  if (m === 'hard' && date === '2026-08-05') {
-    const start = 'Turnham Green', end = 'Crystal Palace';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
   }
 
   // 2026-08-02 Easy & Hard: the Zone 1-3 footfall pool expansion (55 new
@@ -5579,7 +5654,7 @@ function todayPuzzle(mode, opts) {
         // The lookup is the source of truth shared with the Reddit bot, so we
         // must publish THIS pair even if pickOptimal has to log a degenerate
         // optimal — falling through to the generator would desync the site
-        // from Reddit, which is worse than the walk-free warning.
+        // from Reddit, which is worse than the unpublishable-optimal warning.
         const optimal = pickOptimal(routes, { start: entry.start, end: entry.end });
         if (optimal) {
           _tel('puzzle_lookup_hit', { mode: m, ms: Date.now() - _t0 });
@@ -5628,42 +5703,39 @@ function todayPuzzle(mode, opts) {
       routes = dijkstra(GRAPH, start, end);
       if (!routes || routes.length === 0) continue;
 
-      // ── WALK DOMINATION: reject the pair outright ────────────────────────
-      // If the genuinely cheapest route uses an OSI walk, this pair is unfit
-      // for a puzzle: pickOptimal will publish a walk-FREE optimal, so the
-      // published answer is beatable by anyone who spots the walk. Hanger Lane
-      // -> Harrow on the Hill published 54 min against an obvious 36 min walk
-      // via Park Royal.
+      // ── UNPUBLISHABLE CHEAPEST: reject the pair outright ─────────────────
+      // The published optimal must BE the cheapest route, otherwise the answer
+      // is beatable by whoever spots the cheaper one. So the test is not "does
+      // the cheapest route contain a walk" but "is the cheapest route one we
+      // are willing to publish". Since 2026-08-06 a mid-route walk is publishable
+      // and an edge walk is not, so only edge-walk-cheapest pairs get dropped.
       //
       // THIS MUST BE TESTED ON routes[0], NOT ON THE PUBLISHED OPTIMAL. The
-      // per-mode `usesWalk` checks below look at `opt`, and once `opt` became
-      // pickOptimal's output they became permanently false — pickOptimal's
-      // result is walk-free BY CONSTRUCTION, so asking whether it contains a
-      // walk can only ever answer "no". That silently disabled walk rejection
+      // per-mode checks below look at `opt`, and once `opt` became pickOptimal's
+      // output any walk predicate on it became permanently false — pickOptimal's
+      // result satisfies the rule BY CONSTRUCTION, so asking whether it violates
+      // the rule can only ever answer "no". That silently disabled walk rejection
       // for both modes and published 59 walk-dominated pairs in one cron run.
       // A filter whose predicate cannot be true is not a filter.
       const cheapest = routes[0];
-      if (cheapest.legs.some(l => l.line === 'Walk')) continue;
+      if (!isPublishableOptimal(cheapest)) continue;
 
-      // Gate difficulty on the route we will actually PUBLISH, not on
-      // routes[0]. v1 gated on the cheapest candidate while publishing
-      // pickOptimal's walk-free choice, so a puzzle could be admitted on one
-      // route's leg-count and minutes and then presented with a different one.
-      // It also made selection depend on the search's label cap, because
-      // routes[0] shifts with K where the published optimal does not. With the
+      // Gate difficulty on the route we will actually PUBLISH. The check
+      // above already established that routes[0] IS publishable, so pickOptimal
+      // can only return routes[0] here — this is the published optimal by
+      // construction, not a second choice. (v1 gated on the cheapest candidate
+      // while publishing a different, walk-free route, so a puzzle could be
+      // admitted on one route's leg-count and presented with another. The
+      // ordering contract above is what removed that divergence.) With the
       // walk-domination check above done separately, both properties hold.
       const opt = pickOptimal(routes, {start, end}) || routes[0];
 
       if (m === 'easy') {
-        // Easy optima must be pure tube — players reject walk legs as
-        // unintuitive, and even legitimate OSI walks (CW↔HQ, Bank↔Monument)
-        // generate feedback. Walks remain available for scoring player-chosen
-        // routes and for hard puzzles where the gap-to-tube filter applies.
-        // Redundant now that walk domination is rejected above (opt is
-        // walk-free by construction), but kept as a belt-and-braces guard in
-        // case `opt` is ever re-pointed at a route that can contain a walk.
-        const usesWalk = opt.legs.some(l => l.line === 'Walk');
-        if (usesWalk) continue;
+        // Easy is "two tube legs, one change". The change is allowed to be a
+        // walking transfer as of 2026-08-06 (see isPublishableOptimal) — an
+        // easy puzzle solved by Central to Liverpool Street, walk to Moorgate,
+        // Northern onward is still a one-change puzzle. Edge walks are already
+        // rejected above, so nothing here can start or end on foot.
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
         if (tubeLegCount === 2 && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
       } else {
@@ -5674,18 +5746,17 @@ function todayPuzzle(mode, opts) {
         // Kingsland etc). Duration is no longer gated for hard — the change
         // count and gap filters below are what make a puzzle "hard".
         if (changes < 2) continue;
-        // Hard optima must also be pure tube. OSI walk costs only model the
-        // walk itself, not the wait for the next train on the destination
-        // line, so the optimiser arbitrages walks vs. on-platform changes
-        // (e.g. Hackney Central → Dalston Kingsland → walk → Dalston Junction
-        // beats the intuitive Mildmay → Victoria change at H&I, but TfL JP
-        // disagrees). Until the OSI cost model includes wait time, reject any
-        // walk legs from Hard optima as well as Easy.
-        // Redundant now that walk domination is rejected above (opt is
-        // walk-free by construction), but kept as a belt-and-braces guard in
-        // case `opt` is ever re-pointed at a route that can contain a walk.
-        const usesWalk = opt.legs.some(l => l.line === 'Walk');
-        if (usesWalk) continue;
+        // Mid-route walks are allowed here too (see isPublishableOptimal). The
+        // arbitrage that justified banning them — OSI cost modelling the walk
+        // but not the wait for the next train, so walking out and back laundered
+        // an expensive in-station change — was fixed when the unified engine
+        // started charging boarding wait after a Walk leg.
+        //
+        // Note the interaction with `changes` above: countDistinctChanges counts
+        // Walk as a line, so a tube/walk/tube route reports 2 changes while being
+        // a one-change puzzle in spirit. The tubeLegCount >= 3 gate is what
+        // actually keeps those out of Hard, so it has to stay below the
+        // `changes < 2` check, not replace it.
         const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
         if (tubeLegCount < 3) continue;
         // No-inversion guard (2026-08-01). A hard puzzle must GENUINELY require
@@ -6263,10 +6334,12 @@ function buildHintText(n) {
     return `<strong>${puzzleData.start}</strong> is served by: ${lineTags(startLines)}`;
   }
   if (n === 2) {
-    // The published optimal is guaranteed non-empty and pure-tube by
-    // pickOptimal(), so legs[0] is a real interchange (not a Walk). Still
-    // guard defensively: a degenerate optimal (e.g. the no-route fallback
-    // sentinel) must degrade to a graceful hint, never throw.
+    // The published optimal is guaranteed non-empty with no EDGE walks by
+    // pickOptimal(), so legs[0] is always a tube leg and legs[0].to is always
+    // a real station where the player changes — even when that change is a
+    // walking transfer, the hint stays accurate. Still guard defensively: a
+    // degenerate optimal (e.g. the no-route fallback sentinel) must degrade to
+    // a graceful hint, never throw.
     const legs = puzzleData.optimal && puzzleData.optimal.legs;
     const firstChange = legs && legs[0] && legs[0].to;
     if (!firstChange) {

@@ -34,28 +34,66 @@ function test(name, fn) {
 }
 
 // Cache one dijkstra run per instance — several invariants share it.
+//
+// NOTE this calls pickOptimal directly, so it does NOT see todayPuzzle's freeze
+// blocks. For most pinned dates that is harmless (a freeze pins the PAIR, and
+// the pair is what we read from the lookup anyway), but one freeze overrides the
+// OPTIMAL itself: 2026-08-06 hard publishes routes[0], the 36-min edge-walk
+// route, where pickOptimal would return the 54-min tube route. Anything
+// comparing against a published optimal must therefore skip frozen dates.
 const solved = instances.map(inst => {
   const routes = T.dijkstra(g, inst.start, inst.end);
   return { inst, routes, optimal: T.pickOptimal(routes, inst) };
 });
 
+// Derived ONCE and shared. Previously each anchor rebuilt both of these, each
+// re-reading index.html and re-running the same regex, so a change to how freeze
+// dates are written had to be made in several places or one check would silently
+// stop skipping pinned dates.
+const TODAY_LONDON = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date());
+const FROZEN_DATES = new Set(
+  [...readIndexSource().matchAll(/date === '(\d{4}-\d{2}-\d{2})'/g)].map(m => m[1])
+);
+/** Deliberately pinned in todayPuzzle(), so the engine is not free to choose. */
+const isFrozen = date => FROZEN_DATES.has(date);
+
 // ── Invariant 1: THE PUBLISHED OPTIMAL IS NOT BEATABLE ───────────────────────
-// A player who enters a walk-free route must never score below the published
+// A route a player can actually enter must never score below the published
 // optimal. This is the bug that shipped: buildUserLegs and the search resolved
 // the boarding wait differently, so Preston Road -> Ealing Common published 34
 // while a player could enter a route the game scored at 31.
 //
-// Walk-assisted routes are excluded ON PURPOSE: pickOptimal deliberately
-// publishes the best WALK-FREE route because players reject an "optimal" that
-// tells them to walk between stations, so a walk route beating it is a design
-// decision, not a defect.
-test('no walk-free route a player can enter beats the published optimal', () => {
+// WALK ROUTES ARE INCLUDED (changed 2026-08-19). They used to be skipped, on
+// the reasoning that pickOptimal published the best WALK-FREE route so a walk
+// route beating it was a design decision. That reasoning died with the
+// walk-transfer rule: the published optimal can now BE a walk route, and
+// players have always been able to enter walk legs. Skipping them excluded
+// exactly the code path this invariant exists to guard — the historic bug was
+// buildUserLegs and the search disagreeing about the post-walk boarding wait
+// (Mansion House -> Tower Hill -> [walk] -> Tower Gateway -> East India scored
+// 20 against a published 23), which is only reachable through a walk leg.
+test('no route a player can enter beats the published optimal', () => {
   const bad = [];
   for (const { inst, routes, optimal } of solved) {
     if (!optimal) continue;
+    // A frozen date's optimal comes from its freeze block, not from pickOptimal
+    // (see the note on `solved`), so comparing against pickOptimal's answer here
+    // would flag a deliberate decision as a defect.
+    if (isFrozen(inst.date)) continue;
     for (const r of routes) {
-      if (r.legs.some(l => l.line === 'Walk')) continue;
       const userRoute = r.legs.map(l => ({ station: l.to, line: l.line }));
+      // SKIP ROUTES A PLAYER COULD NOT ENTER. The {station, line} form carries
+      // only each leg's destination, so a cross-complex hop inside a route is
+      // lost: dijkstra can return `District: Earl's Court>Monument | Walk:
+      // Bank>Liverpool Street`, where the Monument->Bank step is a graph
+      // interchange edge with no leg of its own. Replaying that as a user route
+      // asks buildUserLegs to walk Monument->Liverpool Street, which is not an
+      // OSI pair, so scoreLegs falls back to a flat 5 min and reports a total
+      // no player could ever achieve. Third time this trap has produced a
+      // phantom "beats the optimal" — validateStep, not buildUserLegs, is what
+      // decides whether a route is real.
+      try { assertPlayable(inst.start, userRoute, `${inst.start} -> ${inst.end}`); }
+      catch { continue; }
       let mins;
       try { mins = T.buildUserLegs(inst.start, userRoute).totalMins; } catch { continue; }
       if (mins < optimal.mins) {
@@ -301,55 +339,123 @@ anchor('boarding after an OSI walk still pays a wait (v2 only)', () => {
 // This asserts on the SHIPPED lookup, so it fails whether the cause is the
 // filter, the search, or bad data. Past dates are exempt (frozen history that
 // cannot be changed), as are dates pinned by a freeze block in todayPuzzle().
-anchor('no upcoming puzzle is beatable by walking', () => {
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(new Date());
-  // Dates pinned by a freeze block: already live, deliberately left alone.
-  const frozen = new Set(
-    [...readIndexSource().matchAll(/date === '(\d{4}-\d{2}-\d{2})'/g)].map(m => m[1])
-  );
+// Generalised 2026-08-06. The old version only fired when the cheapest route
+// contained a Walk, which made it blind to any OTHER way of publishing a
+// non-cheapest route. The property that actually matters is simpler and
+// stronger: THE PUBLISHED OPTIMAL MUST COST WHAT THE CHEAPEST ROUTE COSTS.
+// Anything else is beatable by a player who finds the cheaper one, and players
+// can enter walking legs, so "they probably wouldn't think of it" is not a
+// defence. This subsumes walk domination rather than special-casing it.
+anchor('no upcoming puzzle publishes a beatable optimal', () => {
   const bad = [];
   let checked = 0;
   for (const { inst, routes, optimal } of solved) {
     if (!optimal || !routes.length) continue;
-    if (inst.date < today) continue;          // frozen history
-    if (frozen.has(inst.date)) continue;      // pinned by an explicit freeze
+    if (inst.date < TODAY_LONDON) continue;    // frozen history
+    if (isFrozen(inst.date)) continue;        // pinned by an explicit freeze
     checked++;
     const cheapest = routes[0];
-    if (!cheapest.legs.some(l => l.line === 'Walk')) continue;
     const gap = optimal.mins - cheapest.mins;
     if (gap > 0) {
-      bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} published=${optimal.mins} but walking=${cheapest.mins} (beatable by ${gap})`);
+      const how = cheapest.legs.map(l => `${l.line}:${l.from}>${l.to}`).join(' | ');
+      bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} ` +
+        `published=${optimal.mins} but ${cheapest.mins} is available (beatable by ${gap})\n      ${how}`);
     }
   }
   if (bad.length) {
-    throw new Error(`${bad.length} upcoming puzzle(s) are beatable by walking — the ` +
-      `generator's walk-domination filter is not working:\n  ` + bad.slice(0, 15).join('\n  '));
+    throw new Error(`${bad.length} upcoming puzzle(s) publish a beatable optimal — the ` +
+      `generator is drawing pairs whose cheapest route it then refuses to publish:\n  ` +
+      bad.slice(0, 15).join('\n  '));
   }
   return checked;
 });
 
-// ── The generator's walk-domination check must test the CHEAPEST route ──────
-// The anchor above asserts on the shipped lookup, so it only fails the day
+// The published optimal must also never open or close on foot (the rule that
+// replaced the blanket walk ban on 2026-08-06). Separate from the anchor above
+// because these are different failures: that one is "the answer is wrong", this
+// one is "the answer is right but reads as a mis-set puzzle".
+anchor('no upcoming puzzle starts or ends on foot', () => {
+  const bad = [];
+  let checked = 0;
+  for (const { inst, optimal } of solved) {
+    if (!optimal || !optimal.legs.length) continue;
+    if (inst.date < TODAY_LONDON || isFrozen(inst.date)) continue;
+    checked++;
+    const first = optimal.legs[0].line, last = optimal.legs[optimal.legs.length - 1].line;
+    if (first === 'Walk' || last === 'Walk') {
+      bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} ` +
+        `(${first === 'Walk' ? 'starts' : 'ends'} on foot)`);
+    }
+  }
+  if (bad.length) {
+    throw new Error(`${bad.length} upcoming puzzle(s) publish an edge walk:\n  ` + bad.slice(0, 15).join('\n  '));
+  }
+  return checked;
+});
+
+// ── The generator's publishability check must test the CHEAPEST route ───────
+// The anchors above assert on the shipped lookup, so they only fail the day
 // AFTER a bad cron run. This one fails immediately, on the code.
 //
 // The check must be evaluated against routes[0] (the genuinely cheapest route,
 // walks included). Evaluated against pickOptimal's output it is dead code: that
-// result is walk-free by construction, so the predicate is always false. This
-// is a source guard rather than a behavioural one because reproducing a cron
-// run in-process means overriding the clock across a 90-day sweep; the failure
-// mode it guards is a one-token edit, so matching the source is proportionate.
-anchor('generator rejects walk-dominated pairs using routes[0]', () => {
+// result satisfies the publishability rule by construction, so the predicate is
+// always false. This is a source guard rather than a behavioural one because
+// reproducing a cron run in-process means overriding the clock across a 90-day
+// sweep; the failure mode it guards is a one-token edit, so matching the source
+// is proportionate.
+anchor('generator rejects unpublishable pairs using routes[0]', () => {
   const src = readIndexSource();
-  const loop = src.slice(src.indexOf('routes = dijkstra(GRAPH, start, end);'));
+  // Anchor on a marker unique to the DRAW LOOP. 'routes = dijkstra(GRAPH,
+  // start, end);' also appears verbatim in every freeze block, so slicing from
+  // its first occurrence began the region ~120 lines early, spanning the freeze
+  // blocks and the lookup oracle. Adding the 2026-08-19 freeze silently moved
+  // that anchor; a future freeze mentioning isPublishableOptimal(routes[0])
+  // would have satisfied this guard while the real check was gone.
+  const loopStart = src.indexOf('for (let attempt = 0;');
+  if (loopStart === -1) throw new Error('could not locate the draw loop');
+  const loop = src.slice(loopStart);
   const region = loop.slice(0, loop.indexOf("if (m === 'easy')"));
-  const testsCheapest = /(cheapest|routes\[0\])\s*\.legs\s*\.some\([^)]*'Walk'/.test(region);
+  const testsCheapest = /isPublishableOptimal\(\s*(cheapest|routes\[0\])\s*\)/.test(region);
   if (!testsCheapest) {
     throw new Error(
-      "the draw loop no longer rejects walk-dominated pairs on routes[0].\n" +
+      "the draw loop no longer rejects unpublishable pairs on routes[0].\n" +
       "      A check written against pickOptimal's output cannot fire — its result is\n" +
-      "      walk-free by construction. That silently published 59 walk-dominated\n" +
+      "      publishable by construction. That silently published 59 walk-dominated\n" +
       "      pairs on 2026-08-05, including a 54-min optimal beatable in 36 by walking.");
   }
+});
+
+// isPublishableOptimal is the whole rule, so pin its edges directly.
+anchor('isPublishableOptimal accepts mid-route walks, rejects edge walks', () => {
+  const f = T.isPublishableOptimal;
+  if (typeof f !== 'function') throw new Error('isPublishableOptimal is not exported from the build');
+  const L = (...lines) => ({ mins: 1, legs: lines.map((l, i) => ({ line: l, from: `S${i}`, to: `S${i + 1}` })) });
+  // A zero-length leg (from === to) laundered an edge walk past the rule at
+  // K=32; these two pin that it can't.
+  const nullLeadIn  = { mins: 1, legs: [
+    { line: 'Central', from: 'A', to: 'A' },          // travels nowhere
+    { line: 'Walk',    from: 'A', to: 'B' },
+    { line: 'Victoria', from: 'B', to: 'C' }] };
+  const nullTailOff = { mins: 1, legs: [
+    { line: 'Victoria', from: 'A', to: 'B' },
+    { line: 'Walk',    from: 'B', to: 'C' },
+    { line: 'Central', from: 'C', to: 'C' }] };       // travels nowhere
+  const cases = [
+    [L('Central', 'Walk', 'Victoria'), true,  'tube/walk/tube is an ordinary walking transfer'],
+    [L('Central', 'Victoria'),         true,  'pure tube'],
+    [L('Walk', 'Victoria'),            false, 'starts on foot'],
+    [L('Victoria', 'Walk'),            false, 'ends on foot'],
+    [L('Walk'),                        false, 'walk only'],
+    [nullLeadIn,                       false, 'zero-length leg disguising a leading walk'],
+    [nullTailOff,                      false, 'zero-length leg disguising a trailing walk'],
+    [{ mins: 0, legs: [] },            false, 'empty'],
+    [null,                             false, 'null'],
+  ];
+  for (const [route, want, why] of cases) {
+    if (f(route) !== want) throw new Error(`isPublishableOptimal: expected ${want} for ${why}`);
+  }
+  return cases.length;
 });
 
 for (const a of anchors) {

@@ -155,7 +155,7 @@ function optimal(from, to) {
   const routes = dijkstra(GRAPH, from, to);
   if (!routes || routes.length === 0) throw new Error(`no route ${from} → ${to}`);
   // Use pickOptimal, NOT routes[0] — that is what the game publishes. routes[0]
-  // may be a walk-assisted route that pickOptimal's walk-free rule rejects, so
+  // may be a route that pickOptimal rejects as unpublishable (an edge walk), so
   // asserting on it tested a route no player is ever graded against.
   return pickOptimal(routes, {from, to}) || routes[0];
 }

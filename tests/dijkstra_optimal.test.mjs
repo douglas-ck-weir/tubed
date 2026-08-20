@@ -121,7 +121,7 @@ const T = loadTubed();
 const g = T.buildGraph();
 const { bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName } = T;
 
-// The PUBLISHED optimal — pickOptimal's walk-free choice — not routes[0].
+// The PUBLISHED optimal — pickOptimal's publishable choice (mid-route walks allowed, edge walks not) — not routes[0].
 // routes[0] is the cheapest candidate including walk-assisted ones, which is
 // not what any player is graded against and not what the generator gates on.
 // Asserting on it made this suite fail for a route nobody ever sees.
@@ -262,35 +262,57 @@ test('regression: Wembley Central -> Limehouse optimal is the clean 2-change rou
 });
 
 // pickOptimal() is the single chokepoint every todayPuzzle return path uses to
-// turn ranked routes into the published optimal. Invariant: the optimal is
-// non-empty and pure-tube (no Walk legs). These unit checks pin that contract
-// so a refactor can't silently reintroduce a walk/empty optimal.
-test('pickOptimal: prefers the cheapest pure-tube route over a cheaper walk route', () => {
+// turn ranked routes into the published optimal. Invariant (2026-08-06): the
+// optimal is non-empty and has no walk as its FIRST or LAST leg. Mid-route
+// walks are allowed — they're ordinary transfers (Embankment <-> Charing Cross)
+// and banning them made ~30% of pairs publish a beatable answer. These unit
+// checks pin the contract so a refactor can't widen or narrow it silently.
+test('pickOptimal: skips a cheaper route that STARTS on foot', () => {
   const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
   if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
-  if (r.legs.some(l => l.line === 'Walk')) throw new Error('picked a route containing a Walk leg');
+  if (r.legs[0].line === 'Walk') throw new Error('picked a route that starts on foot');
+});
+test('pickOptimal: skips a cheaper route that ENDS on foot', () => {
+  const walk = { mins: 10, legs: [{ line: 'Victoria', from: 'A', to: 'B' }, { line: 'Walk', from: 'B', to: 'C' }] };
+  const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
+  if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
+  if (r.legs[r.legs.length - 1].line === 'Walk') throw new Error('picked a route that ends on foot');
+});
+test('pickOptimal: KEEPS a cheaper route whose walk is a mid-route transfer', () => {
+  const walk = { mins: 10, legs: [
+    { line: 'Central', from: 'A', to: 'B' },
+    { line: 'Walk', from: 'B', to: 'B2' },
+    { line: 'Victoria', from: 'B2', to: 'C' }] };
+  const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
+  if (!r || r.mins !== 10) {
+    throw new Error(`expected the cheaper 10-min walking-transfer route, got ${r ? r.mins : 'null'}. ` +
+      `Publishing the 12-min route would make the answer beatable by 2 min.`);
+  }
 });
 test('pickOptimal: returns null for empty/degenerate input (no throw)', () => {
   if (T.pickOptimal([], {}) !== null) throw new Error('empty list should give null');
   if (T.pickOptimal(null, {}) !== null) throw new Error('null should give null');
   if (T.pickOptimal([{ mins: 0, legs: [] }], {}) !== null) throw new Error('all-empty routes should give null');
 });
-test('pickOptimal: falls back to a walk route only when no tube route exists', () => {
+test('pickOptimal: falls back to an edge-walk route only when nothing else exists', () => {
   const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const r = T.pickOptimal([walk], { start: 'A', end: 'C' });
-  if (!r || r.mins !== 10) throw new Error('should fall back to the only (walk) route so the game still runs');
+  if (!r || r.mins !== 10) throw new Error('should fall back to the only route so the game still runs');
 });
 
 // End-to-end invariant: every TODAY-OR-FUTURE published optimal is non-empty
-// and pure-tube. This is the real user-facing guarantee — a walk or empty
-// optimal reaching the card/hints/share is the bug class pickOptimal exists to
-// prevent. Past dates are excluded on purpose: those puzzles are already played
-// and their pairs are immutable history (regenerating them would rewrite player
-// results and desync from what Reddit posted). Regenerate the FUTURE lookup via
-// build-lookup.mjs whenever this test names an upcoming date.
-test('every today-or-future lookup puzzle publishes a non-empty, walk-free optimal', () => {
+// and free of EDGE walks. This is the real user-facing guarantee — an empty
+// optimal, or one that opens/closes on foot, reaching the card/hints/share is
+// the bug class pickOptimal exists to prevent. Past dates are excluded on
+// purpose: those puzzles are already played and their pairs are immutable
+// history (regenerating them would rewrite player results and desync from what
+// Reddit posted). Regenerate the FUTURE lookup via build-lookup.mjs whenever
+// this test names an upcoming date.
+test('every today-or-future lookup puzzle publishes a non-empty optimal with no edge walk', () => {
   const todayIso = new Date().toISOString().slice(0, 10);
   const bad = [];
   for (const p of puzzles) {
@@ -299,8 +321,10 @@ test('every today-or-future lookup puzzle publishes a non-empty, walk-free optim
     const opt = T.pickOptimal(routes, { start: p.start, end: p.end });
     if (!opt || opt.legs.length === 0) {
       bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (empty/null optimal)`);
-    } else if (opt.legs.some(l => l.line === 'Walk')) {
-      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal contains a Walk leg)`);
+    } else if (opt.legs[0].line === 'Walk') {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal STARTS on foot)`);
+    } else if (opt.legs[opt.legs.length - 1].line === 'Walk') {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal ENDS on foot)`);
     }
   }
   if (bad.length) {

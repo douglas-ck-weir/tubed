@@ -80,7 +80,9 @@
   <div class="row" style="align-items:center;gap:8px;margin:-4px 0 10px">
     <label style="margin:0;flex:0 0 auto">Build</label>
     <select id="buildSel" style="flex:0 0 auto;width:auto">
-      <option value="index.html">index.html (live)</option>
+      <option value="index.html">index.html (working tree)</option>
+      <option value="backups/index.html.pre-osi-correction.2026-08-18.bak">pre-osi-correction (old walk times)</option>
+      <option value="backups/index.html.pre-walk-transfers.2026-08-06.bak">pre-walk-transfers (walks banned from optima)</option>
       <option value="backups/index.html.pre-unified-engine.2026-08-05.bak">pre-unified-engine (backup)</option>
     </select>
     <span class="mono" id="buildNow" style="opacity:.7"></span>
@@ -146,8 +148,21 @@ let lastOptimal = null;
 // Defaults to index.html. Point it at a file in backups/ to compare current
 // behaviour against a previous engine. Switching reloads the page so the iframe
 // starts clean (the engine caches waits and adjacency internally).
+// ASSERT the expected fingerprint, don't blacklist one known-bad value. The
+// first version tested `=== 3` (the pre-correction value), so a partially
+// applied correction, a later re-correction, or a build where osiTime is missing
+// (fingerprint null) all printed a clean-looking status line — which is exactly
+// the failure it was added to catch. Update this when Canary Wharf <-> Heron
+// Quays legitimately changes.
+const EXPECTED_OSI_FINGERPRINT = 9;
+
 const BUILD = (new URLSearchParams(location.search).get('build')) || 'index.html';
-document.getElementById('game').src = BUILD;
+// CACHE BUST. The browser will happily reuse a cached copy of the build inside
+// this iframe, and a hard refresh of the PARENT page does not always evict it.
+// That is not a cosmetic problem: on 2026-08-19 it served a pre-correction
+// index.html for a full round trip and the stale route was nearly diagnosed as
+// an engine bug. A unique query string per load makes it impossible.
+document.getElementById('game').src = BUILD + '?t=' + Date.now();
 (function initBuildSelector(){
   const sel = document.getElementById('buildSel');
   const now = document.getElementById('buildNow');
@@ -175,6 +190,11 @@ function grabEngine(win) {
       NETWORK, WAIT_MINS, WAIT_MINS_DEFAULT, COORDS, LINE_COLOURS,
       PUZZLE_STATIONS: (typeof PUZZLE_STATIONS !== 'undefined') ? PUZZLE_STATIONS : null,
       SCORING_VERSION: (typeof SCORING_VERSION !== 'undefined') ? SCORING_VERSION : null,
+      // Fingerprint so a stale build is VISIBLE rather than silently scoring with
+      // old numbers. Canary Wharf <-> Heron Quays is the tell: 3 = pre-2026-08-18
+      // OSI values, 9 = corrected. See the cache-bust note above.
+      OSI_FINGERPRINT: (typeof osiTime === 'function')
+        ? osiTime('Canary Wharf', 'Heron Quays') : null,
     };
     // validateStep closes over the game's \`puzzleData\` (a top-level let) for
     // its "that's your start station" rule. This script shares that lexical
@@ -212,7 +232,9 @@ $('game').addEventListener('load', () => {
     GRAPH = E.buildGraph();
     initUI();
     status(`Engine loaded — ${Object.keys(E.NETWORK).length} branches, `
-         + `${Object.keys(E.WAIT_MINS).length} wait entries, SCORING_VERSION ${E.SCORING_VERSION}.`);
+         + `${Object.keys(E.WAIT_MINS).length} wait entries, SCORING_VERSION ${E.SCORING_VERSION}, `
+         + `OSI CW↔HQ ${E.OSI_FINGERPRINT}${E.OSI_FINGERPRINT === EXPECTED_OSI_FINGERPRINT ? '' : ' ⚠ UNEXPECTED BUILD'}.`,
+           E.OSI_FINGERPRINT === EXPECTED_OSI_FINGERPRINT ? '' : 'bad');
   } catch (err) {
     status('Failed to load engine: ' + err.message + '  (serve over http://, not file://)', 'bad');
     console.error(err);
