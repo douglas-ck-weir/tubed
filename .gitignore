@@ -31,8 +31,26 @@ wait_times_validate.txt
 station_layout.csv
 station_shared_platforms.csv
 
-# Ad-hoc test plans / notes
+# Raw reference data downloaded from TfL. Read by hand, not by any code, and
+# re-downloadable. Kept out of the repo because this repo IS the deployed
+# Pages site: the footfall CSV alone is 10 MB of daily tap counts (235k rows)
+# against a 12 MB .git, and it would be served publicly for no benefit.
+# The Zone 1-3 pool expansion that used it cites it in index.html.
+stationfootfall-*.csv
+*Service Intervals and Frequencies.pdf
+
+# Ad-hoc test plans, ship checklists and session notes. These are working
+# documents for one change; once it ships the commit and the tests are the
+# record. Delete rather than accumulate. (The old TEST_PLAN_* rule missed
+# TESTPLAN-* and SHIP-*, so four of them sat untracked for weeks.)
 TEST_PLAN_*.md
+TESTPLAN-*.md
+TESTPLAN_*.md
+SHIP-*.md
+SHIP_*.md
+DEPLOY_*.md
+CHECKLIST-*.md
+OSI-WALK-CHECKLIST.md
 
 # Python bytecode
 __pycache__/
