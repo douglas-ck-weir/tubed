@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-20",
-  "puzzleNum": 140,
+  "date": "2026-08-21",
+  "puzzleNum": 141,
   "easy": {
-    "start": "Farringdon",
-    "end": "Willesden Junction"
+    "start": "St. James's Park",
+    "end": "East Acton"
   },
   "hard": {
-    "start": "Turnpike Lane",
-    "end": "Southfields"
+    "start": "Caledonian Road",
+    "end": "Pontoon Dock"
   }
 }
