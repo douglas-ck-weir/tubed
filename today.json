@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-21",
-  "puzzleNum": 141,
+  "date": "2026-08-22",
+  "puzzleNum": 142,
   "easy": {
-    "start": "St. James's Park",
-    "end": "East Acton"
+    "start": "Kentish Town",
+    "end": "Notting Hill Gate"
   },
   "hard": {
-    "start": "Caledonian Road",
-    "end": "Pontoon Dock"
+    "start": "Lancaster Gate",
+    "end": "Northfields"
   }
 }
