@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-22",
-  "puzzleNum": 142,
+  "date": "2026-08-23",
+  "puzzleNum": 143,
   "easy": {
-    "start": "Kentish Town",
-    "end": "Notting Hill Gate"
+    "start": "Cannon Street",
+    "end": "Warren Street"
   },
   "hard": {
-    "start": "Lancaster Gate",
-    "end": "Northfields"
+    "start": "Crystal Palace",
+    "end": "Royal Oak"
   }
 }
