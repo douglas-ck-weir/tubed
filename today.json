@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-23",
-  "puzzleNum": 143,
+  "date": "2026-08-24",
+  "puzzleNum": 144,
   "easy": {
-    "start": "Cannon Street",
-    "end": "Warren Street"
+    "start": "Holland Park",
+    "end": "Lewisham"
   },
   "hard": {
-    "start": "Crystal Palace",
-    "end": "Royal Oak"
+    "start": "North Acton",
+    "end": "Harlesden"
   }
 }

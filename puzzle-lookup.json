@@ -1,4 +1,15 @@
 {
+  "2026-08-23": {
+    "puzzleNum": 143,
+    "easy": {
+      "start": "Cannon Street",
+      "end": "Warren Street"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Royal Oak"
+    }
+  },
   "2026-08-22": {
     "puzzleNum": 142,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Knightsbridge"
-    }
-  },
-  "2026-06-24": {
-    "puzzleNum": 83,
-    "easy": {
-      "start": "Shepherd's Bush",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Shepherd's Bush",
-      "end": "New Cross Gate"
-    }
-  },
-  "2026-08-23": {
-    "puzzleNum": 143,
-    "easy": {
-      "start": "Cannon Street",
-      "end": "Warren Street"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Royal Oak"
     }
   },
   "2026-08-24": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Acton Town",
       "end": "Neasden"
+    }
+  },
+  "2026-11-21": {
+    "puzzleNum": 233,
+    "easy": {
+      "start": "Chalk Farm",
+      "end": "Harrow & Wealdstone"
+    },
+    "hard": {
+      "start": "Regent's Park",
+      "end": "Plaistow"
     }
   }
 }
