@@ -1,4 +1,15 @@
 {
+  "2026-08-24": {
+    "puzzleNum": 144,
+    "easy": {
+      "start": "Holland Park",
+      "end": "Lewisham"
+    },
+    "hard": {
+      "start": "North Acton",
+      "end": "Harlesden"
+    }
+  },
   "2026-08-23": {
     "puzzleNum": 143,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Chalk Farm",
       "end": "Crystal Palace"
-    }
-  },
-  "2026-06-25": {
-    "puzzleNum": 84,
-    "easy": {
-      "start": "Royal Oak",
-      "end": "Regent's Park"
-    },
-    "hard": {
-      "start": "Surrey Quays",
-      "end": "Knightsbridge"
-    }
-  },
-  "2026-08-24": {
-    "puzzleNum": 144,
-    "easy": {
-      "start": "Holland Park",
-      "end": "Lewisham"
-    },
-    "hard": {
-      "start": "North Acton",
-      "end": "Harlesden"
     }
   },
   "2026-08-25": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Regent's Park",
       "end": "Plaistow"
+    }
+  },
+  "2026-11-22": {
+    "puzzleNum": 234,
+    "easy": {
+      "start": "St. Paul's",
+      "end": "Russell Square"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Euston"
     }
   }
 }
