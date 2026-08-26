@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-25",
-  "puzzleNum": 145,
+  "date": "2026-08-26",
+  "puzzleNum": 146,
   "easy": {
-    "start": "Southwark",
-    "end": "Angel"
+    "start": "Kew Gardens",
+    "end": "Holborn"
   },
   "hard": {
-    "start": "Golders Green",
-    "end": "Bounds Green"
+    "start": "Colliers Wood",
+    "end": "Finchley Road"
   }
 }

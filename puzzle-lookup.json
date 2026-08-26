@@ -1,4 +1,15 @@
 {
+  "2026-08-25": {
+    "puzzleNum": 145,
+    "easy": {
+      "start": "Southwark",
+      "end": "Angel"
+    },
+    "hard": {
+      "start": "Golders Green",
+      "end": "Bounds Green"
+    }
+  },
   "2026-08-24": {
     "puzzleNum": 144,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Holloway Road",
       "end": "Limehouse"
-    }
-  },
-  "2026-06-26": {
-    "puzzleNum": 85,
-    "easy": {
-      "start": "Liverpool Street",
-      "end": "Ravenscourt Park"
-    },
-    "hard": {
-      "start": "Chalk Farm",
-      "end": "Crystal Palace"
-    }
-  },
-  "2026-08-25": {
-    "puzzleNum": 145,
-    "easy": {
-      "start": "Southwark",
-      "end": "Angel"
-    },
-    "hard": {
-      "start": "Golders Green",
-      "end": "Bounds Green"
     }
   },
   "2026-08-26": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "Euston"
+    }
+  },
+  "2026-11-23": {
+    "puzzleNum": 235,
+    "easy": {
+      "start": "Victoria",
+      "end": "Leytonstone"
+    },
+    "hard": {
+      "start": "Bow Road",
+      "end": "South Quay"
     }
   }
 }
