@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-26",
-  "puzzleNum": 146,
+  "date": "2026-08-27",
+  "puzzleNum": 147,
   "easy": {
-    "start": "Kew Gardens",
-    "end": "Holborn"
+    "start": "Marble Arch",
+    "end": "Embankment"
   },
   "hard": {
-    "start": "Colliers Wood",
-    "end": "Finchley Road"
+    "start": "Hanger Lane",
+    "end": "Clapham North"
   }
 }
