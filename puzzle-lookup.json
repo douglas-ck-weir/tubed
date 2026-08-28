@@ -1,4 +1,15 @@
 {
+  "2026-08-27": {
+    "puzzleNum": 147,
+    "easy": {
+      "start": "Marble Arch",
+      "end": "Embankment"
+    },
+    "hard": {
+      "start": "Hanger Lane",
+      "end": "Clapham North"
+    }
+  },
   "2026-08-26": {
     "puzzleNum": 146,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Hampstead",
       "end": "Marylebone"
-    }
-  },
-  "2026-06-28": {
-    "puzzleNum": 87,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Barons Court"
-    },
-    "hard": {
-      "start": "Tufnell Park",
-      "end": "Marylebone"
-    }
-  },
-  "2026-08-27": {
-    "puzzleNum": 147,
-    "easy": {
-      "start": "Marble Arch",
-      "end": "Embankment"
-    },
-    "hard": {
-      "start": "Hanger Lane",
-      "end": "Clapham North"
     }
   },
   "2026-08-28": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Gunnersbury",
       "end": "Clapham South"
+    }
+  },
+  "2026-11-25": {
+    "puzzleNum": 237,
+    "easy": {
+      "start": "Elephant & Castle",
+      "end": "Heron Quays"
+    },
+    "hard": {
+      "start": "Whitechapel",
+      "end": "West Silvertown"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-27",
-  "puzzleNum": 147,
+  "date": "2026-08-28",
+  "puzzleNum": 148,
   "easy": {
-    "start": "Marble Arch",
-    "end": "Embankment"
+    "start": "Tottenham Court Road",
+    "end": "Gunnersbury"
   },
   "hard": {
-    "start": "Hanger Lane",
-    "end": "Clapham North"
+    "start": "Dalston Kingsland",
+    "end": "Turnpike Lane"
   }
 }
