@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-28",
-  "puzzleNum": 148,
+  "date": "2026-08-29",
+  "puzzleNum": 149,
   "easy": {
-    "start": "Tottenham Court Road",
-    "end": "Gunnersbury"
+    "start": "Hendon Central",
+    "end": "Mansion House"
   },
   "hard": {
-    "start": "Dalston Kingsland",
-    "end": "Turnpike Lane"
+    "start": "Ealing Broadway",
+    "end": "Borough"
   }
 }

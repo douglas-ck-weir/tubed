@@ -1,4 +1,15 @@
 {
+  "2026-08-28": {
+    "puzzleNum": 148,
+    "easy": {
+      "start": "Tottenham Court Road",
+      "end": "Gunnersbury"
+    },
+    "hard": {
+      "start": "Dalston Kingsland",
+      "end": "Turnpike Lane"
+    }
+  },
   "2026-08-27": {
     "puzzleNum": 147,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Brent Cross",
       "end": "Surrey Quays"
-    }
-  },
-  "2026-06-29": {
-    "puzzleNum": 88,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Parsons Green"
-    },
-    "hard": {
-      "start": "Hampstead",
-      "end": "Marylebone"
-    }
-  },
-  "2026-08-28": {
-    "puzzleNum": 148,
-    "easy": {
-      "start": "Tottenham Court Road",
-      "end": "Gunnersbury"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Turnpike Lane"
     }
   },
   "2026-08-29": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Whitechapel",
       "end": "West Silvertown"
+    }
+  },
+  "2026-11-26": {
+    "puzzleNum": 238,
+    "easy": {
+      "start": "Embankment",
+      "end": "Knightsbridge"
+    },
+    "hard": {
+      "start": "Barons Court",
+      "end": "South Wimbledon"
     }
   }
 }
