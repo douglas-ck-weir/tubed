@@ -1,4 +1,15 @@
 {
+  "2026-08-29": {
+    "puzzleNum": 149,
+    "easy": {
+      "start": "Hendon Central",
+      "end": "Mansion House"
+    },
+    "hard": {
+      "start": "Ealing Broadway",
+      "end": "Borough"
+    }
+  },
   "2026-08-28": {
     "puzzleNum": 148,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "Bethnal Green"
-    }
-  },
-  "2026-06-30": {
-    "puzzleNum": 89,
-    "easy": {
-      "start": "Richmond",
-      "end": "Shadwell"
-    },
-    "hard": {
-      "start": "Brent Cross",
-      "end": "Surrey Quays"
-    }
-  },
-  "2026-08-29": {
-    "puzzleNum": 149,
-    "easy": {
-      "start": "Hendon Central",
-      "end": "Mansion House"
-    },
-    "hard": {
-      "start": "Ealing Broadway",
-      "end": "Borough"
     }
   },
   "2026-08-30": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Barons Court",
       "end": "South Wimbledon"
+    }
+  },
+  "2026-11-27": {
+    "puzzleNum": 239,
+    "easy": {
+      "start": "Tottenham Hale",
+      "end": "North Acton"
+    },
+    "hard": {
+      "start": "Edgware Road",
+      "end": "Highgate"
     }
   }
 }
