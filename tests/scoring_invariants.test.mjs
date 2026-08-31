@@ -370,25 +370,37 @@ anchor('no upcoming puzzle publishes a beatable optimal', () => {
   return checked;
 });
 
-// The published optimal must also never open or close on foot (the rule that
-// replaced the blanket walk ban on 2026-08-06). Separate from the anchor above
-// because these are different failures: that one is "the answer is wrong", this
-// one is "the answer is right but reads as a mis-set puzzle".
-anchor('no upcoming puzzle starts or ends on foot', () => {
+// Edge walks became publishable on 2026-08-31 (see isPublishableOptimal), so
+// "starts or ends on foot" is no longer a failure. Two weaker properties took
+// its place and this anchor pins both. Same character as before: not "the
+// answer is wrong" but "the answer is right and still reads as a mis-set
+// puzzle".
+//
+//   1. A published optimal must involve a train. A pair whose cheapest route is
+//      one OSI walk (Canary Wharf -> Poplar is exactly that) would otherwise
+//      publish "walk from A to B" as the entire puzzle.
+//   2. An EASY optimal may contain at most one walk. Two tube legs plus two
+//      walks is three transitions being sold as a one-change puzzle — the
+//      Hackney Central -> Barbican case that motivated counting walks in the
+//      easy gate.
+anchor('no upcoming puzzle publishes a walk-only or multi-walk-easy optimal', () => {
   const bad = [];
   let checked = 0;
   for (const { inst, optimal } of solved) {
     if (!optimal || !optimal.legs.length) continue;
     if (inst.date < TODAY_LONDON || isFrozen(inst.date)) continue;
     checked++;
-    const first = optimal.legs[0].line, last = optimal.legs[optimal.legs.length - 1].line;
-    if (first === 'Walk' || last === 'Walk') {
+    const walks = optimal.legs.filter(l => l.line === 'Walk').length;
+    if (walks === optimal.legs.length) {
+      bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} (walk only, no train)`);
+    } else if (inst.mode === 'easy' && walks > 1) {
       bad.push(`${inst.date} ${inst.mode}: ${inst.start} -> ${inst.end} ` +
-        `(${first === 'Walk' ? 'starts' : 'ends'} on foot)`);
+        `(easy with ${walks} walk legs)`);
     }
   }
   if (bad.length) {
-    throw new Error(`${bad.length} upcoming puzzle(s) publish an edge walk:\n  ` + bad.slice(0, 15).join('\n  '));
+    throw new Error(`${bad.length} upcoming puzzle(s) publish a degenerate walk route:\n  `
+      + bad.slice(0, 15).join('\n  '));
   }
   return checked;
 });
@@ -427,7 +439,12 @@ anchor('generator rejects unpublishable pairs using routes[0]', () => {
 });
 
 // isPublishableOptimal is the whole rule, so pin its edges directly.
-anchor('isPublishableOptimal accepts mid-route walks, rejects edge walks', () => {
+// 2026-08-31: edge walks now PASS. What still fails is a route with no train at
+// all, and a route containing a zero-length leg. The zero-length cases below
+// used to matter because a `from === to` leg could disguise a leading or
+// trailing walk; that motive is gone, but they stay because publishing a leg
+// that travels nowhere is malformed in its own right.
+anchor('isPublishableOptimal accepts edge walks, rejects trainless and malformed', () => {
   const f = T.isPublishableOptimal;
   if (typeof f !== 'function') throw new Error('isPublishableOptimal is not exported from the build');
   const L = (...lines) => ({ mins: 1, legs: lines.map((l, i) => ({ line: l, from: `S${i}`, to: `S${i + 1}` })) });
@@ -444,11 +461,13 @@ anchor('isPublishableOptimal accepts mid-route walks, rejects edge walks', () =>
   const cases = [
     [L('Central', 'Walk', 'Victoria'), true,  'tube/walk/tube is an ordinary walking transfer'],
     [L('Central', 'Victoria'),         true,  'pure tube'],
-    [L('Walk', 'Victoria'),            false, 'starts on foot'],
-    [L('Victoria', 'Walk'),            false, 'ends on foot'],
-    [L('Walk'),                        false, 'walk only'],
-    [nullLeadIn,                       false, 'zero-length leg disguising a leading walk'],
-    [nullTailOff,                      false, 'zero-length leg disguising a trailing walk'],
+    [L('Walk', 'Victoria'),            true,  'starts on foot (allowed since 2026-08-31)'],
+    [L('Victoria', 'Walk'),            true,  'ends on foot (allowed since 2026-08-31)'],
+    [L('Walk', 'Central', 'Walk'),     true,  'a walk at both ends is still a real journey'],
+    [L('Walk'),                        false, 'walk only — no train'],
+    [L('Walk', 'Walk'),                false, 'still no train'],
+    [nullLeadIn,                       false, 'zero-length leg'],
+    [nullTailOff,                      false, 'zero-length leg'],
     [{ mins: 0, legs: [] },            false, 'empty'],
     [null,                             false, 'null'],
   ];

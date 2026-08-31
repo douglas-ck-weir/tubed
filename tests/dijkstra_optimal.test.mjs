@@ -41,6 +41,9 @@ const HTML_PATH = path.isAbsolute(process.env.TUBED_HTML || '')
   : path.join(__dirname, '..', process.env.TUBED_HTML || 'index.html');
 const LOOKUP_PATH = path.join(__dirname, '..', 'puzzle-lookup.json');
 const html = readFileSync(HTML_PATH, 'utf8');
+// The label cap the build actually ships, so failure messages can name it
+// instead of a literal that goes stale the next time K moves.
+const SHIPPED_K = (html.match(/const K = (\d+);/) || [, '?'])[1];
 
 // ── Sandbox loader ──────────────────────────────────────────────────────────
 // Loads index.html into a stubbed-DOM sandbox and exports the puzzle engine.
@@ -59,7 +62,7 @@ function loadTubed(kOverride) {
     src = src.replace(/const K = \d+;/, `const K = ${kOverride};`);
   }
   const scripts = [...src.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS, bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName, countDistinctChanges, todayPuzzle, londonDateParts };`;
+  const exportSuffix = `;globalThis.__TUBED__ = { buildGraph, dijkstra, pickOptimal, COORDS, bestOneChangeMins, bestTwoChangeMins, osiTime, _stationName, countDistinctChanges, todayPuzzle, londonDateParts, isPublishableOptimal, PUZZLE_STATIONS };`;
   const fullScript = scripts.join('\n;\n') + exportSuffix;
 
   function makeStub(name = 'stub') {
@@ -178,7 +181,11 @@ test('shipped K is high enough: a deeper label cap finds no cheaper optimal', ()
     const deep = oDeep ? oDeep.mins : null;
     if (deep == null) continue;
     if (ship == null || ship > deep + 1e-9) {
-      worse.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  K=6=${ship == null ? 'NONE' : ship} K=32=${deep}`);
+      // Report the SHIPPED K by reading it out of the build rather than naming a
+      // literal. This message said "K=6" long after the shipped value was 12,
+      // which on 2026-08-31 sent the reader looking for a bug in the wrong K.
+      worse.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end}  ` +
+        `shipped K=${SHIPPED_K}=${ship == null ? 'NONE' : ship} K=32=${deep}`);
     }
   }
   if (worse.length) {
@@ -262,24 +269,86 @@ test('regression: Wembley Central -> Limehouse optimal is the clean 2-change rou
 });
 
 // pickOptimal() is the single chokepoint every todayPuzzle return path uses to
-// turn ranked routes into the published optimal. Invariant (2026-08-06): the
-// optimal is non-empty and has no walk as its FIRST or LAST leg. Mid-route
-// walks are allowed — they're ordinary transfers (Embankment <-> Charing Cross)
-// and banning them made ~30% of pairs publish a beatable answer. These unit
-// checks pin the contract so a refactor can't widen or narrow it silently.
-test('pickOptimal: skips a cheaper route that STARTS on foot', () => {
+// turn ranked routes into the published optimal. Invariant (2026-08-31): the
+// optimal is non-empty, contains no zero-length leg, and involves at least one
+// train. Walks anywhere — including first or last leg — are allowed. The
+// edge-walk ban was removed because it rejected correct answers: it forced
+// 2026-08-06 Hanger Lane -> Harrow on the Hill to publish 54 when a 36 exists
+// starting on foot. These unit checks pin the contract so a refactor can't
+// widen or narrow it silently.
+test('pickOptimal: KEEPS a cheaper route that STARTS on foot', () => {
   const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
-  if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
-  if (r.legs[0].line === 'Walk') throw new Error('picked a route that starts on foot');
+  if (!r || r.mins !== 10) throw new Error(`expected the cheaper 10-min walking route, got ${r ? r.mins : 'null'}`);
 });
-test('pickOptimal: skips a cheaper route that ENDS on foot', () => {
+test('pickOptimal: KEEPS a cheaper route that ENDS on foot', () => {
   const walk = { mins: 10, legs: [{ line: 'Victoria', from: 'A', to: 'B' }, { line: 'Walk', from: 'B', to: 'C' }] };
   const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
   const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
-  if (!r || r.mins !== 12) throw new Error(`expected the 12-min tube route, got ${r ? r.mins : 'null'}`);
-  if (r.legs[r.legs.length - 1].line === 'Walk') throw new Error('picked a route that ends on foot');
+  if (!r || r.mins !== 10) throw new Error(`expected the cheaper 10-min walking route, got ${r ? r.mins : 'null'}`);
+});
+// 2026-08-31: this test used to assert the OPPOSITE — that pickOptimal skipped
+// the walk and returned the 12-min tube route. That is a beatable optimal, and
+// it shipped: the sandbox showed Euston → Euston Square as an 11-minute Northern
+// + Circle route when the 8-minute OSI walk is the real answer. pickOptimal
+// cannot reject a pair, only substitute a worse route for it, so "is this a
+// usable puzzle?" is the generator's job — see the next test.
+test('pickOptimal: NEVER returns a costlier route than the cheapest, even walk-only', () => {
+  const walk = { mins: 10, legs: [{ line: 'Walk', from: 'A', to: 'C' }] };
+  const tube = { mins: 12, legs: [{ line: 'Central', from: 'A', to: 'B' }, { line: 'Victoria', from: 'B', to: 'C' }] };
+  const r = T.pickOptimal([walk, tube], { start: 'A', end: 'C' });
+  if (!r || r.mins !== 10) {
+    throw new Error(`expected the cheaper 10-min walk, got ${r ? r.mins : 'null'}. ` +
+      `Publishing the 12-min route makes the answer beatable by 2 min.`);
+  }
+});
+
+// The real guarantee that no walk-only puzzle is published: the generator refuses
+// the pair up front. Regression for the 9 ordered pairs in PUZZLE_STATIONS whose
+// cheapest route is a bare OSI walk.
+test('generator gate rejects every pair whose cheapest route is a bare walk', () => {
+  const leaks = [];
+  for (const [a, b] of [
+    ['Euston', 'Euston Square'], ['Euston Square', 'Euston'],
+    ['Tower Hill', 'Tower Gateway'], ['Tower Gateway', 'Tower Hill'],
+    ['Wood Lane', 'White City'], ['White City', 'Wood Lane'],
+    ['Bayswater', 'Queensway'], ['Queensway', 'Bayswater'],
+    ['Tower Gateway', 'Aldgate'],
+  ]) {
+    const routes = T.dijkstra(g, a, b);
+    if (!routes.length) continue;
+    // This is exactly the gate todayPuzzle applies before accepting a draw.
+    if (T.isPublishableOptimal(routes[0])) {
+      leaks.push(`${a} -> ${b} (cheapest ${routes[0].mins} min would be drawn)`);
+    }
+  }
+  if (leaks.length) {
+    throw new Error(`the generator would draw ${leaks.length} walk-only pair(s), ` +
+      `publishing a puzzle whose answer is "just walk there":\n  ` + leaks.join('\n  '));
+  }
+});
+
+// Belt and braces across the whole pool rather than a hand-listed nine: no pair
+// the generator WOULD draw may have a published optimal costlier than the
+// cheapest route a player could travel.
+test('no drawable pair in PUZZLE_STATIONS publishes a beatable optimal', () => {
+  const bad = [];
+  const pool = T.PUZZLE_STATIONS || [];
+  for (const a of pool) {
+    for (const b of pool) {
+      if (a === b) continue;
+      if (T.osiTime(a, b) == null) continue;  // only OSI-linked pairs can go walk-only
+      const routes = T.dijkstra(g, a, b);
+      if (!routes.length || !T.isPublishableOptimal(routes[0])) continue;  // not drawable
+      const opt = T.pickOptimal(routes, { start: a, end: b });
+      const wf = routes.filter(r => r.legs.length && !r.legs.some(l => l.from === l.to));
+      if (opt && wf.length && opt.mins > wf[0].mins) {
+        bad.push(`${a} -> ${b}: publishes ${opt.mins}, cheapest is ${wf[0].mins}`);
+      }
+    }
+  }
+  if (bad.length) throw new Error(`beatable published optima:\n  ` + bad.join('\n  '));
 });
 test('pickOptimal: KEEPS a cheaper route whose walk is a mid-route transfer', () => {
   const walk = { mins: 10, legs: [
@@ -312,7 +381,7 @@ test('pickOptimal: falls back to an edge-walk route only when nothing else exist
 // history (regenerating them would rewrite player results and desync from what
 // Reddit posted). Regenerate the FUTURE lookup via build-lookup.mjs whenever
 // this test names an upcoming date.
-test('every today-or-future lookup puzzle publishes a non-empty optimal with no edge walk', () => {
+test('every today-or-future lookup puzzle publishes a usable optimal', () => {
   const todayIso = new Date().toISOString().slice(0, 10);
   const bad = [];
   for (const p of puzzles) {
@@ -321,10 +390,16 @@ test('every today-or-future lookup puzzle publishes a non-empty optimal with no 
     const opt = T.pickOptimal(routes, { start: p.start, end: p.end });
     if (!opt || opt.legs.length === 0) {
       bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (empty/null optimal)`);
-    } else if (opt.legs[0].line === 'Walk') {
-      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal STARTS on foot)`);
-    } else if (opt.legs[opt.legs.length - 1].line === 'Walk') {
-      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (optimal ENDS on foot)`);
+      continue;
+    }
+    // Edge walks are allowed as of 2026-08-31. What is still invalid: a route
+    // with no train at all, and an easy puzzle carrying more than one walk
+    // (three transitions sold as a one-change puzzle).
+    const walks = opt.legs.filter(l => l.line === 'Walk').length;
+    if (walks === opt.legs.length) {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (walk only, no train)`);
+    } else if (p.mode === 'easy' && walks > 1) {
+      bad.push(`#${p.num} ${p.date} ${p.mode}: ${p.start} -> ${p.end} (easy with ${walks} walks)`);
     }
   }
   if (bad.length) {

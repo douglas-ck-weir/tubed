@@ -2261,19 +2261,19 @@ function interchangeTime(stn, fromLine, toLine) {
 // they're stored separately so future asymmetric pairs (e.g. one-way
 // step-free routes) can be added without changing call sites.
 const OSI_PAIRS = [
-  {a:'Aldgate',                   b:'Aldgate East',                aToB: 3, bToA: 3},
-  {a:'Archway',                   b:'Upper Holloway',              aToB: 9, bToA: 9},
+  {a:'Aldgate',                   b:'Aldgate East',                aToB: 10, bToA: 10},
+  {a:'Archway',                   b:'Upper Holloway',              aToB: 10, bToA: 10},
   {a:'Bank',                      b:'Cannon Street',               aToB:14, bToA:14},
-  {a:'Bayswater',                 b:'Queensway',                   aToB:10, bToA:10},
+  {a:'Bayswater',                 b:'Queensway',                   aToB: 7, bToA: 7},
   {a:'Bond Street',               b:'Oxford Circus',               aToB:14, bToA:14},
   {a:'Caledonian Road',           b:'Caledonian Road & Barnsbury', aToB:10, bToA:10},
   {a:'Camden Road',               b:'Camden Town',                 aToB:18, bToA:18},
   {a:'Clapham High Street',       b:'Clapham North',               aToB:10, bToA:10},
-  {a:'Euston',                    b:'Euston Square',               aToB:14, bToA:14},
-  {a:'Euston Square',             b:'Warren Street',               aToB:15, bToA:15},
+  {a:'Euston',                    b:'Euston Square',               aToB: 8, bToA: 8},
+  {a:'Euston Square',             b:'Warren Street',               aToB:13, bToA:13},
   {a:'Finchley Road',             b:'Finchley Road & Frognal',     aToB:14, bToA:14},
   {a:'White City',                b:'Wood Lane',                   aToB:11, bToA:11},
-  {a:'Aldgate',                    b:'Tower Gateway',               aToB: 9, bToA: 9},
+  {a:'Aldgate',                    b:'Tower Gateway',               aToB: 12, bToA: 12},
   {a:'Tower Gateway',              b:'Tower Hill',                  aToB: 5, bToA: 5},
   {a:'Canary Wharf',              b:'Heron Quays',                 aToB: 9, bToA: 9},
   {a:'Canary Wharf',              b:'Poplar',                      aToB:10, bToA:10},
@@ -2281,11 +2281,11 @@ const OSI_PAIRS = [
   {a:'Canary Wharf',              b:'West India Quay',             aToB: 7, bToA: 7},
   {a:'Dalston Junction',          b:'Dalston Kingsland',           aToB: 8, bToA: 8},
   {a:'New Cross',                 b:'New Cross Gate',              aToB: 9, bToA: 9},
-  {a:'Hackney Central',           b:'Hackney Downs',               aToB: 5, bToA: 5},
-  {a:'Forest Gate',               b:'Wanstead Park',               aToB: 6, bToA: 6},
-  {a:'Manor Park',                b:'Woodgrange Park',             aToB: 7, bToA: 7},
-  {a:'Walthamstow Central',       b:'Walthamstow Queens Road',     aToB: 5, bToA: 5},
-  {a:'Liverpool Street',          b:'Moorgate',                    aToB:12, bToA:12},
+  {a:'Hackney Central',           b:'Hackney Downs',               aToB:  7, bToA:  8},
+  {a:'Forest Gate',               b:'Wanstead Park',               aToB:  8, bToA:  8},
+  {a:'Manor Park',                b:'Woodgrange Park',             aToB: 14, bToA: 14},
+  {a:'Walthamstow Central',       b:'Walthamstow Queens Road',     aToB: 13, bToA: 13},
+  {a:'Liverpool Street',          b:'Moorgate',                    aToB: 5, bToA: 5},
   {a:'Embankment',                b:'Waterloo',                    aToB: 8, bToA: 8},
   {a:'Lancaster Gate',            b:'Paddington',                  aToB:13, bToA:13},
   {a:'Bank',                      b:'Liverpool Street',            aToB:11, bToA:11},
@@ -2293,14 +2293,14 @@ const OSI_PAIRS = [
   {a:'Seven Sisters',             b:'Seven Sisters (Overground)',  aToB: 3, bToA: 3},
   {a:'Shepherd\'s Bush',          b:'Shepherd\'s Bush (Overground)',aToB: 7, bToA: 7},
   // Added in OSI audit — official TfL list, both stations in NETWORK.
-  {a:'Brondesbury',               b:'Kilburn',                     aToB: 7, bToA: 7},
+  {a:'Brondesbury',               b:'Kilburn',                     aToB:  9, bToA:  9},
   {a:'Charing Cross',             b:'Embankment',                  aToB: 8, bToA: 8},
   {a:'Hanger Lane',               b:'Park Royal',                  aToB: 9, bToA: 9},
-  {a:'Ickenham',                  b:'West Ruislip',                aToB:11, bToA:11},
-  {a:'Kenton',                    b:'Northwick Park',              aToB:14, bToA:14},
+  {a:'Ickenham',                  b:'West Ruislip',                aToB:16, bToA:16},
+  {a:'Kenton',                    b:'Northwick Park',              aToB:11, bToA:11},
   {a:'Kentish Town',              b:'Kentish Town West',           aToB:13, bToA:13},
-  {a:'Leytonstone',               b:'Leytonstone High Road',       aToB: 8, bToA: 8},
-  {a:'Seven Sisters',             b:'South Tottenham',             aToB: 7, bToA: 7},
+  {a:'Leytonstone',               b:'Leytonstone High Road',       aToB: 12, bToA: 13},
+  {a:'Seven Sisters',             b:'South Tottenham',             aToB: 13, bToA: 13},
 ];
 
 // "A|B" → mins (directional). Populated bidirectionally so isOsi/osiTime
@@ -4438,7 +4438,37 @@ function dijkstra(graph, start, end) {
   // K=6-vs-K=32 sweep over all lookup + sampled pairs (0 optimal differences).
   // If a future network-data change makes K insufficient, the no-inversion /
   // admissibility tests (tests/dijkstra_optimal.test.mjs) catch it — bump K then.
-  const K = 6;
+  //
+  // 2026-08-30: raised 6 -> 12. Correcting the Liverpool Street <-> Moorgate
+  // OSI walk (12 -> 5) opened enough new walk-revisit alternatives that K=6
+  // under-explored: Clapham Common -> Stratford International returned 45 where
+  // a K=32 search finds 44. A sweep over all 300 lookup instances puts the
+  // minimum viable value at 10; 12 is chosen for margin because the lookup is
+  // regenerated after this change and the new pairs were not in the sweep.
+  // Cost on the per-load path: median 20ms -> 44ms, p95 41ms -> 91ms.
+  //
+  // 2026-08-31: raised 12 -> 28. That margin was not enough — exactly the risk
+  // the note above flagged. Regenerating the lookup drew Harlesden -> Lewisham
+  // (2026-11-14 hard), which K=12 answers with 68 via Paddington + Elizabeth
+  // while a 67 exists via Bakerloo -> Baker Street, Jubilee -> Canary Wharf,
+  // WALK -> Heron Quays, DLR -> Lewisham.
+  //
+  // That cheaper route is not a modelling artifact. The TfL Journey Planner
+  // recommends precisely it, and scoring TfL's own itinerary through scoreLegs
+  // reproduces our 67 against their 68 clock, with the interchange+wait
+  // overhead matching exactly at 6 and every leg within 1 minute. It survives
+  // because the Jubilee platforms at Canary Wharf are genuinely closer to
+  // Heron Quays DLR than to Canary Wharf DLR, so the 9-minute out-of-station
+  // walk beats the 11-minute in-station Jubilee|DLR interchange. Both figures
+  // are confirmed against TfL; neither is the bug. See the memory note
+  // project_tubed_canary_wharf_walk_is_correct before "fixing" either.
+  //
+  // A sweep of all 300 regenerated lookup instances against a K=48 reference
+  // puts the minimum fully-correct value at 28; 20 and 24 still miss this pair.
+  // Cost on the per-load path: median 45ms -> 108ms, p95 92ms -> 223ms. That is
+  // the price of not publishing a beatable optimal, and it is the argument for
+  // the priority-queue rewrite that is still an open follow-up.
+  const K = 28;
 
   // Binary min-heap keyed on .cost (replaces pq.push()+pq.sort()).
   const heapArr = [];
@@ -5092,7 +5122,16 @@ function requiresChange(a, b) {
 //       scores higher. Ships alongside the walk-transfer rule, which lets a
 //       published optimal contain a MID-ROUTE walking transfer (never one that
 //       starts or ends on foot) — 4.4% of upcoming optima do.
-const SCORING_VERSION = 6;
+//   7 — 2026-08-31 OSI audit. 16 OSI_PAIRS walk times corrected against TfL
+//       platform-to-platform measurements (biggest movers: Liverpool Street ↔
+//       Moorgate 12→5, Walthamstow Central ↔ Walthamstow Queens Rd 5→13,
+//       Manor Park ↔ Woodgrange Park 7→14, Euston ↔ Euston Square 14→8), two
+//       of them directional for the first time. Also: dijkstra label cap
+//       K 6→12 (the corrected Liverpool Street walk opened enough new
+//       alternatives that K=6 under-explored and published beatable optima),
+//       and edge walks are now publishable. Any cached result card scored
+//       under 6 may disagree with a fresh score, so it must be re-scored.
+const SCORING_VERSION = 7;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANNOUNCEMENTS
@@ -5312,7 +5351,15 @@ function londonDateParts(d) {
 // cheapest route. Shipped with the walk-transfer rule (mid-route walks may now
 // appear in a published optimal). A cached pair may no longer sit inside its
 // mode's bounds, so force stale clients to re-resolve.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v15';
+//
+// v16 — 2026-08-31 OSI audit. The generator's own filters moved, so a pair a
+// stale client has cached may no longer be drawable at all: the easy gate now
+// counts walk legs (a two-tube-leg route with two walks is no longer easy),
+// edge walks are publishable, and 16 corrected OSI times shifted route costs
+// in and out of both modes' minute bounds. 21 of the next 158 puzzle slots
+// resolve to a different pair. Without this bump those clients would keep
+// serving the old pair against the new scoring.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v16';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5392,8 +5439,24 @@ function _tel(event, data) {
 function isPublishableOptimal(r) {
   if (!r || !r.legs || r.legs.length === 0) return false;
   if (r.legs.some(l => l.from === l.to)) return false;
-  if (r.legs[0].line === 'Walk') return false;
-  if (r.legs[r.legs.length - 1].line === 'Walk') return false;
+  // Must actually involve a train. Without this a pair whose cheapest route is
+  // a single OSI walk publishes "walk from A to B" as the whole puzzle —
+  // Canary Wharf -> Poplar resolves to exactly that (one 10-min walk leg).
+  // This replaces part of what the edge-walk guards used to catch by accident.
+  if (!r.legs.some(l => l.line !== 'Walk')) return false;
+  // EDGE WALKS ARE ALLOWED (2026-08-31). The guards that rejected an optimal
+  // starting or ending on foot were removed. They were rejecting correct
+  // answers: 2026-08-06 Hanger Lane -> Harrow on the Hill is 36 min starting on
+  // foot to Park Royal against 54 for the best tube-only route, so the rule
+  // forced pickOptimal to publish a 54 that players could beat by 18 — which is
+  // why that date needs a hardcoded block further down. Measured over 150 days,
+  // allowing them moves 12 pairs (4.0%) and leaves 5 optima (1.7%) opening or
+  // closing on foot, about one puzzle a month, with zero beatable optima.
+  //
+  // The "two tube legs AND at most one walk" easy gate is what stops a
+  // multi-walk route being presented as a one-change puzzle; that check lives
+  // in todayPuzzle, not here, because it is difficulty classification rather
+  // than publishability. Hard puzzles may legitimately carry two walks.
   return true;
 }
 
@@ -5402,42 +5465,50 @@ function isPublishableOptimal(r) {
 // lookup oracle, live generator, fallback) MUST route through here so the
 // invariant is enforced in one place instead of defended at each reader.
 //
-// Invariant: the published optimal satisfies isPublishableOptimal().
-//   - No edge walks: the generator rejects them, but the cache / lookup /
-//     freeze paths call dijkstra directly and skip that filter, so a stale
-//     pinned pair could otherwise surface one. See [[feedback_walk_legs_in_optimal]].
-//   - Non-empty: guards Hint 2 (optimal.legs[0]), the result card, share
-//     text and the map from an empty-legs optimal.
+// THE ONE INVARIANT: the returned route is the CHEAPEST route a player could
+// actually travel. Returning anything costlier is, by definition, publishing a
+// beatable optimal. Everything else this function might want to enforce is
+// subordinate to that.
 //
-// NOTE the ordering contract with the generator: because the generator now
-// rejects any pair whose routes[0] is unpublishable, routes[0] IS the published
-// optimal for every freshly-drawn pair. That is what makes the answer
-// unbeatable — this function must never have to skip past routes[0] on a
-// generated pair. If it does, the pair came from a pin that predates the rule.
+// It therefore only ever discards MALFORMED candidates — an empty leg list, or
+// a leg that travels nowhere (from === to). Those are search artifacts, not
+// journeys, so dropping them cannot hand a player a cheaper answer than the one
+// we publish. Publishing one would render "Central: Oxford Circus → Oxford
+// Circus, 0 min" on the card, share text and map.
+//
+// WHAT THIS FUNCTION DELIBERATELY DOES NOT DO (2026-08-31): decide whether a
+// pair is usable as a puzzle. It used to return the cheapest PUBLISHABLE route,
+// skipping past cheaper ones that failed isPublishableOptimal. Douglas found
+// what that costs, in the sandbox, on Euston → Euston Square: the 8-minute
+// out-of-station walk is the genuine optimum, but the "must contain a train"
+// rule pushed it aside and published an 11-minute Northern + Circle route the
+// player beats by simply walking. A sweep of every OSI-linked ordered pair in
+// PUZZLE_STATIONS found 9 of them, worst Tower Hill → Tower Gateway (published
+// 20, walk 5) and Wood Lane → White City (published 26, walk 11).
+//
+// This is the SAME mistake the edge-walk guards made before they were removed
+// earlier the same day. A guard here cannot reject a route; it can only cause a
+// worse one to be published in its place. So publishability is enforced where it
+// can actually reject — the generator gates on isPublishableOptimal(routes[0])
+// BEFORE it draws (see todayPuzzle), which rejects all 9 of those pairs outright.
+// Verified 2026-08-31: no entry in the 150-day lookup, freezes included, has a
+// published optimal costlier than its cheapest well-formed route.
 function pickOptimal(routes, ctx) {
   if (!routes || routes.length === 0) return null;
-  const tube = routes.filter(isPublishableOptimal);
-  if (tube.length > 0) return tube[0];  // routes are already cost-ranked
-  // Last resort so the game renders something rather than throwing. Only
-  // reachable when NO candidate is publishable, which the generator makes
-  // impossible for a freshly drawn pair — so in practice this means a pinned or
-  // cached pair that predates the current rule, and it logs loudly to say so.
-  //
-  // Still exclude zero-length legs (from === to). Publishing one renders
-  // "Central: Oxford Circus → Oxford Circus, 0 min" on the card, share text and
-  // map, which is worse than the edge walk it would be standing in for. Prefer
-  // a merely unpublishable route over a malformed one, and say which it was.
-  const nonEmpty = routes.find(r => r.legs.length > 0 && !r.legs.some(l => l.from === l.to))
-                || routes.find(r => r.legs.length > 0);
-  if (nonEmpty) {
-    const why = nonEmpty.legs.some(l => l.from === l.to)
-      ? 'every candidate is malformed (a leg that travels nowhere)'
-      : 'every candidate starts or ends on foot';
-    console.error(`[todayPuzzle] ${why}; pinned pair likely predates the ` +
-      'current publishability rule — regenerate it.', ctx || '');
-    return nonEmpty;
+  const wellFormed = routes.filter(r =>
+    r && r.legs && r.legs.length > 0 && !r.legs.some(l => l.from === l.to));
+  if (wellFormed.length === 0) return null;
+  // routes are already cost-ranked, and filtering preserves that order
+  const best = wellFormed[0];
+  // Not a failure — the generator rejects such pairs before drawing, so reaching
+  // here means a pinned, cached or hand-entered pair (the sandbox does this all
+  // the time). Say so rather than silently substituting a beatable route.
+  if (!isPublishableOptimal(best)) {
+    console.warn('[pickOptimal] cheapest route is not usable as a PUZZLE (no train leg), ' +
+      'but it is returned anyway: publishing a costlier route would be beatable. ' +
+      'Freshly generated pairs never reach this.', ctx || '');
   }
-  return null;
+  return best;
 }
 
 function todayPuzzle(mode, opts) {
@@ -5734,10 +5805,21 @@ function todayPuzzle(mode, opts) {
         // Easy is "two tube legs, one change". The change is allowed to be a
         // walking transfer as of 2026-08-06 (see isPublishableOptimal) — an
         // easy puzzle solved by Central to Liverpool Street, walk to Moorgate,
-        // Northern onward is still a one-change puzzle. Edge walks are already
-        // rejected above, so nothing here can start or end on foot.
-        const tubeLegCount = opt.legs.filter(l => l.line !== 'Walk').length;
-        if (tubeLegCount === 2 && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
+        // Northern onward is still a one-change puzzle.
+        //
+        // WALKS ARE COUNTED (2026-08-31). Counting only tube legs let a route
+        // with two tube legs AND TWO walks through as "easy": Hackney Central →
+        // [walk] → Hackney Downs → Weaver → Liverpool Street → [walk] →
+        // Moorgate → Metropolitan → Barbican passed the gate on a tube-leg
+        // count of 2 while actually asking the player for three transitions.
+        // A walk is a transition the player has to find, so it counts. One
+        // walk is still fine (that is the 2026-08-06 decision); two is not an
+        // easy puzzle. Equivalent to a total leg count of at most 3.
+        const legs = opt.legs;
+        const tubeLegCount = legs.filter(l => l.line !== 'Walk').length;
+        const walkLegCount = legs.length - tubeLegCount;
+        if (tubeLegCount === 2 && walkLegCount <= 1
+            && opt.mins >= EASY_MIN && opt.mins <= EASY_MAX) break;
       } else {
         const changes = countDistinctChanges(opt);
         // Hard requires a genuinely multi-change optimal. The 15–60 min time
