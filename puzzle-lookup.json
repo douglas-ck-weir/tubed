@@ -1,4 +1,15 @@
 {
+  "2026-08-30": {
+    "puzzleNum": 150,
+    "easy": {
+      "start": "Euston",
+      "end": "Mile End"
+    },
+    "hard": {
+      "start": "Canary Wharf",
+      "end": "Kensington (Olympia)"
+    }
+  },
   "2026-08-29": {
     "puzzleNum": 149,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Archway"
-    }
-  },
-  "2026-07-01": {
-    "puzzleNum": 90,
-    "easy": {
-      "start": "Mansion House",
-      "end": "Stockwell"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Bethnal Green"
-    }
-  },
-  "2026-08-30": {
-    "puzzleNum": 150,
-    "easy": {
-      "start": "Euston",
-      "end": "Mile End"
-    },
-    "hard": {
-      "start": "Canary Wharf",
-      "end": "Kensington (Olympia)"
     }
   },
   "2026-08-31": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Edgware Road",
       "end": "Highgate"
+    }
+  },
+  "2026-11-28": {
+    "puzzleNum": 240,
+    "easy": {
+      "start": "Custom House for ExCel",
+      "end": "Earl's Court"
+    },
+    "hard": {
+      "start": "Tufnell Park",
+      "end": "Manor House"
     }
   }
 }

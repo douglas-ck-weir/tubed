@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-30",
-  "puzzleNum": 150,
+  "date": "2026-08-31",
+  "puzzleNum": 151,
   "easy": {
-    "start": "Euston",
-    "end": "Mile End"
+    "start": "Holloway Road",
+    "end": "Queensway"
   },
   "hard": {
-    "start": "Canary Wharf",
-    "end": "Kensington (Olympia)"
+    "start": "Notting Hill Gate",
+    "end": "Tooting Broadway"
   }
 }
