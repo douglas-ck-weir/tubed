@@ -1,12 +1,12 @@
 {
-  "date": "2026-08-31",
-  "puzzleNum": 151,
+  "date": "2026-09-01",
+  "puzzleNum": 152,
   "easy": {
-    "start": "Holloway Road",
-    "end": "Queensway"
+    "start": "Oval",
+    "end": "East Ham"
   },
   "hard": {
-    "start": "Notting Hill Gate",
-    "end": "Tooting Broadway"
+    "start": "Warwick Avenue",
+    "end": "Upton Park"
   }
 }
