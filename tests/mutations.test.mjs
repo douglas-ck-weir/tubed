@@ -143,11 +143,22 @@ const MUTATIONS = [
   },
   {
     name: 'pickOptimal publishes the second-best route',
-    tests: ['dijkstra_optimal.test.mjs', 'scoring_invariants.test.mjs'],
+    // scoring_invariants catches this in ~34s locally / ~114s on a runner.
+    // dijkstra_optimal also catches it but takes 548s on a runner, and every
+    // file named here is ALSO run once for the baseline — so listing it would
+    // cost ~18 minutes to learn the same fact twice. Deliberately excluded;
+    // the trade is that no mutation currently proves dijkstra_optimal bites.
+    tests: ['scoring_invariants.test.mjs'],
     find: '  const routes = [], seen = new Set();',
     replace: '  const routes = [], seen = new Set(); candidates.reverse();',
   },
 ];
+
+// Generous per-spawn cap. It must exceed the SLOWEST test file this harness
+// runs, measured on a CI runner rather than a laptop — the first version used
+// 300s, which is under dijkstra_optimal's 548s on a runner, so every baseline
+// run was killed and reported as a broken baseline.
+const SPAWN_TIMEOUT_MS = 20 * 60 * 1000;
 
 const tmp = mkdtempSync(path.join(tmpdir(), 'tubed-mut-'));
 const results = [];
@@ -161,7 +172,7 @@ const baselineFailures = [];
 for (const t of needed) {
   const r = spawnSync(process.execPath, [path.join(__dirname, t)], {
     env: { ...process.env, TUBED_HTML: path.join(ROOT, 'index.html') },
-    encoding: 'utf8', timeout: 300000,
+    encoding: 'utf8', timeout: SPAWN_TIMEOUT_MS,
   });
   if (r.status !== 0) baselineFailures.push(t);
 }
@@ -188,7 +199,7 @@ for (const m of MUTATIONS) {
     const r = spawnSync(process.execPath, [path.join(__dirname, t)], {
       env: { ...process.env, TUBED_HTML: file },
       encoding: 'utf8',
-      timeout: 300000,
+      timeout: SPAWN_TIMEOUT_MS,
     });
     if (r.status !== 0) { caughtBy = t; break; }
   }
