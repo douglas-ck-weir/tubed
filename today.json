@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-01",
-  "puzzleNum": 152,
+  "date": "2026-09-02",
+  "puzzleNum": 153,
   "easy": {
-    "start": "Oval",
-    "end": "East Ham"
+    "start": "Southwark",
+    "end": "Russell Square"
   },
   "hard": {
-    "start": "Warwick Avenue",
-    "end": "Upton Park"
+    "start": "Ravenscourt Park",
+    "end": "London City Airport"
   }
 }

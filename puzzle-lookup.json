@@ -1,4 +1,15 @@
 {
+  "2026-09-01": {
+    "puzzleNum": 152,
+    "easy": {
+      "start": "Oval",
+      "end": "East Ham"
+    },
+    "hard": {
+      "start": "Warwick Avenue",
+      "end": "Upton Park"
+    }
+  },
   "2026-08-31": {
     "puzzleNum": 151,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Angel",
       "end": "Stamford Brook"
-    }
-  },
-  "2026-07-03": {
-    "puzzleNum": 92,
-    "easy": {
-      "start": "Aldgate East",
-      "end": "Holloway Road"
-    },
-    "hard": {
-      "start": "Belsize Park",
-      "end": "Regent's Park"
-    }
-  },
-  "2026-09-01": {
-    "puzzleNum": 152,
-    "easy": {
-      "start": "Oval",
-      "end": "East Ham"
-    },
-    "hard": {
-      "start": "Warwick Avenue",
-      "end": "Upton Park"
     }
   },
   "2026-09-02": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "London City Airport",
       "end": "Surrey Quays"
+    }
+  },
+  "2026-11-30": {
+    "puzzleNum": 242,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Highbury & Islington"
+    },
+    "hard": {
+      "start": "West Hampstead",
+      "end": "Euston"
     }
   }
 }
