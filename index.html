@@ -408,18 +408,40 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-// TEST: DATE OVERRIDE VIA URL PARAM
-// Visit ?date=YYYY-MM-DD to see what the daily puzzle (both modes) looks
-// like on that date. A small banner at the top makes the override obvious.
+// TEST: CLOCK OVERRIDE VIA URL PARAM
+//
+//   ?date=YYYY-MM-DD        local noon on that day. Good for "what is the
+//                           puzzle on date X".
+//   ?at=<ISO instant>       an EXACT instant, e.g. ?at=2026-08-29T21:48:00Z.
+//
+// Why ?at exists: the puzzle day comes from Europe/London and (before the
+// 2026-09-01 fix) the progress day came from the browser's own zone. Those
+// only disagree at particular TIMES of day, so ?date=, which always lands on
+// local noon, can never reproduce a timezone bug. Pair ?at= with a browser
+// launched under another zone to get a real device:
+//
+//   TZ=Australia/Sydney open -na "Google Chrome" --args \
+//     --user-data-dir=/tmp/tubed-syd \
+//     "http://localhost:8001/?at=2026-08-29T21:48:00Z"
+//
+// The banner prints the London day and the device day side by side, which is
+// the whole diagnostic in one line.
 // Remove this block before merging to production.
 // ─────────────────────────────────────────────────────────────────────────────
 (function(){
   try {
-    const m = (location.search || '').match(/[?&]date=(\d{4}-\d{2}-\d{2})/);
-    if (!m) return;
-    const iso = m[1];
-    const target = new Date(iso + 'T12:00:00');
-    if (isNaN(target.getTime())) return;
+    const qs = location.search || '';
+    const md = qs.match(/[?&]date=(\d{4}-\d{2}-\d{2})/);
+    const ma = qs.match(/[?&]at=([^&]+)/);
+    let target = null, iso = '';
+    if (ma) {
+      iso = decodeURIComponent(ma[1]);
+      target = new Date(iso);
+    } else if (md) {
+      iso = md[1];
+      target = new Date(iso + 'T12:00:00');
+    }
+    if (!target || isNaN(target.getTime())) return;
     const RealDate = Date;
     const offsetMs = target.getTime() - RealDate.now();
     const SimDate = function(...args) {
@@ -433,7 +455,37 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
     Date = SimDate;
     window.addEventListener('DOMContentLoaded', () => {
       const b = document.createElement('div');
-      b.textContent = `⚠ TEST MODE - Simulating ${iso}`;
+      // Print both clocks. If these two days differ, you are inside the window
+      // where the old device-day code broke. London is computed inline via Intl
+      // rather than through todayKey() so this same block can be dropped into
+      // an older build for an A/B without dragging the fix in with it.
+      let clocks = '';
+      try {
+        const dev = new Date();
+        const devDay = `${dev.getFullYear()}-${String(dev.getMonth()+1).padStart(2,'0')}-${String(dev.getDate()).padStart(2,'0')}`;
+        const lp = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London',
+          year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(dev);
+        const g = t => lp.find(x => x.type === t).value;
+        const lonDay = `${g('year')}-${g('month')}-${g('day')}`;
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown';
+        clocks = ` · London ${lonDay} · device ${devDay} (${tz})${lonDay !== devDay ? ' ← DAYS DIFFER' : ''}`;
+      } catch (e) {}
+      const base = `⚠ TEST MODE - Simulating ${iso}${clocks}`;
+      b.textContent = base;
+      // Then say whether the puzzle-lookup oracle actually loaded. Opened over
+      // file:// the fetch is blocked, the page falls back to the in-browser
+      // generator, and you can spend a while wondering why the pair on screen
+      // isn't the pair in puzzle-lookup.json. Say it out loud instead.
+      const showLookup = () => {
+        const ok = typeof window !== 'undefined' && !!window.PUZZLE_LOOKUP;
+        b.textContent = base + (ok ? ' · lookup ok' : ' · LOOKUP NOT LOADED (serve over http, not file://)');
+        if (!ok) b.style.background = '#b91c1c';
+      };
+      if (typeof _lookupReady !== 'undefined' && _lookupReady && _lookupReady.then) {
+        _lookupReady.then(showLookup, showLookup);
+      } else {
+        setTimeout(showLookup, 3500);
+      }
       b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#e85d4f;color:#fff;text-align:center;padding:6px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:600;z-index:99999;letter-spacing:0.5px;';
       document.body.appendChild(b);
     });
@@ -5317,6 +5369,88 @@ function londonDateParts(d) {
   };
 }
 
+// ── Player-progress day key ────────────────────────────────────────────────
+// EVERY "has this player done today's puzzle" question must be asked against
+// the SAME clock todayPuzzle() uses, i.e. Europe/London. This used to be
+// `new Date().toDateString()` (the DEVICE's calendar day), which meant the
+// puzzle and the progress record disagreed for the whole offset between the
+// player's timezone and London: a 9-hour window every morning in Sydney, a
+// matching evening window in the Americas. Two things broke in that window:
+//
+//   1. Local date rolls over while London's hasn't → lastPlayed no longer
+//      matches "today", the mode unlocks, and the player replays the SAME
+//      puzzle for a second history row and a free streak day.
+//   2. London date rolls over while the local one hasn't → lastPlayed still
+//      matches "today", so the game restores the stored result card against
+//      the NEW puzzle. renderStoredResultFor replayed yesterday's stop list
+//      from today's start station and published the nonsense as a score.
+//      (Reported 2026-08-30 from Sydney: a Hendon Central → Mansion House
+//      answer re-scored as Euston → Mansion House, 17 min, against the
+//      Euston → Mile End optimal of 24, and declared optimal.)
+//
+// Format is the ISO 'YYYY-MM-DD' London day, which sorts lexicographically
+// and matches puzzleData.date. Legacy 'Sun Aug 30 2026' values are converted
+// once by getStore()'s migration.
+function todayKey(d) { return londonDateParts(d).dateStr; }
+
+// Yesterday's London day key. Computed by CALENDAR arithmetic on the London
+// parts rather than by subtracting 86400000ms from now, so the two BST/GMT
+// switchover days (when a local day is 23 or 25 hours long) can't silently
+// skip or repeat a day and break a streak.
+function yesterdayKey(d) {
+  const { y, mo, da } = londonDateParts(d);
+  const prev = new Date(Date.UTC(y, mo - 1, da) - 86400000);
+  return `${prev.getUTCFullYear()}-${String(prev.getUTCMonth() + 1).padStart(2, '0')}-${String(prev.getUTCDate()).padStart(2, '0')}`;
+}
+
+// Normalise a stored day value to the ISO key. Idempotent, so it's safe to
+// run over an already-migrated store. Legacy values came from toDateString()
+// ('Sun Aug 30 2026'), which Date parses as LOCAL midnight — so the calendar
+// day must be read back with the LOCAL getters. Using getUTC* here would shift
+// every Sydney player's history back a day.
+//
+// Note this preserves what the player was SHOWN, not the London day they
+// actually played: for rows written inside the old mismatch window the stored
+// day was the device's, and the true London day is unrecoverable from the
+// store. Migrating re-encodes history; it doesn't rewrite it. Everything from
+// here on is keyed to London.
+const _DAY_ABBR = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const _MON_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function _toDayKey(s) {
+  if (typeof s !== 'string' || !s) return s;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  // Parse the toDateString() shape ('Sun Aug 30 2026') EXPLICITLY rather than
+  // handing it to Date.parse. ECMA-262 only requires Date.parse to read back
+  // toString, toUTCString and toISOString — toDateString is not on that list,
+  // so support for it is implementation-defined. Every current engine happens
+  // to manage it, but a miss would return NaN here, leave the legacy value in
+  // place, and silently cost that player a streak and a duplicate row. The
+  // format is fixed and trivial, so don't depend on the engine for it.
+  const m = /^[A-Za-z]{3} ([A-Za-z]{3}) (\d{1,2}) (\d{4})$/.exec(s.trim());
+  if (m) {
+    const mon = _MON_ABBR.indexOf(m[1]);
+    if (mon !== -1) {
+      return `${m[3]}-${String(mon + 1).padStart(2, '0')}-${String(+m[2]).padStart(2, '0')}`;
+    }
+  }
+  // Anything else is not something this app ever wrote to a day field, so it
+  // is corrupt or hand-edited. Pass it through untouched rather than guessing:
+  // _nextStreakValue and the clamp both require a well-formed key, so an
+  // unrecognised value fails closed rather than becoming a wrong date.
+  return s;
+}
+
+// Render a day key for display ('2026-08-30' → 'Sun 30 Aug 2026'). Built from
+// the parts by hand against a UTC date: `new Date('2026-08-30')` is UTC
+// midnight, so any toLocale* call on it renders the PREVIOUS day for players
+// west of Greenwich. Unrecognised (legacy, unparseable) values pass through.
+function _dayLabel(key) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key || '');
+  if (!m) return key || '';
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return `${_DAY_ABBR[d.getUTCDay()]} ${d.getUTCDate()} ${_MON_ABBR[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
 // Cache key for today's pre-generated puzzles. Each entry stores just the
 // {start, end} pair, the routes/graph are rebuilt cheaply on demand
 // (one targeted dijkstra ~130ms vs up to 200 attempts at ~95ms each).
@@ -5947,12 +6081,90 @@ let lockedSubmission = false;
 // One-time migration: existing v5 single-bucket data moves into `easy`.
 function emptyModeStore() { return { streak: 0, lastPlayed: null, history: [] }; }
 
+// Re-encode every stored day value to the ISO London key (see todayKey).
+// Returns true if anything actually changed, so the caller only pays a
+// localStorage write on the one load that migrates. Idempotent: _toDayKey
+// passes through values that are already ISO, so this is safe to run on
+// every getStore().
+//
+// Why it MUST run before the first read: legacy values are toDateString()
+// strings ('Sun Aug 30 2026') and the new comparisons are all against
+// 'YYYY-MM-DD'. Without the conversion, `lastPlayed === today` is false for
+// every existing player on the day this ships, so they'd get one duplicate
+// history row and one bogus streak day — the exact bug being fixed here,
+// handed out one last time on the way past.
+function _migrateDayKeys(store) {
+  let changed = false;
+  const today = todayKey();
+  // A legacy value LATER than the London day cannot be a real London day: it
+  // can only have come from a device clock running ahead of London, which is
+  // every player east of us inside their local small hours. Left alone, such a
+  // value never equals todayKey(), so on the first load after this ships the
+  // game would decide they hadn't played yet and hand them a replay of the
+  // puzzle they just solved — the exact bug, delivered one last time by the
+  // fix for it. Clamping to today restores what they actually did: they played
+  // the London day that was current when they submitted.
+  //
+  // Only FUTURE values are touched. A past value is indistinguishable from an
+  // ordinary "last played a while ago", so it is left exactly as stored.
+  // Players west of London (device clock BEHIND) therefore still get one
+  // replay if they solved inside their own window on deploy day; that is
+  // unavoidable without knowing which puzzle the row answered, it happens at
+  // most once, and _storedSubmissionMatches stops it being scored wrongly.
+  const clamp = v => (/^\d{4}-\d{2}-\d{2}$/.test(v || '') && v > today) ? today : v;
+  for (const mode of ['easy', 'hard']) {
+    const m = store && store[mode];
+    if (!m) continue;
+    const lp = clamp(_toDayKey(m.lastPlayed));
+    if (lp !== m.lastPlayed) { m.lastPlayed = lp; changed = true; }
+    if (!Array.isArray(m.history)) continue;
+    for (const e of m.history) {
+      if (!e) continue;
+      // Future-dated rows collapse onto today. Where that collides with a row
+      // already on today, renderHistory's per-day dedupe keeps the better
+      // score — which is right: two rows a day apart for the SAME London
+      // puzzle are the duplicate this bug produced, not two days of play.
+      const d = clamp(_toDayKey(e.date));
+      if (d !== e.date) { e.date = d; changed = true; }
+    }
+  }
+  return changed;
+}
+
+// Pre-migration copy of the store, written once, on the single load that
+// converts a player from device day keys to London ones.
+//
+// WHY: the migration is not reversible by reverting the code. Afterwards
+// lastPlayed is '2026-08-30'; the old build compares that against
+// 'Sun Aug 30 2026', never matches, and every player's streak resets to 1 on
+// their next play. Rolling the deploy back would therefore cost every player
+// who had loaded the page in the meantime — for a reason that need have
+// nothing to do with dates.
+//
+// Same reasoning, and the same cost (a few KB), as keeping tubepzl_v5 around
+// when the store split per mode. Never overwritten, so it always holds the
+// true pre-migration state no matter how many times this runs.
+const PRE_DAYKEYS_BACKUP_KEY = 'tubepzl_v6_predaykeys';
+
 function getStore() {
   try {
-    const v6 = JSON.parse(localStorage.getItem('tubepzl_v6') || 'null');
-    if (v6 && v6.easy && v6.hard) return v6;
+    const rawV6 = localStorage.getItem('tubepzl_v6');
+    const v6 = JSON.parse(rawV6 || 'null');
+    if (v6 && v6.easy && v6.hard) {
+      if (_migrateDayKeys(v6)) {
+        try {
+          if (rawV6 && !localStorage.getItem(PRE_DAYKEYS_BACKUP_KEY)) {
+            localStorage.setItem(PRE_DAYKEYS_BACKUP_KEY, rawV6);
+          }
+          localStorage.setItem('tubepzl_v6', JSON.stringify(v6));
+          _tel('storage_migrated', { from: 'device-day-keys', to: 'london-day-keys' });
+        } catch(e){}
+      }
+      return v6;
+    }
     const v5 = JSON.parse(localStorage.getItem('tubepzl_v5') || 'null');
     const migrated = { easy: v5 || emptyModeStore(), hard: emptyModeStore() };
+    _migrateDayKeys(migrated);  // v5 payload predates the ISO key entirely
     try {
       localStorage.setItem('tubepzl_v6', JSON.stringify(migrated));
       // NOTE: we deliberately do NOT delete tubepzl_v5 here. Keeping the
@@ -6078,20 +6290,146 @@ function freshSnapshotFor(mode) {
 //   easy done, hard not done   → hard
 //   both done today            → hard (returning player lands on their results)
 function pickDefaultMode() {
-  const today = new Date().toDateString();
-  const easyDone = getModeStore('easy').lastPlayed === today;
-  if (!easyDone) return 'easy';
+  if (!_modeSolvedToday('easy')) return 'easy';
   return 'hard';
+}
+
+// Is this mode's puzzle for TODAY actually solved?
+//
+// lastPlayed on its own is not enough. A legacy value written by the old
+// device-day code can coincidentally EQUAL today's London key while the
+// submission it refers to answered yesterday's puzzle — a Sydney player who
+// solved at 07:48 their time stamped it with their own date, which is the
+// London date some hours later. Left unchecked that shows a ✓ on an unplayed
+// puzzle, sends the player to the wrong default tab, and (worst) makes
+// submitRoute think the day is already logged, so the streak never increments
+// and the new result overwrites the old row.
+//
+// Where the mode's puzzle is known, the submission itself is the authority.
+// Early in init(), before the lookup has settled and any puzzle is resolved,
+// it isn't known — fall back to lastPlayed, and init() calls refreshTabChecks
+// again once the puzzles are warm.
+// This mode's puzzle for today, if we can get it without guessing. Prefers
+// whatever is already resolved; otherwise resolves it once and memoises.
+//
+// Resolving is gated on _LOOKUP_SETTLED: before the oracle lands, todayPuzzle
+// would fall through to the seeded generator and could answer with a pair the
+// lookup is about to override. Better to say "don't know" than to memoise a
+// wrong one.
+const _pdForMode = {};
+function _puzzleForMode(mode) {
+  if (mode === currentMode && puzzleData) return puzzleData;
+  const snap = modeState[mode];
+  if (snap && snap.puzzleData) return snap.puzzleData;
+  if (!_LOOKUP_SETTLED) return null;
+  const today = todayKey();
+  if (_pdForMode[mode] && _pdForMode[mode].date === today) return _pdForMode[mode];
+  try {
+    _pdForMode[mode] = todayPuzzle(mode);
+    return _pdForMode[mode];
+  } catch (e) {
+    console.error('[_puzzleForMode] could not resolve', mode, e);
+    return null;
+  }
+}
+
+// ── Streak transition ──────────────────────────────────────────────────────
+// Split out of submitRoute so the rules can be tested directly; submitRoute
+// itself needs a live DOM and can't be exercised in the harness.
+//
+// Is this submission the first of a NEW streak day?
+//
+// `lastPlayed === today` is not sufficient on its own: a legacy device-day
+// stamp can equal today's London key while the submission it refers to
+// answered a DIFFERENT puzzle. Treating that as already-logged would cost the
+// player the streak day they just earned, so the stored submission has to
+// agree with the puzzle in front of them.
+function _isNewStreakDay(store, today, puzzleDataForMode) {
+  return !(store.lastPlayed === today && _storedSubmissionMatches(store, puzzleDataForMode));
+}
+
+// The streak value after a new day is logged.
+//
+// Continues on `>=` rather than `===` yesterday. ISO keys sort
+// lexicographically so the comparison is safe, and the looser test covers the
+// migration: a player whose legacy stamp sat a day AHEAD of London would
+// otherwise read as having skipped a day and lose their streak on the
+// changeover. It cannot double-count, because _isNewStreakDay gates it to once
+// per London day per mode.
+function _nextStreakValue(prevStreak, lastPlayed) {
+  const cont = lastPlayed && /^\d{4}-\d{2}-\d{2}$/.test(lastPlayed) && lastPlayed >= yesterdayKey();
+  return cont ? (prevStreak || 0) + 1 : 1;
+}
+
+// Apply a submission to a mode's store. Pure state transition, split out of
+// submitRoute so it can be tested — submitRoute itself needs a live DOM.
+//
+// Everything here is ONE update. An earlier version wrote the streak, day and
+// history first, refreshed the UI, and only then attached submittedRoute and
+// the puzzle stamp. That left a window where the store said "played today"
+// with no submission to prove it, so _modeSolvedToday correctly refused to
+// tick the tab and the ✓ never appeared on a freshly solved puzzle. Keep these
+// writes together.
+function _applySubmissionToStore(store, ctx) {
+  const { today, puzzleData: pd, userRoute, userLegsData,
+          userMins, optimalMins, medal, mode, completionSecs, hintsUsed } = ctx;
+
+  if (_isNewStreakDay(store, today, pd)) {
+    store.streak = _nextStreakValue(store.streak, store.lastPlayed);
+    store.lastPlayed = today;
+  }
+
+  // Match on the PAIR as well as the day: a stale row dated today may belong
+  // to a different puzzle, and overwriting it would lose a real result.
+  if (!Array.isArray(store.history)) store.history = [];
+  const idx = store.history.findIndex(e =>
+    e && e.date === today && e.start === pd.start && e.end === pd.end);
+  // History reflects the route the player submitted, not the optimal one.
+  // Walk legs are skipped to match the pill rendering.
+  const route = userLegsData.legs
+    .filter(l => l.line !== 'Walk')
+    .map(l => ({ line: l.line, to: l.to }));
+  const entry = { start: pd.start, end: pd.end, userMins, optimalMins, medal,
+                  date: today, route, mode };
+  if (idx === -1) store.history.push(entry);
+  else if (userMins < store.history[idx].userMins) store.history[idx] = entry;
+
+  // Cap history so localStorage doesn't grow unbounded over years of play.
+  // The UI only ever surfaces the most recent 5.
+  const MAX_HISTORY = 60;
+  if (store.history.length > MAX_HISTORY) {
+    store.history.sort((a, b) => String(a.date).localeCompare(String(b.date)));
+    store.history = store.history.slice(-MAX_HISTORY);
+  }
+
+  // The submission and its stamp, written in the same pass as lastPlayed.
+  store.submittedRoute     = userRoute.slice();
+  store.completionSecs     = completionSecs;
+  store.submittedHintsUsed = hintsUsed;
+  store.submittedPuzzle    = { date: pd.date, start: pd.start, end: pd.end };
+  // Legacy rendered HTML from older versions: clear it so it can never be
+  // re-injected. The restore path rebuilds via renderResultCard.
+  delete store.resultHtml;
+  return store;
+}
+
+function _modeSolvedToday(mode) {
+  const s = getModeStore(mode);
+  // Cheap reject first, so the resolve below only ever runs for a mode that
+  // actually claims to be solved today.
+  if (s.lastPlayed !== todayKey()) return false;
+  const pd = _puzzleForMode(mode);
+  if (!pd) return true;
+  return _storedSubmissionMatches(s, pd);
 }
 
 // Show a ✓ on whichever tab has been solved today. Called on init and after
 // every successful submit.
 function refreshTabChecks() {
-  const today = new Date().toDateString();
   for (const m of ['easy', 'hard']) {
     const el = document.getElementById(`check-${m}`);
     if (!el) continue;
-    el.style.display = getModeStore(m).lastPlayed === today ? 'inline' : 'none';
+    el.style.display = _modeSolvedToday(m) ? 'inline' : 'none';
   }
 }
 
@@ -6138,8 +6476,7 @@ function showResultPanel(html) {
 // the Easy/Hard tab at the top to cross-navigate, so this button is hidden.
 function buildTryOtherModeButton() {
   const other = currentMode === 'easy' ? 'hard' : 'easy';
-  const today = new Date().toDateString();
-  if (getModeStore(other).lastPlayed === today) return '';
+  if (_modeSolvedToday(other)) return '';
   const otherName = other === 'hard' ? 'Hard' : 'Easy';
   const bg = other === 'hard' ? 'var(--coral)' : 'var(--navy)';
   return `<button class="btn-share" style="background:${bg};margin-top:2px;" onclick="switchMode('${other}')">Try today's ${otherName} puzzle &nbsp;→</button>`;
@@ -6243,7 +6580,7 @@ function switchMode(mode) {
   const rp = document.getElementById('result-panel');
   const mp = document.getElementById('main-panel');
   const snap = modeState[currentMode];
-  const today = new Date().toDateString();
+  const today = todayKey();
   const persisted = getModeStore(currentMode);
   const persistedSolved = persisted.lastPlayed === today && persisted.submittedRoute;
   if (snap && snap.resultShown && snap.resultHtml) {
@@ -6322,7 +6659,7 @@ function showSavedResults() {
 // On load, if the current mode is solved today and we have the submitted
 // route persisted, rebuild and show the result card instead of the puzzle.
 function maybeShowSolvedResult() {
-  const today = new Date().toDateString();
+  const today = todayKey();
   const s = getModeStore(currentMode);
   if (s.lastPlayed !== today || !s.submittedRoute) return;
   const html = renderStoredResultFor(currentMode, puzzleData);
@@ -6350,7 +6687,22 @@ async function init() {
   // resolves, so the lookup oracle wins over the seeded generator on a cold
   // load. See _preloadPuzzleLookup for why. _lookupReady never rejects.
   await _lookupReady;
-  puzzleData = todayPuzzle(currentMode);
+  // Re-decide now the oracle has landed: _modeSolvedToday can consult the
+  // stored submission rather than lastPlayed alone, so a mode that only LOOKED
+  // solved (a legacy device-day stamp pointing at another puzzle) no longer
+  // pushes the player onto the wrong tab.
+  const settledMode = pickDefaultMode();
+  if (settledMode !== currentMode) {
+    currentMode = settledMode;
+    document.querySelectorAll('.mode-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.mode === currentMode);
+    });
+    applyHardModeStyling();
+  }
+  // Reuse whatever pickDefaultMode already had to resolve; falling back to a
+  // fresh call. Without this, a player whose stale submission was rejected pays
+  // for the same dijkstra twice on load.
+  puzzleData = _puzzleForMode(currentMode) || todayPuzzle(currentMode);
   document.getElementById('start-stn').textContent = puzzleData.start;
   document.getElementById('end-stn').textContent   = puzzleData.end;
   document.getElementById('puzzle-sub').textContent = `Daily London Puzzle #${puzzleData.puzzleNum}`;
@@ -6394,6 +6746,11 @@ async function init() {
     // populated modeState[other]. Don't overwrite it — that would discard
     // any in-flight user state.
     if (!modeState[other]) modeState[other] = snap;
+    // Both modes' puzzles are resolved now, so _modeSolvedToday can consult the
+    // stored submission for BOTH tabs instead of trusting lastPlayed. Doing it
+    // here rather than inline above keeps a possible dijkstra off the
+    // first-paint path, and by now it is free — the snapshot holds the puzzle.
+    refreshTabChecks();
   }, 0);
 }
 
@@ -7131,6 +7488,36 @@ function renderResultCard(data) {
     </div>`;
 }
 
+// Does the persisted submission actually answer the puzzle now on screen?
+//
+// submittedRoute is only a list of STOPS — it carries no record of which
+// puzzle it was an answer to. buildUserLegs will happily replay those stops
+// from ANY start station they happen to connect to, so a stale submission
+// produces a confident, plausible-looking, completely wrong result card
+// rather than an error. That is what shipped to a Sydney player on
+// 2026-08-30: their Hendon Central → Mansion House answer was replayed from
+// Euston (17 min), scored against the Euston → Mile End optimal (24), and
+// declared optimal on a route that never reaches Mile End.
+//
+// todayKey() is the real fix for that particular drift; this is the seatbelt
+// that stops ANY future mismatch from being published as a score. When it
+// fails, callers fall through to the fresh puzzle.
+function _storedSubmissionMatches(s, puzzleDataForMode) {
+  if (!s || !s.submittedRoute || !s.submittedRoute.length || !puzzleDataForMode) return false;
+  const stamp = s.submittedPuzzle;
+  if (stamp) {
+    return stamp.date  === puzzleDataForMode.date
+        && stamp.start === puzzleDataForMode.start
+        && stamp.end   === puzzleDataForMode.end;
+  }
+  // Submitted before the stamp existed. We can't verify the date, but a route
+  // is always built to END at the destination, so a last stop that isn't this
+  // puzzle's destination is proof the submission belongs to a different one.
+  // Catches the reported bug for pre-existing players too.
+  const last = s.submittedRoute[s.submittedRoute.length - 1];
+  return !!last && (last.station || last) === puzzleDataForMode.end;
+}
+
 // Restore the result card HTML for a mode that was solved earlier today.
 // Returns null if the mode's stored data isn't sufficient — caller should
 // fall through to showing a fresh puzzle. NEVER returns persisted HTML;
@@ -7138,6 +7525,12 @@ function renderResultCard(data) {
 function renderStoredResultFor(mode, puzzleDataForMode) {
   const s = getModeStore(mode);
   if (!s.submittedRoute || !puzzleDataForMode) return null;
+  if (!_storedSubmissionMatches(s, puzzleDataForMode)) {
+    console.warn('[renderStoredResultFor] stored submission does not match the live puzzle; showing the fresh puzzle instead.',
+      { stored: s.submittedPuzzle || s.submittedRoute, live: { date: puzzleDataForMode.date, start: puzzleDataForMode.start, end: puzzleDataForMode.end } });
+    _tel('stored_result_mismatch', { mode });
+    return null;
+  }
   try {
     const userLegsData = buildUserLegs(puzzleDataForMode.start, s.submittedRoute);
     return renderResultCard({
@@ -7213,58 +7606,27 @@ function submitRoute() {
   const pct = Math.max(0, Math.min(100, Math.round(optimalMins / Math.max(userMins, 1) * 100)));
 
   // Streak + history are kept per mode so easy and hard track independently.
+  // One state update, one save. Streak, history, submission and the puzzle
+  // stamp all land together — see _applySubmissionToStore for why splitting
+  // them was a bug.
   const store = getModeStore(currentMode);
-  const today = new Date().toDateString();
-  if (store.lastPlayed !== today) {
-    store.streak = (store.lastPlayed === new Date(Date.now()-86400000).toDateString()) ? store.streak+1 : 1;
-    store.lastPlayed = today;
-  }
-  const todayIdx = store.history.findIndex(e => e.date === today);
-  // History should reflect the route the player actually submitted, not the
-  // optimal one. Walk legs are skipped to match the pill rendering.
-  const route = userLegsData.legs
-    .filter(l => l.line !== 'Walk')
-    .map(l => ({line: l.line, to: l.to}));
-  const entry = {start:puzzleData.start, end:puzzleData.end, userMins, optimalMins, medal, date:today, route, mode: currentMode};
-  if (todayIdx === -1) {
-    store.history.push(entry);
-  } else if (userMins < store.history[todayIdx].userMins) {
-    store.history[todayIdx] = entry;
-  }
-  // Cap history at MAX_HISTORY entries per mode so localStorage doesn't grow
-  // unbounded over years of play. UI only ever surfaces the most recent 5,
-  // so 60 is plenty of headroom for any future "see all" feature.
-  const MAX_HISTORY = 60;
-  if (store.history.length > MAX_HISTORY) {
-    store.history.sort((a, b) => new Date(a.date) - new Date(b.date));
-    store.history = store.history.slice(-MAX_HISTORY);
-  }
+  _applySubmissionToStore(store, {
+    today: todayKey(), puzzleData, userRoute, userLegsData,
+    userMins, optimalMins, medal, mode: currentMode, completionSecs, hintsUsed,
+  });
   setModeStore(currentMode, store);
+
   document.getElementById('streak-disp').textContent = store.streak;
   refreshTabChecks();
 
   showResultPanel(renderResultCard({
     puzzleData, userLegsData, hintsUsed, completionSecs, mode: currentMode
   }));
-
-  // PERSIST RESULT — store the structured data the player would need to
-  // re-see this result later today. We deliberately DO NOT cache rendered
-  // HTML — that would risk persisting any future XSS introduced into the
-  // result card, and would also pin the visual to whatever shipped today.
-  const cardSnap = getModeStore(currentMode);
-  cardSnap.submittedRoute     = userRoute.slice();
-  cardSnap.completionSecs     = completionSecs;
-  cardSnap.submittedHintsUsed = hintsUsed;
   // Note: the scoring snapshot (submittedScoring) is written by
-  // renderResultCard() the first time it computes fresh values for a
-  // given SCORING_VERSION. Doing it there (not here) keeps a single
-  // source of truth for scoring and means pre-existing players whose
-  // results predate the current version get a snapshot on first reopen.
-  // Legacy resultHtml from older versions: clear it so it doesn't get
-  // accidentally re-injected later. New restore path rebuilds via
-  // renderResultCard() from submittedRoute.
-  delete cardSnap.resultHtml;
-  setModeStore(currentMode, cardSnap);
+  // renderResultCard() the first time it computes fresh values for a given
+  // SCORING_VERSION. Doing it there (not here) keeps a single source of truth
+  // for scoring and means pre-existing players whose results predate the
+  // current version get a snapshot on first reopen.
   lockedSubmission = true;
 
   setTimeout(() => {
@@ -7329,9 +7691,12 @@ async function copyResult(diff, hints, changes, secs) {
 function resetGame() {
   // If this mode has already been submitted today, "Back to puzzle" goes to
   // the locked, read-only view of the submitted route — not a fresh puzzle.
-  const today = new Date().toDateString();
+  const today = todayKey();
   const s = getModeStore(currentMode);
-  if (s.lastPlayed === today && s.submittedRoute) {
+  // Same identity guard as renderStoredResultFor: enterLockedView splats the
+  // stored stops straight onto the board, so a stale submission would draw
+  // yesterday's route over today's puzzle.
+  if (s.lastPlayed === today && _storedSubmissionMatches(s, puzzleData)) {
     enterLockedView();
     return;
   }
@@ -7400,7 +7765,7 @@ function renderHistory() {
     const badgeLbl = mode === 'hard' ? 'HARD' : 'EASY';
     const badge = `<span style="background:${badgeBg};color:#fff;border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;letter-spacing:0.5px;margin-left:6px;vertical-align:middle;">${badgeLbl}</span>`;
     return `<div class="hist-row">
-      <div><div>${e.start} → ${e.end}${badge}</div>${routeHtml}<div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${e.date}</div></div>
+      <div><div>${e.start} → ${e.end}${badge}</div>${routeHtml}<div class="hist-sub">${e.userMins} min · optimal ${e.optimalMins} min · ${_dayLabel(e.date)}</div></div>
       <div style="font-size:20px;">${e.medal}</div>
     </div>`;
   }).join('');
