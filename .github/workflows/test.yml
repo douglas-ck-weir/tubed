@@ -37,6 +37,3 @@ jobs:
 
       - name: Day keys (London clock for puzzle AND progress; stale-result guard)
         run: node tests/day_keys.test.mjs
-
-      - name: Mutation harness (every test proven to catch a real break)
-        run: node tests/mutations.test.mjs

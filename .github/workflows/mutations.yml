@@ -1,0 +1,29 @@
+name: Mutation harness
+
+# Deliberately NOT on every push. The harness re-runs whole test files per
+# mutation, and one of them runs the Dijkstra admissibility suite, which alone
+# takes ~9 minutes on a runner. Adding that to the per-push gate would push
+# every commit well past 20 minutes for an assurance check that does not need
+# to block a deploy.
+#
+# What it answers: "would our tests actually notice if this code broke?"
+# That is worth knowing regularly, not instantly. Nightly, plus on demand.
+on:
+  schedule:
+    - cron: '30 3 * * *'   # 03:30 UTC, well clear of the today.json cron
+  workflow_dispatch:
+
+jobs:
+  mutate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Break the code on purpose and check the suite notices
+        run: node tests/mutations.test.mjs
