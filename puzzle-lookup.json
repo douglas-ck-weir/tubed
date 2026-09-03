@@ -1,4 +1,15 @@
 {
+  "2026-09-02": {
+    "puzzleNum": 153,
+    "easy": {
+      "start": "Southwark",
+      "end": "Russell Square"
+    },
+    "hard": {
+      "start": "Ravenscourt Park",
+      "end": "London City Airport"
+    }
+  },
   "2026-09-01": {
     "puzzleNum": 152,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Bethnal Green",
       "end": "New Cross Gate"
-    }
-  },
-  "2026-07-04": {
-    "puzzleNum": 93,
-    "easy": {
-      "start": "Swiss Cottage",
-      "end": "Stepney Green"
-    },
-    "hard": {
-      "start": "Angel",
-      "end": "Stamford Brook"
-    }
-  },
-  "2026-09-02": {
-    "puzzleNum": 153,
-    "easy": {
-      "start": "Southwark",
-      "end": "Russell Square"
-    },
-    "hard": {
-      "start": "Ravenscourt Park",
-      "end": "London City Airport"
     }
   },
   "2026-09-03": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "West Hampstead",
       "end": "Euston"
+    }
+  },
+  "2026-12-01": {
+    "puzzleNum": 243,
+    "easy": {
+      "start": "Mornington Crescent",
+      "end": "Kensal Green"
+    },
+    "hard": {
+      "start": "Richmond",
+      "end": "Tooting Bec"
     }
   }
 }

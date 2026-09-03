@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-02",
-  "puzzleNum": 153,
+  "date": "2026-09-03",
+  "puzzleNum": 154,
   "easy": {
-    "start": "Southwark",
-    "end": "Russell Square"
+    "start": "Lewisham",
+    "end": "White City"
   },
   "hard": {
-    "start": "Ravenscourt Park",
-    "end": "London City Airport"
+    "start": "Mornington Crescent",
+    "end": "East Putney"
   }
 }
