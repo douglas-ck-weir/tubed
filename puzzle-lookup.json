@@ -1,4 +1,15 @@
 {
+  "2026-09-03": {
+    "puzzleNum": 154,
+    "easy": {
+      "start": "Lewisham",
+      "end": "White City"
+    },
+    "hard": {
+      "start": "Mornington Crescent",
+      "end": "East Putney"
+    }
+  },
   "2026-09-02": {
     "puzzleNum": 153,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Crystal Palace",
       "end": "Shepherd's Bush"
-    }
-  },
-  "2026-07-05": {
-    "puzzleNum": 94,
-    "easy": {
-      "start": "Parsons Green",
-      "end": "Barbican"
-    },
-    "hard": {
-      "start": "Bethnal Green",
-      "end": "New Cross Gate"
-    }
-  },
-  "2026-09-03": {
-    "puzzleNum": 154,
-    "easy": {
-      "start": "Lewisham",
-      "end": "White City"
-    },
-    "hard": {
-      "start": "Mornington Crescent",
-      "end": "East Putney"
     }
   },
   "2026-09-04": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Richmond",
       "end": "Tooting Bec"
+    }
+  },
+  "2026-12-02": {
+    "puzzleNum": 244,
+    "easy": {
+      "start": "Paddington",
+      "end": "Clapham North"
+    },
+    "hard": {
+      "start": "Angel",
+      "end": "Neasden"
     }
   }
 }

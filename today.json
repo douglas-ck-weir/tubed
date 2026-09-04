@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-03",
-  "puzzleNum": 154,
+  "date": "2026-09-04",
+  "puzzleNum": 155,
   "easy": {
-    "start": "Lewisham",
-    "end": "White City"
+    "start": "St. James's Park",
+    "end": "Kilburn"
   },
   "hard": {
-    "start": "Mornington Crescent",
-    "end": "East Putney"
+    "start": "Barbican",
+    "end": "North Acton"
   }
 }
