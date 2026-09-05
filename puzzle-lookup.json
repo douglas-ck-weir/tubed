@@ -1,4 +1,15 @@
 {
+  "2026-09-04": {
+    "puzzleNum": 155,
+    "easy": {
+      "start": "St. James's Park",
+      "end": "Kilburn"
+    },
+    "hard": {
+      "start": "Barbican",
+      "end": "North Acton"
+    }
+  },
   "2026-09-03": {
     "puzzleNum": 154,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Finsbury Park",
       "end": "Shadwell"
-    }
-  },
-  "2026-07-06": {
-    "puzzleNum": 95,
-    "easy": {
-      "start": "Warren Street",
-      "end": "Notting Hill Gate"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Shepherd's Bush"
-    }
-  },
-  "2026-09-04": {
-    "puzzleNum": 155,
-    "easy": {
-      "start": "St. James's Park",
-      "end": "Kilburn"
-    },
-    "hard": {
-      "start": "Barbican",
-      "end": "North Acton"
     }
   },
   "2026-09-05": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Angel",
       "end": "Neasden"
+    }
+  },
+  "2026-12-03": {
+    "puzzleNum": 245,
+    "easy": {
+      "start": "Kilburn Park",
+      "end": "Latimer Road"
+    },
+    "hard": {
+      "start": "Stratford International",
+      "end": "Stonebridge Park"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-04",
-  "puzzleNum": 155,
+  "date": "2026-09-05",
+  "puzzleNum": 156,
   "easy": {
-    "start": "St. James's Park",
-    "end": "Kilburn"
+    "start": "Liverpool Street",
+    "end": "Maida Vale"
   },
   "hard": {
-    "start": "Barbican",
-    "end": "North Acton"
+    "start": "Pontoon Dock",
+    "end": "Blackhorse Road"
   }
 }
