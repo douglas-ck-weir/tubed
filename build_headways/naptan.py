@@ -84,7 +84,13 @@ MANUAL_NAPTAN = {
     'Kensington (Olympia)':      '940GZZLUKOY',
     'Shadwell (Overground)':     '910GSHADWEL',
     'Bethnal Green (Overground)':'910GBTHNLGR',
-    'Seven Sisters (Overground)':'910GSVNSIS',
+    # 910GSVNSIS (the code in station_layout.csv, and what this override read
+    # until 2026-09-06) is DEAD: /StopPoint returns 404 and JourneyResults
+    # returns 0 journeys, so every Weaver hop boarding here silently fell to
+    # WAIT_MINS_DEFAULT. 910GSEVNSIS is the live code and returns the Weaver
+    # service (verified 2026-09-06: departures 12:00/12:01/12:16/12:31).
+    # Same failure mode as the dead 910GBLKHRSR noted below.
+    'Seven Sisters (Overground)':'910GSEVNSIS',
     # Blackhorse Road is deliberately absent: it resolves via the CSV to
     # 910GBLCHSRD, which serves BOTH its lines correctly. This entry used to
     # read 'Blackhorse Road (Overground)': '910GBLKHRSR' — see the note in

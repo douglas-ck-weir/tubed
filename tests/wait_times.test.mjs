@@ -173,12 +173,17 @@ function findDirectionSensitivePairs() {
 const directionSensitive = findDirectionSensitivePairs();
 
 test('#1 found expected number of direction-sensitive station+branch pairs', () => {
-  // Sanity: there are 28 in the current dataset. Allow drift but warn loudly
-  // if the number changes a lot.
-  truthy(directionSensitive.length >= 20,
-    `expected at least 20 direction-sensitive pairs, got ${directionSensitive.length}`);
-  truthy(directionSensitive.length <= 50,
-    `expected at most 50 direction-sensitive pairs, got ${directionSensitive.length} — has data shape changed?`);
+  // Sanity band, not an exact count: warn loudly if the data shape shifts.
+  // Was 28 when WAIT_MINS held 950 edges. On 2026-09-06 full Overground
+  // boarding coverage took it to 1218 edges and 74 sensitive pairs — the new
+  // ones are real branch splits that previously had no entry to disagree with
+  // (Weaver at Bethnal Green/Hackney Downs, Windrush south of Surrey Quays,
+  // Mildmay core vs its Richmond tail). The substantive check is the next
+  // test, which asserts every one of them reads back correctly per direction.
+  truthy(directionSensitive.length >= 40,
+    `expected at least 40 direction-sensitive pairs, got ${directionSensitive.length}`);
+  truthy(directionSensitive.length <= 110,
+    `expected at most 110 direction-sensitive pairs, got ${directionSensitive.length} — has data shape changed?`);
 });
 
 test('#1 waitTime returns the correct value per direction for every sensitive pair', () => {
@@ -338,30 +343,31 @@ test('#5 regression: Preston Road → Rayners Lane → Ealing Common scores 34',
   eq(r.totalMins, 34, 'user scorer must agree with dijkstra, not undercut it');
 });
 
-test('#5 tie-break guard: ambiguous multi-branch lookups agree on wait', () => {
-  // firstHopOnLeg breaks ties by "nearest pairing" (shortest way round) when a
-  // display line has several branches serving a station, or a station repeats
-  // on one branch. As of 2026-08-03 that policy is unobservable: of ~11,300
-  // multi-branch lookups, only 74 disagree on DIRECTION and all 74 carry the
-  // SAME wait either way (they're dense central sections — Hainault loop,
-  // Northern via-Bank/via-Charing-Cross, DLR Poplar).
+test('#5 tie-break policy: ambiguous multi-branch lookups take the LOWEST wait', () => {
+  // firstHopOnLeg must choose between branches when a display line serves the
+  // boarding station several ways. Until 2026-09-06 only one Overground branch
+  // per station carried a wait entry, so the choice was forced and the policy
+  // was unobservable. Full boarding coverage made it load-bearing.
   //
-  // If a data change ever gives two branches of one line different waits at
-  // the same station, this fails — and the tie-break must then be decided
-  // deliberately rather than by array order.
+  // The policy is now deliberate (resolveLegBranch): every candidate branch
+  // reaches legTo by construction, so the rider boards whichever of those
+  // trains comes first and the expected wait is the MINIMUM across candidates.
+  // This asserts that policy holds everywhere it is observable, rather than
+  // asserting the ambiguity does not exist.
   const byDL = {};
   for (const br of Object.keys(NETWORK)) (byDL[displayLine(br)] ||= []).push(br);
   const all = new Set(Object.values(NETWORK).flat());
 
-  const offenders = [];
+  const violations = [];
+  let observed = 0;
   for (const stn of all) {
-    for (const [, brs] of Object.entries(byDL)) {
+    for (const [dl, brs] of Object.entries(byDL)) {
       const hit = brs.filter(b => NETWORK[b].includes(stn));
       if (hit.length < 2) continue;
       for (const dest of all) {
         if (dest === stn) continue;
-        const waits = new Set();
-        let hops = new Set();
+        const hops = new Set();
+        const waits = [];
         for (const br of hit) {
           const arr = NETWORK[br];
           const si = arr.indexOf(stn), di = arr.indexOf(dest);
@@ -370,15 +376,21 @@ test('#5 tie-break guard: ambiguous multi-branch lookups agree on wait', () => {
           if (hop === undefined) continue;
           hops.add(hop);
           const k = `${stn}|${hop}|${br}`;
-          if (k in WAIT_MINS) waits.add(WAIT_MINS[k]);
+          if (k in WAIT_MINS) waits.push(WAIT_MINS[k]);
         }
-        // Only ambiguous cases matter: different branches -> different hops.
-        if (hops.size > 1 && waits.size > 1) offenders.push(`${stn}->${dest}`);
+        if (hops.size < 2 || new Set(waits).size < 2) continue;
+        observed++;
+        const want = Math.min(...waits);
+        const got = waitTime(stn, firstHopOnLeg(stn, dest, dl), dl);
+        if (got !== want) violations.push(`${stn}->${dest} [${dl}]: want ${want}, got ${got}`);
       }
     }
   }
-  eq(offenders.length, 0,
-     `tie-break became observable at: ${offenders.slice(0, 5).join(', ')}`);
+  // Guard the guard: if coverage ever regresses so nothing is ambiguous, this
+  // test would pass vacuously and stop protecting the policy.
+  eq(observed > 0, true, 'expected at least one observable multi-branch tie-break');
+  eq(violations.length, 0,
+     `tie-break policy violated at: ${violations.slice(0, 5).join('; ')}`);
 });
 
 test('#2 combined: waitTime via firstHopOnLeg picks the right direction', () => {

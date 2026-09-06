@@ -11,7 +11,7 @@ because the player is already on the train.
 import logging
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 
 logger = logging.getLogger(__name__)
@@ -117,6 +117,41 @@ def branches_by_hop(
     return out
 
 
+def enumerate_boarding_edges(
+    network: Dict[str, List[str]],
+    display_lines: Optional[Set[str]] = None,
+) -> List[Tuple[str, str, str]]:
+    """List (from, to, branch_id) for EVERY adjacent pair, both directions.
+
+    `enumerate_interchange_edges` prices only hops whose `from` station serves
+    2+ display lines, on the assumption that a rider at a single-line station
+    is already on the train. That assumption is false twice over:
+
+      1. The puzzle's START station is a fresh boarding, and most stations on
+         the sparse Overground lines serve exactly one line.
+      2. An out-of-station interchange drops the rider on the street; they
+         board the next line cold, again often at a single-line station.
+
+    Where the assumption fails the scorer finds no key and falls back to
+    WAIT_MINS_DEFAULT (3). On a 15-minute line like the Suffragette that is
+    less than half the true wait, so any route boarding there pockets a
+    discount that does not exist -- which is how a walk route beats the ride
+    TfL actually offers.
+
+    `display_lines` restricts the expansion to those lines (e.g. the six
+    Overground lines); None expands the whole network.
+    """
+    out: List[Tuple[str, str, str]] = []
+    for branch, stns in network.items():
+        if display_lines is not None and display_line(branch) not in display_lines:
+            continue
+        for i in range(len(stns) - 1):
+            a, b = stns[i], stns[i + 1]
+            out.append((a, b, branch))
+            out.append((b, a, branch))
+    return sorted(set(out))
+
+
 def enumerate_interchange_edges(
     network: Dict[str, List[str]],
 ) -> List[Tuple[str, str, str]]:
@@ -124,6 +159,9 @@ def enumerate_interchange_edges(
 
     Both directions of every adjacent pair are included so we capture
     waits for both travel directions.
+
+    NOTE: this misses every single-line boarding point -- see
+    `enumerate_boarding_edges` for why that matters and how it is covered.
     """
     stn_lines = stations_by_display_line(network)
     out: List[Tuple[str, str, str]] = []

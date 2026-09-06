@@ -853,15 +853,15 @@
       "end": "Kilburn"
     },
     "hard": {
-      "start": "Highgate",
-      "end": "West Hampstead"
+      "start": "Bounds Green",
+      "end": "Highgate"
     }
   },
   "2026-09-24": {
     "puzzleNum": 175,
     "easy": {
-      "start": "Oxford Circus",
-      "end": "Bounds Green"
+      "start": "Kentish Town",
+      "end": "Stepney Green"
     },
     "hard": {
       "start": "Warren Street",

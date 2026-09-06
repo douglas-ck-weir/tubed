@@ -454,6 +454,70 @@ def check_7_shared_hop_agreement(
 # ── Runner ─────────────────────────────────────────────────────────────────
 
 
+# Lines whose true headway is far enough above WAIT_MINS_DEFAULT that an
+# unpriced boarding point materially mis-scores. A missing key on the Victoria
+# line costs the player ~2 min; on the Suffragette it costs ~4, and in the
+# wrong direction -- it makes a route look cheaper than TfL will ever run it.
+SPARSE_DISPLAY_LINES = (
+    'Lioness', 'Mildmay', 'Windrush', 'Weaver', 'Suffragette', 'Liberty',
+)
+
+# index.html's WAIT_MINS_DEFAULT. An unpriced boarding point is charged this.
+WAIT_MINS_DEFAULT = 3
+
+
+def check_8_boarding_coverage(
+    waits: Dict[Tuple[str, str, str], int],
+    network: Optional[Dict[str, List[str]]],
+) -> List[dict]:
+    """Flag boarding points that have NO wait entry at all.
+
+    The blind spot this closes: every other check only inspects values that
+    EXIST. So the suite reported a clean bill of health while 88% of the
+    Suffragette and 94% of the Weaver silently took WAIT_MINS_DEFAULT --
+    the absence of data was invisible precisely because it was absent.
+
+    A rider can board at any station: the puzzle start, or cold off an
+    out-of-station interchange. So every directed hop is a boarding point,
+    and one with no key is scored at WAIT_MINS_DEFAULT regardless of the
+    real service. On the sparse Overground lines that is a false discount,
+    so those are errors; elsewhere the lines are frequent enough that the
+    default is close, so those are warnings.
+    """
+    findings: List[dict] = []
+    if not network:
+        return findings
+
+    from .network import display_line
+
+    by_line: Dict[str, List[Tuple[str, str, str]]] = {}
+    for branch, stns in network.items():
+        for i in range(len(stns) - 1):
+            for a, b in ((stns[i], stns[i + 1]), (stns[i + 1], stns[i])):
+                if (a, b, branch) not in waits:
+                    by_line.setdefault(display_line(branch), []).append((a, b, branch))
+
+    for dline, missing in sorted(by_line.items()):
+        sparse = dline in SPARSE_DISPLAY_LINES
+        stations = sorted({a for a, _b, _br in missing})
+        findings.append({
+            'edge': (', '.join(stations[:6]) + ('...' if len(stations) > 6 else ''),
+                     '', dline),
+            'severity': 'error' if sparse else 'warn',
+            'detail': (
+                f'{len(missing)} directed hops on {dline} have no wait entry, '
+                f'across {len(stations)} boarding stations. Each is charged '
+                f'WAIT_MINS_DEFAULT ({WAIT_MINS_DEFAULT} min)'
+                + (' against a line whose real half-headway is much higher, so '
+                   'routes boarding there are scored cheaper than TfL runs them. '
+                   'Rebuild with --expand-boarding.'
+                   if sparse else
+                   ' -- tolerable on a frequent line, but unmeasured.')
+            ),
+        })
+    return findings
+
+
 def run_all_checks(
     wait_times_path: Path,
     cache_dir: Path,
@@ -476,6 +540,7 @@ def run_all_checks(
     results['expected']       = check_6_expected(waits, fixture_path)
     results['shared-hop']     = check_7_shared_hop_agreement(
         waits, network, naptan_resolver, platform_fetcher)
+    results['boarding-coverage'] = check_8_boarding_coverage(waits, network)
     return results
 
 

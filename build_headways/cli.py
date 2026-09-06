@@ -1,6 +1,7 @@
 """CLI for building wait_times.js."""
 
 import argparse
+import datetime
 import json
 import logging
 import sys
@@ -14,7 +15,12 @@ from .headway import (
 )
 from .line_map import tfl_for_branch
 from .naptan import load_csv_naptan_map, platform_line_sets, resolve_naptan
-from .network import display_line, enumerate_interchange_edges, parse_network
+from .network import (
+    display_line,
+    enumerate_boarding_edges,
+    enumerate_interchange_edges,
+    parse_network,
+)
 from .tfl_api import TflClient
 
 
@@ -31,8 +37,51 @@ DEFAULT_REPORT_TXT = PROJECT_ROOT / 'wait_times_report.txt'
 # Date queried for JourneyResults. Pick a representative weekday a few
 # weeks out so the schedule is stable and not affected by today's
 # disruptions or weekend service.
-QUERY_DATE = '20260616'  # Tuesday 16 June 2026
+#
+# This is deliberately PINNED, not rolling: a rebuild must be deterministic
+# and not skewed by one day's disruption. But TfL rejects any date more than
+# 7 days in the past ("Date cannot be more than 7 days in the past"), and the
+# failure is silent -- the edge just comes back 'no-data' and falls to
+# WAIT_MINS_DEFAULT while the run still exits 0. That cost us the entire
+# Overground rebuild once. So the constant is pinned AND its rot is loud:
+# check_query_date_fresh() aborts the run rather than degrading to no-data.
+QUERY_DATE = '20260922'  # Tuesday 22 September 2026
+
+# The six TfL Overground line names, as display_line() renders them.
+OVERGROUND_DISPLAY_LINES = (
+    'Lioness', 'Mildmay', 'Windrush', 'Weaver', 'Suffragette', 'Liberty',
+)
 QUERY_TIME = '1200'
+
+
+def check_query_date_fresh(today: Optional[datetime.date] = None) -> None:
+    """Abort if QUERY_DATE has rotted past TfL's 7-day backstop.
+
+    JourneyResults answers dates from 7 days ago onward. Past that it returns
+    HTTP 400 with no journeys, which the edge loop cannot distinguish from a
+    genuinely unserved pair -- so every Overground/DLR/Elizabeth edge needing
+    a fresh fetch silently becomes WAIT_MINS_DEFAULT. Fail loudly instead.
+    """
+    today = today or datetime.date.today()
+    qd = datetime.datetime.strptime(QUERY_DATE, '%Y%m%d').date()
+    age_days = (today - qd).days
+    if age_days > 7:
+        raise SystemExit(
+            f'QUERY_DATE {QUERY_DATE} is {age_days} days in the past. TfL '
+            f'JourneyResults refuses anything over 7 days old, so every '
+            f'Overground/DLR/Elizabeth edge would silently come back no-data '
+            f'and fall to WAIT_MINS_DEFAULT.\n'
+            f'Fix: set QUERY_DATE in build_headways/cli.py to a representative '
+            f'weekday a few weeks out (avoid weekends and bank holidays), then '
+            f'rerun. Changing it also invalidates the jr_* cache by design, so '
+            f'expect a full re-fetch of the JourneyResults edges.'
+        )
+    if qd.weekday() >= 5:
+        raise SystemExit(
+            f'QUERY_DATE {QUERY_DATE} is a {qd.strftime("%A")}. Weekend '
+            f'service is not the off-peak weekday schedule the scorer models. '
+            f'Pick a Tuesday-Thursday.'
+        )
 
 
 # Manual wait-time overrides for edges the API can't answer cleanly during
@@ -81,6 +130,32 @@ MANUAL_WAIT_OVERRIDES = {
     # Central Ealing Broadway stub (~10 min live -> wait 5); sampler gave 3.
     ('Ealing Broadway', 'West Acton', 'Central_Ealing_Broadway_Epping'):    5,
     ('Ealing Broadway', 'West Acton', 'Central_Ealing_Broadway_Hainault'):  5,
+    # -- Weaver inner corridor: BUNCHED service (2026-09-06) ------------------
+    # wait_minutes() is floor(headway/2), which is only correct when trains are
+    # evenly spaced. Between Liverpool Street and Hackney Downs the Chingford
+    # branch and the Enfield/Cheshunt branches leave within 1-3 min of each
+    # other and are then followed by a long gap. Arriving at random you land in
+    # the long gap far more often than the short one, so the usable wait is much
+    # higher than half the mean headway. The correct figure is the random-arrival
+    # wait E[g^2] / 2E[g]; these are that value, floored.
+    #
+    # Measured off-peak Tue 22 Sep 2026 (confirmed independently against
+    # Trainline for Liverpool Street -> Bethnal Green):
+    #   Hackney Downs -> Bethnal Green   :11 :12 :26 :27 :41 :42  gaps 1,14 -> 6.5
+    #   Bethnal Green -> Hackney Downs   :01 :04 :16 :19 :31 :34  gaps 3,12 -> 5.0
+    #   Bethnal Green -> Liverpool St    :00 :03 :15 :18 :30 :33  gaps 3,12 -> 5.0
+    #   Liverpool St  -> Bethnal Green   :58 :01 :13 :16 :28 :31  gaps 3,12 -> 4.9
+    # The last one floors to 4, which the generator already produces, so it is
+    # deliberately NOT overridden here.
+    #
+    # Only this corridor bunches. The Cheshunt/Enfield shared section further
+    # out (Bethnal Green -> Cambridge Heath, Silver Street -> Edmonton Green)
+    # runs a clean 15-min interval and needs no correction.
+    ('Hackney Downs', 'Bethnal Green (Overground)', 'Overground_Weaver_Chingford'):     6,
+    ('Bethnal Green (Overground)', 'Hackney Downs', 'Overground_Weaver_Chingford'):     5,
+    ('Bethnal Green (Overground)', 'Liverpool Street', 'Overground_Weaver_Cheshunt'):     5,
+    ('Bethnal Green (Overground)', 'Liverpool Street', 'Overground_Weaver_Chingford'):    5,
+    ('Bethnal Green (Overground)', 'Liverpool Street', 'Overground_Weaver_Enfield_Town'): 5,
 }
 
 
@@ -95,6 +170,13 @@ def _parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
                    help='Process only first N edges (for testing)')
     p.add_argument('--dry-run', action='store_true',
                    help="Don't write output files")
+    p.add_argument('--expand-boarding', metavar='LINES', default='overground',
+                   help="Also price every single-line boarding point on these "
+                        "display lines (comma-separated, e.g. "
+                        "'Suffragette,Weaver'). 'overground' = all six "
+                        "Overground lines (default). 'all' = whole network. "
+                        "'none' = interchange edges only, the pre-2026-09 "
+                        "behaviour. See network.enumerate_boarding_edges.")
     p.add_argument('--validate', action='store_true',
                    help='Run validation checks on the existing wait_times.js '
                         '(does not rebuild). Outputs flagged-edges report.')
@@ -437,12 +519,28 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.validate:
         return _run_validate(args)
 
+    # JourneyResults silently returns nothing for a stale date, which would
+    # turn every Overground edge into WAIT_MINS_DEFAULT while still exiting 0.
+    check_query_date_fresh()
+
     html = args.html.read_text()
     network = parse_network(html)
     logger.info('Parsed %d branches in NETWORK', len(network))
 
     edges = enumerate_interchange_edges(network)
     logger.info('Found %d interchange edges', len(edges))
+
+    expand = (args.expand_boarding or 'none').strip().lower()
+    if expand != 'none':
+        sel = None if expand == 'all' else (
+            set(OVERGROUND_DISPLAY_LINES) if expand == 'overground'
+            else {s.strip() for s in args.expand_boarding.split(',') if s.strip()}
+        )
+        extra = [e for e in enumerate_boarding_edges(network, sel)
+                 if e not in set(edges)]
+        edges = sorted(set(edges) | set(extra))
+        logger.info('Expanded boarding points (%s): +%d single-line edges, '
+                    '%d total', expand, len(extra), len(edges))
     if args.limit:
         edges = edges[:args.limit]
         logger.info('Limited to first %d edges', len(edges))
