@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-05",
-  "puzzleNum": 156,
+  "date": "2026-09-06",
+  "puzzleNum": 157,
   "easy": {
-    "start": "Liverpool Street",
-    "end": "Maida Vale"
+    "start": "Tower Hill",
+    "end": "Marylebone"
   },
   "hard": {
-    "start": "Pontoon Dock",
-    "end": "Blackhorse Road"
+    "start": "Chiswick Park",
+    "end": "Clapham North"
   }
 }
