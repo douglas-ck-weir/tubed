@@ -137,6 +137,7 @@ function defined(v, msg) {
 }
 
 const { NETWORK, COORDS, LINE_COLOURS, PLATFORM_GROUPS, INTERCHANGE_MINS,
+        OSI_PAIRS,
         displayLine, getTime, interchangeTime,
         buildGraph, dijkstra, travelTimeOnLine, buildUserLegs,
         _singleLineDistances, bestOneChangeMins } = ctx.__TUBED__;
@@ -280,8 +281,8 @@ const OVERGROUND_CSV = {
     ['Gospel Oak','Upper Holloway',4],['Upper Holloway','Crouch Hill',2],
     ['Crouch Hill','Harringay Green Lanes',3],
     ['Harringay Green Lanes','South Tottenham',4],
-    ['South Tottenham','Blackhorse Road (Overground)',3],
-    ['Blackhorse Road (Overground)','Walthamstow Queens Road',2],
+    ['South Tottenham','Blackhorse Road',3],
+    ['Blackhorse Road','Walthamstow Queens Road',2],
     ['Walthamstow Queens Road','Leyton Midland Road',3],
     ['Leyton Midland Road','Leytonstone High Road',2],
     ['Leytonstone High Road','Wanstead Park',3],
@@ -335,6 +336,14 @@ test('Stratford Elizabeth↔Mildmay = 7 min', () => {
 });
 test('Romford Elizabeth↔Liberty = 5 min', () => {
   eq(interchangeTime('Romford', 'Elizabeth', 'Overground_Liberty'), 5);
+});
+// Walking time only — the boarding wait is charged separately by waitTime().
+// Deliberately 3, not the 6 the TfL API returns: that 6 bundles a connection
+// buffer, and charging it alongside our wait would double-bill. Declared in
+// build_interchanges MANUAL_OVERRIDES so a rebuild cannot quietly revert it;
+// if this test ever flips to 6, a pipeline --apply run has overwritten it.
+test('Blackhorse Road Victoria↔Suffragette = 3 min (walk only)', () => {
+  eq(interchangeTime('Blackhorse Road', 'Victoria', 'Overground_Suffragette'), 3);
 });
 test('Barking District↔Suffragette = 5 min', () => {
   eq(interchangeTime('Barking', 'District', 'Overground_Suffragette'), 5);
@@ -772,6 +781,96 @@ test('the only multi-occurrence (station, sub-line) pairs are the documented Cir
       `  Missing: ${missing.join(', ') || '(none)'}\n` +
       `If the new occurrence is intentional, update this test and the\n` +
       `comments around _nodeKey/_stationName; if not, fix the data.`
+    );
+  }
+});
+
+// ── Split-station integrity ────────────────────────────────────────────────
+// Tubed models a handful of stations as an "X" / "X (Overground)" pair. That
+// is correct where the two really are separate buildings (Bethnal Green: the
+// Central line station and the Weaver line station are a street walk apart,
+// and their COORDS differ accordingly). It is WRONG where TfL treats them as
+// one station behind one ticket hall.
+//
+// Blackhorse Road was the wrong kind: Victoria and Suffragette shared a
+// ticket hall and identical COORDS, but the two nodes had no OSI and no
+// shared line, so the Overground half was an unreachable island. Effects on
+// 2026-09-05 (puzzle #156, Pontoon Dock -> Blackhorse Road):
+//   * the picker listed "Blackhorse Road" AND "Blackhorse Road (Overground)",
+//     so players saw one destination as two stations;
+//   * picking the Overground one could never complete the puzzle;
+//   * the published optimal was 52 min because the Suffragette approach was
+//     invisible to the search.
+// Fixed by merging the two nodes into one `Blackhorse Road` served by both
+// lines, with a normal INTERCHANGE_MINS entry rather than an OSI walk.
+test('Blackhorse Road is ONE station served by both Victoria and Suffragette', () => {
+  const linesHere = Object.entries(NETWORK)
+    .filter(([, stns]) => stns.includes('Blackhorse Road'))
+    .map(([line]) => displayLine(line));
+  truthy(linesHere.includes('Victoria'),
+    `Blackhorse Road should be on the Victoria line, got: ${linesHere.join(', ')}`);
+  truthy(linesHere.includes('Suffragette'),
+    `Blackhorse Road should be on the Suffragette line, got: ${linesHere.join(', ')}`);
+  // The split node must be gone entirely, or the picker shows two stations again.
+  const stillSplit = Object.values(NETWORK).flat().includes('Blackhorse Road (Overground)');
+  truthy(!stillSplit, '"Blackhorse Road (Overground)" is still a NETWORK node');
+  // And the Suffragette must actually be routable through it. Note
+  // travelTimeOnLine takes the DISPLAY line ('Suffragette'), not the NETWORK
+  // key ('Overground_Suffragette') — passing the key returns null for every
+  // station and would make this assertion vacuous.
+  eq(travelTimeOnLine('Barking', 'Blackhorse Road', 'Suffragette'), 17,
+    'Suffragette Barking -> Blackhorse Road');
+  eq(travelTimeOnLine('South Tottenham', 'Blackhorse Road', 'Suffragette'), 3,
+    'Suffragette South Tottenham -> Blackhorse Road');
+});
+
+// The general form of the bug above, so the next one fails here rather than in
+// a player's inbox. Two NETWORK nodes at IDENTICAL coordinates are claiming to
+// be the same physical place; if they are, they must be reachable from each
+// other — either as one merged node, or joined by an OSI walk. Stations that
+// really are separate buildings have separate coordinates and are out of scope.
+test('no two NETWORK stations share coordinates without being connected', () => {
+  // Known-bad COORDS, not a missing merge. Kilburn Park (Bakerloo) and Kilburn
+  // High Road (Lioness) are two genuinely different stations roughly 230m
+  // apart, but both carry 51.5354,-0.194 — one of the two entries is simply
+  // wrong. Fixing it means sourcing real coordinates and re-checking anything
+  // geographic that reads COORDS, which is out of scope for the Blackhorse
+  // Road merge. Flagged here so the Underground/Overground audit picks it up.
+  // Remove this exemption once the coordinates are corrected.
+  const KNOWN_BAD_COORDS = new Set(['Kilburn High Road|Kilburn Park']);
+  const inNetwork = new Set(Object.values(NETWORK).flat());
+  const osiLinked = new Set();
+  for (const p of OSI_PAIRS) {
+    osiLinked.add(`${p.a}|${p.b}`);
+    osiLinked.add(`${p.b}|${p.a}`);
+  }
+  const byCoord = new Map();
+  for (const s of inNetwork) {
+    const c = COORDS[s];
+    if (!c) continue;
+    const key = `${c[0]},${c[1]}`;
+    if (!byCoord.has(key)) byCoord.set(key, []);
+    byCoord.get(key).push(s);
+  }
+  const islands = [];
+  for (const [coord, stns] of byCoord) {
+    if (stns.length < 2) continue;
+    for (let i = 0; i < stns.length; i++) {
+      for (let j = i + 1; j < stns.length; j++) {
+        const pairKey = [stns[i], stns[j]].sort().join('|');
+        if (KNOWN_BAD_COORDS.has(pairKey)) continue;
+        if (!osiLinked.has(`${stns[i]}|${stns[j]}`)) {
+          islands.push(`${stns[i]} <-> ${stns[j]} (both at ${coord})`);
+        }
+      }
+    }
+  }
+  if (islands.length) {
+    throw new Error(
+      `${islands.length} station pair(s) share coordinates but have no OSI link, ` +
+      `so one half is unreachable:\n  ` + islands.join('\n  ') +
+      `\nEither merge them into one node (they are one station) or add an ` +
+      `OSI_PAIRS entry (they are two).`
     );
   }
 });

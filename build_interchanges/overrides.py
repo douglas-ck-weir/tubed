@@ -240,6 +240,23 @@ LINKED_STATIONS: List[FrozenSet[str]] = [
 # Each entry MUST include a `reason` comment explaining why the API can't
 # provide this value, so a future maintainer can re-evaluate.
 MANUAL_OVERRIDES: Dict[str, Dict[str, int]] = {
+    # Blackhorse Road: the API DOES return this pair, and returns 6 — this is
+    # a deliberate disagreement, not a gap-filler like the rest of this dict.
+    #
+    # The game charges the boarding wait separately from the interchange, so
+    # an INTERCHANGE_MINS value must be walking time only. TfL's 6 (both Stop
+    # Structure footpaths and Journey Planner icDur) appears to include a
+    # connection buffer: the planner schedules the tube leg to arrive ~6 min
+    # before the Overground departs, so its own figures never separate the
+    # walk from the wait. Taking 6 and then adding our 3-min wait bills that
+    # buffer twice.
+    #
+    # 3 is the measured walk (user's own timing, and Google Maps shows the
+    # change as 3 min plus 3 min waiting). Without this entry the next
+    # --apply run silently pushes it back to 6.
+    'Blackhorse Road': {
+        'Suffragette|Victoria': 3,
+    },
     # Lioness (London Overground) at Euston is not in the tube Stop
     # Structure data; the Overground station is modelled separately from
     # the LU station and footpaths between them aren't emitted.

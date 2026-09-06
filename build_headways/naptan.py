@@ -85,7 +85,10 @@ MANUAL_NAPTAN = {
     'Shadwell (Overground)':     '910GSHADWEL',
     'Bethnal Green (Overground)':'910GBTHNLGR',
     'Seven Sisters (Overground)':'910GSVNSIS',
-    'Blackhorse Road (Overground)': '910GBLKHRSR',
+    # Blackhorse Road is deliberately absent: it resolves via the CSV to
+    # 910GBLCHSRD, which serves BOTH its lines correctly. This entry used to
+    # read 'Blackhorse Road (Overground)': '910GBLKHRSR' — see the note in
+    # LINE_SPECIFIC_NAPTAN for why that code must not come back.
 }
 
 
@@ -103,6 +106,13 @@ LINE_SPECIFIC_NAPTAN = {
     ('Edgware Road', 'circle'):             '940GZZLUERC',
     ('Edgware Road', 'district'):           '940GZZLUERC',
     ('Edgware Road', 'hammersmith-city'):   '940GZZLUERC',
+    # NOTE: Blackhorse Road must NOT be added here. When its two nodes were
+    # merged on 2026-09-05 it was briefly pinned to 910GBLKHRSR (the code the
+    # old 'Blackhorse Road (Overground)' node carried). That code is DEAD for
+    # JourneyResults: verified 2026-09-05, 910GBLKHRSR returns 0 journeys
+    # while the CSV's 910GBLCHSRD returns the Suffragette service. Letting it
+    # fall through to the CSV is correct for both of its lines.
+    #
     # Barbican's tube code (940G) is what /Line/.../Timetable needs; the CSV
     # has the rail code (910GBRBCNLT) which the tube endpoint rejects.
     ('Barbican', 'circle'):                 '940GZZLUBBN',

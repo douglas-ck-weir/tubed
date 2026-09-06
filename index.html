@@ -601,6 +601,29 @@ const INTERCHANGE_MINS = {
   "Blackfriars": {
     "Circle|District": 1,
   },
+  // Added 2026-09-05 with the Blackhorse Road node merge. Previously the
+  // Victoria and Suffragette halves were separate NETWORK nodes with no link
+  // at all, so this change was unmakeable and never needed a time.
+  //
+  // 3 min is the WALK only. The boarding wait is charged separately by
+  // waitTime(), the same convention every other value in this table follows
+  // and the same one the OSI model uses (an interchange time covers walking,
+  // not standing on the far platform).
+  //
+  // NOTE FOR THE NEXT PIPELINE RUN: TfL disagrees and says 6. Both the Stop
+  // Structure footpath data (ICS 1000024, fresh fetch 2026-09-05) and Journey
+  // Planner icDur (symmetric, both directions) return 6. That 6 appears to
+  // bundle a connection buffer on top of the walk: the planner picks a tube
+  // departure that lands you ~6 min before the Overground goes, so the
+  // observed gap never separates walking from waiting.
+  //
+  // Overridden to 3 on the user's own measurement, corroborated by Google
+  // Maps (3 min change + 3 min wait). Charging TfL's 6 AND our 3-min wait
+  // would bill the buffer twice. Declared in build_interchanges
+  // MANUAL_OVERRIDES so a pipeline run does not silently revert it.
+  "Blackhorse Road": {
+    "Suffragette|Victoria": 3,
+  },
   "Bond Street": {
     "Central|Elizabeth": 8,
     "Central|Jubilee": 5,
@@ -1154,6 +1177,13 @@ const WAIT_MINS = {
   'Blackfriars|Temple|District_Ealing_Broadway_Upminster': 1,
   'Blackfriars|Temple|District_Richmond_Upminster': 1,
   'Blackfriars|Temple|District_Wimbledon_Upminster': 1,
+  // Added 2026-09-05 with the Blackhorse Road node merge. Before the merge the
+  // station was Victoria-only, so it was never a boarding point and the
+  // generator emitted no entry for it; boarding there fell back to
+  // WAIT_MINS_DEFAULT (3) against a Victoria line where all 19 measured
+  // entries are 1. Produced by build_headways, not hand-picked.
+  'Blackhorse Road|Tottenham Hale|Victoria': 1,
+  'Blackhorse Road|Walthamstow Central|Victoria': 1,
   'Bond Street|Baker Street|Jubilee': 1,
   'Bond Street|Green Park|Jubilee': 1,
   'Bond Street|Marble Arch|Central_Ealing_Broadway_Epping': 1,
@@ -2767,7 +2797,6 @@ const COORDS = {
   'Crouch Hill':           [51.5780,-0.1068],
   'Harringay Green Lanes': [51.5831,-0.1020],
   'South Tottenham':       [51.5841,-0.0760],
-  'Blackhorse Road (Overground)':[51.5866,-0.0408],
   'Leyton Midland Road':   [51.5657, 0.0001],
   'Leytonstone High Road': [51.5648, 0.0153],
   'Wanstead Park':         [51.5605, 0.0327],
@@ -3203,7 +3232,7 @@ const NETWORK = {
   ],
   'Overground_Suffragette': [
     'Gospel Oak','Upper Holloway','Crouch Hill','Harringay Green Lanes',
-    'South Tottenham','Blackhorse Road (Overground)','Walthamstow Queens Road',
+    'South Tottenham','Blackhorse Road','Walthamstow Queens Road',
     'Leyton Midland Road','Leytonstone High Road','Wanstead Park','Woodgrange Park','Barking','Barking Riverside',
   ],
   'Overground_Liberty': [
@@ -3245,7 +3274,7 @@ const TIMES = {
   'Bethnal Green|Mile End':2,
   'Blackfriars|Mansion House':1,
   'Blackfriars|Temple':1,
-  'Blackhorse Road (Overground)|Walthamstow Queens Road':2,
+  'Blackhorse Road|Walthamstow Queens Road':2,
   'Blackhorse Road|Walthamstow Central':2,
   'Blackwall|East India':2,
   'Bond Street|Green Park':2,
@@ -3546,7 +3575,7 @@ const TIMES = {
   'South Kensington|Knightsbridge':2,
   'South Kenton|North Wembley':2,
   'South Quay|Crossharbour':1,
-  'South Tottenham|Blackhorse Road (Overground)':3,
+  'South Tottenham|Blackhorse Road':3,
   'South Wimbledon|Colliers Wood':2,
   'South Woodford|Woodford':2,
   'Southall|Hayes & Harlington':4,
@@ -5183,7 +5212,12 @@ function requiresChange(a, b) {
 //       alternatives that K=6 under-explored and published beatable optima),
 //       and edge walks are now publishable. Any cached result card scored
 //       under 6 may disagree with a fresh score, so it must be re-scored.
-const SCORING_VERSION = 7;
+//   7→8 2026-09-05: the Blackhorse Road node merge. Victoria and Suffragette
+//       were two disconnected NETWORK nodes, so the Suffragette approach was
+//       invisible to the search and any route to or through Blackhorse Road
+//       was scored without it. Pontoon Dock -> Blackhorse Road published 52
+//       where 44 exists. Cards scored under 7 must be re-scored.
+const SCORING_VERSION = 8;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ANNOUNCEMENTS
@@ -5493,7 +5527,18 @@ function _dayLabel(key) {
 // in and out of both modes' minute bounds. 21 of the next 158 puzzle slots
 // resolve to a different pair. Without this bump those clients would keep
 // serving the old pair against the new scoring.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v16';
+//
+// v17 — 2026-09-05 Blackhorse Road node merge (SCORING_VERSION 8). The station
+// gains a second line, so route costs to and through it change, and the
+// difficulty filters read those costs.
+//
+// MEASURED, so nobody has to re-derive it: regenerating the 150-day lookup
+// against both builds moves ZERO pairs. This bump is therefore precautionary,
+// not load-bearing — it is here because the graph changed and the standing
+// rule is to bump on any filter/graph change, not because a stale client is
+// known to serve a wrong pair. Kept anyway: the cache holds only the current
+// date's pair, so a bump costs one re-resolve and nothing else.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v17';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
@@ -5723,118 +5768,27 @@ function todayPuzzle(mode, opts) {
   // a *new* puzzle even though they thought they'd already solved today's.
   //
   // The fix is to hardcode the published pair for that date here, so the
-  // generator output is pinned regardless of underlying drift. Each freeze
-  // should be removed in the daily code cleanup after that calendar date
-  // passes (no need to keep stale dates forever).
+  // generator output is pinned regardless of underlying drift.
+  //
+  // THERE ARE CURRENTLY NO FREEZES. All were removed on 2026-09-06 after
+  // checking that none of their dates publishes a beatable optimal any more:
+  // 2026-06-08/06-11/06-23 have aged out of the lookup window entirely, and
+  // 2026-08-02, 08-06 and 08-19 all now have pickOptimal == cheapest. The
+  // 08-06 block in particular used to be load-bearing — it published
+  // routes[0] (36) against pickOptimal's 54 for Hanger Lane -> Harrow on the
+  // Hill — but once edge walks became publishable (2026-08-31) pickOptimal
+  // returns that 36 itself, so the block had become a no-op.
   //
   // When you add a freeze:
-  //   1. Add the matching entry to generate-today.mjs::pickStations.
-  //   2. Note the trigger (which input changed) in the comment.
-  //   3. If a player has loaded the site mid-day before the freeze, their
-  //      tubepzl_puzzles_cache_v1 may still hold the pre-freeze pair —
-  //      they will need to clear localStorage or wait until tomorrow.
-  //      We deliberately let the cache win over the freeze; otherwise we'd
-  //      yank a puzzle out from under someone mid-solve.
-
-  // 2026-08-19 Easy & Hard: the OSI walk-time correction (21 values in
-  // OSI_PAIRS, mostly measured against TfL) changes route costs, and therefore
-  // which pairs pass the difficulty filters — 76 of 180 upcoming pairs move.
-  // Today's EASY draw is one of them: the regenerated lookup wants
-  // Tower Gateway -> Crystal Palace where the live site has been serving
-  // Stonebridge Park -> West Brompton all day. Pin the live pairs so nobody
-  // loses a puzzle mid-solve and so the Reddit bot's morning post stays
-  // correct. Hard is unchanged by the correction but is pinned alongside it,
-  // so the whole day is explicit rather than half-pinned.
-  //
-  // build-lookup.mjs calls todayPuzzle(), so these blocks also hold
-  // puzzle-lookup.json's 2026-08-19 entry at the live values, keeping it in
-  // agreement with today.json (which puzzle-sources.test.mjs checks).
-  // Everything else takes effect from 2026-08-20. (Remove after 2026-08-19.)
-  if (m === 'easy' && date === '2026-08-19') {
-    const start = 'Stonebridge Park', end = 'West Brompton';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-  if (m === 'hard' && date === '2026-08-19') {
-    const start = 'Tooting Broadway', end = 'Barons Court';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-08-06 Hard: KEPT after the date passed, unlike the other expired
-  // freezes. This one is not a pin, it is a published RESULT. Hanger Lane ->
-  // Harrow on the Hill is walk-dominated by an EDGE walk (36 min starting on
-  // foot to Park Royal, against 54 for the best tube-only route), so
-  // isPublishableOptimal rejects the 36 and pickOptimal would publish the 54 —
-  // leaving a past puzzle whose stated optimal is beatable by 18 minutes.
-  // Players were told 36 on the day and that is what history must keep saying.
-  //
-  // Removing this on 2026-08-19 as "stale, cannot fire" was wrong: todayPuzzle
-  // is called for past dates too (build-lookup regeneration, the invariant
-  // suite, history rendering), and the invariant caught it immediately.
-  // Delete only if this pair is ever removed from puzzle-lookup.json.
-  if (m === 'hard' && date === '2026-08-06') {
-    const start = 'Hanger Lane', end = 'Harrow on the Hill';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: routes[0], routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-08-02 Easy & Hard: the Zone 1-3 footfall pool expansion (55 new
-  // PUZZLE_STATIONS + PUZZLE_CACHE_KEY v11→v12) reseeds every day's draw. Today
-  // was already published/live (easy = Lambeth North → Victoria, hard = Brent
-  // Cross → West Brompton), so pin the pre-expansion pairs. The new pool takes
-  // effect from 2026-08-03 onward. puzzle-lookup.json's 2026-08-02 entry is also
-  // held at these old values so the Reddit bot matches. (Remove after 2026-08-02.)
-  if (m === 'easy' && date === '2026-08-02') {
-    const start = 'Lambeth North', end = 'Victoria';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-  if (m === 'hard' && date === '2026-08-02') {
-    const start = 'Brent Cross', end = 'West Brompton';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-06-23 Hard: this morning's cron pushed today.json with hard =
-  // Willesden Junction → Arsenal — a duplicate of yesterday's pair caused
-  // by a build-lookup no-repeat seed bug. We patched today.json to Chalk
-  // Farm → Marylebone, but the in-browser seeded generator (which has no
-  // recentPairs context) still picks the duplicate. Pin to the published
-  // pair. (Remove this freeze after 2026-06-23.)
-  if (m === 'hard' && date === '2026-06-23') {
-    const start = 'Chalk Farm', end = 'Marylebone';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-06-11 Easy: Canary Wharf Elizabeth↔Jubilee interchange was corrected
-  // mid-day (9 → 6) to kill an OSI walk-arbitrage optimal (CW→HQ→CW loop), and
-  // the easy filter was tightened to reject any walk in the optimal. Together
-  // these would shift the in-browser generator's first acceptable pair away
-  // from what the cron published this morning — pin the published pair so
-  // returning players see the same puzzle they started on.
-  if (m === 'easy' && date === '2026-06-11') {
-    const start = "North Greenwich", end = 'Tottenham Court Road';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-
-  // 2026-06-08 Easy & Hard: Hammersmith and Earl's Court interchange times
-  // were corrected mid-day (the Circle/District/Piccadilly cross-road and
-  // deep-tube changes that were previously too low). The generator now picks
-  // different pairs than the cron published this morning. Pin to the live
-  // pairs so returning players see the same puzzle they started on.
-  if (m === 'easy' && date === '2026-06-08') {
-    const start = 'Kennington', end = 'Holborn';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
-  if (m === 'hard' && date === '2026-06-08') {
-    const start = 'Colliers Wood', end = 'Goldhawk Road';
-    const routes = dijkstra(GRAPH, start, end);
-    return { start, end, optimal: pickOptimal(routes, {start, end}), routes, date, puzzleNum, graph: GRAPH, mode: m };
-  }
+  //   1. Note the trigger (which input changed) in the comment.
+  //   2. If a player has loaded the site mid-day before the freeze, their
+  //      puzzle cache may still hold the pre-freeze pair — they will need to
+  //      clear localStorage or wait until tomorrow. We deliberately let the
+  //      cache win over the freeze; otherwise we'd yank a puzzle out from
+  //      under someone mid-solve.
+  //   3. A freeze also EXEMPTS its date from the beatable-optimal sweep in
+  //      scoring_invariants.test.mjs (isFrozen scrapes `date === '...'` out
+  //      of this file), so verify by hand that what you pin is not beatable.
 
   // Lookup oracle: if puzzle-lookup.json is loaded AND has an entry for
   // this date, use it as the source of truth. This is the same file the
