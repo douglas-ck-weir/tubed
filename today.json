@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-06",
-  "puzzleNum": 157,
+  "date": "2026-09-07",
+  "puzzleNum": 158,
   "easy": {
-    "start": "Tower Hill",
-    "end": "Marylebone"
+    "start": "Leyton",
+    "end": "Golders Green"
   },
   "hard": {
-    "start": "Chiswick Park",
-    "end": "Clapham North"
+    "start": "Hyde Park Corner",
+    "end": "East India"
   }
 }

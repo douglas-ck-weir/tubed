@@ -1,4 +1,15 @@
 {
+  "2026-09-06": {
+    "puzzleNum": 157,
+    "easy": {
+      "start": "Tower Hill",
+      "end": "Marylebone"
+    },
+    "hard": {
+      "start": "Chiswick Park",
+      "end": "Clapham North"
+    }
+  },
   "2026-09-05": {
     "puzzleNum": 156,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Lambeth North",
       "end": "New Cross Gate"
-    }
-  },
-  "2026-07-08": {
-    "puzzleNum": 97,
-    "easy": {
-      "start": "Clapham South",
-      "end": "Westminster"
-    },
-    "hard": {
-      "start": "Hyde Park Corner",
-      "end": "Dalston Kingsland"
-    }
-  },
-  "2026-09-06": {
-    "puzzleNum": 157,
-    "easy": {
-      "start": "Tower Hill",
-      "end": "Marylebone"
-    },
-    "hard": {
-      "start": "Chiswick Park",
-      "end": "Clapham North"
     }
   },
   "2026-09-07": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Wood Green",
       "end": "Warwick Avenue"
+    }
+  },
+  "2026-12-05": {
+    "puzzleNum": 247,
+    "easy": {
+      "start": "Maida Vale",
+      "end": "St. John's Wood"
+    },
+    "hard": {
+      "start": "Bromley-by-Bow",
+      "end": "Marylebone"
     }
   }
 }
