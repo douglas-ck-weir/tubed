@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-07",
-  "puzzleNum": 158,
+  "date": "2026-09-08",
+  "puzzleNum": 159,
   "easy": {
-    "start": "Leyton",
-    "end": "Golders Green"
+    "start": "Pimlico",
+    "end": "Turnham Green"
   },
   "hard": {
-    "start": "Hyde Park Corner",
-    "end": "East India"
+    "start": "Wimbledon Park",
+    "end": "Archway"
   }
 }

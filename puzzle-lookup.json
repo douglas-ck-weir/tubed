@@ -1,4 +1,15 @@
 {
+  "2026-09-07": {
+    "puzzleNum": 158,
+    "easy": {
+      "start": "Leyton",
+      "end": "Golders Green"
+    },
+    "hard": {
+      "start": "Hyde Park Corner",
+      "end": "East India"
+    }
+  },
   "2026-09-06": {
     "puzzleNum": 157,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Wembley Central",
       "end": "Limehouse"
-    }
-  },
-  "2026-07-09": {
-    "puzzleNum": 98,
-    "easy": {
-      "start": "West Ham",
-      "end": "Pimlico"
-    },
-    "hard": {
-      "start": "Lambeth North",
-      "end": "New Cross Gate"
-    }
-  },
-  "2026-09-07": {
-    "puzzleNum": 158,
-    "easy": {
-      "start": "Leyton",
-      "end": "Golders Green"
-    },
-    "hard": {
-      "start": "Hyde Park Corner",
-      "end": "East India"
     }
   },
   "2026-09-08": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Bromley-by-Bow",
       "end": "Marylebone"
+    }
+  },
+  "2026-12-06": {
+    "puzzleNum": 248,
+    "easy": {
+      "start": "Wembley Central",
+      "end": "Moorgate"
+    },
+    "hard": {
+      "start": "Hampstead",
+      "end": "Hyde Park Corner"
     }
   }
 }
