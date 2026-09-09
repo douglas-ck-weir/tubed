@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-08",
-  "puzzleNum": 159,
+  "date": "2026-09-09",
+  "puzzleNum": 160,
   "easy": {
-    "start": "Pimlico",
-    "end": "Turnham Green"
+    "start": "Aldgate",
+    "end": "Kensal Green"
   },
   "hard": {
-    "start": "Wimbledon Park",
-    "end": "Archway"
+    "start": "Holloway Road",
+    "end": "Harrow & Wealdstone"
   }
 }
