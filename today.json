@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-09",
-  "puzzleNum": 160,
+  "date": "2026-09-10",
+  "puzzleNum": 161,
   "easy": {
-    "start": "Aldgate",
-    "end": "Kensal Green"
+    "start": "Neasden",
+    "end": "Monument"
   },
   "hard": {
-    "start": "Holloway Road",
-    "end": "Harrow & Wealdstone"
+    "start": "Bayswater",
+    "end": "Seven Sisters"
   }
 }

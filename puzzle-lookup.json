@@ -1,4 +1,15 @@
 {
+  "2026-09-09": {
+    "puzzleNum": 160,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Kensal Green"
+    },
+    "hard": {
+      "start": "Holloway Road",
+      "end": "Harrow & Wealdstone"
+    }
+  },
   "2026-09-08": {
     "puzzleNum": 159,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Goldhawk Road",
       "end": "Brixton"
-    }
-  },
-  "2026-07-11": {
-    "puzzleNum": 100,
-    "easy": {
-      "start": "Latimer Road",
-      "end": "Arsenal"
-    },
-    "hard": {
-      "start": "Edgware Road",
-      "end": "Limehouse"
-    }
-  },
-  "2026-09-09": {
-    "puzzleNum": 160,
-    "easy": {
-      "start": "Aldgate",
-      "end": "Kensal Green"
-    },
-    "hard": {
-      "start": "Holloway Road",
-      "end": "Harrow & Wealdstone"
     }
   },
   "2026-09-10": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "High Street Kensington",
       "end": "Arsenal"
+    }
+  },
+  "2026-12-08": {
+    "puzzleNum": 250,
+    "easy": {
+      "start": "Queensway",
+      "end": "Stepney Green"
+    },
+    "hard": {
+      "start": "Caledonian Road",
+      "end": "Lewisham"
     }
   }
 }
