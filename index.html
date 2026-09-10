@@ -536,6 +536,97 @@ const PLATFORM_GROUPS = {
   'Willesden Junction':   { 'Overground': ['Lioness', 'Mildmay'] },
 };
 
+// ── Split-platform stations ──────────────────────────────────────────────────
+// Stations whose platforms form two physically separate groups with a real
+// walk between them, AND where at least one display line calls at BOTH groups.
+// That last clause is the whole problem: a plain line-pair lookup in
+// INTERCHANGE_MINS cannot be right in both directions when one of the lines
+// is in two places at once.
+//
+// Paddington is the case. Its sub-surface platforms are:
+//   Praed Street  (940GZZLUPAC areas 3/4) — Circle + District
+//   Bishop's Road (940GZZLUPAH areas 1/2) — Circle + Hammersmith & City
+// build_interchanges declares both {Circle,District} and {Circle,H&C} as
+// same-platform 1-min pairs. Each is true of ONE group, but because "Circle"
+// is a single display line the 1 leaked onto Circle legs departing the FAR
+// platforms — so a District rider was charged 1 minute for a crossing that
+// INTERCHANGE_MINS itself prices at 14 under District|Hammersmith & City.
+//
+// Hammersmith is the same shape of station and needs no entry: its Circle
+// calls on one side only, so the flat line-pair values are already correct
+// there (District|Circle 7, District|H&C 7, Circle|H&C 1).
+//
+// `lines` lists the display lines boarding each group. A line appearing in
+// two groups is resolved per leg by `via`: an adjacent station reachable ONLY
+// from that group. Edgware Road is deliberately absent from both — the Circle
+// runs to it from BOTH Paddington occurrences, so it disambiguates nothing.
+//
+// crossMins is TfL's own Stop Structure footpath, 940GZZLUPAC area 3 ->
+// 940GZZLUPAH area 1 = 14, i.e. the value already in INTERCHANGE_MINS.
+const SPLIT_PLATFORMS = {
+  'Paddington': {
+    crossMins: 14,
+    sameMins: 1,
+    sides: {
+      'Praed Street':  {lines: ['Circle', 'District'],           via: ['Bayswater']},
+      "Bishop's Road": {lines: ['Circle', 'Hammersmith & City'], via: ['Royal Oak']},
+    },
+  },
+};
+
+// Which platform group at `stn` a leg uses, or null when the station isn't
+// split, the line doesn't use the split platforms (Bakerloo and Elizabeth at
+// Paddington are separate stations in their own right), or the occurrence
+// can't be resolved. A null on either side makes interchangeTime fall back to
+// the flat INTERCHANGE_MINS lookup, so this can only ever refine an answer.
+//
+// `neighbours` are the stations either side of the occurrence the leg
+// actually uses. Only consulted for a line that calls at both groups.
+function splitPlatformSide(stn, dl, neighbours) {
+  const cfg = SPLIT_PLATFORMS[stn];
+  if (!cfg) return null;
+  const owning = Object.keys(cfg.sides).filter(k => cfg.sides[k].lines.includes(dl));
+  if (owning.length === 0) return null;
+  if (owning.length === 1) return owning[0];
+  if (!neighbours || neighbours.length === 0) return null;
+  for (const side of owning) {
+    if (cfg.sides[side].via.some(n => neighbours.includes(n))) return side;
+  }
+  return null;
+}
+
+// Stations either side of the occurrence of a station that a leg running
+// legFrom->legTo on `branchLine` actually uses. `which` picks the boarding
+// end ('from') or the alighting end ('to'). Built on resolveLegBranch so the
+// interchange model and the wait model resolve the SAME occurrence — if they
+// disagreed, the two halves of a change would describe different journeys.
+function legNeighboursAt(legFrom, legTo, branchLine, which) {
+  if (typeof NETWORK === 'undefined') return null;
+  const r = resolveLegBranch(legFrom, legTo, branchLine);
+  if (!r) return null;
+  const arr = NETWORK[r.br];
+  if (!arr) return null;
+  const idx = which === 'from' ? r.f : r.t;
+  const out = [];
+  if (idx > 0) out.push(arr[idx - 1]);
+  if (idx < arr.length - 1) out.push(arr[idx + 1]);
+  return out;
+}
+
+// Stations either side of a graph node's occurrence. Bare node keys mean the
+// line calls once, which splitPlatformSide resolves without neighbours.
+function nodeNeighbours(nodeKey, lineKey) {
+  if (typeof NETWORK === 'undefined') return null;
+  if (nodeKey.indexOf('#') < 0) return null;
+  const pos = parseInt(nodeKey.slice(nodeKey.lastIndexOf('@') + 1), 10);
+  const arr = NETWORK[lineKey];
+  if (!arr || !Number.isFinite(pos)) return null;
+  const out = [];
+  if (pos > 0) out.push(arr[pos - 1]);
+  if (pos < arr.length - 1) out.push(arr[pos + 1]);
+  return out;
+}
+
 // ── Interchange times (minutes, walking-only) ────────────────────────────────
 // Bank/Monument cross-complex pairs are duplicated under both stations so
 // interchangeTime() works regardless of which station is queried. When
@@ -2581,7 +2672,22 @@ function platformPeers(stn, dl) {
   return [dl];
 }
 
-function interchangeTime(stn, fromLine, toLine) {
+function interchangeTime(stn, fromLine, toLine, fromSide, toSide) {
+  // Split-platform stations (see SPLIT_PLATFORMS): once both legs resolve to a
+  // concrete platform group, the change is just the walk between those groups —
+  // sameMins if they share platforms, crossMins if they don't. That is the
+  // thing the flat line-pair table below cannot express when one display line
+  // calls at BOTH groups, because a single Circle|District value is then wrong
+  // in one of the two directions no matter which number you pick.
+  //
+  // Deliberately ahead of the same-line branch check, so a Circle teardrop
+  // pivot across the two groups is charged the same crossing as any other
+  // line change between them. Falls through whenever either side is
+  // unresolved, so this can only ever refine an answer, never coarsen one.
+  const split = SPLIT_PLATFORMS[stn];
+  if (split && fromSide && toSide) {
+    return fromSide === toSide ? split.sameMins : split.crossMins;
+  }
   const entry = INTERCHANGE_MINS[stn];
   // Same-line branch change (e.g. one District service → another at Earl's
   // Court). These are typically same-platform or cross-platform changes
@@ -4457,11 +4563,19 @@ function buildGraph() {
       for (const pb of presences) {
         if (pa.line === pb.line) continue;
         const sameDispLine = displayLine(pa.line) === displayLine(pb.line);
+        // Which physical platform group each end of this change uses. The
+        // node keys already carry the occurrence for a line that calls twice
+        // (the Circle teardrop at Paddington), so the search can price the
+        // two Circle occurrences differently — which is exactly what the flat
+        // line-pair lookup could not do. Null for every ordinary station, and
+        // interchangeTime then behaves as before.
+        const sideA = splitPlatformSide(realStn, displayLine(pa.line), nodeNeighbours(pa.nodeKey, pa.line));
+        const sideB = splitPlatformSide(realStn, displayLine(pb.line), nodeNeighbours(pb.nodeKey, pb.line));
         if (sameDispLine) {
           if (sameLineMergedAt(realStn, pa.line, pb.line)) continue;
-          graph[pa.nodeKey][pa.line].push({station:pb.nodeKey, line:pb.line, cost: interchangeTime(realStn, pa.line, pb.line), type:'interchange'});
+          graph[pa.nodeKey][pa.line].push({station:pb.nodeKey, line:pb.line, cost: interchangeTime(realStn, pa.line, pb.line, sideA, sideB), type:'interchange'});
         } else {
-          const w = interchangeTime(realStn, pa.line, pb.line);
+          const w = interchangeTime(realStn, pa.line, pb.line, sideA, sideB);
           graph[pa.nodeKey][pa.line].push({station:pb.nodeKey, line:pb.line, cost:w, type:'interchange'});
         }
       }
@@ -5281,7 +5395,19 @@ function scoreLegs(legs, origin) {
 
     const at = leg.to;              // where this leg puts you down
     const boardAt = next.from;      // where the next leg picks you up
-    const walkMins = interchangeTime(at, dl, nextDl);
+    // Platform groups at a split-platform station (SPLIT_PLATFORMS). Only
+    // meaningful when both legs touch the SAME station, which excludes the
+    // Bank/Monument cross-complex case where at !== boardAt. Resolved through
+    // the same resolveLegBranch the wait model uses, so the walk and the wait
+    // always describe the same train at the same platform.
+    let fromSide = null, toSide = null;
+    if (at === boardAt && SPLIT_PLATFORMS[at]) {
+      fromSide = splitPlatformSide(at, dl,
+        legNeighboursAt(leg.from, leg.to, leg.branchLine || leg.line, 'to'));
+      toSide = splitPlatformSide(at, nextDl,
+        legNeighboursAt(next.from, next.to, next.branchLine || next.line, 'from'));
+    }
+    const walkMins = interchangeTime(at, dl, nextDl, fromSide, toSide);
     // Wait is looked up at boardAt, not at `at`. They differ only for
     // cross-complex changes (Bank <-> Monument), and that difference is
     // precisely the result-card bug: Bank has no Circle platforms, so a lookup
@@ -5513,6 +5639,16 @@ function requiresChange(a, b) {
 //       invisible to the search and any route to or through Blackhorse Road
 //       was scored without it. Pontoon Dock -> Blackhorse Road published 52
 //       where 44 exists. Cards scored under 7 must be re-scored.
+// DELIBERATELY NOT BUMPED for the 2026-09-10 Paddington split-platform fix
+// (SPLIT_PLATFORMS). That change corrects today's live hard puzzle optimal
+// from 32 to 33, and bumping this would invalidate every existing snapshot —
+// re-scoring cards that players had already been shown. The players hit
+// hardest would be the ones who found the mispriced Paddington change: told
+// "OPTIMAL, 32" in the morning, then silently re-graded to ~12 min off after
+// the deploy. Leaving it at 9 keeps finished cards frozen exactly as played,
+// while everyone who plays from now on is scored by the corrected engine
+// (the optimal is computed live in pickOptimal, not read from the lookup).
+// PUZZLE_CACHE_KEY IS bumped, which is what actually refreshes clients.
 const SCORING_VERSION = 9;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -5834,7 +5970,7 @@ function _dayLabel(key) {
 // rule is to bump on any filter/graph change, not because a stale client is
 // known to serve a wrong pair. Kept anyway: the cache holds only the current
 // date's pair, so a bump costs one re-resolve and nothing else.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v18';
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v19';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');

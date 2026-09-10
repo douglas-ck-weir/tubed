@@ -1465,8 +1465,8 @@
   "2026-11-22": {
     "puzzleNum": 234,
     "easy": {
-      "start": "St. Paul's",
-      "end": "Russell Square"
+      "start": "Goldhawk Road",
+      "end": "Marble Arch"
     },
     "hard": {
       "start": "Crystal Palace",
@@ -1542,8 +1542,8 @@
   "2026-11-29": {
     "puzzleNum": 241,
     "easy": {
-      "start": "Monument",
-      "end": "New Cross Gate"
+      "start": "West Hampstead",
+      "end": "Russell Square"
     },
     "hard": {
       "start": "London City Airport",
@@ -1557,8 +1557,8 @@
       "end": "Highbury & Islington"
     },
     "hard": {
-      "start": "West Hampstead",
-      "end": "Euston"
+      "start": "Richmond",
+      "end": "Angel"
     }
   },
   "2026-12-01": {
@@ -1568,8 +1568,8 @@
       "end": "Kensal Green"
     },
     "hard": {
-      "start": "Richmond",
-      "end": "Tooting Bec"
+      "start": "New Cross Gate",
+      "end": "Shepherd's Bush Market"
     }
   },
   "2026-12-02": {
@@ -1579,8 +1579,8 @@
       "end": "Clapham North"
     },
     "hard": {
-      "start": "Angel",
-      "end": "Neasden"
+      "start": "Bounds Green",
+      "end": "East Ham"
     }
   },
   "2026-12-03": {

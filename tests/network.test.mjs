@@ -536,11 +536,22 @@ test('buildUserLegs: Victoria → Ladbroke Grove on Circle (no waypoint) scores 
 
 test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces a change at Paddington', () => {
   // Player adds Paddington as a pivot waypoint → leg splits with a
-  // Circle|Circle interchange at Paddington. Interchange is 7-min walk
-  // (cross-platform between Bayswater-side and Royal-Oak-side Circle
-  // platforms) + 2-min wait: Circle shares its Paddington platform with
-  // District and H&C, so the wait is the combined-frequency value, not the
-  // old Circle-only 5. Total: 16 + (7 walk + 2 wait) + 5 = 30.
+  // Circle|Circle interchange at Paddington.
+  //
+  // The walk is 14, not the 7 this asserted until SPLIT_PLATFORMS landed.
+  // Paddington's sub-surface platforms are two separate groups and this pivot
+  // crosses between them: the leg from Victoria alights on the Bayswater side
+  // (Praed Street) and Ladbroke Grove is only reachable from the Royal Oak
+  // side (Bishop's Road). 14 is TfL's own Stop Structure footpath for that
+  // crossing, and is what INTERCHANGE_MINS already charged for
+  // District|Hammersmith & City here. The old 7 was a hand-tuned value that
+  // made the same physical walk cost half as much when both legs happened to
+  // be Circle. Compare the Hammersmith test below, which pins the same
+  // symmetry for that station's cross-road walk.
+  //
+  // Wait stays 2: Circle shares its Paddington platform with District and
+  // H&C, so it is the combined-frequency value, not the old Circle-only 5.
+  // Total: 16 + (14 walk + 2 wait) + 5 = 37.
   const r = buildUserLegs('Victoria', [
     {station:'Paddington', line:'Circle'},
     {station:'Ladbroke Grove', line:'Circle'},
@@ -549,10 +560,10 @@ test('buildUserLegs: Victoria → Paddington → Ladbroke Grove on Circle forces
   eq(r.legs[0].mins, 16);
   eq(r.legs[1].mins, 5);
   eq(r.interchanges[0]?.at, 'Paddington');
-  eq(r.interchanges[0]?.walkMins, 7);
+  eq(r.interchanges[0]?.walkMins, 14);
   eq(r.interchanges[0]?.waitMins, 2);
-  eq(r.interchanges[0]?.mins, 9);
-  eq(r.totalMins, 30);
+  eq(r.interchanges[0]?.mins, 16);
+  eq(r.totalMins, 37);
 });
 
 test('buildUserLegs: Victoria → Edgware Road → Ladbroke Grove forces a change at Edgware Road', () => {
@@ -592,10 +603,19 @@ test('buildUserLegs: Hammersmith → Victoria direct on Circle = 46 min continuo
 });
 
 test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington uses 2-min wait', () => {
-  // Circle and H&C share platforms at Paddington-N — 1-min cross-platform
-  // interchange walk. Heading to Ladbroke Grove the first hop is Royal Oak,
-  // where only Circle + H&C run (District turns south to Bayswater), so the
-  // combined wait is Paddington|Royal Oak|H&C = 2.
+  // Circle and H&C DO share platforms at Paddington's Bishop's Road group —
+  // but this route never reaches them. The Circle leg from Victoria is the
+  // Bayswater-side occurrence, so it alights at Praed Street, and boarding the
+  // H&C means the 14-min crossing to Bishop's Road. This asserted 1 until
+  // SPLIT_PLATFORMS landed, which was the bug a player reported on 2026-09-08:
+  // a single Circle|District value cannot be right in both directions when the
+  // Circle calls at both platform groups. Note this total now matches the
+  // Circle→Circle test above exactly (37) — same physical walk, same price,
+  // whatever is written on the front of the train.
+  //
+  // Heading to Ladbroke Grove the first hop is Royal Oak, where only Circle +
+  // H&C run (District turns south to Bayswater), so the combined wait is
+  // Paddington|Royal Oak|H&C = 2.
   //
   // This previously expected 1, which was Paddington|Edgware Road|H&C — the
   // three-line value for the OPPOSITE direction. There is no
@@ -609,28 +629,43 @@ test('buildUserLegs: explicit cross-line change Circle → H&C at Paddington use
   eq(r.legs.length, 2);
   eq(r.legs[0].line, 'Circle');
   eq(r.legs[1].line, 'Hammersmith & City');
-  eq(r.interchanges[0]?.walkMins, 1);
+  eq(r.interchanges[0]?.walkMins, 14);
   eq(r.interchanges[0]?.waitMins, 2);
-  eq(r.interchanges[0]?.mins, 3);
-  // 16 + (1 walk + 2 wait) + 5 = 24
-  eq(r.totalMins, 24);
+  eq(r.interchanges[0]?.mins, 16);
+  // 16 + (14 walk + 2 wait) + 5 = 37
+  eq(r.totalMins, 37);
 });
 
-test('Optimal Victoria → Ladbroke Grove uses Paddington change (not the long anticlockwise way)', () => {
+test('Optimal Victoria → Ladbroke Grove changes at Edgware Road (not the long anticlockwise way)', () => {
   const opt = optimal('Victoria', 'Ladbroke Grove');
   defined(opt, 'optimal route should exist');
-  // Should be a 2-leg route via Paddington, not a 1-leg 39-min long way.
+  // Should be a 2-leg route, not a 1-leg 39-min long way.
+  //
+  // The change is at Edgware Road, not Paddington. Changing at Paddington
+  // means the 14-min crossing between its two platform groups (SPLIT_PLATFORMS),
+  // so it is cheaper to stay on the train two more stops to Edgware Road, where
+  // all three sub-surface lines genuinely share island platforms, and double
+  // back. This test asserted a Paddington change until SPLIT_PLATFORMS landed,
+  // which was only optimal because the crossing was mispriced at 1 minute.
+  //
+  // TfL Journey Planner makes the same move: for Earl's Court -> Westbourne
+  // Park it rides past Paddington to Edgware Road and doubles back rather than
+  // crossing at Paddington.
   eq(opt.legs.length, 2);
-  eq(opt.legs[0].to, 'Paddington');
-  eq(opt.legs[1].from, 'Paddington');
+  eq(opt.legs[0].to, 'Edgware Road');
+  eq(opt.legs[1].from, 'Edgware Road');
   truthy(opt.mins < 39, `optimal should beat the long way; got ${opt.mins}`);
 });
 
-test('Optimal Bayswater → Westbourne Park uses a same-station change at Paddington', () => {
+test('Optimal Bayswater → Westbourne Park changes at Edgware Road, not across Paddington', () => {
   const opt = optimal('Bayswater', 'Westbourne Park');
   defined(opt, 'optimal route should exist');
+  // Both stations sit on opposite platform groups at Paddington, so the
+  // direct-looking change there is really the 14-min crossing. Riding on to
+  // Edgware Road and doubling back is genuinely quicker. Asserted Paddington
+  // until SPLIT_PLATFORMS landed. See [[SPLIT_PLATFORMS]] in index.html.
   eq(opt.legs.length, 2);
-  eq(opt.legs[0].to, 'Paddington');
+  eq(opt.legs[0].to, 'Edgware Road');
 });
 
 test('Paddington Bakerloo|H&C interchange is 10 (not the previously-wrong 22)', () => {
@@ -689,15 +724,21 @@ test('_singleLineDistances on a linear line (Northern) is unchanged', () => {
   defined(d['Oval'], 'Oval reachable from Stockwell on Northern Bank branch');
 });
 
-test('bestOneChangeMins for Victoria → Ladbroke Grove gives the via-Paddington short route (~22 min)', () => {
+test('bestOneChangeMins for Victoria → Ladbroke Grove gives the via-Edgware-Road route (~27 min)', () => {
   // Before the _singleLineDistances pivot guard, this returned 21 (the
   // free-teleport short way), which then made the hard-puzzle generator's
   // "1-change-gap" filter accept puzzles whose optimal route only just beat
-  // a fictitious one-change tube route. With the fix, the value reflects
-  // the real two-leg route Victoria → Paddington (Circle) → Ladbroke Grove
-  // (H&C) including the 1-min cross-line interchange at Paddington.
+  // a fictitious one-change tube route. The guard is still what this test
+  // exists to protect.
+  //
+  // The band moved from ~22 to ~27 when SPLIT_PLATFORMS landed. The old value
+  // was the two-leg route Victoria → Paddington (Circle) → Ladbroke Grove
+  // (H&C) charging a 1-min interchange for what is really the 14-min crossing
+  // between Paddington's two platform groups. The real best one-change route
+  // changes at Edgware Road instead, and 27 now agrees exactly with the
+  // dijkstra optimal for this pair.
   const m = bestOneChangeMins('Victoria', 'Ladbroke Grove');
-  truthy(m >= 20 && m <= 25, `bestOneChangeMins should be ~22, got ${m}`);
+  truthy(m >= 25 && m <= 30, `bestOneChangeMins should be ~27, got ${m}`);
 });
 
 // ── Multi-occurrence stations are an explicit, documented set ─────────────

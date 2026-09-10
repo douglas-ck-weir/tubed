@@ -342,9 +342,14 @@ test('e2e: Paddington pivot wait reflects Circle headway (covers #1 direction-se
   ]);
   const interchange = userLegsData.interchanges.find(x => x && x.at === 'Paddington');
   truthy(interchange, 'should have a Paddington interchange');
-  eq(interchange.walkMins, 7, '7-min cross-platform walk between Circle teardrops');
+  // 14, not 7: this pivot crosses between Paddington's two platform groups
+  // (Praed Street -> Bishop's Road), which is TfL's own 14-min footpath and
+  // the value INTERCHANGE_MINS already used for District|Hammersmith & City.
+  // The old 7 let the identical walk cost half as much when both legs were
+  // Circle. See SPLIT_PLATFORMS in index.html.
+  eq(interchange.walkMins, 14, '14-min crossing between Paddington platform groups');
   eq(interchange.waitMins, 2, 'Circle combined shared-platform half-headway wait');
-  eq(interchange.mins, 9);
+  eq(interchange.mins, 16);
 });
 
 test('e2e: Edgware Road pivot wait resolves per-pivot (direction sanity)', () => {
