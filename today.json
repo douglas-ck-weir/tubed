@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-10",
-  "puzzleNum": 161,
+  "date": "2026-09-11",
+  "puzzleNum": 162,
   "easy": {
-    "start": "Neasden",
-    "end": "Monument"
+    "start": "Elephant & Castle",
+    "end": "Putney Bridge"
   },
   "hard": {
-    "start": "Bayswater",
-    "end": "Seven Sisters"
+    "start": "Gloucester Road",
+    "end": "Clapham South"
   }
 }
