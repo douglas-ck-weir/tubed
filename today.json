@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-11",
-  "puzzleNum": 162,
+  "date": "2026-09-12",
+  "puzzleNum": 163,
   "easy": {
-    "start": "Elephant & Castle",
-    "end": "Putney Bridge"
+    "start": "Charing Cross",
+    "end": "Stratford"
   },
   "hard": {
-    "start": "Gloucester Road",
-    "end": "Clapham South"
+    "start": "Custom House for ExCel",
+    "end": "Surrey Quays"
   }
 }
