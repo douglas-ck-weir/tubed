@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-12",
-  "puzzleNum": 163,
+  "date": "2026-09-13",
+  "puzzleNum": 164,
   "easy": {
-    "start": "Charing Cross",
-    "end": "Stratford"
+    "start": "Covent Garden",
+    "end": "High Street Kensington"
   },
   "hard": {
-    "start": "Custom House for ExCel",
-    "end": "Surrey Quays"
+    "start": "Piccadilly Circus",
+    "end": "Crystal Palace"
   }
 }
