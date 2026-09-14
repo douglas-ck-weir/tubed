@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-13",
-  "puzzleNum": 164,
+  "date": "2026-09-14",
+  "puzzleNum": 165,
   "easy": {
-    "start": "Covent Garden",
-    "end": "High Street Kensington"
+    "start": "Westferry",
+    "end": "Southwark"
   },
   "hard": {
-    "start": "Piccadilly Circus",
-    "end": "Crystal Palace"
+    "start": "Bounds Green",
+    "end": "South Wimbledon"
   }
 }
