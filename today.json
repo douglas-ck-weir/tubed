@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-14",
-  "puzzleNum": 165,
+  "date": "2026-09-15",
+  "puzzleNum": 166,
   "easy": {
-    "start": "Westferry",
-    "end": "Southwark"
+    "start": "Crossharbour",
+    "end": "Earl's Court"
   },
   "hard": {
-    "start": "Bounds Green",
-    "end": "South Wimbledon"
+    "start": "Maida Vale",
+    "end": "Caledonian Road"
   }
 }
