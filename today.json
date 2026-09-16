@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-15",
-  "puzzleNum": 166,
+  "date": "2026-09-16",
+  "puzzleNum": 167,
   "easy": {
-    "start": "Crossharbour",
-    "end": "Earl's Court"
+    "start": "Holland Park",
+    "end": "Tower Hill"
   },
   "hard": {
-    "start": "Maida Vale",
-    "end": "Caledonian Road"
+    "start": "Gunnersbury",
+    "end": "Tooting Bec"
   }
 }
