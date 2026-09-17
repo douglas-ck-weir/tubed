@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-16",
-  "puzzleNum": 167,
+  "date": "2026-09-17",
+  "puzzleNum": 168,
   "easy": {
-    "start": "Holland Park",
-    "end": "Tower Hill"
+    "start": "Ravenscourt Park",
+    "end": "Holloway Road"
   },
   "hard": {
-    "start": "Gunnersbury",
-    "end": "Tooting Bec"
+    "start": "West Brompton",
+    "end": "Pontoon Dock"
   }
 }

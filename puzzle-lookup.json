@@ -1,4 +1,15 @@
 {
+  "2026-09-16": {
+    "puzzleNum": 167,
+    "easy": {
+      "start": "Holland Park",
+      "end": "Tower Hill"
+    },
+    "hard": {
+      "start": "Gunnersbury",
+      "end": "Tooting Bec"
+    }
+  },
   "2026-09-15": {
     "puzzleNum": 166,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Preston Road",
       "end": "St. James's Park"
-    }
-  },
-  "2026-07-18": {
-    "puzzleNum": 107,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Turnham Green"
-    },
-    "hard": {
-      "start": "Golders Green",
-      "end": "New Cross Gate"
-    }
-  },
-  "2026-09-16": {
-    "puzzleNum": 167,
-    "easy": {
-      "start": "Holland Park",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Gunnersbury",
-      "end": "Tooting Bec"
     }
   },
   "2026-09-17": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Northfields",
       "end": "Stockwell"
+    }
+  },
+  "2026-12-15": {
+    "puzzleNum": 257,
+    "easy": {
+      "start": "Preston Road",
+      "end": "Canning Town"
+    },
+    "hard": {
+      "start": "Greenwich",
+      "end": "Harrow on the Hill"
     }
   }
 }
