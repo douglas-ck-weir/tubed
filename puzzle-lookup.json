@@ -1,4 +1,15 @@
 {
+  "2026-09-17": {
+    "puzzleNum": 168,
+    "easy": {
+      "start": "Ravenscourt Park",
+      "end": "Holloway Road"
+    },
+    "hard": {
+      "start": "West Brompton",
+      "end": "Pontoon Dock"
+    }
+  },
   "2026-09-16": {
     "puzzleNum": 167,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Arsenal",
       "end": "Dalston Kingsland"
-    }
-  },
-  "2026-07-19": {
-    "puzzleNum": 108,
-    "easy": {
-      "start": "Aldgate East",
-      "end": "Knightsbridge"
-    },
-    "hard": {
-      "start": "Preston Road",
-      "end": "St. James's Park"
-    }
-  },
-  "2026-09-17": {
-    "puzzleNum": 168,
-    "easy": {
-      "start": "Ravenscourt Park",
-      "end": "Holloway Road"
-    },
-    "hard": {
-      "start": "West Brompton",
-      "end": "Pontoon Dock"
     }
   },
   "2026-09-18": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Greenwich",
       "end": "Harrow on the Hill"
+    }
+  },
+  "2026-12-16": {
+    "puzzleNum": 258,
+    "easy": {
+      "start": "South Ealing",
+      "end": "St. Paul's"
+    },
+    "hard": {
+      "start": "Kilburn Park",
+      "end": "Kentish Town"
     }
   }
 }

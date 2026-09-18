@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-17",
-  "puzzleNum": 168,
+  "date": "2026-09-18",
+  "puzzleNum": 169,
   "easy": {
-    "start": "Ravenscourt Park",
-    "end": "Holloway Road"
+    "start": "Highbury & Islington",
+    "end": "Tottenham Court Road"
   },
   "hard": {
-    "start": "West Brompton",
-    "end": "Pontoon Dock"
+    "start": "London City Airport",
+    "end": "Tottenham Hale"
   }
 }
