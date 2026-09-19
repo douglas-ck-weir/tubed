@@ -1,4 +1,15 @@
 {
+  "2026-09-18": {
+    "puzzleNum": 169,
+    "easy": {
+      "start": "Highbury & Islington",
+      "end": "Tottenham Court Road"
+    },
+    "hard": {
+      "start": "London City Airport",
+      "end": "Tottenham Hale"
+    }
+  },
   "2026-09-17": {
     "puzzleNum": 168,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Sloane Square",
       "end": "Harrow on the Hill"
-    }
-  },
-  "2026-07-20": {
-    "puzzleNum": 109,
-    "easy": {
-      "start": "Stockwell",
-      "end": "Hammersmith"
-    },
-    "hard": {
-      "start": "Arsenal",
-      "end": "Dalston Kingsland"
-    }
-  },
-  "2026-09-18": {
-    "puzzleNum": 169,
-    "easy": {
-      "start": "Highbury & Islington",
-      "end": "Tottenham Court Road"
-    },
-    "hard": {
-      "start": "London City Airport",
-      "end": "Tottenham Hale"
     }
   },
   "2026-09-19": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Kilburn Park",
       "end": "Kentish Town"
+    }
+  },
+  "2026-12-17": {
+    "puzzleNum": 259,
+    "easy": {
+      "start": "Dalston Kingsland",
+      "end": "Bethnal Green"
+    },
+    "hard": {
+      "start": "Limehouse",
+      "end": "Leytonstone"
     }
   }
 }

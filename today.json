@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-18",
-  "puzzleNum": 169,
+  "date": "2026-09-19",
+  "puzzleNum": 170,
   "easy": {
-    "start": "Highbury & Islington",
-    "end": "Tottenham Court Road"
+    "start": "Lambeth North",
+    "end": "Kings Cross St. Pancras"
   },
   "hard": {
-    "start": "London City Airport",
-    "end": "Tottenham Hale"
+    "start": "Westbourne Park",
+    "end": "Dalston Kingsland"
   }
 }
