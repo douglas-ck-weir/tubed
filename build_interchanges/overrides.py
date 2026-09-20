@@ -240,20 +240,71 @@ LINKED_STATIONS: List[FrozenSet[str]] = [
 # Each entry MUST include a `reason` comment explaining why the API can't
 # provide this value, so a future maintainer can re-evaluate.
 MANUAL_OVERRIDES: Dict[str, Dict[str, int]] = {
-    # Blackhorse Road: the API DOES return this pair, and returns 6 — this is
-    # a deliberate disagreement, not a gap-filler like the rest of this dict.
+    # ── Deliberate disagreements with the API ────────────────────────────────
+    # Baker Street and Blackhorse Road below are NOT gap-fillers like the rest
+    # of this dict. The API returns these pairs; we override them because TfL's
+    # interchange figures are a planning ALLOWANCE, not a walk.
     #
-    # The game charges the boarding wait separately from the interchange, so
-    # an INTERCHANGE_MINS value must be walking time only. TfL's 6 (both Stop
-    # Structure footpaths and Journey Planner icDur) appears to include a
-    # connection buffer: the planner schedules the tube leg to arrive ~6 min
-    # before the Overground departs, so its own figures never separate the
-    # walk from the wait. Taking 6 and then adding our 3-min wait bills that
-    # buffer twice.
+    # Measured across all 36,889 cached footpaths, TfL's durations imply a
+    # median walking speed of 0.64 m/s (0.71 on level-only corridors) against a
+    # normal 1.3-1.4. The error is progressive, not a flat offset: 1-2 min
+    # values are right, a 7 is ~3 too high, a 13 is ~4 too high. 46 of 271
+    # cells sit at 7+.
     #
-    # 3 is the measured walk (user's own timing, and Google Maps shows the
-    # change as 3 min plus 3 min waiting). Without this entry the next
-    # --apply run silently pushes it back to 6.
+    # This is NOT a wait double-count, which was the previous theory here.
+    # Journey Planner's interChangeDuration excludes waiting: over 212 sampled
+    # Baker Street connections, (next departure - arrival) minus icDur was
+    # never negative, median +1 min, with icDur constant while the gap varied.
+    # That is a fixed walking allowance with the wait on top. The Stop
+    # Structure figure settles it independently, being a static footpath record
+    # with no timetable attached at all. waitTime() charges the wait, as ever.
+    #
+    # NOT fixed network-wide on purpose. Recalibrating every cell from the
+    # footpath geometry breaks Canary Wharf (DLR|Jubilee 11 -> 6), which flips
+    # Green Park -> Mudchute off the verified-correct Heron Quays walk. Baker
+    # Street is 216 m over 5 levels and really ~4 min; Canary Wharf is 298 m
+    # over 4 levels and really ~11. More distance, fewer levels, three times the
+    # transfer. No formula over those inputs produces both, so the remaining
+    # cells need per-station evidence rather than a pass of arithmetic.
+
+    # Baker Street: API returns 9 for Circle/H&C|Jubilee (Journey Planner says
+    # 9 one way, 10 the other). The footpath is itemised as STAIRS 36m, STAIRS
+    # 31m, ESCALATOR 86m, ESCALATOR 24m, LEVEL 38m — 216 m, against a
+    # straight-line platform gap of 152 m. Nine minutes for that is 0.4 m/s.
+    #
+    # Reported by a player 2026-09-08 ("not a 9 minute walk, it is 3-4
+    # minutes"). Google Maps puts the change at 2, splitting the same 8-minute
+    # gap as 2 walk + 6 wait where TfL splits it 9 walk + 1 wait; the H&C and
+    # Circle share track to Royal Oak on a ~6 min combined headway, so the wait
+    # is where that time actually goes. Geometry at normal pace gives 4-5.
+    # We take 4.
+    #
+    # The whole station moves together. Bakerloo|Circle carried the same
+    # inflation (7 for a 177 m path), and leaving it would make Baker Street
+    # price a SHORTER walk above a longer one. Bakerloo|Jubilee (a single 38 m
+    # level passage) and Circle|Hammersmith & City (shared platforms 5/6) were
+    # already right and are left alone.
+    'Baker Street': {
+        'Bakerloo|Circle': 4,
+        'Bakerloo|Hammersmith & City': 4,
+        'Bakerloo|Metropolitan': 2,
+        'Circle|Jubilee': 4,
+        'Circle|Metropolitan': 2,
+        'Hammersmith & City|Jubilee': 4,
+        'Hammersmith & City|Metropolitan': 2,
+        'Jubilee|Metropolitan': 3,
+    },
+    # Blackhorse Road: the API returns 6 for this pair; we charge the 3-minute
+    # walk. Same reasoning as Baker Street above — TfL's figure is the slow-pace
+    # allowance, not the walk.
+    #
+    # NOTE the earlier justification here was wrong and has been removed: it
+    # claimed TfL's 6 bundled a connection buffer so "its own figures never
+    # separate the walk from the wait". They do separate them (see the 212-
+    # connection test above). The VALUE stands on its own evidence — the user's
+    # own timing, and Google Maps showing 3 min walking plus 3 min waiting.
+    #
+    # Without this entry the next --apply run silently pushes it back to 6.
     'Blackhorse Road': {
         'Suffragette|Victoria': 3,
     },

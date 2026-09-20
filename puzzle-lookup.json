@@ -732,8 +732,8 @@
       "end": "Kennington"
     },
     "hard": {
-      "start": "Great Portland Street",
-      "end": "Greenwich"
+      "start": "Earl's Court",
+      "end": "Harrow on the Hill"
     }
   },
   "2026-09-29": {
@@ -853,8 +853,8 @@
       "end": "Greenwich"
     },
     "hard": {
-      "start": "Bow Road",
-      "end": "Wembley Central"
+      "start": "Pimlico",
+      "end": "Westbourne Park"
     }
   },
   "2026-10-10": {
@@ -886,15 +886,15 @@
       "end": "Royal Oak"
     },
     "hard": {
-      "start": "Stepney Green",
-      "end": "Kilburn Park"
+      "start": "Mornington Crescent",
+      "end": "Turnham Green"
     }
   },
   "2026-10-13": {
     "puzzleNum": 194,
     "easy": {
-      "start": "Goldhawk Road",
-      "end": "Old Street"
+      "start": "Stepney Green",
+      "end": "Kilburn Park"
     },
     "hard": {
       "start": "North Acton",
@@ -1480,8 +1480,8 @@
       "end": "St. John's Wood"
     },
     "hard": {
-      "start": "Bromley-by-Bow",
-      "end": "Marylebone"
+      "start": "Holland Park",
+      "end": "Old Street"
     }
   },
   "2026-12-06": {
@@ -1502,8 +1502,8 @@
       "end": "Seven Sisters"
     },
     "hard": {
-      "start": "High Street Kensington",
-      "end": "Arsenal"
+      "start": "Great Portland Street",
+      "end": "Pontoon Dock"
     }
   },
   "2026-12-08": {
@@ -1557,8 +1557,8 @@
       "end": "Brent Cross"
     },
     "hard": {
-      "start": "Chancery Lane",
-      "end": "Stamford Brook"
+      "start": "Queen's Park",
+      "end": "Tooting Broadway"
     }
   },
   "2026-12-13": {
@@ -1597,8 +1597,8 @@
   "2026-12-16": {
     "puzzleNum": 258,
     "easy": {
-      "start": "South Ealing",
-      "end": "St. Paul's"
+      "start": "Turnpike Lane",
+      "end": "Chancery Lane"
     },
     "hard": {
       "start": "Kilburn Park",

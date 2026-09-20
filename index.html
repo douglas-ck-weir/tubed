@@ -648,17 +648,38 @@ const INTERCHANGE_MINS = {
   "Aldgate East": {
     "District|Hammersmith & City": 1,
   },
+  // Baker Street is MANUALLY OVERRIDDEN — see MANUAL_OVERRIDES['Baker Street']
+  // in build_interchanges/overrides.py for the full evidence. Summary:
+  //
+  // The API returns 9 for Circle/H&C|Jubilee. Its own footpath record itemises
+  // that walk as 216 m (stairs, stairs, escalator, escalator, level) against a
+  // straight-line platform gap of 152 m. Nine minutes for that is 0.4 m/s.
+  // TfL's interchange figures are a planning allowance, not a walk: network
+  // wide they imply a median 0.64 m/s against a normal 1.3-1.4.
+  //
+  // Reported by a player 2026-09-08. Google Maps puts the change at 2, and
+  // splits the same 8-min gap as 2 walk + 6 wait where TfL splits it 9 + 1.
+  // The wait is real (H&C and Circle share track to Royal Oak on a ~6 min
+  // combined headway); the nine-minute walk is not. We take 4.
+  //
+  // Not a wait double-count — icDur excludes waiting, verified over 212
+  // connections. waitTime() still charges the wait separately.
+  //
+  // The whole station moved together: Bakerloo|Circle carried the same
+  // inflation, and leaving it at 7 would price a SHORTER walk above a longer
+  // one. Bakerloo|Jubilee (one 38 m level passage) and Circle|Hammersmith &
+  // City (shared platforms 5/6) were already right and are untouched.
   "Baker Street": {
-    "Bakerloo|Circle": 7,
-    "Bakerloo|Hammersmith & City": 7,
+    "Bakerloo|Circle": 4,
+    "Bakerloo|Hammersmith & City": 4,
     "Bakerloo|Jubilee": 2,
-    "Bakerloo|Metropolitan": 4,
+    "Bakerloo|Metropolitan": 2,
     "Circle|Hammersmith & City": 1,
-    "Circle|Jubilee": 9,
-    "Circle|Metropolitan": 4,
-    "Hammersmith & City|Jubilee": 9,
-    "Hammersmith & City|Metropolitan": 4,
-    "Jubilee|Metropolitan": 6,
+    "Circle|Jubilee": 4,
+    "Circle|Metropolitan": 2,
+    "Hammersmith & City|Jubilee": 4,
+    "Hammersmith & City|Metropolitan": 2,
+    "Jubilee|Metropolitan": 3,
   },
   "Bank": {
     "Central|Circle": 8,
@@ -5970,7 +5991,16 @@ function _dayLabel(key) {
 // rule is to bump on any filter/graph change, not because a stale client is
 // known to serve a wrong pair. Kept anyway: the cache holds only the current
 // date's pair, so a bump costs one re-resolve and nothing else.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v19';
+//
+// v20 — 2026-09-20 Baker Street interchange override. Eight values fall, so
+// route costs change and the difficulty filters read those costs.
+//
+// SCORING_VERSION deliberately NOT bumped, following the precedent set by the
+// Paddington fix (8aa9a7e). It gates the result-card snapshot, and bumping
+// re-scores cards players were already shown — hitting hardest the players who
+// took the Baker Street change this fix is for. History reads banked values
+// and never re-scores; new plays use the live engine regardless.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v20';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
