@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-19",
-  "puzzleNum": 170,
+  "date": "2026-09-20",
+  "puzzleNum": 171,
   "easy": {
-    "start": "Lambeth North",
-    "end": "Kings Cross St. Pancras"
+    "start": "Walthamstow Central",
+    "end": "Wembley Park"
   },
   "hard": {
-    "start": "Westbourne Park",
-    "end": "Dalston Kingsland"
+    "start": "East Putney",
+    "end": "Surrey Quays"
   }
 }

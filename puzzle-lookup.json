@@ -1,4 +1,15 @@
 {
+  "2026-09-19": {
+    "puzzleNum": 170,
+    "easy": {
+      "start": "Lambeth North",
+      "end": "Kings Cross St. Pancras"
+    },
+    "hard": {
+      "start": "Westbourne Park",
+      "end": "Dalston Kingsland"
+    }
+  },
   "2026-09-18": {
     "puzzleNum": 169,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Borough",
       "end": "Surrey Quays"
-    }
-  },
-  "2026-07-21": {
-    "puzzleNum": 110,
-    "easy": {
-      "start": "Acton Town",
-      "end": "Finchley Road"
-    },
-    "hard": {
-      "start": "Sloane Square",
-      "end": "Harrow on the Hill"
-    }
-  },
-  "2026-09-19": {
-    "puzzleNum": 170,
-    "easy": {
-      "start": "Lambeth North",
-      "end": "Kings Cross St. Pancras"
-    },
-    "hard": {
-      "start": "Westbourne Park",
-      "end": "Dalston Kingsland"
     }
   },
   "2026-09-20": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Limehouse",
       "end": "Leytonstone"
+    }
+  },
+  "2026-12-18": {
+    "puzzleNum": 260,
+    "easy": {
+      "start": "Golders Green",
+      "end": "Bond Street"
+    },
+    "hard": {
+      "start": "Acton Town",
+      "end": "Wembley Central"
     }
   }
 }
