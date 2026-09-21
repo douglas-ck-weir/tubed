@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-20",
-  "puzzleNum": 171,
+  "date": "2026-09-21",
+  "puzzleNum": 172,
   "easy": {
-    "start": "Walthamstow Central",
-    "end": "Wembley Park"
+    "start": "Dollis Hill",
+    "end": "Bromley-by-Bow"
   },
   "hard": {
-    "start": "East Putney",
-    "end": "Surrey Quays"
+    "start": "New Cross Gate",
+    "end": "South Kensington"
   }
 }
