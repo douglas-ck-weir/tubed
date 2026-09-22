@@ -1,4 +1,15 @@
 {
+  "2026-09-21": {
+    "puzzleNum": 172,
+    "easy": {
+      "start": "Dollis Hill",
+      "end": "Bromley-by-Bow"
+    },
+    "hard": {
+      "start": "New Cross Gate",
+      "end": "South Kensington"
+    }
+  },
   "2026-09-20": {
     "puzzleNum": 171,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "New Cross Gate",
       "end": "Elephant & Castle"
-    }
-  },
-  "2026-07-23": {
-    "puzzleNum": 112,
-    "easy": {
-      "start": "Wembley Park",
-      "end": "Charing Cross"
-    },
-    "hard": {
-      "start": "High Street Kensington",
-      "end": "Angel"
-    }
-  },
-  "2026-09-21": {
-    "puzzleNum": 172,
-    "easy": {
-      "start": "Dollis Hill",
-      "end": "Bromley-by-Bow"
-    },
-    "hard": {
-      "start": "New Cross Gate",
-      "end": "South Kensington"
     }
   },
   "2026-09-22": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Ravenscourt Park",
       "end": "Colliers Wood"
+    }
+  },
+  "2026-12-20": {
+    "puzzleNum": 262,
+    "easy": {
+      "start": "Neasden",
+      "end": "Kew Gardens"
+    },
+    "hard": {
+      "start": "Putney Bridge",
+      "end": "Clapham Common"
     }
   }
 }

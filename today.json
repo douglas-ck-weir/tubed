@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-21",
-  "puzzleNum": 172,
+  "date": "2026-09-22",
+  "puzzleNum": 173,
   "easy": {
-    "start": "Dollis Hill",
-    "end": "Bromley-by-Bow"
+    "start": "Tower Gateway",
+    "end": "Ealing Broadway"
   },
   "hard": {
-    "start": "New Cross Gate",
-    "end": "South Kensington"
+    "start": "Shadwell",
+    "end": "Vauxhall"
   }
 }
