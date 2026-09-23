@@ -3410,9 +3410,27 @@ const NETWORK = {
     'Canning Town','West Silvertown','Pontoon Dock','London City Airport','King George V','Woolwich Arsenal',
   ],
   'DLR_Tower_Gateway_Beckton': [
-    'Tower Gateway','Shadwell','Limehouse','Westferry','Poplar','All Saints',
+    'Tower Gateway','Shadwell','Limehouse','Westferry','Poplar',
     'Blackwall','East India','Canning Town','Royal Victoria','Custom House for ExCel','Prince Regent',
     'Royal Albert','Beckton Park','Cyprus','Gallions Reach','Beckton',
+  ],
+  // Stratford branch. Four of its stations (Pudding Mill Lane, Bow Church,
+  // Devons Road, Langdon Park) had coordinates and hop times but belonged to no
+  // service pattern, so they were absent from ALL_STATIONS and unreachable in
+  // the graph — a player could not even type "Bow Church". All Saints was
+  // additionally mis-stopped on the Tower Gateway-Beckton pattern above;
+  // Beckton trains run Poplar-Blackwall direct.
+  // TERMINATES AT CANARY WHARF, verified against live departure boards and
+  // scheduled journeys on three future dates. Do NOT extend it to Lewisham:
+  // TfL's /Line/dlr/Route/Sequence `orderedLineRoutes` still advertises a
+  // "Lewisham <-> Stratford" pattern, but no such train runs. Every board on
+  // the branch is signed Stratford or Canary Wharf, and Bow Church -> Lewisham
+  // plans as two legs with a change at Canary Wharf. Modelling the through
+  // service would let the scorer ride Stratford -> Lewisham with no change,
+  // producing a published optimal no player could actually match.
+  'DLR_Stratford_Canary_Wharf': [
+    'Stratford','Pudding Mill Lane','Bow Church','Devons Road','Langdon Park','All Saints',
+    'Poplar','West India Quay','Canary Wharf',
   ],
   // Elizabeth line: 4 actual TfL service patterns. Reading branch is omitted
   // entirely (no puzzle stations and no interchanges out there). The 4 modelled
@@ -3672,7 +3690,6 @@ const TIMES = {
   'Aldgate East|Whitechapel':2,
   'Aldgate|Tower Hill':3,
   'Abbey Road|West Ham':2,
-  'All Saints|Blackwall':1,
   'All Saints|Poplar':1,
   'Alperton|Park Royal':3,
   'Amersham|Chalfont & Latimer':3,
@@ -6000,7 +6017,24 @@ function _dayLabel(key) {
 // re-scores cards players were already shown — hitting hardest the players who
 // took the Baker Street change this fix is for. History reads banked values
 // and never re-scores; new plays use the live engine regardless.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v20';
+// v21 — 2026-09-23 DLR Stratford branch. The graph gains four stations (Bow
+// Church, Devons Road, Langdon Park, Pudding Mill Lane), six hops and one
+// service pattern, and loses the invented All Saints-Blackwall hop, so the
+// difficulty filters read different costs.
+//
+// MEASURED against both builds over the 150-day lookup, so nobody has to
+// re-derive it: 2 of 300 slots resolve to a different PAIR (2026-12-12 hard,
+// 2026-12-16 easy) — both via the RNG cascade, neither anywhere near the new
+// branch. 2 optimals move by one minute (2026-08-17, 2026-08-21) and BOTH are
+// in the past, where history reads banked values and never re-scores. 18 more
+// change only which equal-cost branch is named, at identical minutes. ZERO of
+// the 300 published optimals route over the new branch, which is expected: the
+// four new stations are not in PUZZLE_STATIONS and the branch is a slow local.
+//
+// SCORING_VERSION deliberately NOT bumped, following the Paddington (8aa9a7e)
+// and Baker Street precedents — it gates the result-card snapshot, and no
+// live-or-future puzzle's cost changes here.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v21';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
