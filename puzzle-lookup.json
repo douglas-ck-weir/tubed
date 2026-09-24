@@ -1,4 +1,15 @@
 {
+  "2026-09-23": {
+    "puzzleNum": 174,
+    "easy": {
+      "start": "Elephant & Castle",
+      "end": "Kilburn"
+    },
+    "hard": {
+      "start": "Bounds Green",
+      "end": "Highgate"
+    }
+  },
   "2026-09-22": {
     "puzzleNum": 173,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Dalston Kingsland",
       "end": "Knightsbridge"
-    }
-  },
-  "2026-07-25": {
-    "puzzleNum": 114,
-    "easy": {
-      "start": "Willesden Green",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Parsons Green"
-    }
-  },
-  "2026-09-23": {
-    "puzzleNum": 174,
-    "easy": {
-      "start": "Elephant & Castle",
-      "end": "Kilburn"
-    },
-    "hard": {
-      "start": "Bounds Green",
-      "end": "Highgate"
     }
   },
   "2026-09-24": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Richmond",
       "end": "Clapham South"
+    }
+  },
+  "2026-12-22": {
+    "puzzleNum": 264,
+    "easy": {
+      "start": "Leicester Square",
+      "end": "Cannon Street"
+    },
+    "hard": {
+      "start": "Upton Park",
+      "end": "Shadwell"
     }
   }
 }
