@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Privacy - Tubed</title>
+<meta name="robots" content="index, follow"/>
+<link rel="icon" type="image/png" href="ChatGPT_Image_Jun_1__2026__08_06_12_PM-removebg-preview.png" sizes="192x192"/>
+<link rel="apple-touch-icon" href="ChatGPT_Image_Jun_1__2026__08_06_12_PM-removebg-preview.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f0f4f8;--surf:#ffffff;--brd:#dde3ec;--navy:#1e40af;--txt:#0f172a;--muted:#64748b;}
+body{background:var(--bg);color:var(--txt);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.65;padding:24px 16px 48px;}
+.wrap{max-width:660px;margin:0 auto;}
+.head{text-align:center;margin-bottom:24px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:38px;letter-spacing:2px;line-height:1;}
+.sub{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:6px;}
+.card{background:var(--surf);border:0.5px solid var(--brd);border-radius:14px;padding:22px;margin-bottom:14px;}
+h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.2px;margin-bottom:10px;}
+p{margin-bottom:12px;}
+p:last-child,ul:last-child{margin-bottom:0;}
+ul{margin:0 0 12px;padding-left:20px;}
+li{margin-bottom:6px;}
+strong{font-weight:500;}
+a{color:var(--navy);}
+.lead{font-size:16px;}
+.note{background:var(--bg);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--muted);margin-top:14px;}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:var(--bg);padding:1px 5px;border-radius:4px;}
+.back{display:inline-block;margin-top:18px;font-size:13px;color:var(--navy);text-decoration:none;}
+.foot{text-align:center;font-size:11px;color:#94a3b8;line-height:1.8;margin-top:22px;}
+@media(max-width:480px){.card{padding:18px;}h1{font-size:32px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <h1>Privacy</h1>
+    <div class="sub">Tubed &middot; Last updated 25 September 2026</div>
+  </div>
+
+  <div class="card">
+    <p class="lead">Tubed has no accounts, no sign-up and no advertising. You can play it without telling us anything about yourself, and we don't try to work out who you are.</p>
+    <p>This page explains the small amount of data the game does handle, in plain terms.</p>
+  </div>
+
+  <div class="card">
+    <h2>Stored in your browser</h2>
+    <p>The game keeps a few things in your browser's local storage so it can work at all:</p>
+    <ul>
+      <li>Your puzzle progress, results history and streaks</li>
+      <li>Whether you've already seen the how-to-play screen</li>
+      <li>A random ID (a string like <code>3f4c040d-a1e9-…</code>) created the first time you play</li>
+    </ul>
+    <p>That random ID isn't linked to your name, email or anything else. Its only jobs are to stop the same person submitting twice to one day's leaderboard, and to show you your own ranking.</p>
+    <p>None of this is used for advertising, and none of it follows you to other websites.</p>
+    <div class="note">Because there's no account, this data lives only in the browser you're playing in. Clearing your site data, switching device or using a private window gives you a clean slate &mdash; your streak and history won't carry over, and they can't be recovered.</div>
+  </div>
+
+  <div class="card">
+    <h2>The daily leaderboard</h2>
+    <p>When you finish a puzzle, the game sends your result to a database so it can show where you placed among that day's players. Each entry records:</p>
+    <ul>
+      <li>Your random ID</li>
+      <li>The puzzle date and whether it was Easy or Hard</li>
+      <li>How far off the optimal route you were, and your journey and optimal times</li>
+      <li>How long you took to solve it, and how many hints you used</li>
+    </ul>
+    <p>There's no name attached, and nothing you type. The leaderboard shows you your own position only &mdash; other players are never shown your result, and you are never shown theirs.</p>
+    <p>This is hosted on <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">Supabase</a> in their London (eu-west-2) region, so the data stays in the UK.</p>
+    <p>Entries are kept indefinitely so the game can offer long-term player statistics, such as how many optimal routes you've found over time.</p>
+  </div>
+
+  <div class="card">
+    <h2>Visitor numbers</h2>
+    <p>We count page visits using <a href="https://www.goatcounter.com/help/privacy" target="_blank" rel="noopener noreferrer">GoatCounter</a>, a privacy-focused analytics tool. It sets no cookies, creates no persistent identifier, and can't track you across other websites. It tells us how many people played today, nothing more.</p>
+  </div>
+
+  <div class="card">
+    <h2>The feedback form</h2>
+    <p>If you use the feedback form, your message is sent to us through <a href="https://web3forms.com/privacy" target="_blank" rel="noopener noreferrer">Web3Forms</a>, along with which puzzle you were on. Your email address is included only if you choose to type one in, and is used solely to reply to you.</p>
+  </div>
+
+  <div class="card">
+    <h2>Cookies</h2>
+    <p>Tubed sets no cookies. The browser storage described above is what makes the game function &mdash; remembering your puzzle so it isn't lost on refresh &mdash; rather than anything used to track or profile you, which is why you aren't asked to accept a cookie banner.</p>
+  </div>
+
+  <div class="card">
+    <h2>Your choices</h2>
+    <p>Clearing your browser's site data for playtubed.co.uk removes everything stored on your device, including your random ID.</p>
+    <p>If you'd like your leaderboard entries deleted from the database, get in touch through the feedback form and include your random ID. You can find it by opening your browser's developer console on playtubed.co.uk and running:</p>
+    <p><code>localStorage.getItem('tubed_player_id')</code></p>
+    <p>We need that ID because it's the only thing connecting entries to you &mdash; without it there's genuinely no way for us to tell which rows are yours.</p>
+  </div>
+
+  <div class="card">
+    <h2>Children</h2>
+    <p>Tubed isn't aimed at children, but it's a simple puzzle game and anyone may play it. We ask for no personal details, show no advertising, and don't profile players, so there's nothing collected that would identify a young person.</p>
+  </div>
+
+  <div class="card">
+    <h2>Changes and contact</h2>
+    <p>If this page changes, the date at the top changes with it. Questions about any of the above can go through the feedback form on the game, or to <a href="mailto:feedback@playtubed.co.uk">feedback@playtubed.co.uk</a>.</p>
+    <a class="back" href="/">&larr; Back to the puzzle</a>
+  </div>
+
+  <div class="foot">
+    Powered by TfL Open Data &middot; Not affiliated with Transport for London<br>&copy; Tubed 2026
+  </div>
+
+</div>
+</body>
+</html>

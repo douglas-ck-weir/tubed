@@ -84,6 +84,16 @@ select option{background:var(--surf);}
 .result-medal{font-size:52px;text-align:center;margin-bottom:8px;}
 .result-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;text-align:center;margin-bottom:4px;}
 .result-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:20px;}
+.lb-band{border-radius:12px;padding:12px 14px;margin:0 0 8px;text-align:center;color:#fff;animation:lbIn .45s cubic-bezier(.22,1.2,.36,1) both;}
+.lb-band.lb-solo{margin-bottom:16px;}
+.lb-anchor{font-size:12px;color:var(--muted);text-align:center;margin:0 0 16px;animation:lbIn .45s cubic-bezier(.22,1.2,.36,1) both;}
+.lb-band.tier-elite{background:linear-gradient(135deg,#b45309,#d97706);}
+.lb-band.tier-good{background:linear-gradient(135deg,#1e40af,#1d4ed8);}
+.lb-band.tier-mid{background:var(--bg);color:var(--txt);border:0.5px solid var(--brd);}
+.lb-pct{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;line-height:1;}
+.lb-rank{font-size:12px;letter-spacing:0.4px;margin-top:5px;opacity:0.92;}
+@keyframes lbIn{from{opacity:0;transform:scale(.88) translateY(-6px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.lb-band{animation:none;}}
 .times-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
 .time-box{background:var(--bg);border-radius:10px;padding:14px;text-align:center;}
 .time-val{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1;}
@@ -402,7 +412,7 @@ textarea.feedback-input{resize:vertical;min-height:100px;line-height:1.5;}
     </a>
   </div>
   <div style="text-align:center;padding:8px 0 8px;font-size:11px;color:#94a3b8;line-height:1.8;">
-    Powered by TfL Open Data · Not affiliated with Transport for London<br>© Tubed <span id="yr"></span>
+    Powered by TfL Open Data · Not affiliated with Transport for London<br>© Tubed <span id="yr"></span> · <a href="privacy.html" style="color:#94a3b8;">Privacy</a>
   </div>
 </div>
 
@@ -7917,11 +7927,24 @@ function renderResultCard(data) {
     ? `<div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:4px;">✨ No hints needed</div>`
     : `<div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:4px;">🔍 ${hu}/3 hint${hu > 1 ? 's' : ''} used</div>`;
 
+  // Every card starts with the generic share wording; renderLeaderboardBlock
+  // upgrades it only if this player ranked. Without the reset, a ranked Easy
+  // card's label leaks onto an unranked Hard card after its "Shared!" flash.
+  _lbShareLabel = _LB_SHARE_DEFAULT;
+
+  // Reopening an already-submitted result: the row is already on the
+  // leaderboard, so load rank straight away. On a FRESH solve we skip this —
+  // submitRoute() sequences the POST before the GET, because a rank can't be
+  // computed for a row that doesn't exist yet. Deferred a tick so the caller
+  // (showResultPanel) has put this HTML in the DOM before we look for the slot.
+  if (useSnapshot) setTimeout(() => loadLeaderboardStats(pd.date, mode), 0);
+
   return `
     <div class="result-card">
       <div class="result-medal">${medal}</div>
       <div class="result-title" style="color:${color};">${title}</div>
       <div class="result-sub">${pd.start} → ${pd.end}</div>
+      <div id="leaderboard-stats"></div>
       <div class="times-grid" style="grid-template-columns:1fr 1fr 1fr;">
         <div class="time-box"><div class="time-val">${userMins}</div><div class="time-lbl">Your route (min)</div></div>
         <div class="time-box"><div class="time-val" style="color:${color};">${optimalMins}</div><div class="time-lbl">Optimal (min)</div></div>
@@ -8018,6 +8041,167 @@ function _applyShareButtonVisibility() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// LEADERBOARD (Supabase)
+// ═══════════════════════════════════════════════════════════════════════════════
+// No npm dependency for this — the project has none anywhere (no
+// package.json) — so we talk to Supabase's PostgREST API directly via
+// fetch(), matching the plain-fetch pattern already used for
+// puzzle-lookup.json and the web3forms feedback call. The anon key below is
+// meant to be public (same model as the web3forms access_key a few hundred
+// lines down); access control lives in Postgres RLS (see supabase/schema.sql).
+const SUPABASE_URL = 'https://hngjziobiblvnosbmgsx.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_hs_dkr1WA-FIbLy3uBwh5w_GMZyg4-N';
+
+// stats already loaded this page-load, keyed "mode:date" — lets
+// buildShareText() include a percentile line without another round trip.
+const _leaderboardStatsCache = {};
+
+// Share/copy button labels. shareResult() restores the label after its
+// "Shared!" flash, so it has to read the current one rather than a literal —
+// otherwise a ranked card reverts to the generic wording.
+const _LB_SHARE_DEFAULT = { share: '&#128172; Share my result', copy: '&#128203; Copy to clipboard' };
+let _lbShareLabel = _LB_SHARE_DEFAULT;
+
+// Below-median ranks are never shown. "Top 100% today" is what last place
+// would otherwise read, and there's no framing of the bottom half that
+// isn't discouraging, so the line is simply absent unless it's worth
+// bragging about. Also gates the share line.
+const LB_MIN_PLAYERS = 5;
+const LB_MAX_PCT = 50;
+// A "typical" time needs more than one or two solvers behind it.
+const LB_MIN_OPTIMAL = 3;
+
+function _lbShowPct(stats) {
+  return !!stats
+    && stats.total_players >= LB_MIN_PLAYERS
+    && stats.top_pct != null
+    && stats.top_pct <= LB_MAX_PCT;
+}
+
+// Shown to everyone with enough data, including players whose own rank is
+// suppressed — a target is exactly what someone below the median needs.
+// Deliberately the same wording for everyone: a plain benchmark to aim at,
+// not a comparison against your own run.
+function _lbAnchorLine(stats) {
+  if (!stats) return '';
+  const med = stats.median_optimal_secs;
+  if (med == null || (stats.optimal_count || 0) < LB_MIN_OPTIMAL) return '';
+  return `⏱ Typical optimal solve: ${timerFmt(med)}`;
+}
+
+// Anonymous per-device id. Deliberately its own localStorage key, unrelated
+// to tubepzl_v6, so this feature can never interact with that store's
+// migration logic (_migrateDayKeys, v5->v6).
+function getPlayerId() {
+  const KEY = 'tubed_player_id';
+  try {
+    let id = localStorage.getItem(KEY);
+    if (!id) { id = crypto.randomUUID(); localStorage.setItem(KEY, id); }
+    return id;
+  } catch(e) { return null; }
+}
+
+// Fire-and-forget: post this puzzle's finished score, then load stats
+// regardless of whether the insert itself was new or a no-op (the UNIQUE
+// constraint makes a duplicate submit harmless either way). Never blocks or
+// alert()s — same silent-fail convention as the puzzle-lookup.json preload,
+// since this is a bonus layered on a result card that already rendered
+// correctly from local data.
+function submitScore(s) {
+  const playerId = getPlayerId();
+  if (!playerId) return;
+  fetch(`${SUPABASE_URL}/rest/v1/scores`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    },
+    body: JSON.stringify({
+      puzzle_date: s.date, mode: s.mode, player_id: playerId,
+      // Clamped to the column's 6h ceiling rather than sent raw: the timer
+      // keeps counting in a backgrounded tab, so someone who opens the puzzle
+      // in the morning and finishes that evening would otherwise fail the
+      // CHECK and drop off the board without ever knowing.
+      diff_mins: Math.max(0, s.diff),
+      completion_secs: Math.min(Math.max(0, s.completionSecs), 21600),
+      hints_used: s.hintsUsed,
+      // Context for later analysis; the board itself doesn't read these.
+      user_mins: s.userMins, optimal_mins: s.optimalMins, scoring_version: SCORING_VERSION,
+    }),
+  })
+    .then(() => loadLeaderboardStats(s.date, s.mode))
+    .catch(e => console.warn('[tubed] leaderboard submit failed:', e.message));
+}
+
+// Reads current rank/percentile for a puzzle already submitted in THIS
+// browser (relies on getPlayerId() matching a row that exists server-side).
+// Safe to call repeatedly - e.g. every time a solved result is reopened -
+// since it's a pure read.
+function loadLeaderboardStats(date, mode) {
+  const playerId = getPlayerId();
+  if (!playerId || !document.getElementById('leaderboard-stats')) return;
+  fetch(`${SUPABASE_URL}/rest/v1/rpc/get_leaderboard_stats`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ p_date: date, p_mode: mode, p_player: playerId }),
+  })
+    .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json(); })
+    .then(stats => {
+      _leaderboardStatsCache[`${mode}:${date}`] = stats;
+      // The card on screen can change while this is in flight (mode switch,
+      // or a reset), so re-check before painting — otherwise easy's rank can
+      // land on hard's card.
+      if (currentMode !== mode || !puzzleData || puzzleData.date !== date) return;
+      const slot = document.getElementById('leaderboard-stats');
+      if (slot) renderLeaderboardBlock(slot, stats);
+    })
+    .catch(e => console.warn('[tubed] leaderboard stats failed:', e.message));
+}
+
+// No player-supplied text anywhere by design: nothing is typed, stored or
+// displayed, so there is no moderation surface. A podium on a near-empty
+// board means nothing, so the rank line uses the same minimum as the
+// percentile.
+function renderLeaderboardBlock(slot, stats) {
+  const anchor = _lbAnchorLine(stats);
+  const parts = [];
+
+  if (_lbShowPct(stats)) {
+    // Tier by how rare the result is, so the band reads as a reward rather
+    // than a readout. Gold echoes the optimal-medal colour already on the card.
+    const tier = stats.top_pct <= 1 ? 'tier-elite' : stats.top_pct <= 10 ? 'tier-good' : 'tier-mid';
+    const podium = (stats.is_top3 && stats.total_players >= LB_MIN_PLAYERS)
+      ? `<div class="lb-rank">🏆 You're #${stats.my_rank} today</div>`
+      : '';
+
+    // The player count is deliberately not shown — "top 9% of 11" undersells
+    // a real achievement while the player base is still small.
+    parts.push(
+      `<div class="lb-band ${tier}${anchor ? '' : ' lb-solo'}">
+         <div class="lb-pct">📊 TOP ${stats.top_pct}% TODAY</div>
+         ${podium}
+       </div>`);
+
+    // Retitle the share CTA at the moment share intent is highest.
+    _lbShareLabel = { share: `&#128172; Share your Top ${stats.top_pct}%`,
+                      copy:  `&#128203; Copy your Top ${stats.top_pct}%` };
+    const sb = document.getElementById('share-btn');
+    if (sb && !sb.classList.contains('success')) sb.innerHTML = _lbShareLabel.share;
+    const cb = document.getElementById('copy-btn');
+    if (cb && !cb.classList.contains('copied')) cb.innerHTML = _lbShareLabel.copy;
+  }
+
+  if (anchor) parts.push(`<div class="lb-anchor">${anchor}</div>`);
+  slot.innerHTML = parts.join('');
+}
+
 function submitRoute() {
   const btn = document.getElementById('sub-btn');
 
@@ -8087,6 +8271,11 @@ function submitRoute() {
   // current version get a snapshot on first reopen.
   lockedSubmission = true;
 
+  // Post to the leaderboard, then load this player's rank into the card.
+  // Ordered POST-then-GET because the GET can only rank a row that exists.
+  submitScore({ date: puzzleData.date, mode: currentMode, diff, completionSecs,
+                hintsUsed, userMins, optimalMins });
+
   setTimeout(() => {
     const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%';
     _applyShareButtonVisibility();
@@ -8122,6 +8311,8 @@ function buildShareText(diff, hints, changes, secs) {
     hintsLine,
   ];
   if (streakLine) lines.push(streakLine);
+  const lb = _leaderboardStatsCache[`${currentMode}:${puzzleData.date}`];
+  if (_lbShowPct(lb)) lines.push(`📊 Top ${lb.top_pct}% today`);
   lines.push(challengeLine, `➡️ playtubed.co.uk`);
   return lines.join('\n');
 }
@@ -8131,7 +8322,7 @@ async function shareResult(diff, hints, changes, secs) {
   const btn = document.getElementById('share-btn');
   try {
     await navigator.share({ text });
-    if (btn) { btn.innerHTML = '✓ Shared!'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = '&#128172; Share my result'; btn.classList.remove('success'); }, 2500); }
+    if (btn) { btn.innerHTML = '✓ Shared!'; btn.classList.add('success'); setTimeout(() => { btn.innerHTML = _lbShareLabel.share; btn.classList.remove('success'); }, 2500); }
   } catch(e) {}
 }
 
@@ -8140,7 +8331,7 @@ async function copyResult(diff, hints, changes, secs) {
   const btn = document.getElementById('copy-btn');
   try {
     await navigator.clipboard.writeText(text);
-    if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = '&#128203; Copy to clipboard'; btn.classList.remove('copied'); }, 2500); }
+    if (btn) { btn.innerHTML = '✓ Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.innerHTML = _lbShareLabel.copy; btn.classList.remove('copied'); }, 2500); }
   } catch(e) {
     prompt('Copy your result:', text);
   }
