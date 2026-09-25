@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-24",
-  "puzzleNum": 175,
+  "date": "2026-09-25",
+  "puzzleNum": 176,
   "easy": {
-    "start": "Kentish Town",
-    "end": "Stepney Green"
+    "start": "Chancery Lane",
+    "end": "Caledonian Road"
   },
   "hard": {
-    "start": "Warren Street",
-    "end": "Bow Road"
+    "start": "White City",
+    "end": "Arsenal"
   }
 }
