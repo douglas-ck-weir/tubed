@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-25",
-  "puzzleNum": 176,
+  "date": "2026-09-26",
+  "puzzleNum": 177,
   "easy": {
-    "start": "Chancery Lane",
-    "end": "Caledonian Road"
+    "start": "Ravenscourt Park",
+    "end": "Seven Sisters"
   },
   "hard": {
-    "start": "White City",
-    "end": "Arsenal"
+    "start": "Stratford International",
+    "end": "Knightsbridge"
   }
 }

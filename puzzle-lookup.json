@@ -1,4 +1,15 @@
 {
+  "2026-09-25": {
+    "puzzleNum": 176,
+    "easy": {
+      "start": "Chancery Lane",
+      "end": "Caledonian Road"
+    },
+    "hard": {
+      "start": "White City",
+      "end": "Arsenal"
+    }
+  },
   "2026-09-24": {
     "puzzleNum": 175,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Clapham North",
       "end": "Dalston Kingsland"
-    }
-  },
-  "2026-07-27": {
-    "puzzleNum": 116,
-    "easy": {
-      "start": "Holloway Road",
-      "end": "Southfields"
-    },
-    "hard": {
-      "start": "Lancaster Gate",
-      "end": "Harrow on the Hill"
-    }
-  },
-  "2026-09-25": {
-    "puzzleNum": 176,
-    "easy": {
-      "start": "Chancery Lane",
-      "end": "Caledonian Road"
-    },
-    "hard": {
-      "start": "White City",
-      "end": "Arsenal"
     }
   },
   "2026-09-26": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Gloucester Road",
       "end": "New Cross Gate"
+    }
+  },
+  "2026-12-24": {
+    "puzzleNum": 266,
+    "easy": {
+      "start": "Elephant & Castle",
+      "end": "Island Gardens"
+    },
+    "hard": {
+      "start": "Ealing Broadway",
+      "end": "Finsbury Park"
     }
   }
 }
