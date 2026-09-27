@@ -1,4 +1,15 @@
 {
+  "2026-09-26": {
+    "puzzleNum": 177,
+    "easy": {
+      "start": "Ravenscourt Park",
+      "end": "Seven Sisters"
+    },
+    "hard": {
+      "start": "Stratford International",
+      "end": "Knightsbridge"
+    }
+  },
   "2026-09-25": {
     "puzzleNum": 176,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "East Putney",
       "end": "Harrow on the Hill"
-    }
-  },
-  "2026-07-28": {
-    "puzzleNum": 117,
-    "easy": {
-      "start": "West Hampstead",
-      "end": "Oxford Circus"
-    },
-    "hard": {
-      "start": "Clapham North",
-      "end": "Dalston Kingsland"
-    }
-  },
-  "2026-09-26": {
-    "puzzleNum": 177,
-    "easy": {
-      "start": "Ravenscourt Park",
-      "end": "Seven Sisters"
-    },
-    "hard": {
-      "start": "Stratford International",
-      "end": "Knightsbridge"
     }
   },
   "2026-09-27": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Ealing Broadway",
       "end": "Finsbury Park"
+    }
+  },
+  "2026-12-25": {
+    "puzzleNum": 267,
+    "easy": {
+      "start": "Brent Cross",
+      "end": "Blackhorse Road"
+    },
+    "hard": {
+      "start": "Stratford International",
+      "end": "Embankment"
     }
   }
 }

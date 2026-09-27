@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-26",
-  "puzzleNum": 177,
+  "date": "2026-09-27",
+  "puzzleNum": 178,
   "easy": {
-    "start": "Ravenscourt Park",
-    "end": "Seven Sisters"
+    "start": "Kilburn Park",
+    "end": "Finchley Road"
   },
   "hard": {
-    "start": "Stratford International",
-    "end": "Knightsbridge"
+    "start": "Westferry",
+    "end": "Brixton"
   }
 }
