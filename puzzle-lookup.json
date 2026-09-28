@@ -1,4 +1,15 @@
 {
+  "2026-09-27": {
+    "puzzleNum": 178,
+    "easy": {
+      "start": "Kilburn Park",
+      "end": "Finchley Road"
+    },
+    "hard": {
+      "start": "Westferry",
+      "end": "Brixton"
+    }
+  },
   "2026-09-26": {
     "puzzleNum": 177,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Dalston Kingsland",
       "end": "Royal Oak"
-    }
-  },
-  "2026-07-29": {
-    "puzzleNum": 118,
-    "easy": {
-      "start": "Richmond",
-      "end": "Latimer Road"
-    },
-    "hard": {
-      "start": "East Putney",
-      "end": "Harrow on the Hill"
-    }
-  },
-  "2026-09-27": {
-    "puzzleNum": 178,
-    "easy": {
-      "start": "Kilburn Park",
-      "end": "Finchley Road"
-    },
-    "hard": {
-      "start": "Westferry",
-      "end": "Brixton"
     }
   },
   "2026-09-28": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Stratford International",
       "end": "Embankment"
+    }
+  },
+  "2026-12-26": {
+    "puzzleNum": 268,
+    "easy": {
+      "start": "Bermondsey",
+      "end": "Hampstead"
+    },
+    "hard": {
+      "start": "Euston Square",
+      "end": "Westferry"
     }
   }
 }

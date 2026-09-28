@@ -1,12 +1,12 @@
 {
-  "date": "2026-09-27",
-  "puzzleNum": 178,
+  "date": "2026-09-28",
+  "puzzleNum": 179,
   "easy": {
-    "start": "Kilburn Park",
-    "end": "Finchley Road"
+    "start": "East Putney",
+    "end": "Kennington"
   },
   "hard": {
-    "start": "Westferry",
-    "end": "Brixton"
+    "start": "Earl's Court",
+    "end": "Harrow on the Hill"
   }
 }
