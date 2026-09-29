@@ -1,4 +1,15 @@
 {
+  "2026-09-28": {
+    "puzzleNum": 179,
+    "easy": {
+      "start": "East Putney",
+      "end": "Kennington"
+    },
+    "hard": {
+      "start": "Earl's Court",
+      "end": "Harrow on the Hill"
+    }
+  },
   "2026-09-27": {
     "puzzleNum": 178,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Sloane Square",
       "end": "Hackney Central"
-    }
-  },
-  "2026-07-30": {
-    "puzzleNum": 119,
-    "easy": {
-      "start": "White City",
-      "end": "Golders Green"
-    },
-    "hard": {
-      "start": "Dalston Kingsland",
-      "end": "Royal Oak"
-    }
-  },
-  "2026-09-28": {
-    "puzzleNum": 179,
-    "easy": {
-      "start": "East Putney",
-      "end": "Kennington"
-    },
-    "hard": {
-      "start": "Earl's Court",
-      "end": "Harrow on the Hill"
     }
   },
   "2026-09-29": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Euston Square",
       "end": "Westferry"
+    }
+  },
+  "2026-12-27": {
+    "puzzleNum": 269,
+    "easy": {
+      "start": "West Kensington",
+      "end": "Brixton"
+    },
+    "hard": {
+      "start": "Tottenham Court Road",
+      "end": "Hackney Central"
     }
   }
 }
