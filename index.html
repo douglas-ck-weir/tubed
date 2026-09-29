@@ -3833,7 +3833,7 @@ const TIMES = {
   'Farringdon|Barbican':1,
   'Farringdon|Liverpool Street':2,
   'Finchley Road & Frognal|West Hampstead':2,
-  'Finchley Road|Baker Street':7,
+  'Finchley Road|Baker Street':6,
   'Finchley Road|Swiss Cottage':2,
   'Finsbury Park|Manor House':2,
   'Finsbury Park|Seven Sisters':4,
@@ -6044,7 +6044,33 @@ function _dayLabel(key) {
 // SCORING_VERSION deliberately NOT bumped, following the Paddington (8aa9a7e)
 // and Baker Street precedents — it gates the result-card snapshot, and no
 // live-or-future puzzle's cost changes here.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v21';
+// v22 — 2026-09-29 Metropolitan Finchley Road-Baker Street 7 -> 6. A player
+// on #178 asked why the non-stop Met read slower than the Jubilee's two-stop
+// run over the same corridor. It did: build_times.py reads only
+// stationIntervals[0], so the game had banked the slowest of the five TfL
+// patterns ([5,6,6,7,7]) while the Jubilee's three hops each sit at their own
+// median (3+1+2=6). Journey Planner gives 6 for both lines. Route costs move,
+// and the difficulty filters read those costs. Regression test:
+// tests/tube_hop_times.test.mjs.
+//
+// MEASURED against both builds over the 150-day lookup: 2 of 300 slots
+// resolve to a different PAIR (2026-12-12 hard, 2026-12-16 easy) — the same
+// two boundary slots the DLR change re-rolled, both via the RNG cascade. 8
+// optimals move by one minute, of which 4 are already published (#118, #124,
+// #171, #179) and land in the past, where history banks optimalMins at solve
+// time and never re-scores. 17 more change only which equal-cost branch is
+// named. TODAY's #180 is untouched on both pair and optimal, which is why
+// this could ship mid-day: there is no window in which two players see
+// different answers.
+//
+// The other half of that player's 2-min gap is the Baker Street boarding wait
+// (Met 2, Jubilee 1) and is CORRECT — the Jubilee is genuinely more frequent
+// off-peak. Deliberately left alone.
+//
+// SCORING_VERSION deliberately NOT bumped, following the Paddington (8aa9a7e),
+// Baker Street and DLR precedents — it gates the result-card snapshot, and no
+// live puzzle's cost changes here.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v22';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
