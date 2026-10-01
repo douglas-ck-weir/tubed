@@ -1,4 +1,15 @@
 {
+  "2026-09-30": {
+    "puzzleNum": 181,
+    "easy": {
+      "start": "Willesden Green",
+      "end": "Island Gardens"
+    },
+    "hard": {
+      "start": "Warwick Avenue",
+      "end": "Plaistow"
+    }
+  },
   "2026-09-29": {
     "puzzleNum": 180,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Brent Cross",
       "end": "West Brompton"
-    }
-  },
-  "2026-08-01": {
-    "puzzleNum": 121,
-    "easy": {
-      "start": "Dalston Kingsland",
-      "end": "Euston"
-    },
-    "hard": {
-      "start": "Shepherd's Bush Market",
-      "end": "Dalston Kingsland"
-    }
-  },
-  "2026-09-30": {
-    "puzzleNum": 181,
-    "easy": {
-      "start": "Willesden Green",
-      "end": "Island Gardens"
-    },
-    "hard": {
-      "start": "Warwick Avenue",
-      "end": "Plaistow"
     }
   },
   "2026-10-01": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Arsenal",
       "end": "Wimbledon"
+    }
+  },
+  "2026-12-29": {
+    "puzzleNum": 271,
+    "easy": {
+      "start": "St. James's Park",
+      "end": "St. Paul's"
+    },
+    "hard": {
+      "start": "East Putney",
+      "end": "Tufnell Park"
     }
   }
 }
