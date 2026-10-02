@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-01",
-  "puzzleNum": 182,
+  "date": "2026-10-02",
+  "puzzleNum": 183,
   "easy": {
-    "start": "Old Street",
-    "end": "Ladbroke Grove"
+    "start": "Blackfriars",
+    "end": "Tottenham Hale"
   },
   "hard": {
-    "start": "Regent's Park",
-    "end": "Mornington Crescent"
+    "start": "West Silvertown",
+    "end": "Hanger Lane"
   }
 }
