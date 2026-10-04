@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-03",
-  "puzzleNum": 184,
+  "date": "2026-10-04",
+  "puzzleNum": 185,
   "easy": {
-    "start": "South Ealing",
-    "end": "West Kensington"
+    "start": "Swiss Cottage",
+    "end": "Parsons Green"
   },
   "hard": {
-    "start": "Hyde Park Corner",
-    "end": "London City Airport"
+    "start": "Putney Bridge",
+    "end": "Brent Cross"
   }
 }
