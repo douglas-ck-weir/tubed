@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-04",
-  "puzzleNum": 185,
+  "date": "2026-10-05",
+  "puzzleNum": 186,
   "easy": {
-    "start": "Swiss Cottage",
-    "end": "Parsons Green"
+    "start": "Clapham Junction",
+    "end": "Temple"
   },
   "hard": {
-    "start": "Putney Bridge",
-    "end": "Brent Cross"
+    "start": "New Cross Gate",
+    "end": "Hampstead"
   }
 }
