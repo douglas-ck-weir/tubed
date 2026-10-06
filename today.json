@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-05",
-  "puzzleNum": 186,
+  "date": "2026-10-06",
+  "puzzleNum": 187,
   "easy": {
-    "start": "Clapham Junction",
-    "end": "Temple"
+    "start": "Shepherd's Bush",
+    "end": "Harlesden"
   },
   "hard": {
-    "start": "New Cross Gate",
-    "end": "Hampstead"
+    "start": "Barons Court",
+    "end": "Clapham North"
   }
 }

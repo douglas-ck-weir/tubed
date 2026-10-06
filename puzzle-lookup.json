@@ -1,4 +1,15 @@
 {
+  "2026-10-05": {
+    "puzzleNum": 186,
+    "easy": {
+      "start": "Clapham Junction",
+      "end": "Temple"
+    },
+    "hard": {
+      "start": "New Cross Gate",
+      "end": "Hampstead"
+    }
+  },
   "2026-10-04": {
     "puzzleNum": 185,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Tooting Broadway",
       "end": "Wimbledon Park"
-    }
-  },
-  "2026-08-06": {
-    "puzzleNum": 126,
-    "easy": {
-      "start": "Bermondsey",
-      "end": "Holborn"
-    },
-    "hard": {
-      "start": "Hanger Lane",
-      "end": "Harrow on the Hill"
-    }
-  },
-  "2026-10-05": {
-    "puzzleNum": 186,
-    "easy": {
-      "start": "Clapham Junction",
-      "end": "Temple"
-    },
-    "hard": {
-      "start": "New Cross Gate",
-      "end": "Hampstead"
     }
   },
   "2026-10-06": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "East Finchley",
       "end": "South Kensington"
+    }
+  },
+  "2027-01-03": {
+    "puzzleNum": 276,
+    "easy": {
+      "start": "Chiswick Park",
+      "end": "Holland Park"
+    },
+    "hard": {
+      "start": "Pontoon Dock",
+      "end": "Turnham Green"
     }
   }
 }
