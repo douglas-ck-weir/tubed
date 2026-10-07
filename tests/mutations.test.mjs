@@ -152,6 +152,53 @@ const MUTATIONS = [
     find: '  const routes = [], seen = new Set();',
     replace: '  const routes = [], seen = new Set(); candidates.reverse();',
   },
+  // ── the share snippet / result card podium ───────────────────────────────
+  // The podium is rendered from one gate and one string into two surfaces.
+  // Each of these breaks one of those joins; share_card.test.mjs exists to
+  // notice. The card-drift entry is the important one: it is the exact
+  // regression the shared helper was introduced to make impossible.
+  {
+    name: 'podium gate stops requiring a board big enough to mean anything',
+    tests: ['share_card.test.mjs'],
+    find: '  return _lbShowPct(stats) && !!stats.is_top3 && stats.my_rank >= 1 && stats.my_rank <= 3;',
+    replace: '  return !!stats && !!stats.is_top3;',
+  },
+  {
+    name: 'podium gate trusts is_top3 alone, without sanity-checking the rank',
+    tests: ['share_card.test.mjs'],
+    find: '&& !!stats.is_top3 && stats.my_rank >= 1 && stats.my_rank <= 3;',
+    replace: '&& !!stats.is_top3;',
+  },
+  {
+    name: 'the card drifts back to its own hardcoded wording',
+    tests: ['share_card.test.mjs'],
+    find: '      ? `<div class="lb-rank">${_lbPodiumLine(stats)}</div>`',
+    replace: '      ? `<div class="lb-rank">🏆 You\'re #${stats.my_rank} today</div>`',
+  },
+  {
+    name: 'the snippet prints the percentile alongside the podium, not instead',
+    tests: ['share_card.test.mjs'],
+    find: '  else if (_lbShowPct(lb)) lines.push(',
+    replace: '  if (_lbShowPct(lb)) lines.push(',
+  },
+  {
+    name: 'every placement collapses to the same trophy',
+    tests: ['share_card.test.mjs'],
+    find: "  const medal = stats.my_rank === 1 ? '🏆' : stats.my_rank === 2 ? '🥈' : '🥉';",
+    replace: "  const medal = '🏆';",
+  },
+  {
+    name: 'every placement reads as 1st',
+    tests: ['share_card.test.mjs'],
+    find: "  const ord   = stats.my_rank === 1 ? '1st' : stats.my_rank === 2 ? '2nd' : '3rd';",
+    replace: "  const ord   = '1st';",
+  },
+  {
+    name: 'the challenge line takes the trophy back off the podium',
+    tests: ['share_card.test.mjs'],
+    find: '    ? `⁉️ Can anyone match this?`',
+    replace: '    ? `🏆 Can anyone match this?`',
+  },
 ];
 
 // Generous per-spawn cap. It must exceed the SLOWEST test file this harness

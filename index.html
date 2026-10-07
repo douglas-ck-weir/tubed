@@ -8105,6 +8105,26 @@ function _lbShowPct(stats) {
     && stats.top_pct <= LB_MAX_PCT;
 }
 
+// Podium gate, shared by the result card and the share snippet so the two can
+// never disagree about who made the top 3. Rides on _lbShowPct deliberately:
+// a board too small or too shallow to be worth a percentile is also too small
+// to call someone first in the world.
+function _lbShowPodium(stats) {
+  return _lbShowPct(stats) && !!stats.is_top3 && stats.my_rank >= 1 && stats.my_rank <= 3;
+}
+
+// Trophy for the win, medals behind it. ONE string for both surfaces, so the
+// card and the snippet can't drift apart in wording the way they already had
+// in gating. Where they differ is placement, not text: the card prints this
+// under the percentile band, the snippet prints it INSTEAD of the percentile
+// — "1st in the World!" already says it better than "Top 1% today", and two
+// ranking lines in a six-line snippet reads as noise.
+function _lbPodiumLine(stats) {
+  const medal = stats.my_rank === 1 ? '🏆' : stats.my_rank === 2 ? '🥈' : '🥉';
+  const ord   = stats.my_rank === 1 ? '1st' : stats.my_rank === 2 ? '2nd' : '3rd';
+  return `${medal} ${ord} in the World!`;
+}
+
 // Shown to everyone with enough data, including players whose own rank is
 // suppressed — a target is exactly what someone below the median needs.
 // Deliberately the same wording for everyone: a plain benchmark to aim at,
@@ -8203,8 +8223,8 @@ function renderLeaderboardBlock(slot, stats) {
     // Tier by how rare the result is, so the band reads as a reward rather
     // than a readout. Gold echoes the optimal-medal colour already on the card.
     const tier = stats.top_pct <= 1 ? 'tier-elite' : stats.top_pct <= 10 ? 'tier-good' : 'tier-mid';
-    const podium = (stats.is_top3 && stats.total_players >= LB_MIN_PLAYERS)
-      ? `<div class="lb-rank">🏆 You're #${stats.my_rank} today</div>`
+    const podium = _lbShowPodium(stats)
+      ? `<div class="lb-rank">${_lbPodiumLine(stats)}</div>`
       : '';
 
     // The player count is deliberately not shown — "top 9% of 11" undersells
@@ -8324,7 +8344,7 @@ function buildShareText(diff, hints, changes, secs) {
     ? `${blocks}  Optimal route!`
     : `${blocks}  ${diff} min off optimal route`;
   const challengeLine = diff <= 0
-    ? `🏆 Can anyone match this?`
+    ? `⁉️ Can anyone match this?`
     : `🤔 Think you know the Tube better?`;
   const hintsLine = hints === 0
     ? `✨ No hints used`
@@ -8338,7 +8358,8 @@ function buildShareText(diff, hints, changes, secs) {
   ];
   if (streakLine) lines.push(streakLine);
   const lb = _leaderboardStatsCache[`${currentMode}:${puzzleData.date}`];
-  if (_lbShowPct(lb)) lines.push(`📊 Top ${lb.top_pct}% today`);
+  if (_lbShowPodium(lb))   lines.push(_lbPodiumLine(lb));
+  else if (_lbShowPct(lb)) lines.push(`📊 Top ${lb.top_pct}% today`);
   lines.push(challengeLine, `➡️ playtubed.co.uk`);
   return lines.join('\n');
 }

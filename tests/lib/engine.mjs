@@ -73,7 +73,7 @@ function makeStorage() {
 
 /**
  * @param {string} htmlPath  path to the build, absolute or relative to repo root
- * @param {{extraExports?: string[]}} [opts]
+ * @param {{extraExports?: string[], preCtx?: object, append?: string}} [opts]
  * @returns engine surface object, plus `_ctx` (the sandbox) and `_path`
  */
 export function loadEngine(htmlPath = 'index.html', opts = {}) {
@@ -127,8 +127,15 @@ export function loadEngine(htmlPath = 'index.html', opts = {}) {
   Object.assign(ctx, opts.preCtx || {});
   vm.createContext(ctx);
 
+  // Extra source evaluated INSIDE the sandbox, in the build's own top-level
+  // scope. The only way to reach a `let` global: lexical bindings never land
+  // on the context object, so `currentMode` and `puzzleData` cannot be
+  // assigned from the host side the way a `var` or a const object's contents
+  // can. Used by tests that need to put the page into a specific UI state.
+  const append = opts.append ? '\n;' + opts.append + '\n' : '';
+
   try {
-    vm.runInContext(scripts.join('\n;\n') + exportSuffix, ctx, { filename: abs });
+    vm.runInContext(scripts.join('\n;\n') + append + exportSuffix, ctx, { filename: abs });
   } catch (e) {
     // The DOM stubs make init() throw harmlessly after the definitions land.
     // Only treat it as fatal if the surface never got attached.
