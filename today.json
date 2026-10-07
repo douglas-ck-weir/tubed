@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-06",
-  "puzzleNum": 187,
+  "date": "2026-10-07",
+  "puzzleNum": 188,
   "easy": {
-    "start": "Shepherd's Bush",
-    "end": "Harlesden"
+    "start": "Lambeth North",
+    "end": "East Putney"
   },
   "hard": {
-    "start": "Barons Court",
-    "end": "Clapham North"
+    "start": "Clapham South",
+    "end": "Dollis Hill"
   }
 }

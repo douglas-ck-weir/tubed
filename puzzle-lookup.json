@@ -1,4 +1,15 @@
 {
+  "2026-10-06": {
+    "puzzleNum": 187,
+    "easy": {
+      "start": "Shepherd's Bush",
+      "end": "Harlesden"
+    },
+    "hard": {
+      "start": "Barons Court",
+      "end": "Clapham North"
+    }
+  },
   "2026-10-05": {
     "puzzleNum": 186,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Regent's Park",
       "end": "South Wimbledon"
-    }
-  },
-  "2026-08-07": {
-    "puzzleNum": 127,
-    "easy": {
-      "start": "Seven Sisters",
-      "end": "Camden Town"
-    },
-    "hard": {
-      "start": "Tooting Broadway",
-      "end": "Wimbledon Park"
-    }
-  },
-  "2026-10-06": {
-    "puzzleNum": 187,
-    "easy": {
-      "start": "Shepherd's Bush",
-      "end": "Harlesden"
-    },
-    "hard": {
-      "start": "Barons Court",
-      "end": "Clapham North"
     }
   },
   "2026-10-07": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Pontoon Dock",
       "end": "Turnham Green"
+    }
+  },
+  "2027-01-04": {
+    "puzzleNum": 277,
+    "easy": {
+      "start": "Covent Garden",
+      "end": "Heron Quays"
+    },
+    "hard": {
+      "start": "Bayswater",
+      "end": "Wembley Park"
     }
   }
 }
