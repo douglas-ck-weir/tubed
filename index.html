@@ -6675,38 +6675,162 @@ function setModeStore(mode, modeData) {
 // ═══════════════════════════════════════════════════════════════════════════════
 // TIMER
 // ═══════════════════════════════════════════════════════════════════════════════
+// Elapsed seconds are PERSISTED per mode per London day. Without that, a
+// refresh started the clock again at 0:00, so anyone could read the puzzle,
+// work the route out at leisure (or on paper, or in another tab), reload, key
+// it in and submit a time they never played. The clock now resumes where it
+// left off.
+//
+// Deliberately NOT wall-clock: we store accumulated ticks, not a start
+// timestamp, so closing the tab PAUSES the clock rather than charging the
+// hours until the player comes back. Pausing is what an honest player
+// expects, and it still removes the reset.
+//
+// Its own key, not tubepzl_v6: this is written once a second, and re-encoding
+// the whole store (streak + history + submitted routes) at that rate to move
+// one integer would be wasteful. It is also disposable — a lost or corrupt
+// timer costs one puzzle's clock, never a streak — so it stays out of the
+// store we take such care to migrate.
+const TIMER_KEY = 'tubed_timer_v1';
+
+// The London day the live clock's seconds belong to, set when the clock
+// starts or resumes. null means "no live clock yet", which leaves writes
+// unguarded — before startTimer() the only value anything can write is 0.
+//
+// Why this exists: a tab left open across London midnight keeps ticking the
+// puzzle still on screen, which is correct — the player is still looking at
+// it. But those seconds must NOT be banked once the day has rolled, because
+// _readTimerStore() re-stamps itself to the current day on the way through a
+// read-modify-write. Banking them would write YESTERDAY's seconds under
+// TODAY's key: the day-expiry guard is defeated, and the reload that finally
+// picks up the new puzzle starts it nine minutes in the hole. Measured at 541s
+// before this guard existed; see the midnight block in
+// tests/timer_persistence.test.mjs.
+let timerDay = null;
+
+// Reject anything that isn't a plain non-negative number. A hand-edited or
+// half-written value must not be able to put NaN in the display, and the
+// floor keeps the stored value an integer count of ticks.
+function _timerSecsValue(v) {
+  return (typeof v === 'number' && isFinite(v) && v >= 0) ? Math.floor(v) : 0;
+}
+
+// Today's timer slots. A stored day other than today is dropped wholesale:
+// yesterday's clock has nothing to say about today's puzzle, and this is what
+// makes the value expire without a cleanup pass. Keyed on todayKey() (London),
+// the same clock the puzzle and the streak use — see the day-keys tests for
+// why the device day is not allowed anywhere near progress.
+function _readTimerStore() {
+  const today = todayKey();
+  try {
+    const t = JSON.parse(localStorage.getItem(TIMER_KEY) || 'null');
+    if (t && t.day === today) {
+      return { day: today, easy: _timerSecsValue(t.easy), hard: _timerSecsValue(t.hard) };
+    }
+  } catch(e) {}
+  return { day: today, easy: 0, hard: 0 };
+}
+function savedTimerSecs(mode) { return _readTimerStore()[mode === 'hard' ? 'hard' : 'easy']; }
+function _writeTimerSecs(mode, secs) {
+  const t = _readTimerStore();
+  // Day rolled over under an open tab: _readTimerStore has already moved to
+  // the new day, so writing here would carry the old puzzle's seconds onto
+  // the new one. Drop the write; the live clock on screen is unaffected, and
+  // submitRoute() reads timerSeconds directly so a post-midnight submission
+  // of the puzzle still on screen is still scored on its true elapsed time.
+  if (timerDay !== null && timerDay !== t.day) return;
+  t[mode === 'hard' ? 'hard' : 'easy'] = _timerSecsValue(secs);
+  try { localStorage.setItem(TIMER_KEY, JSON.stringify(t)); } catch(e) {}
+}
+// Genuine "start this puzzle over" — the only thing allowed to zero a saved
+// clock mid-day. Reachable from resetGame's fresh-puzzle path only, which a
+// player who has submitted today can't get to (they land in the locked view).
+function clearSavedTimer(mode) { _writeTimerSecs(mode, 0); }
+
+// Paint the banked clock as early as the DOM allows — BEFORE init() runs.
+//
+// The header timer lives outside #game-body, so it is on screen for the whole
+// loading state, and init() cannot reach startTimer() until it has awaited the
+// puzzle lookup, which is allowed LOOKUP_TIMEOUT_MS (3s) to settle. Without
+// this a returning player watches a flat, wrong 0:00 for up to three seconds
+// and reasonably concludes the clock reset after all — the exact impression
+// the persistence exists to remove.
+//
+// The mode choice here is a localStorage-only approximation of
+// pickDefaultMode(): no puzzle exists yet, and resolving one would put the
+// generator on the critical path. init() repaints authoritatively moments
+// later, so the worst case is the other mode's banked time shown briefly,
+// which is still nearer the truth than 0:00. When nothing is banked we leave
+// the static markup alone — 0:00 is then correct.
+function _earlyPaintTimer() {
+  try {
+    const store = getStore();
+    const easy = store && store.easy;
+    const easyDone = !!(easy && easy.lastPlayed === todayKey() && easy.submittedRoute);
+    const secs = savedTimerSecs(easyDone ? 'hard' : 'easy');
+    if (!secs) return;
+    const disp = document.getElementById('timer-disp');
+    if (disp) disp.textContent = timerFmt(secs);
+  } catch(e) {}
+}
+
 function timerFmt(s) {
   const m = Math.floor(s / 60);
   const sec = s % 60;
   return `${m}:${String(sec).padStart(2,'0')}`;
 }
-function startTimer() {
-  timerSeconds = 0; timerStopped = false;
+function _paintTimer() {
   const disp = document.getElementById('timer-disp');
-  const box  = document.getElementById('timer-box');
-  if (disp) disp.textContent = '0:00';
-  if (box)  box.classList.remove('done');
+  if (disp) disp.textContent = timerFmt(timerSeconds);
+  const box = document.getElementById('timer-box');
+  if (box) box.classList.toggle('done', timerStopped);
+}
+// Tick the live clock, persisting every second. Every second rather than
+// every few: a cheaper write interval would let a player shave the unwritten
+// tail off their time by reloading, which is a smaller version of the exact
+// bug this closes.
+function _startTicking() {
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
     if (timerStopped) return;
     timerSeconds++;
-    if (disp) disp.textContent = timerFmt(timerSeconds);
+    _paintTimer();
+    _writeTimerSecs(currentMode, timerSeconds);
   }, 1000);
+}
+// Start, or RESUME, the current mode's clock. Always picks up the persisted
+// value, so every caller (load, how-to dismissal, first switch into a mode)
+// continues rather than restarts.
+function startTimer() {
+  timerSeconds = savedTimerSecs(currentMode);
+  timerStopped = false;
+  timerDay = todayKey();
+  _paintTimer();
+  // Claim the slot immediately: a player who loads the puzzle and reloads
+  // before the first tick has still spent that time on it.
+  _writeTimerSecs(currentMode, timerSeconds);
+  _startTicking();
 }
 function stopTimer() {
   timerStopped = true;
   clearInterval(timerInterval);
   const box = document.getElementById('timer-box');
   if (box) box.classList.add('done');
+  // Persist the final value so the locked view and a reload agree.
+  _writeTimerSecs(currentMode, timerSeconds);
 }
+// Put the current mode's clock back to zero, saved value included, and leave
+// it stopped for a following startTimer() to pick up. Note the deliberate
+// asymmetry with stopTimer(): this must NOT persist the seconds it is
+// discarding, so it clears rather than saves.
 function resetTimer() {
-  stopTimer();
-  timerSeconds = 0; timerStopped = false;
+  timerStopped = true;
+  clearInterval(timerInterval);
   timerInterval = null;
-  const disp = document.getElementById('timer-disp');
-  const box  = document.getElementById('timer-box');
-  if (disp) disp.textContent = '0:00';
-  if (box)  box.classList.remove('done');
+  timerSeconds = 0;
+  clearSavedTimer(currentMode);
+  timerStopped = false;
+  _paintTimer();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -6763,7 +6887,11 @@ function freshSnapshotFor(mode) {
     nbAdding:         false,
     nbDestLocked:     false,
     selectedStation:  '',
-    timerSeconds:     0,
+    // Seeded from the saved clock, not 0. This snapshot is built on every
+    // load for the mode the player is not looking at, and restoreMode()
+    // splats it in wholesale on the first tab switch — a 0 here would hand
+    // back the refresh reset one tab click later.
+    timerSeconds:     savedTimerSecs(mode),
     timerStopped:     false,
     lockedSubmission: false,
     resultShown:      false,
@@ -6979,6 +7107,7 @@ function switchMode(mode) {
   const wasRunning = !timerStopped;
   timerStopped = true;
   clearInterval(timerInterval);
+  _writeTimerSecs(currentMode, timerSeconds);
   modeState[currentMode] = snapshotMode();
   modeState[currentMode].timerStopped = !wasRunning;
 
@@ -6996,17 +7125,8 @@ function switchMode(mode) {
   if (modeState[currentMode]) {
     restoreMode(modeState[currentMode]);
     // Always paint the restored time so the display matches the new mode
-    const disp = document.getElementById('timer-disp');
-    if (disp) disp.textContent = timerFmt(timerSeconds);
-    const box = document.getElementById('timer-box');
-    if (box) box.classList.toggle('done', timerStopped);
-    if (!timerStopped) {
-      timerInterval = setInterval(() => {
-        if (timerStopped) return;
-        timerSeconds++;
-        if (disp) disp.textContent = timerFmt(timerSeconds);
-      }, 1000);
-    }
+    _paintTimer();
+    if (!timerStopped) _startTicking();
   } else {
     puzzleData = todayPuzzle(currentMode);
     userRoute = [];
@@ -7017,7 +7137,9 @@ function switchMode(mode) {
     nbDestLocked = false;
     selectedStation = '';
     lockedSubmission = false;
-    resetTimer();
+    // startTimer(), NOT resetTimer(): with no in-memory snapshot this is the
+    // first look at this mode SINCE A RELOAD as often as it is a genuinely
+    // fresh one, and the saved clock is what tells the two apart.
     startTimer();
   }
 
@@ -7076,6 +7198,8 @@ function switchMode(mode) {
     lockedSubmission = true;
     timerStopped = true;
     clearInterval(timerInterval);
+    timerSeconds = persisted.completionSecs || 0;
+    _paintTimer();
     _applyShareButtonVisibility();
   } else {
     if (rp) { rp.style.display = 'none'; rp.innerHTML = ''; }
@@ -7122,8 +7246,7 @@ function enterLockedView() {
   timerStopped = true;
   clearInterval(timerInterval);
   timerSeconds = s.completionSecs || 0;
-  const disp = document.getElementById('timer-disp'); if (disp) disp.textContent = timerFmt(timerSeconds);
-  const box  = document.getElementById('timer-box');  if (box)  box.classList.add('done');
+  _paintTimer();
 
   if (map) { mapLayers = []; map.remove(); map = null; }
   initMap();
@@ -7153,6 +7276,10 @@ function maybeShowSolvedResult() {
   lockedSubmission = true;
   timerStopped = true;
   clearInterval(timerInterval);
+  // Show what they actually submitted, not whatever the resumed clock had
+  // reached before this ran.
+  timerSeconds = s.completionSecs || 0;
+  _paintTimer();
   _applyShareButtonVisibility();
 }
 
@@ -7163,6 +7290,12 @@ async function init() {
   document.getElementById('yr').textContent = new Date().getFullYear();
   renderAnnouncements();
   currentMode = pickDefaultMode();
+  // Paint the banked seconds for the real default mode now, BEFORE the
+  // _lookupReady await below. startTimer() is the authoritative painter but it
+  // cannot run until the lookup settles; this keeps the header honest for the
+  // up-to-3s in between. Display only — nothing is started or banked here.
+  timerSeconds = savedTimerSecs(currentMode);
+  _paintTimer();
   document.querySelectorAll('.mode-tab').forEach(t => {
     t.classList.toggle('active', t.dataset.mode === currentMode);
   });
@@ -7184,6 +7317,9 @@ async function init() {
       t.classList.toggle('active', t.dataset.mode === currentMode);
     });
     applyHardModeStyling();
+    // The mode changed under us, so the pre-await paint was the wrong clock.
+    timerSeconds = savedTimerSecs(currentMode);
+    _paintTimer();
   }
   // Reuse whatever pickDefaultMode already had to resolve; falling back to a
   // fresh call. Without this, a player whose stale submission was rejected pays
@@ -8607,6 +8743,13 @@ function _preloadPuzzleLookup() {
   return Promise.race([fetchPromise, timeout]);
 }
 const _lookupReady = _preloadPuzzleLookup();  // fire immediately; init() awaits it
+// Earliest honest paint of the banked clock. Runs well before the 'load'
+// handler below, which waits on Leaflet and every other subresource.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _earlyPaintTimer);
+} else {
+  _earlyPaintTimer();
+}
 window.addEventListener('load', () => { init(); });
 </script>
 </body>
