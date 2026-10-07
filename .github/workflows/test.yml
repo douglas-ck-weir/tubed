@@ -17,8 +17,40 @@ jobs:
         with:
           node-version: '20'
 
+      # Runs first, and takes a second. This workflow names its suites one by
+      # one, which reads well in the Actions UI but silently skips any file
+      # nobody remembered to add — six suites had accumulated unrun, including
+      # the timer anti-cheat regression, so re-introducing that exploit would
+      # have shipped fully green. A green tick has to mean "the whole suite
+      # ran", not "the part of it someone wired up".
+      - name: Every test file is gated (no silently-skipped suites)
+        run: |
+          excluded="mutations"   # has its own nightly workflow: mutations.yml
+          missing=""
+          for f in tests/*.test.mjs; do
+            base=$(basename "$f" .test.mjs)
+            case " $excluded " in *" $base "*) continue ;; esac
+            grep -qF "node tests/$base.test.mjs" .github/workflows/test.yml \
+              || missing="$missing $base"
+          done
+          if [ -n "$missing" ]; then
+            echo "Not run by this workflow:$missing"
+            echo "Add a step for each, or add it to 'excluded' above with a reason."
+            exit 1
+          fi
+          echo "All test files are gated."
+
       - name: Network data integrity
         run: node tests/network.test.mjs
+
+      - name: Tube hop times (TIMES matches the slowest sampled pattern)
+        run: node tests/tube_hop_times.test.mjs
+
+      - name: Baker Street interchange (INTERCHANGE_MINS at half TfL walking pace)
+        run: node tests/baker_street_interchange.test.mjs
+
+      - name: Paddington split platforms (H&C vs Circle, walk vs interchange)
+        run: node tests/paddington_split_platforms.test.mjs
 
       - name: Puzzle sources agreement (today.json ↔ puzzle-lookup.json ↔ index.html)
         run: node tests/puzzle-sources.test.mjs
@@ -37,3 +69,9 @@ jobs:
 
       - name: Day keys (London clock for puzzle AND progress; stale-result guard)
         run: node tests/day_keys.test.mjs
+
+      - name: Share card and leaderboard snippet agree on every rank band
+        run: node tests/share_card.test.mjs
+
+      - name: Timer persistence (a reload cannot reset the clock)
+        run: node tests/timer_persistence.test.mjs
