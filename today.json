@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-07",
-  "puzzleNum": 188,
+  "date": "2026-10-08",
+  "puzzleNum": 189,
   "easy": {
-    "start": "Lambeth North",
-    "end": "East Putney"
+    "start": "Island Gardens",
+    "end": "Green Park"
   },
   "hard": {
-    "start": "Clapham South",
-    "end": "Dollis Hill"
+    "start": "Hackney Central",
+    "end": "Arsenal"
   }
 }

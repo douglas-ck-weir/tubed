@@ -1,4 +1,15 @@
 {
+  "2026-10-07": {
+    "puzzleNum": 188,
+    "easy": {
+      "start": "Lambeth North",
+      "end": "East Putney"
+    },
+    "hard": {
+      "start": "Clapham South",
+      "end": "Dollis Hill"
+    }
+  },
   "2026-10-06": {
     "puzzleNum": 187,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Bounds Green",
       "end": "Charing Cross"
-    }
-  },
-  "2026-08-08": {
-    "puzzleNum": 128,
-    "easy": {
-      "start": "North Greenwich",
-      "end": "Temple"
-    },
-    "hard": {
-      "start": "Regent's Park",
-      "end": "South Wimbledon"
-    }
-  },
-  "2026-10-07": {
-    "puzzleNum": 188,
-    "easy": {
-      "start": "Lambeth North",
-      "end": "East Putney"
-    },
-    "hard": {
-      "start": "Clapham South",
-      "end": "Dollis Hill"
     }
   },
   "2026-10-08": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Bayswater",
       "end": "Wembley Park"
+    }
+  },
+  "2027-01-05": {
+    "puzzleNum": 278,
+    "easy": {
+      "start": "South Quay",
+      "end": "Oxford Circus"
+    },
+    "hard": {
+      "start": "Goldhawk Road",
+      "end": "West Silvertown"
     }
   }
 }
