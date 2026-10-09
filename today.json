@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-08",
-  "puzzleNum": 189,
+  "date": "2026-10-09",
+  "puzzleNum": 190,
   "easy": {
-    "start": "Island Gardens",
-    "end": "Green Park"
+    "start": "Euston",
+    "end": "Greenwich"
   },
   "hard": {
-    "start": "Hackney Central",
-    "end": "Arsenal"
+    "start": "Pimlico",
+    "end": "Westbourne Park"
   }
 }
