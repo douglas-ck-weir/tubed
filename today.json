@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-09",
-  "puzzleNum": 190,
+  "date": "2026-10-10",
+  "puzzleNum": 191,
   "easy": {
-    "start": "Euston",
-    "end": "Greenwich"
+    "start": "Piccadilly Circus",
+    "end": "Seven Sisters"
   },
   "hard": {
-    "start": "Pimlico",
-    "end": "Westbourne Park"
+    "start": "Stamford Brook",
+    "end": "St. Paul's"
   }
 }
