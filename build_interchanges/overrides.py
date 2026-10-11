@@ -348,6 +348,19 @@ MANUAL_OVERRIDES: Dict[str, Dict[str, int]] = {
         'Circle|Elizabeth': 10,
         'District|Elizabeth': 10,
     },
+    # Stratford: TfL Stop Structure (ICS 1000226) returns 5 for Central|
+    # Elizabeth, routed STAIRS+STAIRS via the main ticket hall (area 1) rather
+    # than platform to platform. That is the wrong route to measure: Platform
+    # 3 (Central westbound) and Platform 5 (Elizabeth westbound) share the
+    # same platform, as do Platform 6 (Central eastbound) and Platform 8
+    # (Elizabeth eastbound) — "the only cross-platform interchange on the
+    # whole Elizabeth line." Reported by a player 2026-10-11 ("they back onto
+    # each other, same as Central/District at Mile End"); independently
+    # confirmed by TfL's own station literature. Same convention as Mile End
+    # Central|District in CROSS_PLATFORM_INTERCHANGES: 1 min.
+    'Stratford': {
+        'Central|Elizabeth': 1,
+    },
 }
 
 

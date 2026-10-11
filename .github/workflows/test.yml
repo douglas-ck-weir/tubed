@@ -49,6 +49,9 @@ jobs:
       - name: Baker Street interchange (INTERCHANGE_MINS at half TfL walking pace)
         run: node tests/baker_street_interchange.test.mjs
 
+      - name: Stratford interchange (Central/Elizabeth is cross-platform)
+        run: node tests/stratford_interchange.test.mjs
+
       - name: Paddington split platforms (H&C vs Circle, walk vs interchange)
         run: node tests/paddington_split_platforms.test.mjs
 

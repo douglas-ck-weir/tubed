@@ -1095,9 +1095,16 @@ const INTERCHANGE_MINS = {
   "Stonebridge Park": {
     "Bakerloo|Lioness": 4,
   },
+  // Central|Elizabeth is MANUALLY OVERRIDDEN — see MANUAL_OVERRIDES['Stratford']
+  // in build_interchanges/overrides.py. TfL's Stop Structure data routes this
+  // via the main ticket hall (5 min, two staircases) instead of platform to
+  // platform: Central westbound (3) and Elizabeth westbound (5) share a
+  // platform, as do Central eastbound (6) and Elizabeth eastbound (8) — the
+  // only cross-platform interchange on the whole Elizabeth line. Reported by
+  // a player 2026-10-11, confirmed against TfL's own station literature.
   "Stratford": {
     "Central|DLR": 4,
-    "Central|Elizabeth": 4,
+    "Central|Elizabeth": 1,
     "Central|Jubilee": 4,
     "Central|Mildmay": 5,
     "DLR|Elizabeth": 4,
@@ -6070,7 +6077,31 @@ function _dayLabel(key) {
 // SCORING_VERSION deliberately NOT bumped, following the Paddington (8aa9a7e),
 // Baker Street and DLR precedents — it gates the result-card snapshot, and no
 // live puzzle's cost changes here.
-const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v22';
+// v23 — 2026-10-11 Stratford Central/Elizabeth cross-platform fix. A player
+// reported the westbound platforms back onto each other (10 sec) and the
+// change is cross-platform generally (30 sec), same shape as Mile End
+// Central|District. TfL's Stop Structure data disagreed (5, routed via
+// stairs through the main ticket hall rather than platform to platform);
+// TfL's own station literature and an independent Google transit-routing
+// check (0.8 min) both corroborate the player. 4 -> 1, matching the Mile
+// End convention. Regression test: tests/stratford_interchange.test.mjs.
+//
+// MEASURED against both builds over the 150-day lookup: 8 of 12 diffs are
+// the window itself rolling forward four days between builds, unrelated to
+// this change. The other 4 are real RNG cascades (2026-11-17 hard,
+// 2026-11-18 easy, 2026-12-12 hard, 2026-12-16 easy), all 37+ days out, all
+// confirmed non-beatable (dijkstra, scoreLegs and pickOptimal agree on each).
+//
+// UNLIKE every prior bump's note above: TODAY's #192 hard (Leyton -> Surrey
+// Quays) IS affected, 25 -> 24. There IS a window in which two players would
+// see different answers for the same calendar-day puzzle if this shipped
+// now. Held until after the London midnight rollover, so it only ever
+// applies to a puzzle nobody has started.
+//
+// SCORING_VERSION deliberately NOT bumped, following every precedent above
+// — it gates the result-card snapshot, protecting anyone who already solved
+// under the old number once this does go live.
+const PUZZLE_CACHE_KEY = 'tubepzl_puzzles_cache_v23';
 function _getCachedPuzzle(date, mode) {
   try {
     const c = JSON.parse(localStorage.getItem(PUZZLE_CACHE_KEY) || 'null');
