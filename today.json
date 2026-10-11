@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-10",
-  "puzzleNum": 191,
+  "date": "2026-10-11",
+  "puzzleNum": 192,
   "easy": {
-    "start": "Piccadilly Circus",
-    "end": "Seven Sisters"
+    "start": "South Kensington",
+    "end": "Chancery Lane"
   },
   "hard": {
-    "start": "Stamford Brook",
-    "end": "St. Paul's"
+    "start": "Leyton",
+    "end": "Surrey Quays"
   }
 }
