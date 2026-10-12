@@ -1,4 +1,15 @@
 {
+  "2026-10-11": {
+    "puzzleNum": 192,
+    "easy": {
+      "start": "South Kensington",
+      "end": "Chancery Lane"
+    },
+    "hard": {
+      "start": "Leyton",
+      "end": "Surrey Quays"
+    }
+  },
   "2026-10-10": {
     "puzzleNum": 191,
     "easy": {
@@ -646,28 +657,6 @@
     "hard": {
       "start": "Archway",
       "end": "West Kensington"
-    }
-  },
-  "2026-08-12": {
-    "puzzleNum": 132,
-    "easy": {
-      "start": "East Finchley",
-      "end": "Vauxhall"
-    },
-    "hard": {
-      "start": "South Kensington",
-      "end": "Stratford International"
-    }
-  },
-  "2026-10-11": {
-    "puzzleNum": 192,
-    "easy": {
-      "start": "South Kensington",
-      "end": "Chancery Lane"
-    },
-    "hard": {
-      "start": "Leyton",
-      "end": "Surrey Quays"
     }
   },
   "2026-10-12": {
@@ -1647,6 +1636,17 @@
     "hard": {
       "start": "Clapham South",
       "end": "East Putney"
+    }
+  },
+  "2027-01-09": {
+    "puzzleNum": 282,
+    "easy": {
+      "start": "Walthamstow Central",
+      "end": "Hammersmith"
+    },
+    "hard": {
+      "start": "Golders Green",
+      "end": "Wimbledon"
     }
   }
 }
