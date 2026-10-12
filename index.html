@@ -8366,6 +8366,32 @@ function submitScore(s) {
     .catch(e => console.warn('[tubed] leaderboard submit failed:', e.message));
 }
 
+// Route analytics, deliberately independent of submitScore() above: its own
+// table (supabase/schema.sql), its own fetch, its own catch. A failure here
+// (network, or the plays table not existing yet on a stale deploy) can never
+// affect the leaderboard insert or anything already rendered on the result
+// card — same silent-fail, fire-and-forget convention, and the table's own
+// UNIQUE constraint makes a duplicate submit harmless the same way.
+function submitPlay(p) {
+  const playerId = getPlayerId();
+  if (!playerId) return;
+  fetch(`${SUPABASE_URL}/rest/v1/plays`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    },
+    body: JSON.stringify({
+      puzzle_date: p.date, mode: p.mode, player_id: playerId,
+      start_station: p.start, end_station: p.end,
+      optimal_route: p.optimalRoute, player_route: p.playerRoute,
+      scoring_version: SCORING_VERSION,
+    }),
+  }).catch(e => console.warn('[tubed] play submit failed:', e.message));
+}
+
 // Reads current rank/percentile for a puzzle already submitted in THIS
 // browser (relies on getPlayerId() matching a row that exists server-side).
 // Safe to call repeatedly - e.g. every time a solved result is reopened -
@@ -8505,6 +8531,9 @@ function submitRoute() {
   // Ordered POST-then-GET because the GET can only rank a row that exists.
   submitScore({ date: puzzleData.date, mode: currentMode, diff, completionSecs,
                 hintsUsed, userMins, optimalMins });
+  submitPlay({ date: puzzleData.date, mode: currentMode,
+               start: puzzleData.start, end: puzzleData.end,
+               optimalRoute: puzzleData.optimal.legs, playerRoute: userLegsData.legs });
 
   setTimeout(() => {
     const b = document.getElementById('score-bar'); if(b) b.style.width = pct + '%';

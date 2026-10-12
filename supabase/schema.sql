@@ -132,6 +132,72 @@ grant execute on function public.get_leaderboard_stats(date, text, uuid) to anon
 
 
 -- ═══════════════════════════════════════════════════════════════════════════
+-- PLAYS (route analytics)
+-- ═══════════════════════════════════════════════════════════════════════════
+-- A separate table from scores, deliberately, not a widening of it. scores
+-- exists to serve the public leaderboard through one tight SECURITY DEFINER
+-- RPC that never needs route data; plays exists purely so routes can be
+-- queried offline later (which puzzles produce a popular non-optimal route,
+-- whether a historical "optimal" still holds up once the cost model
+-- changes, etc). Keeping them apart means neither table's mistakes or
+-- access rules can touch the other.
+--
+-- diff_mins / completion_secs / hints_used are deliberately NOT duplicated
+-- here — they already live in scores, and a second copy is a second source
+-- of truth free to drift (same reasoning as the no-stored-streaks note
+-- above). Join on (puzzle_date, mode, player_id) when a report needs both.
+--
+-- No foreign key to scores: submitPlay() and submitScore() are two
+-- independent fire-and-forget POSTs (same convention as everywhere else in
+-- this file), so a timing hiccup or failure in one insert can never reject
+-- or block the other.
+create table public.plays (
+  id              bigint generated always as identity primary key,
+  puzzle_date     date not null,
+  mode            text not null check (mode in ('easy','hard')),
+  player_id       uuid not null,
+
+  start_station   text not null,
+  end_station     text not null,
+
+  -- Exactly the leg shape the client already computes for these two routes
+  -- — pickOptimal()'s [{from,to,line,branchLine}] and buildUserLegs()'s
+  -- [{from,to,line,via}] — stored as-is rather than reshaped into a shared
+  -- format, so a row always reflects what actually ran client-side.
+  optimal_route   jsonb not null,
+  player_route    jsonb not null,
+
+  -- Same reasoning as scores.scoring_version: the cost model moves (wait
+  -- times, OSI walks, interchange penalties), so a route recorded under one
+  -- version is not safely comparable to one recorded under another.
+  scoring_version integer not null check (scoring_version > 0),
+
+  created_at      timestamptz not null default now(),
+  unique (puzzle_date, mode, player_id)
+);
+
+alter table public.plays enable row level security;
+
+-- Same window as scores' insert policy, for the same reason (clock skew
+-- around midnight) — see that policy's comment for the full rationale.
+create policy "insert own play for a recent date"
+  on public.plays for insert to anon
+  with check (
+    puzzle_date >= (now() at time zone 'Europe/London')::date - 1
+    and puzzle_date <= (now() at time zone 'Europe/London')::date
+  );
+
+-- Schema-level usage was already granted to anon above; only the
+-- table-level grant is new here.
+grant insert on public.plays to anon;
+
+-- Deliberately no select grant. Unlike scores, nothing in the game reads
+-- plays back — it's queried by hand later (service_role, SQL editor), not
+-- served to players.
+revoke select on public.plays from anon;
+
+
+-- ═══════════════════════════════════════════════════════════════════════════
 -- MIGRATIONS
 -- ═══════════════════════════════════════════════════════════════════════════
 -- The table definition above is the canonical fresh install. Databases
