@@ -988,5 +988,16 @@
       "start": "Golders Green",
       "end": "Wimbledon"
     }
+  },
+  "2027-01-10": {
+    "puzzleNum": 283,
+    "easy": {
+      "start": "Green Park",
+      "end": "Kew Gardens"
+    },
+    "hard": {
+      "start": "Kensal Green",
+      "end": "Westferry"
+    }
   }
 }

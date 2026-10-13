@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-12",
-  "puzzleNum": 193,
+  "date": "2026-10-13",
+  "puzzleNum": 194,
   "easy": {
-    "start": "Covent Garden",
-    "end": "Royal Oak"
+    "start": "Stepney Green",
+    "end": "Kilburn Park"
   },
   "hard": {
-    "start": "Mornington Crescent",
-    "end": "Turnham Green"
+    "start": "North Acton",
+    "end": "London City Airport"
   }
 }
