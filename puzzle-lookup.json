@@ -1,15 +1,4 @@
 {
-  "2026-10-12": {
-    "puzzleNum": 193,
-    "easy": {
-      "start": "Covent Garden",
-      "end": "Royal Oak"
-    },
-    "hard": {
-      "start": "Mornington Crescent",
-      "end": "Turnham Green"
-    }
-  },
   "2026-10-13": {
     "puzzleNum": 194,
     "easy": {
@@ -19,6 +8,17 @@
     "hard": {
       "start": "North Acton",
       "end": "London City Airport"
+    }
+  },
+  "2026-10-12": {
+    "puzzleNum": 193,
+    "easy": {
+      "start": "Covent Garden",
+      "end": "Royal Oak"
+    },
+    "hard": {
+      "start": "Mornington Crescent",
+      "end": "Turnham Green"
     }
   },
   "2026-10-14": {
@@ -998,6 +998,17 @@
     "hard": {
       "start": "Kensal Green",
       "end": "Westferry"
+    }
+  },
+  "2027-01-11": {
+    "puzzleNum": 284,
+    "easy": {
+      "start": "Holloway Road",
+      "end": "Tufnell Park"
+    },
+    "hard": {
+      "start": "Regent's Park",
+      "end": "Sloane Square"
     }
   }
 }
