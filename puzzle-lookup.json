@@ -1,4 +1,15 @@
 {
+  "2026-10-14": {
+    "puzzleNum": 195,
+    "easy": {
+      "start": "Bank",
+      "end": "Green Park"
+    },
+    "hard": {
+      "start": "Piccadilly Circus",
+      "end": "Archway"
+    }
+  },
   "2026-10-13": {
     "puzzleNum": 194,
     "easy": {
@@ -19,17 +30,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-14": {
-    "puzzleNum": 195,
-    "easy": {
-      "start": "Bank",
-      "end": "Green Park"
-    },
-    "hard": {
-      "start": "Piccadilly Circus",
-      "end": "Archway"
     }
   },
   "2026-10-15": {
@@ -1009,6 +1009,17 @@
     "hard": {
       "start": "Regent's Park",
       "end": "Sloane Square"
+    }
+  },
+  "2027-01-12": {
+    "puzzleNum": 285,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Stockwell"
+    },
+    "hard": {
+      "start": "Brixton",
+      "end": "Ealing Broadway"
     }
   }
 }
