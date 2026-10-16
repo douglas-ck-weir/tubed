@@ -1,4 +1,15 @@
 {
+  "2026-10-15": {
+    "puzzleNum": 196,
+    "easy": {
+      "start": "Marble Arch",
+      "end": "Parsons Green"
+    },
+    "hard": {
+      "start": "Stratford International",
+      "end": "Acton Town"
+    }
+  },
   "2026-10-14": {
     "puzzleNum": 195,
     "easy": {
@@ -30,17 +41,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-15": {
-    "puzzleNum": 196,
-    "easy": {
-      "start": "Marble Arch",
-      "end": "Parsons Green"
-    },
-    "hard": {
-      "start": "Stratford International",
-      "end": "Acton Town"
     }
   },
   "2026-10-16": {
@@ -1020,6 +1020,17 @@
     "hard": {
       "start": "Brixton",
       "end": "Ealing Broadway"
+    }
+  },
+  "2027-01-13": {
+    "puzzleNum": 286,
+    "easy": {
+      "start": "New Cross Gate",
+      "end": "Swiss Cottage"
+    },
+    "hard": {
+      "start": "East India",
+      "end": "Knightsbridge"
     }
   }
 }

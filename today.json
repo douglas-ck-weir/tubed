@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-15",
-  "puzzleNum": 196,
+  "date": "2026-10-16",
+  "puzzleNum": 197,
   "easy": {
-    "start": "Marble Arch",
-    "end": "Parsons Green"
+    "start": "Victoria",
+    "end": "Greenwich"
   },
   "hard": {
-    "start": "Stratford International",
-    "end": "Acton Town"
+    "start": "Neasden",
+    "end": "Arsenal"
   }
 }
