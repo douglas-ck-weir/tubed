@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-16",
-  "puzzleNum": 197,
+  "date": "2026-10-17",
+  "puzzleNum": 198,
   "easy": {
-    "start": "Victoria",
-    "end": "Greenwich"
+    "start": "Hanger Lane",
+    "end": "Wembley Park"
   },
   "hard": {
-    "start": "Neasden",
-    "end": "Arsenal"
+    "start": "Great Portland Street",
+    "end": "Crystal Palace"
   }
 }

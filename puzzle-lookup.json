@@ -1,4 +1,15 @@
 {
+  "2026-10-16": {
+    "puzzleNum": 197,
+    "easy": {
+      "start": "Victoria",
+      "end": "Greenwich"
+    },
+    "hard": {
+      "start": "Neasden",
+      "end": "Arsenal"
+    }
+  },
   "2026-10-15": {
     "puzzleNum": 196,
     "easy": {
@@ -41,17 +52,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-16": {
-    "puzzleNum": 197,
-    "easy": {
-      "start": "Victoria",
-      "end": "Greenwich"
-    },
-    "hard": {
-      "start": "Neasden",
-      "end": "Arsenal"
     }
   },
   "2026-10-17": {
@@ -1031,6 +1031,17 @@
     "hard": {
       "start": "East India",
       "end": "Knightsbridge"
+    }
+  },
+  "2027-01-14": {
+    "puzzleNum": 287,
+    "easy": {
+      "start": "Tower Hill",
+      "end": "Hampstead"
+    },
+    "hard": {
+      "start": "Bow Road",
+      "end": "Wood Green"
     }
   }
 }
