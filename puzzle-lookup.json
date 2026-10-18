@@ -1,4 +1,15 @@
 {
+  "2026-10-17": {
+    "puzzleNum": 198,
+    "easy": {
+      "start": "Hanger Lane",
+      "end": "Wembley Park"
+    },
+    "hard": {
+      "start": "Great Portland Street",
+      "end": "Crystal Palace"
+    }
+  },
   "2026-10-16": {
     "puzzleNum": 197,
     "easy": {
@@ -52,17 +63,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-17": {
-    "puzzleNum": 198,
-    "easy": {
-      "start": "Hanger Lane",
-      "end": "Wembley Park"
-    },
-    "hard": {
-      "start": "Great Portland Street",
-      "end": "Crystal Palace"
     }
   },
   "2026-10-18": {
@@ -1042,6 +1042,17 @@
     "hard": {
       "start": "Bow Road",
       "end": "Wood Green"
+    }
+  },
+  "2027-01-15": {
+    "puzzleNum": 288,
+    "easy": {
+      "start": "South Quay",
+      "end": "Belsize Park"
+    },
+    "hard": {
+      "start": "Northfields",
+      "end": "Harlesden"
     }
   }
 }
