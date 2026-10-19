@@ -1,4 +1,15 @@
 {
+  "2026-10-18": {
+    "puzzleNum": 199,
+    "easy": {
+      "start": "Finsbury Park",
+      "end": "Harlesden"
+    },
+    "hard": {
+      "start": "Sloane Square",
+      "end": "Tooting Broadway"
+    }
+  },
   "2026-10-17": {
     "puzzleNum": 198,
     "easy": {
@@ -63,17 +74,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-18": {
-    "puzzleNum": 199,
-    "easy": {
-      "start": "Finsbury Park",
-      "end": "Harlesden"
-    },
-    "hard": {
-      "start": "Sloane Square",
-      "end": "Tooting Broadway"
     }
   },
   "2026-10-19": {
@@ -1053,6 +1053,17 @@
     "hard": {
       "start": "Northfields",
       "end": "Harlesden"
+    }
+  },
+  "2027-01-16": {
+    "puzzleNum": 289,
+    "easy": {
+      "start": "Victoria",
+      "end": "Mornington Crescent"
+    },
+    "hard": {
+      "start": "Oval",
+      "end": "London City Airport"
     }
   }
 }
