@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-20",
-  "puzzleNum": 201,
+  "date": "2026-10-21",
+  "puzzleNum": 202,
   "easy": {
-    "start": "Lewisham",
-    "end": "Cannon Street"
+    "start": "Belsize Park",
+    "end": "Goldhawk Road"
   },
   "hard": {
-    "start": "Hendon Central",
-    "end": "Manor House"
+    "start": "Baker Street",
+    "end": "Hackney Central"
   }
 }

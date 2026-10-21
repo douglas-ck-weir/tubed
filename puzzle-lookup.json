@@ -1,4 +1,15 @@
 {
+  "2026-10-20": {
+    "puzzleNum": 201,
+    "easy": {
+      "start": "Lewisham",
+      "end": "Cannon Street"
+    },
+    "hard": {
+      "start": "Hendon Central",
+      "end": "Manor House"
+    }
+  },
   "2026-10-19": {
     "puzzleNum": 200,
     "easy": {
@@ -85,17 +96,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-20": {
-    "puzzleNum": 201,
-    "easy": {
-      "start": "Lewisham",
-      "end": "Cannon Street"
-    },
-    "hard": {
-      "start": "Hendon Central",
-      "end": "Manor House"
     }
   },
   "2026-10-21": {
@@ -1075,6 +1075,17 @@
     "hard": {
       "start": "Kilburn",
       "end": "Blackhorse Road"
+    }
+  },
+  "2027-01-18": {
+    "puzzleNum": 291,
+    "easy": {
+      "start": "Green Park",
+      "end": "Monument"
+    },
+    "hard": {
+      "start": "Harrow on the Hill",
+      "end": "West Brompton"
     }
   }
 }
