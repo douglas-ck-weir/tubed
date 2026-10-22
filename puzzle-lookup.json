@@ -1,4 +1,15 @@
 {
+  "2026-10-21": {
+    "puzzleNum": 202,
+    "easy": {
+      "start": "Belsize Park",
+      "end": "Goldhawk Road"
+    },
+    "hard": {
+      "start": "Baker Street",
+      "end": "Hackney Central"
+    }
+  },
   "2026-10-20": {
     "puzzleNum": 201,
     "easy": {
@@ -96,17 +107,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-21": {
-    "puzzleNum": 202,
-    "easy": {
-      "start": "Belsize Park",
-      "end": "Goldhawk Road"
-    },
-    "hard": {
-      "start": "Baker Street",
-      "end": "Hackney Central"
     }
   },
   "2026-10-22": {
@@ -1086,6 +1086,17 @@
     "hard": {
       "start": "Harrow on the Hill",
       "end": "West Brompton"
+    }
+  },
+  "2027-01-19": {
+    "puzzleNum": 292,
+    "easy": {
+      "start": "Angel",
+      "end": "Finchley Road"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Harrow & Wealdstone"
     }
   }
 }

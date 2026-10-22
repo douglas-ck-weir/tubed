@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-21",
-  "puzzleNum": 202,
+  "date": "2026-10-22",
+  "puzzleNum": 203,
   "easy": {
-    "start": "Belsize Park",
-    "end": "Goldhawk Road"
+    "start": "Crossharbour",
+    "end": "Bermondsey"
   },
   "hard": {
-    "start": "Baker Street",
-    "end": "Hackney Central"
+    "start": "Golders Green",
+    "end": "Warwick Avenue"
   }
 }
