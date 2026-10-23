@@ -1,4 +1,15 @@
 {
+  "2026-10-22": {
+    "puzzleNum": 203,
+    "easy": {
+      "start": "Crossharbour",
+      "end": "Bermondsey"
+    },
+    "hard": {
+      "start": "Golders Green",
+      "end": "Warwick Avenue"
+    }
+  },
   "2026-10-21": {
     "puzzleNum": 202,
     "easy": {
@@ -107,17 +118,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-22": {
-    "puzzleNum": 203,
-    "easy": {
-      "start": "Crossharbour",
-      "end": "Bermondsey"
-    },
-    "hard": {
-      "start": "Golders Green",
-      "end": "Warwick Avenue"
     }
   },
   "2026-10-23": {
@@ -1097,6 +1097,17 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Harrow & Wealdstone"
+    }
+  },
+  "2027-01-20": {
+    "puzzleNum": 293,
+    "easy": {
+      "start": "Notting Hill Gate",
+      "end": "Island Gardens"
+    },
+    "hard": {
+      "start": "Plaistow",
+      "end": "Hackney Central"
     }
   }
 }
