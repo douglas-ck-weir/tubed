@@ -1,4 +1,15 @@
 {
+  "2026-10-23": {
+    "puzzleNum": 204,
+    "easy": {
+      "start": "West Hampstead",
+      "end": "Marble Arch"
+    },
+    "hard": {
+      "start": "Acton Town",
+      "end": "Balham"
+    }
+  },
   "2026-10-22": {
     "puzzleNum": 203,
     "easy": {
@@ -118,17 +129,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-23": {
-    "puzzleNum": 204,
-    "easy": {
-      "start": "West Hampstead",
-      "end": "Marble Arch"
-    },
-    "hard": {
-      "start": "Acton Town",
-      "end": "Balham"
     }
   },
   "2026-10-24": {
@@ -1108,6 +1108,17 @@
     "hard": {
       "start": "Plaistow",
       "end": "Hackney Central"
+    }
+  },
+  "2027-01-21": {
+    "puzzleNum": 294,
+    "easy": {
+      "start": "Willesden Green",
+      "end": "Preston Road"
+    },
+    "hard": {
+      "start": "Limehouse",
+      "end": "Shepherd's Bush Market"
     }
   }
 }
