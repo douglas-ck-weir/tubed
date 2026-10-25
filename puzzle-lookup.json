@@ -1,4 +1,15 @@
 {
+  "2026-10-24": {
+    "puzzleNum": 205,
+    "easy": {
+      "start": "North Acton",
+      "end": "Tower Hill"
+    },
+    "hard": {
+      "start": "Wembley Central",
+      "end": "London City Airport"
+    }
+  },
   "2026-10-23": {
     "puzzleNum": 204,
     "easy": {
@@ -129,17 +140,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-24": {
-    "puzzleNum": 205,
-    "easy": {
-      "start": "North Acton",
-      "end": "Tower Hill"
-    },
-    "hard": {
-      "start": "Wembley Central",
-      "end": "London City Airport"
     }
   },
   "2026-10-25": {
@@ -1119,6 +1119,17 @@
     "hard": {
       "start": "Limehouse",
       "end": "Shepherd's Bush Market"
+    }
+  },
+  "2027-01-22": {
+    "puzzleNum": 295,
+    "easy": {
+      "start": "Gunnersbury",
+      "end": "Covent Garden"
+    },
+    "hard": {
+      "start": "Wood Lane",
+      "end": "East India"
     }
   }
 }

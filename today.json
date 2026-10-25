@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-24",
-  "puzzleNum": 205,
+  "date": "2026-10-25",
+  "puzzleNum": 206,
   "easy": {
-    "start": "North Acton",
-    "end": "Tower Hill"
+    "start": "Aldgate",
+    "end": "Oxford Circus"
   },
   "hard": {
-    "start": "Wembley Central",
-    "end": "London City Airport"
+    "start": "Westferry",
+    "end": "Charing Cross"
   }
 }
