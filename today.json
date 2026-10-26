@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-25",
-  "puzzleNum": 206,
+  "date": "2026-10-26",
+  "puzzleNum": 207,
   "easy": {
-    "start": "Aldgate",
-    "end": "Oxford Circus"
+    "start": "Wimbledon Park",
+    "end": "Holborn"
   },
   "hard": {
-    "start": "Westferry",
-    "end": "Charing Cross"
+    "start": "Stonebridge Park",
+    "end": "Willesden Green"
   }
 }

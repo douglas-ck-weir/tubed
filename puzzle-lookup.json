@@ -1,4 +1,15 @@
 {
+  "2026-10-25": {
+    "puzzleNum": 206,
+    "easy": {
+      "start": "Aldgate",
+      "end": "Oxford Circus"
+    },
+    "hard": {
+      "start": "Westferry",
+      "end": "Charing Cross"
+    }
+  },
   "2026-10-24": {
     "puzzleNum": 205,
     "easy": {
@@ -140,17 +151,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-25": {
-    "puzzleNum": 206,
-    "easy": {
-      "start": "Aldgate",
-      "end": "Oxford Circus"
-    },
-    "hard": {
-      "start": "Westferry",
-      "end": "Charing Cross"
     }
   },
   "2026-10-26": {
@@ -1130,6 +1130,17 @@
     "hard": {
       "start": "Wood Lane",
       "end": "East India"
+    }
+  },
+  "2027-01-23": {
+    "puzzleNum": 296,
+    "easy": {
+      "start": "Seven Sisters",
+      "end": "Queensway"
+    },
+    "hard": {
+      "start": "Royal Oak",
+      "end": "South Quay"
     }
   }
 }
