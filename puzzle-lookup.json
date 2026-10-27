@@ -1,4 +1,15 @@
 {
+  "2026-10-26": {
+    "puzzleNum": 207,
+    "easy": {
+      "start": "Wimbledon Park",
+      "end": "Holborn"
+    },
+    "hard": {
+      "start": "Stonebridge Park",
+      "end": "Willesden Green"
+    }
+  },
   "2026-10-25": {
     "puzzleNum": 206,
     "easy": {
@@ -151,17 +162,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-26": {
-    "puzzleNum": 207,
-    "easy": {
-      "start": "Wimbledon Park",
-      "end": "Holborn"
-    },
-    "hard": {
-      "start": "Stonebridge Park",
-      "end": "Willesden Green"
     }
   },
   "2026-10-27": {
@@ -1141,6 +1141,17 @@
     "hard": {
       "start": "Royal Oak",
       "end": "South Quay"
+    }
+  },
+  "2027-01-24": {
+    "puzzleNum": 297,
+    "easy": {
+      "start": "London City Airport",
+      "end": "Hampstead"
+    },
+    "hard": {
+      "start": "East Ham",
+      "end": "West Silvertown"
     }
   }
 }

@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-26",
-  "puzzleNum": 207,
+  "date": "2026-10-27",
+  "puzzleNum": 208,
   "easy": {
-    "start": "Wimbledon Park",
-    "end": "Holborn"
+    "start": "North Greenwich",
+    "end": "Kings Cross St. Pancras"
   },
   "hard": {
-    "start": "Stonebridge Park",
-    "end": "Willesden Green"
+    "start": "Queen's Park",
+    "end": "Crystal Palace"
   }
 }
