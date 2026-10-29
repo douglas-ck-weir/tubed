@@ -1,4 +1,15 @@
 {
+  "2026-10-28": {
+    "puzzleNum": 209,
+    "easy": {
+      "start": "Old Street",
+      "end": "Hammersmith"
+    },
+    "hard": {
+      "start": "Victoria",
+      "end": "Preston Road"
+    }
+  },
   "2026-10-27": {
     "puzzleNum": 208,
     "easy": {
@@ -173,17 +184,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-28": {
-    "puzzleNum": 209,
-    "easy": {
-      "start": "Old Street",
-      "end": "Hammersmith"
-    },
-    "hard": {
-      "start": "Victoria",
-      "end": "Preston Road"
     }
   },
   "2026-10-29": {
@@ -1163,6 +1163,17 @@
     "hard": {
       "start": "Holland Park",
       "end": "Clapham South"
+    }
+  },
+  "2027-01-26": {
+    "puzzleNum": 299,
+    "easy": {
+      "start": "Crystal Palace",
+      "end": "Barbican"
+    },
+    "hard": {
+      "start": "Harrow on the Hill",
+      "end": "High Street Kensington"
     }
   }
 }
