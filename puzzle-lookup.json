@@ -1,4 +1,15 @@
 {
+  "2026-10-29": {
+    "puzzleNum": 210,
+    "easy": {
+      "start": "Southwark",
+      "end": "Brent Cross"
+    },
+    "hard": {
+      "start": "Willesden Junction",
+      "end": "Tooting Broadway"
+    }
+  },
   "2026-10-28": {
     "puzzleNum": 209,
     "easy": {
@@ -184,17 +195,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-29": {
-    "puzzleNum": 210,
-    "easy": {
-      "start": "Southwark",
-      "end": "Brent Cross"
-    },
-    "hard": {
-      "start": "Willesden Junction",
-      "end": "Tooting Broadway"
     }
   },
   "2026-10-30": {
@@ -1174,6 +1174,17 @@
     "hard": {
       "start": "Harrow on the Hill",
       "end": "High Street Kensington"
+    }
+  },
+  "2027-01-27": {
+    "puzzleNum": 300,
+    "easy": {
+      "start": "Kilburn",
+      "end": "Hanger Lane"
+    },
+    "hard": {
+      "start": "Canada Water",
+      "end": "Chancery Lane"
     }
   }
 }
