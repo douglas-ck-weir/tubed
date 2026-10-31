@@ -1,4 +1,15 @@
 {
+  "2026-10-30": {
+    "puzzleNum": 211,
+    "easy": {
+      "start": "Vauxhall",
+      "end": "Russell Square"
+    },
+    "hard": {
+      "start": "Barons Court",
+      "end": "Golders Green"
+    }
+  },
   "2026-10-29": {
     "puzzleNum": 210,
     "easy": {
@@ -195,17 +206,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-30": {
-    "puzzleNum": 211,
-    "easy": {
-      "start": "Vauxhall",
-      "end": "Russell Square"
-    },
-    "hard": {
-      "start": "Barons Court",
-      "end": "Golders Green"
     }
   },
   "2026-10-31": {
@@ -1185,6 +1185,17 @@
     "hard": {
       "start": "Canada Water",
       "end": "Chancery Lane"
+    }
+  },
+  "2027-01-28": {
+    "puzzleNum": 301,
+    "easy": {
+      "start": "East Acton",
+      "end": "Baker Street"
+    },
+    "hard": {
+      "start": "Surrey Quays",
+      "end": "Elephant & Castle"
     }
   }
 }
