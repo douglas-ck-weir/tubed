@@ -1,4 +1,15 @@
 {
+  "2026-10-31": {
+    "puzzleNum": 212,
+    "easy": {
+      "start": "Temple",
+      "end": "Holland Park"
+    },
+    "hard": {
+      "start": "Colliers Wood",
+      "end": "Neasden"
+    }
+  },
   "2026-10-30": {
     "puzzleNum": 211,
     "easy": {
@@ -206,17 +217,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-10-31": {
-    "puzzleNum": 212,
-    "easy": {
-      "start": "Temple",
-      "end": "Holland Park"
-    },
-    "hard": {
-      "start": "Colliers Wood",
-      "end": "Neasden"
     }
   },
   "2026-11-01": {
@@ -1196,6 +1196,17 @@
     "hard": {
       "start": "Surrey Quays",
       "end": "Elephant & Castle"
+    }
+  },
+  "2027-01-29": {
+    "puzzleNum": 302,
+    "easy": {
+      "start": "Bow Road",
+      "end": "Tottenham Court Road"
+    },
+    "hard": {
+      "start": "Sloane Square",
+      "end": "Caledonian Road"
     }
   }
 }
