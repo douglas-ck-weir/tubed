@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-01",
-  "puzzleNum": 213,
+  "date": "2026-11-02",
+  "puzzleNum": 214,
   "easy": {
-    "start": "Baker Street",
-    "end": "Putney Bridge"
+    "start": "Shadwell",
+    "end": "West Kensington"
   },
   "hard": {
-    "start": "Custom House for ExCel",
-    "end": "Hackney Central"
+    "start": "Queensway",
+    "end": "Clapham South"
   }
 }

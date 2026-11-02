@@ -1,4 +1,15 @@
 {
+  "2026-11-01": {
+    "puzzleNum": 213,
+    "easy": {
+      "start": "Baker Street",
+      "end": "Putney Bridge"
+    },
+    "hard": {
+      "start": "Custom House for ExCel",
+      "end": "Hackney Central"
+    }
+  },
   "2026-10-31": {
     "puzzleNum": 212,
     "easy": {
@@ -217,17 +228,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-01": {
-    "puzzleNum": 213,
-    "easy": {
-      "start": "Baker Street",
-      "end": "Putney Bridge"
-    },
-    "hard": {
-      "start": "Custom House for ExCel",
-      "end": "Hackney Central"
     }
   },
   "2026-11-02": {
@@ -1207,6 +1207,17 @@
     "hard": {
       "start": "Sloane Square",
       "end": "Caledonian Road"
+    }
+  },
+  "2027-01-30": {
+    "puzzleNum": 303,
+    "easy": {
+      "start": "Blackfriars",
+      "end": "Camden Town"
+    },
+    "hard": {
+      "start": "Westferry",
+      "end": "Piccadilly Circus"
     }
   }
 }
