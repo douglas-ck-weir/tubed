@@ -1,4 +1,15 @@
 {
+  "2026-11-02": {
+    "puzzleNum": 214,
+    "easy": {
+      "start": "Shadwell",
+      "end": "West Kensington"
+    },
+    "hard": {
+      "start": "Queensway",
+      "end": "Clapham South"
+    }
+  },
   "2026-11-01": {
     "puzzleNum": 213,
     "easy": {
@@ -228,17 +239,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-02": {
-    "puzzleNum": 214,
-    "easy": {
-      "start": "Shadwell",
-      "end": "West Kensington"
-    },
-    "hard": {
-      "start": "Queensway",
-      "end": "Clapham South"
     }
   },
   "2026-11-03": {
@@ -1218,6 +1218,17 @@
     "hard": {
       "start": "Westferry",
       "end": "Piccadilly Circus"
+    }
+  },
+  "2027-01-31": {
+    "puzzleNum": 304,
+    "easy": {
+      "start": "Kensal Green",
+      "end": "Kew Gardens"
+    },
+    "hard": {
+      "start": "Borough",
+      "end": "Hyde Park Corner"
     }
   }
 }

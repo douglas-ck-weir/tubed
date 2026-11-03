@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-02",
-  "puzzleNum": 214,
+  "date": "2026-11-03",
+  "puzzleNum": 215,
   "easy": {
-    "start": "Shadwell",
-    "end": "West Kensington"
+    "start": "Blackfriars",
+    "end": "Walthamstow Central"
   },
   "hard": {
-    "start": "Queensway",
-    "end": "Clapham South"
+    "start": "East India",
+    "end": "Gunnersbury"
   }
 }
