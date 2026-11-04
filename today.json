@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-03",
-  "puzzleNum": 215,
+  "date": "2026-11-04",
+  "puzzleNum": 216,
   "easy": {
-    "start": "Blackfriars",
-    "end": "Walthamstow Central"
+    "start": "Crystal Palace",
+    "end": "Heron Quays"
   },
   "hard": {
-    "start": "East India",
-    "end": "Gunnersbury"
+    "start": "Manor House",
+    "end": "Edgware Road"
   }
 }

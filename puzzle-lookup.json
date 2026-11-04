@@ -1,4 +1,15 @@
 {
+  "2026-11-03": {
+    "puzzleNum": 215,
+    "easy": {
+      "start": "Blackfriars",
+      "end": "Walthamstow Central"
+    },
+    "hard": {
+      "start": "East India",
+      "end": "Gunnersbury"
+    }
+  },
   "2026-11-02": {
     "puzzleNum": 214,
     "easy": {
@@ -239,17 +250,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-03": {
-    "puzzleNum": 215,
-    "easy": {
-      "start": "Blackfriars",
-      "end": "Walthamstow Central"
-    },
-    "hard": {
-      "start": "East India",
-      "end": "Gunnersbury"
     }
   },
   "2026-11-04": {
@@ -1229,6 +1229,17 @@
     "hard": {
       "start": "Borough",
       "end": "Hyde Park Corner"
+    }
+  },
+  "2027-02-01": {
+    "puzzleNum": 305,
+    "easy": {
+      "start": "Stratford International",
+      "end": "Lancaster Gate"
+    },
+    "hard": {
+      "start": "Manor House",
+      "end": "Richmond"
     }
   }
 }
