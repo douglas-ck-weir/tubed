@@ -1,4 +1,15 @@
 {
+  "2026-11-04": {
+    "puzzleNum": 216,
+    "easy": {
+      "start": "Crystal Palace",
+      "end": "Heron Quays"
+    },
+    "hard": {
+      "start": "Manor House",
+      "end": "Edgware Road"
+    }
+  },
   "2026-11-03": {
     "puzzleNum": 215,
     "easy": {
@@ -250,17 +261,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-04": {
-    "puzzleNum": 216,
-    "easy": {
-      "start": "Crystal Palace",
-      "end": "Heron Quays"
-    },
-    "hard": {
-      "start": "Manor House",
-      "end": "Edgware Road"
     }
   },
   "2026-11-05": {
@@ -1240,6 +1240,17 @@
     "hard": {
       "start": "Manor House",
       "end": "Richmond"
+    }
+  },
+  "2027-02-02": {
+    "puzzleNum": 306,
+    "easy": {
+      "start": "Tottenham Hale",
+      "end": "Earl's Court"
+    },
+    "hard": {
+      "start": "Tooting Broadway",
+      "end": "Willesden Green"
     }
   }
 }
