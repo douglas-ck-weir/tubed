@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-05",
-  "puzzleNum": 217,
+  "date": "2026-11-06",
+  "puzzleNum": 218,
   "easy": {
-    "start": "Lancaster Gate",
-    "end": "Aldgate East"
+    "start": "Earl's Court",
+    "end": "Westbourne Park"
   },
   "hard": {
-    "start": "South Quay",
-    "end": "Pimlico"
+    "start": "Bounds Green",
+    "end": "Goodge Street"
   }
 }

@@ -1,4 +1,15 @@
 {
+  "2026-11-05": {
+    "puzzleNum": 217,
+    "easy": {
+      "start": "Lancaster Gate",
+      "end": "Aldgate East"
+    },
+    "hard": {
+      "start": "South Quay",
+      "end": "Pimlico"
+    }
+  },
   "2026-11-04": {
     "puzzleNum": 216,
     "easy": {
@@ -261,17 +272,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-05": {
-    "puzzleNum": 217,
-    "easy": {
-      "start": "Lancaster Gate",
-      "end": "Aldgate East"
-    },
-    "hard": {
-      "start": "South Quay",
-      "end": "Pimlico"
     }
   },
   "2026-11-06": {
@@ -1251,6 +1251,17 @@
     "hard": {
       "start": "Tooting Broadway",
       "end": "Willesden Green"
+    }
+  },
+  "2027-02-03": {
+    "puzzleNum": 307,
+    "easy": {
+      "start": "Highgate",
+      "end": "Heron Quays"
+    },
+    "hard": {
+      "start": "Parsons Green",
+      "end": "Stonebridge Park"
     }
   }
 }
