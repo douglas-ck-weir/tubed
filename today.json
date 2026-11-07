@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-06",
-  "puzzleNum": 218,
+  "date": "2026-11-07",
+  "puzzleNum": 219,
   "easy": {
-    "start": "Earl's Court",
-    "end": "Westbourne Park"
+    "start": "Ealing Common",
+    "end": "Preston Road"
   },
   "hard": {
-    "start": "Bounds Green",
-    "end": "Goodge Street"
+    "start": "Tottenham Court Road",
+    "end": "Pontoon Dock"
   }
 }

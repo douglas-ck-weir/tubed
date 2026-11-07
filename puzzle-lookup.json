@@ -1,4 +1,15 @@
 {
+  "2026-11-06": {
+    "puzzleNum": 218,
+    "easy": {
+      "start": "Earl's Court",
+      "end": "Westbourne Park"
+    },
+    "hard": {
+      "start": "Bounds Green",
+      "end": "Goodge Street"
+    }
+  },
   "2026-11-05": {
     "puzzleNum": 217,
     "easy": {
@@ -272,17 +283,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-06": {
-    "puzzleNum": 218,
-    "easy": {
-      "start": "Earl's Court",
-      "end": "Westbourne Park"
-    },
-    "hard": {
-      "start": "Bounds Green",
-      "end": "Goodge Street"
     }
   },
   "2026-11-07": {
@@ -1262,6 +1262,17 @@
     "hard": {
       "start": "Parsons Green",
       "end": "Stonebridge Park"
+    }
+  },
+  "2027-02-04": {
+    "puzzleNum": 308,
+    "easy": {
+      "start": "Canning Town",
+      "end": "Chancery Lane"
+    },
+    "hard": {
+      "start": "Wembley Central",
+      "end": "Stamford Brook"
     }
   }
 }
