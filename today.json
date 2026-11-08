@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-07",
-  "puzzleNum": 219,
+  "date": "2026-11-08",
+  "puzzleNum": 220,
   "easy": {
-    "start": "Ealing Common",
-    "end": "Preston Road"
+    "start": "Bond Street",
+    "end": "Crossharbour"
   },
   "hard": {
-    "start": "Tottenham Court Road",
-    "end": "Pontoon Dock"
+    "start": "Surrey Quays",
+    "end": "Stonebridge Park"
   }
 }

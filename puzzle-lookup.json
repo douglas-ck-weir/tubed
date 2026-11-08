@@ -1,4 +1,15 @@
 {
+  "2026-11-07": {
+    "puzzleNum": 219,
+    "easy": {
+      "start": "Ealing Common",
+      "end": "Preston Road"
+    },
+    "hard": {
+      "start": "Tottenham Court Road",
+      "end": "Pontoon Dock"
+    }
+  },
   "2026-11-06": {
     "puzzleNum": 218,
     "easy": {
@@ -283,17 +294,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-07": {
-    "puzzleNum": 219,
-    "easy": {
-      "start": "Ealing Common",
-      "end": "Preston Road"
-    },
-    "hard": {
-      "start": "Tottenham Court Road",
-      "end": "Pontoon Dock"
     }
   },
   "2026-11-08": {
@@ -1273,6 +1273,17 @@
     "hard": {
       "start": "Wembley Central",
       "end": "Stamford Brook"
+    }
+  },
+  "2027-02-05": {
+    "puzzleNum": 309,
+    "easy": {
+      "start": "Charing Cross",
+      "end": "Acton Town"
+    },
+    "hard": {
+      "start": "Goodge Street",
+      "end": "Turnpike Lane"
     }
   }
 }
