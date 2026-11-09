@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-08",
-  "puzzleNum": 220,
+  "date": "2026-11-09",
+  "puzzleNum": 221,
   "easy": {
-    "start": "Bond Street",
-    "end": "Crossharbour"
+    "start": "Stockwell",
+    "end": "Knightsbridge"
   },
   "hard": {
-    "start": "Surrey Quays",
-    "end": "Stonebridge Park"
+    "start": "New Cross Gate",
+    "end": "Latimer Road"
   }
 }
