@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-09",
-  "puzzleNum": 221,
+  "date": "2026-11-10",
+  "puzzleNum": 222,
   "easy": {
-    "start": "Stockwell",
-    "end": "Knightsbridge"
+    "start": "Canada Water",
+    "end": "Great Portland Street"
   },
   "hard": {
-    "start": "New Cross Gate",
-    "end": "Latimer Road"
+    "start": "Vauxhall",
+    "end": "Northfields"
   }
 }
