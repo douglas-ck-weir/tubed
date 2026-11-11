@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-10",
-  "puzzleNum": 222,
+  "date": "2026-11-11",
+  "puzzleNum": 223,
   "easy": {
-    "start": "Canada Water",
-    "end": "Great Portland Street"
+    "start": "Richmond",
+    "end": "Walthamstow Central"
   },
   "hard": {
-    "start": "Vauxhall",
-    "end": "Northfields"
+    "start": "Acton Town",
+    "end": "Highgate"
   }
 }
