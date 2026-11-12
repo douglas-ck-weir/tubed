@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-11",
-  "puzzleNum": 223,
+  "date": "2026-11-12",
+  "puzzleNum": 224,
   "easy": {
-    "start": "Richmond",
-    "end": "Walthamstow Central"
+    "start": "Chiswick Park",
+    "end": "Elephant & Castle"
   },
   "hard": {
-    "start": "Acton Town",
-    "end": "Highgate"
+    "start": "South Ealing",
+    "end": "Brixton"
   }
 }
