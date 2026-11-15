@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-14",
-  "puzzleNum": 226,
+  "date": "2026-11-15",
+  "puzzleNum": 227,
   "easy": {
-    "start": "Kew Gardens",
-    "end": "St. John's Wood"
+    "start": "Leicester Square",
+    "end": "West Ham"
   },
   "hard": {
-    "start": "Bounds Green",
-    "end": "Ladbroke Grove"
+    "start": "Hackney Central",
+    "end": "Archway"
   }
 }
