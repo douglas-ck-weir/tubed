@@ -1,4 +1,15 @@
 {
+  "2026-11-15": {
+    "puzzleNum": 227,
+    "easy": {
+      "start": "Leicester Square",
+      "end": "West Ham"
+    },
+    "hard": {
+      "start": "Hackney Central",
+      "end": "Archway"
+    }
+  },
   "2026-11-14": {
     "puzzleNum": 226,
     "easy": {
@@ -371,17 +382,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-15": {
-    "puzzleNum": 227,
-    "easy": {
-      "start": "Leicester Square",
-      "end": "West Ham"
-    },
-    "hard": {
-      "start": "Hackney Central",
-      "end": "Archway"
     }
   },
   "2026-11-16": {
@@ -1361,6 +1361,17 @@
     "hard": {
       "start": "Maida Vale",
       "end": "Wood Green"
+    }
+  },
+  "2027-02-13": {
+    "puzzleNum": 317,
+    "easy": {
+      "start": "Brixton",
+      "end": "Richmond"
+    },
+    "hard": {
+      "start": "Royal Oak",
+      "end": "Crossharbour"
     }
   }
 }

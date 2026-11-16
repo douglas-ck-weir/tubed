@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-15",
-  "puzzleNum": 227,
+  "date": "2026-11-16",
+  "puzzleNum": 228,
   "easy": {
-    "start": "Leicester Square",
-    "end": "West Ham"
+    "start": "Stratford International",
+    "end": "Tottenham Court Road"
   },
   "hard": {
-    "start": "Hackney Central",
-    "end": "Archway"
+    "start": "Barbican",
+    "end": "Hanger Lane"
   }
 }
