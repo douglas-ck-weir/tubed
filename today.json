@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-16",
-  "puzzleNum": 228,
+  "date": "2026-11-17",
+  "puzzleNum": 229,
   "easy": {
-    "start": "Stratford International",
-    "end": "Tottenham Court Road"
+    "start": "Queen's Park",
+    "end": "Mile End"
   },
   "hard": {
-    "start": "Barbican",
-    "end": "Hanger Lane"
+    "start": "Swiss Cottage",
+    "end": "Leyton"
   }
 }
