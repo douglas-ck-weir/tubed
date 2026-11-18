@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-17",
-  "puzzleNum": 229,
+  "date": "2026-11-18",
+  "puzzleNum": 230,
   "easy": {
-    "start": "Queen's Park",
-    "end": "Mile End"
+    "start": "Canary Wharf",
+    "end": "White City"
   },
   "hard": {
-    "start": "Swiss Cottage",
-    "end": "Leyton"
+    "start": "North Greenwich",
+    "end": "Chancery Lane"
   }
 }
