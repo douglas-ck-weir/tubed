@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-18",
-  "puzzleNum": 230,
+  "date": "2026-11-19",
+  "puzzleNum": 231,
   "easy": {
-    "start": "Canary Wharf",
-    "end": "White City"
+    "start": "Holborn",
+    "end": "Upton Park"
   },
   "hard": {
-    "start": "North Greenwich",
-    "end": "Chancery Lane"
+    "start": "Hammersmith",
+    "end": "Angel"
   }
 }
