@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-19",
-  "puzzleNum": 231,
+  "date": "2026-11-20",
+  "puzzleNum": 232,
   "easy": {
-    "start": "Holborn",
-    "end": "Upton Park"
+    "start": "Wembley Park",
+    "end": "Golders Green"
   },
   "hard": {
-    "start": "Hammersmith",
-    "end": "Angel"
+    "start": "Acton Town",
+    "end": "Neasden"
   }
 }
