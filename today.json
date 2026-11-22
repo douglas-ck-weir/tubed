@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-21",
-  "puzzleNum": 233,
+  "date": "2026-11-22",
+  "puzzleNum": 234,
   "easy": {
-    "start": "Chalk Farm",
-    "end": "Harrow & Wealdstone"
+    "start": "Goldhawk Road",
+    "end": "Marble Arch"
   },
   "hard": {
-    "start": "Regent's Park",
-    "end": "Plaistow"
+    "start": "Crystal Palace",
+    "end": "Euston"
   }
 }
