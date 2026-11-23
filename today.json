@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-22",
-  "puzzleNum": 234,
+  "date": "2026-11-23",
+  "puzzleNum": 235,
   "easy": {
-    "start": "Goldhawk Road",
-    "end": "Marble Arch"
+    "start": "Victoria",
+    "end": "Leytonstone"
   },
   "hard": {
-    "start": "Crystal Palace",
-    "end": "Euston"
+    "start": "Bow Road",
+    "end": "South Quay"
   }
 }

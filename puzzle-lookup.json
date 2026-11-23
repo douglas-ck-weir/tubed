@@ -1,4 +1,15 @@
 {
+  "2026-11-22": {
+    "puzzleNum": 234,
+    "easy": {
+      "start": "Goldhawk Road",
+      "end": "Marble Arch"
+    },
+    "hard": {
+      "start": "Crystal Palace",
+      "end": "Euston"
+    }
+  },
   "2026-11-21": {
     "puzzleNum": 233,
     "easy": {
@@ -448,17 +459,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-22": {
-    "puzzleNum": 234,
-    "easy": {
-      "start": "Goldhawk Road",
-      "end": "Marble Arch"
-    },
-    "hard": {
-      "start": "Crystal Palace",
-      "end": "Euston"
     }
   },
   "2026-11-23": {
@@ -1438,6 +1438,17 @@
     "hard": {
       "start": "Bermondsey",
       "end": "Barbican"
+    }
+  },
+  "2027-02-20": {
+    "puzzleNum": 324,
+    "easy": {
+      "start": "Canada Water",
+      "end": "Chalk Farm"
+    },
+    "hard": {
+      "start": "Pontoon Dock",
+      "end": "St. James's Park"
     }
   }
 }
