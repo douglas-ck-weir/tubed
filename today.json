@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-23",
-  "puzzleNum": 235,
+  "date": "2026-11-24",
+  "puzzleNum": 236,
   "easy": {
-    "start": "Victoria",
-    "end": "Leytonstone"
+    "start": "Leicester Square",
+    "end": "Baker Street"
   },
   "hard": {
-    "start": "Bow Road",
-    "end": "South Quay"
+    "start": "Gunnersbury",
+    "end": "Clapham South"
   }
 }
