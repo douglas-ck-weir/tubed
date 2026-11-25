@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-24",
-  "puzzleNum": 236,
+  "date": "2026-11-25",
+  "puzzleNum": 237,
   "easy": {
-    "start": "Leicester Square",
-    "end": "Baker Street"
+    "start": "Elephant & Castle",
+    "end": "Heron Quays"
   },
   "hard": {
-    "start": "Gunnersbury",
-    "end": "Clapham South"
+    "start": "Whitechapel",
+    "end": "West Silvertown"
   }
 }
