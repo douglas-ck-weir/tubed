@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-25",
-  "puzzleNum": 237,
+  "date": "2026-11-26",
+  "puzzleNum": 238,
   "easy": {
-    "start": "Elephant & Castle",
-    "end": "Heron Quays"
+    "start": "Embankment",
+    "end": "Knightsbridge"
   },
   "hard": {
-    "start": "Whitechapel",
-    "end": "West Silvertown"
+    "start": "Barons Court",
+    "end": "South Wimbledon"
   }
 }

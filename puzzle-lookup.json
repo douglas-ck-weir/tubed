@@ -1,4 +1,15 @@
 {
+  "2026-11-25": {
+    "puzzleNum": 237,
+    "easy": {
+      "start": "Elephant & Castle",
+      "end": "Heron Quays"
+    },
+    "hard": {
+      "start": "Whitechapel",
+      "end": "West Silvertown"
+    }
+  },
   "2026-11-24": {
     "puzzleNum": 236,
     "easy": {
@@ -481,17 +492,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-25": {
-    "puzzleNum": 237,
-    "easy": {
-      "start": "Elephant & Castle",
-      "end": "Heron Quays"
-    },
-    "hard": {
-      "start": "Whitechapel",
-      "end": "West Silvertown"
     }
   },
   "2026-11-26": {
@@ -1471,6 +1471,17 @@
     "hard": {
       "start": "Stockwell",
       "end": "Ealing Common"
+    }
+  },
+  "2027-02-23": {
+    "puzzleNum": 327,
+    "easy": {
+      "start": "North Greenwich",
+      "end": "Kew Gardens"
+    },
+    "hard": {
+      "start": "Whitechapel",
+      "end": "Covent Garden"
     }
   }
 }
