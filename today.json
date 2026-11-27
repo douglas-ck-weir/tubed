@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-26",
-  "puzzleNum": 238,
+  "date": "2026-11-27",
+  "puzzleNum": 239,
   "easy": {
-    "start": "Embankment",
-    "end": "Knightsbridge"
+    "start": "Tottenham Hale",
+    "end": "North Acton"
   },
   "hard": {
-    "start": "Barons Court",
-    "end": "South Wimbledon"
+    "start": "Edgware Road",
+    "end": "Highgate"
   }
 }

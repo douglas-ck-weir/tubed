@@ -1,4 +1,15 @@
 {
+  "2026-11-26": {
+    "puzzleNum": 238,
+    "easy": {
+      "start": "Embankment",
+      "end": "Knightsbridge"
+    },
+    "hard": {
+      "start": "Barons Court",
+      "end": "South Wimbledon"
+    }
+  },
   "2026-11-25": {
     "puzzleNum": 237,
     "easy": {
@@ -492,17 +503,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-26": {
-    "puzzleNum": 238,
-    "easy": {
-      "start": "Embankment",
-      "end": "Knightsbridge"
-    },
-    "hard": {
-      "start": "Barons Court",
-      "end": "South Wimbledon"
     }
   },
   "2026-11-27": {
@@ -1482,6 +1482,17 @@
     "hard": {
       "start": "Whitechapel",
       "end": "Covent Garden"
+    }
+  },
+  "2027-02-24": {
+    "puzzleNum": 328,
+    "easy": {
+      "start": "Hendon Central",
+      "end": "Stonebridge Park"
+    },
+    "hard": {
+      "start": "Baker Street",
+      "end": "Wood Green"
     }
   }
 }
