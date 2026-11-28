@@ -1,4 +1,15 @@
 {
+  "2026-11-27": {
+    "puzzleNum": 239,
+    "easy": {
+      "start": "Tottenham Hale",
+      "end": "North Acton"
+    },
+    "hard": {
+      "start": "Edgware Road",
+      "end": "Highgate"
+    }
+  },
   "2026-11-26": {
     "puzzleNum": 238,
     "easy": {
@@ -503,17 +514,6 @@
     "hard": {
       "start": "Mornington Crescent",
       "end": "Turnham Green"
-    }
-  },
-  "2026-11-27": {
-    "puzzleNum": 239,
-    "easy": {
-      "start": "Tottenham Hale",
-      "end": "North Acton"
-    },
-    "hard": {
-      "start": "Edgware Road",
-      "end": "Highgate"
     }
   },
   "2026-11-28": {
@@ -1493,6 +1493,17 @@
     "hard": {
       "start": "Baker Street",
       "end": "Wood Green"
+    }
+  },
+  "2027-02-25": {
+    "puzzleNum": 329,
+    "easy": {
+      "start": "Highbury & Islington",
+      "end": "Harrow on the Hill"
+    },
+    "hard": {
+      "start": "Old Street",
+      "end": "Maida Vale"
     }
   }
 }

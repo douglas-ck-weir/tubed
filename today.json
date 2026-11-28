@@ -1,12 +1,12 @@
 {
-  "date": "2026-11-27",
-  "puzzleNum": 239,
+  "date": "2026-11-28",
+  "puzzleNum": 240,
   "easy": {
-    "start": "Tottenham Hale",
-    "end": "North Acton"
+    "start": "Custom House for ExCel",
+    "end": "Earl's Court"
   },
   "hard": {
-    "start": "Edgware Road",
-    "end": "Highgate"
+    "start": "Tufnell Park",
+    "end": "Manor House"
   }
 }
